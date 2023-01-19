@@ -1,3 +1,16 @@
 {
-  "files": {}
+  "files": {
+    "user-ruthcostello-primary_biliary_cirrhosis.csv": {
+      "id": "user/ruthcostello/primary_biliary_cirrhosis/3c117787",
+      "url": "https://codelists.opensafely.org/codelist/user/ruthcostello/primary_biliary_cirrhosis/3c117787/",
+      "downloaded_at": "2023-01-19 11:01:09.575823Z",
+      "sha": "8a2b98288510b7589c3c7e9dc31fe220ac8b014e"
+    },
+    "opensafely-ursodeoxycholic_acid.csv": {
+      "id": "opensafely/ursodeoxycholic_acid/738c74e0",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/ursodeoxycholic_acid/738c74e0/",
+      "downloaded_at": "2023-01-19 11:01:09.680649Z",
+      "sha": "d0c6744f54fe4bab33e9ef927a7d3b53c93cea92"
+    }
+  }
 }
