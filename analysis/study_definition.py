@@ -42,6 +42,70 @@ study = StudyDefinition(
     has_pbc=patients.with_these_clinical_events(
         pbc_codes,
         returning = "binary_flag",
-        include_date_o
+        include_date_of_match = "True",
+        on_or_before = "index_date"
     )
+
+    #Ursodeoxycholic acid 
+    udca_count=patients.with_these_medications(
+        udca_codes, 
+        between=["2019-09-01", "2020-02-29"],
+        returning="number_of_matches_in_period",
+        return_expectations={
+            "int": {"distribution": "normal", "mean": 3, "stddev": 2},
+            "incidence": 0.30,
+        },
+    ),
+
+     udca_last_date=patients.with_these_medications(
+        udca_codes, 
+        between=["2019-09-01", "2020-02-29"], 
+        return_last_date_in_period=True,
+        include_month=True,
+        return_expectations={
+            "date": {"earliest": "2019-09-01", "latest": "2020-02-29"}
+        },
+    ),
+
+    udca_first_after=patients.with_these_medications(
+        udca_codes, 
+        on_or_after="2020-03-01",
+        return_first_date_in_period=True,
+        include_month=True,
+        include_day=True,
+        return_expectations={
+            "date": {"earliest": "2020-03-01", "latest": "today"}
+        },
+    ),
+    
+    #HISTORY OF HYDROXYCHLOROQUINE (FIRST RX in 10 years prior)
+    udca_first_history=patients.with_these_medications(
+        udca_codes, 
+        on_or_before="2020-02-29",
+        return_first_date_in_period=True,
+        include_month=True,
+        return_expectations={
+            "date": {"latest": "2020-02-29"}
+        },
+    ),    
+
+    #OUTCOMES
+     died_ons_covid_flag_any=patients.with_these_codes_on_death_certificate(
+        covid_identification,
+        on_or_after="2020-03-01",
+        match_only_underlying_cause=False,
+        return_expectations={"date": {"earliest": "2020-03-01"}},
+    ),
+    died_ons_covid_flag_underlying=patients.with_these_codes_on_death_certificate(
+        covid_identification,
+        on_or_after="2020-03-01",
+        match_only_underlying_cause=True,
+        return_expectations={"date": {"earliest": "2020-03-01"}},
+    ),
+    died_date_ons=patients.died_from_any_cause(
+        on_or_after="2020-03-01",
+        returning="date_of_death",
+        include_month=True,
+        include_day=True,
+        return_expectations={"date": {"earliest": "2020-03-01"}},
 )

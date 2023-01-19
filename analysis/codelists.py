@@ -12,3 +12,10 @@ udca_codes = codelist_from_csv(
     system = "snomed",
     column = "dmd_id",
 )
+
+# OUTCOME CODELISTS
+covid_identification = codelist_from_csv(
+    "codelists/opensafely-covid-identification.csv",
+    system="icd10",
+    column="icd10_code",
+)
