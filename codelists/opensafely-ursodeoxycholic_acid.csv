@@ -1,0 +1,104 @@
+dmd_type,dmd_id,dmd_name,bnf_code
+VMP,317800005,Ursodeoxycholic acid 150mg tablets,0109010U0AAAAAA
+AMP,2862411000001105,Ursodeoxycholic acid 150mg tablets,0109010U0AAAAAA
+AMP,2863511000001102,Ursodeoxycholic acid 150mg tablets,0109010U0AAAAAA
+AMP,30106911000001104,Ursodeoxycholic acid 150mg tablets,0109010U0AAAAAA
+AMP,29987311000001100,Ursodeoxycholic acid 150mg tablets,0109010U0AAAAAA
+AMP,37269711000001104,Ursodeoxycholic acid 150mg tablets,0109010U0AAAAAA
+AMP,39924311000001100,Ursodeoxycholic acid 150mg tablets,0109010U0AAAAAA
+AMP,27995511000001106,Ursodeoxycholic acid 150mg tablets,0109010U0AAAAAA
+AMP,9555711000001107,Ursodeoxycholic acid 150mg tablets,0109010U0AAAAAA
+AMP,23602811000001109,Ursodeoxycholic acid 150mg tablets,0109010U0AAAAAA
+VMP,317801009,Ursodeoxycholic acid 250mg capsules,0109010U0AAABAB
+AMP,2870511000001103,Ursodeoxycholic acid 250mg capsules,0109010U0AAABAB
+AMP,34897711000001108,Ursodeoxycholic acid 250mg capsules,0109010U0AAABAB
+AMP,32785311000001106,Ursodeoxycholic acid 250mg capsules,0109010U0AAABAB
+AMP,34693411000001103,Ursodeoxycholic acid 250mg capsules,0109010U0AAABAB
+AMP,2871111000001101,Ursodeoxycholic acid 250mg capsules,0109010U0AAABAB
+AMP,30106711000001101,Ursodeoxycholic acid 250mg capsules,0109010U0AAABAB
+AMP,29987711000001101,Ursodeoxycholic acid 250mg capsules,0109010U0AAABAB
+AMP,32449011000001107,Ursodeoxycholic acid 250mg capsules,0109010U0AAABAB
+AMP,39923411000001109,Ursodeoxycholic acid 250mg capsules,0109010U0AAABAB
+AMP,32430911000001104,Ursodeoxycholic acid 250mg capsules,0109010U0AAABAB
+AMP,9555511000001102,Ursodeoxycholic acid 250mg capsules,0109010U0AAABAB
+AMP,23603011000001107,Ursodeoxycholic acid 250mg capsules,0109010U0AAABAB
+VMP,12938711000001103,Ursodeoxycholic acid 250mg/5ml oral solution,0109010U0AAAJAJ
+VMP,12938811000001106,Ursodeoxycholic acid 250mg/5ml oral suspension,0109010U0AAAJAJ
+AMP,12927411000001108,Ursodeoxycholic acid 250mg/5ml oral solution,0109010U0AAAJAJ
+AMP,12927111000001103,Ursodeoxycholic acid 250mg/5ml oral suspension,0109010U0AAAJAJ
+VMP,12940611000001105,Ursodeoxycholic acid 75mg/5ml oral solution,0109010U0AAAKAK
+VMP,12940711000001101,Ursodeoxycholic acid 75mg/5ml oral suspension,0109010U0AAAKAK
+AMP,12932811000001109,Ursodeoxycholic acid 75mg/5ml oral solution,0109010U0AAAKAK
+AMP,12932511000001106,Ursodeoxycholic acid 75mg/5ml oral suspension,0109010U0AAAKAK
+VMP,12938311000001102,Ursodeoxycholic acid 150mg/5ml oral solution,0109010U0AAANAN
+VMP,12938411000001109,Ursodeoxycholic acid 150mg/5ml oral suspension,0109010U0AAANAN
+AMP,12926211000001107,Ursodeoxycholic acid 150mg/5ml oral solution,0109010U0AAANAN
+AMP,12925911000001105,Ursodeoxycholic acid 150mg/5ml oral suspension,0109010U0AAANAN
+VMP,12938911000001101,Ursodeoxycholic acid 25mg/5ml oral solution,0109010U0AAAQAQ
+VMP,12939011000001105,Ursodeoxycholic acid 25mg/5ml oral suspension,0109010U0AAAQAQ
+AMP,12928011000001103,Ursodeoxycholic acid 25mg/5ml oral solution,0109010U0AAAQAQ
+AMP,12927711000001102,Ursodeoxycholic acid 25mg/5ml oral suspension,0109010U0AAAQAQ
+VMP,12938111000001104,Ursodeoxycholic acid 125mg/5ml oral solution,0109010U0AAARAR
+VMP,12938211000001105,Ursodeoxycholic acid 125mg/5ml oral suspension,0109010U0AAARAR
+AMP,12925611000001104,Ursodeoxycholic acid 125mg/5ml oral solution,0109010U0AAARAR
+AMP,12925311000001109,Ursodeoxycholic acid 125mg/5ml oral suspension,0109010U0AAARAR
+VMP,12938511000001108,Ursodeoxycholic acid 200mg/5ml oral solution,0109010U0AAAUAU
+VMP,12938611000001107,Ursodeoxycholic acid 200mg/5ml oral suspension,0109010U0AAAUAU
+AMP,12926811000001108,Ursodeoxycholic acid 200mg/5ml oral solution,0109010U0AAAUAU
+AMP,12926511000001105,Ursodeoxycholic acid 200mg/5ml oral suspension,0109010U0AAAUAU
+VMP,12937911000001102,Ursodeoxycholic acid 120mg/5ml oral solution,0109010U0AAAWAW
+VMP,12938011000001100,Ursodeoxycholic acid 120mg/5ml oral suspension,0109010U0AAAWAW
+AMP,12925011000001106,Ursodeoxycholic acid 120mg/5ml oral solution,0109010U0AAAWAW
+AMP,12924711000001109,Ursodeoxycholic acid 120mg/5ml oral suspension,0109010U0AAAWAW
+VMP,12940011000001103,Ursodeoxycholic acid 50mg/5ml oral solution,0109010U0AAAXAX
+VMP,12940111000001102,Ursodeoxycholic acid 50mg/5ml oral suspension,0109010U0AAAXAX
+AMP,12931011000001106,Ursodeoxycholic acid 50mg/5ml oral solution,0109010U0AAAXAX
+AMP,12930711000001100,Ursodeoxycholic acid 50mg/5ml oral suspension,0109010U0AAAXAX
+VMP,317796004,Ursodeoxycholic acid 300mg tablets,0109010U0AAAYAY
+AMP,20367011000001109,Ursodeoxycholic acid 300mg tablets,0109010U0AAAYAY
+AMP,20011911000001103,Ursodeoxycholic acid 300mg tablets,0109010U0AAAYAY
+AMP,37832711000001108,Ursodeoxycholic acid 300mg tablets,0109010U0AAAYAY
+AMP,39923911000001101,Ursodeoxycholic acid 300mg tablets,0109010U0AAAYAY
+AMP,19885611000001106,Ursodeoxycholic acid 300mg tablets,0109010U0AAAYAY
+VMP,12939811000001104,Ursodeoxycholic acid 375mg/5ml oral solution,0109010U0AABCBC
+VMP,12939911000001109,Ursodeoxycholic acid 375mg/5ml oral suspension,0109010U0AABCBC
+AMP,12930411000001106,Ursodeoxycholic acid 375mg/5ml oral solution,0109010U0AABCBC
+AMP,12930111000001101,Ursodeoxycholic acid 375mg/5ml oral suspension,0109010U0AABCBC
+VMP,12939511000001102,Ursodeoxycholic acid 37.5mg/5ml oral solution,0109010U0AABDBD
+VMP,12939711000001107,Ursodeoxycholic acid 37.5mg/5ml oral suspension,0109010U0AABDBD
+AMP,12929811000001102,Ursodeoxycholic acid 37.5mg/5ml oral solution,0109010U0AABDBD
+AMP,12929511000001100,Ursodeoxycholic acid 37.5mg/5ml oral suspension,0109010U0AABDBD
+VMP,36564811000001100,Ursodeoxycholic acid 250mg/5ml oral suspension sugar free,0109010U0AABEBE
+VMP,12940411000001107,Ursodeoxycholic acid 62.5mg/5ml oral solution,0109010U0AABFBF
+VMP,12940511000001106,Ursodeoxycholic acid 62.5mg/5ml oral suspension,0109010U0AABFBF
+AMP,12932211000001108,Ursodeoxycholic acid 62.5mg/5ml oral solution,0109010U0AABFBF
+AMP,12931911000001105,Ursodeoxycholic acid 62.5mg/5ml oral suspension,0109010U0AABFBF
+VMP,12939311000001108,Ursodeoxycholic acid 34mg/5ml oral solution,0109010U0AABGBG
+VMP,12939411000001101,Ursodeoxycholic acid 34mg/5ml oral suspension,0109010U0AABGBG
+AMP,12929211000001103,Ursodeoxycholic acid 34mg/5ml oral solution,0109010U0AABGBG
+AMP,12928911000001104,Ursodeoxycholic acid 34mg/5ml oral suspension,0109010U0AABGBG
+VMP,12939111000001106,Ursodeoxycholic acid 300mg/5ml oral solution,0109010U0AABHBH
+VMP,12939211000001100,Ursodeoxycholic acid 300mg/5ml oral suspension,0109010U0AABHBH
+AMP,12928611000001105,Ursodeoxycholic acid 300mg/5ml oral solution,0109010U0AABHBH
+AMP,12928311000001100,Ursodeoxycholic acid 300mg/5ml oral suspension,0109010U0AABHBH
+VMP,12940211000001108,Ursodeoxycholic acid 60mg/5ml oral solution,0109010U0AABIBI
+VMP,12940311000001100,Ursodeoxycholic acid 60mg/5ml oral suspension,0109010U0AABIBI
+AMP,12931611000001104,Ursodeoxycholic acid 60mg/5ml oral solution,0109010U0AABIBI
+AMP,12931311000001109,Ursodeoxycholic acid 60mg/5ml oral suspension,0109010U0AABIBI
+VMP,12937711000001104,Ursodeoxycholic acid 100mg/5ml oral solution,0109010U0AABJBJ
+VMP,12937811000001107,Ursodeoxycholic acid 100mg/5ml oral suspension,0109010U0AABJBJ
+AMP,12924411000001103,Ursodeoxycholic acid 100mg/5ml oral solution,0109010U0AABJBJ
+AMP,12924111000001108,Ursodeoxycholic acid 100mg/5ml oral suspension,0109010U0AABJBJ
+VMP,22155311000001106,Ursodeoxycholic acid 500mg tablets,0109010U0AABKBK
+VMP,33620111000001108,Ursodeoxycholic acid 250mg tablets,0109010U0AABLBL
+AMP,2863211000001100,Destolit 150mg tablets,0109010U0BBAAAA
+AMP,2870911000001105,Ursofalk 250mg capsules,0109010U0BCAAAB
+AMP,2859011000001101,Ursofalk 250mg/5ml oral suspension,0109010U0BCABBE
+AMP,21714011000001107,Ursofalk 500mg tablets,0109010U0BCACBK
+AMP,2862811000001107,Ursogal 150mg tablets,0109010U0BDAAAA
+AMP,2870711000001108,Ursogal 250mg capsules,0109010U0BDABAB
+AMP,2864211000001102,Urdox 300mg tablets,0109010U0BEAAAY
+AMP,32886511000001105,Cholurso 500mg tablets,0109010U0BFAABK
+AMP,33610611000001105,Cholurso 250mg tablets,0109010U0BFABBL
+AMP,36910711000001105,Ursonorm 250mg capsules,0109010U0BGAAAB
+AMP,36910911000001107,Ursonorm 500mg tablets,0109010U0BGABBK
