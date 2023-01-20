@@ -92,6 +92,8 @@ tab has_pbc udca, m
 * Tabulating time since first prescription by whether have 2+ prescriptions in the last 6 months
 tab udca_first udca, m
 
+bys udca: sum udca_count
+
 * How many COVID-19 deaths in those with pbc and 2+ prescriptions
 tab died_ons_covid_flag_any if has_pbc==1 & udca==1
 
@@ -179,6 +181,9 @@ tab udca, m
 
 * Tabulating time since first prescription by whether have 2+ prescriptions in the last 6 months
 tab udca_first udca, m
+
+* Check number of prescriptions
+bys udca: sum udca_count
 
 * How many COVID-19 deaths by whether had 2+ prescriptions
 tab died_ons_covid_flag_any udca
