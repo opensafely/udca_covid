@@ -11,6 +11,12 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/ursodeoxycholic_acid/738c74e0/",
       "downloaded_at": "2023-01-19 11:01:09.680649Z",
       "sha": "d0c6744f54fe4bab33e9ef927a7d3b53c93cea92"
+    },
+    "opensafely-covid-identification.csv": {
+      "id": "opensafely/covid-identification/2020-06-03",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/covid-identification/2020-06-03/",
+      "downloaded_at": "2023-01-20 09:18:05.696374Z",
+      "sha": "124db6929439379b7dacd55ba26ae4f2ed9370bc"
     }
   }
 }

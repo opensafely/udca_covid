@@ -10,3 +10,16 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/input.csv
+
+  generate_study_population_pbc:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_pbc
+    outputs:
+      highly_sensitive:
+        cohort: output/input_pbc.csv
+
+  feasibility:
+    run: stata-mp:latest analysis/feasibility.do
+    needs: [generate_study_population, generate_study_population_pbc]
+    outputs:
+      moderately_sensitive:
+        log: logs/feasibility.log
