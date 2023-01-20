@@ -78,7 +78,6 @@ label define udca_first 	0 "unexposed"								///
 						7 "4 to 5 yr before exposure window"		///
 						8 "5+ yr before exposure window"
 label values udca_first udca_first
-tab udca_first udca, m
 
 * Flag if died
 gen died_flag = died_date_onsA!=.
@@ -89,6 +88,9 @@ gen died_date_onscovid = died_date_onsA if died_ons_covid_flag_any == 1
 ** Currently dataset includes all people with at least one udca prescription
 * Tabulate pbc diagnosis vs those with 2+ prescriptions in 6 months prior
 tab has_pbc udca, m 
+
+* Tabulating time since first prescription by whether have 2+ prescriptions in the last 6 months
+tab udca_first udca, m
 
 * How many COVID-19 deaths in those with pbc and 2+ prescriptions
 tab died_ons_covid_flag_any if has_pbc==1 & udca==1
@@ -164,7 +166,6 @@ label define udca_first 	0 "unexposed"								///
 						7 "4 to 5 yr before exposure window"		///
 						8 "5+ yr before exposure window"
 label values udca_first udca_first
-tab udca_first udca, m
 
 * Flag if died
 gen died_flag = died_date_onsA!=.
@@ -175,6 +176,9 @@ gen died_date_onscovid = died_date_ons if died_ons_covid_flag_any == 1
 ** Currently dataset includes all people with a pbc diagnosis, how many have 2+ udca prescription
 * Tabulate pbc diagnosis vs those with 2+ prescriptions in 6 months prior
 tab udca, m 
+
+* Tabulating time since first prescription by whether have 2+ prescriptions in the last 6 months
+tab udca_first udca, m
 
 * How many COVID-19 deaths by whether had 2+ prescriptions
 tab died_ons_covid_flag_any udca
