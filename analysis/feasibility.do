@@ -84,6 +84,8 @@ gen died_flag = died_date_onsA!=.
 * Generate date if died of covid
 gen died_date_onscovid = died_date_onsA if died_ons_covid_flag_any == 1
 
+gen died_covid_2020 = (died_date_onscovid<date("31Dec2020", "DMY") & died_flag==1)
+
 **** Summary INFORMATION
 ** Currently dataset includes all people with at least one udca prescription
 * Tabulate pbc diagnosis vs those with 2+ prescriptions in 6 months prior
@@ -96,6 +98,12 @@ bys udca: sum udca_count
 
 * How many COVID-19 deaths in those with pbc and 2+ prescriptions
 tab died_ons_covid_flag_any if has_pbc==1 & udca==1
+tab died_covid_2020 if has_pbc==1 & udca==1
+tab died_flag if has_pbc==1 & udca==1
+
+* Summary demographics
+tab agegroup udca, col row m 
+tab sex udca, col row m 
 
 ** Next import the PBC population
 
@@ -172,7 +180,8 @@ label values udca_first udca_first
 * Flag if died
 gen died_flag = died_date_onsA!=.
 * Generate date if died of covid
-gen died_date_onscovid = died_date_ons if died_ons_covid_flag_any == 1
+gen died_date_onscovid = died_date_onsA if died_ons_covid_flag_any == 1
+gen died_covid_2020 = (died_date_onscovid<date("31Dec2020", "DMY") & died_flag==1)
 
 **** Summary INFORMATION
 ** Currently dataset includes all people with a pbc diagnosis, how many have 2+ udca prescription
@@ -187,10 +196,13 @@ bys udca: sum udca_count
 
 * How many COVID-19 deaths by whether had 2+ prescriptions
 tab died_ons_covid_flag_any udca
+tab died_covid_2020 if has_pbc==1 & udca==1
+tab died_flag if has_pbc==1 & udca==1
+
 
 * Summary demographics
-tab agegroup udca, m 
-tab sex udca, m 
+tab agegroup udca, col row m 
+tab sex udca, col row m 
 
 
 
