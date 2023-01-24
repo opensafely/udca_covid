@@ -241,7 +241,10 @@
 
 . 
 . * Export to table 
-. table1_mc, by(udca) vars(has_pbc bin \ udca_first cate)
+. preserve
+
+. table1_mc, by(udca) vars(has_pbc bin \ udca_first cate) saving(./output/table
+> s/udca_all.xlsx, replace)
 
   +------------------------------------+
   | factor       N_0   N_1   m_0   m_1 |
@@ -276,9 +279,9 @@
 > ----------+
 Data are presented as n (%).
  
+file ./output/tables/udca_all.xlsx saved
 
-. export delimited using ./output/tables/udca_all.csv 
-file ./output/tables/udca_all.csv saved
+. restore 
 
 . 
 . * How many COVID-19 deaths in those with pbc and 2+ prescriptions
@@ -480,7 +483,8 @@ died_covid |        has_pbc
 (796 observations deleted)
 
 . table1_mc, by(has_pbc) vars(died_ons_covid_flag_any bin \ died_covid_2020 bin
->  \ died_flag bin \ agegroup cate \ male bin)
+>  \ died_flag bin \ agegroup cate \ male bin) saving(./output/tables/udca_only
+> .xlsx, replace)
 
   +-------------------------------------------------+
   | factor                    N_0   N_1   m_0   m_1 |
@@ -531,9 +535,7 @@ died_covid |        has_pbc
   +------------------------------------------------------------------------+
 Data are presented as n (%).
  
-
-. export delimited using ./output/tables/udca_only.csv 
-file ./output/tables/udca_only.csv saved
+file ./output/tables/udca_only.xlsx saved
 
 . 
 . ** Next import the PBC population
@@ -981,7 +983,8 @@ died_covid |         udca
 . 
 . * Export to table 
 . table1_mc, by(udca) vars(udca_first cate \ died_ons_covid_flag_any bin \ died
-> _covid_2020 bin \ died_flag bin \ agegroup cate \ male bin)
+> _covid_2020 bin \ died_flag bin \ agegroup cate \ male bin) saving(./output/t
+> ables/udca_pbc.xlsx, replace)
 exceeded memory limits using exact(1); try again with larger #; see help 
 tabulate for details
 
