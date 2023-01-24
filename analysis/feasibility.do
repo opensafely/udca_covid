@@ -196,8 +196,8 @@ bys udca: sum udca_count
 
 * How many COVID-19 deaths by whether had 2+ prescriptions
 tab died_ons_covid_flag_any udca
-tab died_covid_2020 if has_pbc==1 & udca==1
-tab died_flag if has_pbc==1 & udca==1
+tab died_covid_2020 udca
+tab died_flag udca
 
 
 * Summary demographics
