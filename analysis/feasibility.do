@@ -4,9 +4,12 @@ DATE: 					20/01/2023
 AUTHOR:					R Costello adaped from C Rentsch 00_cr_create_dataset.do
 DESCRIPTION OF FILE:	Format variables and then check feasibility of study
 ==============================================================================*/
+adopath + ./analysis/ado 
 
 * Open a log file
 cap log using ./logs/feasibility.log, replace
+
+cap mkdir ./output/tables/
 
 ** First import udca population
 import delimited using ./output/input.csv
@@ -96,6 +99,10 @@ tab udca_first udca, m col
 
 bys udca: sum udca_count
 
+* Export to table 
+table1_mc, by(udca) vars(has_pbc bin \ udca_first cate)
+export delimited using ./output/tables/udca_all.csv 
+
 * How many COVID-19 deaths in those with pbc and 2+ prescriptions
 tab died_ons_covid_flag_any has_pbc if udca==1, row
 tab died_covid_2020 has_pbc if udca==1, row col
@@ -104,6 +111,11 @@ tab died_flag has_pbc if udca==1, row col
 * Summary demographics
 tab agegroup has_pbc if udca==1, row col m 
 tab sex has_pbc if udca==1, row col m 
+
+* Export to table 
+keep if udca==1
+table1_mc, by(has_pbc) vars(died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cate \ male bin)
+export delimited using ./output/tables/udca_only.csv 
 
 ** Next import the PBC population
 
@@ -204,6 +216,9 @@ tab died_flag udca, row col
 tab agegroup udca, row col m 
 tab sex udca, row col m 
 
+* Export to table 
+table1_mc, by(udca) vars(udca_first cate \ died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cate \ male bin)
+export delimited using ./output/tables/udca_pbc.csv 
 
 
 
