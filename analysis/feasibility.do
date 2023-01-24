@@ -97,9 +97,9 @@ tab udca_first udca, m
 bys udca: sum udca_count
 
 * How many COVID-19 deaths in those with pbc and 2+ prescriptions
-tab died_ons_covid_flag_any has_pbc if udca==1
-tab died_covid_2020 has_pbc if udca==1
-tab died_flag has_pbc if udca==1
+tab died_ons_covid_flag_any has_pbc if udca==1, row
+tab died_covid_2020 has_pbc if udca==1, row 
+tab died_flag has_pbc if udca==1, row 
 
 * Summary demographics
 tab agegroup has_pbc if udca==1, col row m 
@@ -189,15 +189,15 @@ gen died_covid_2020 = (died_date_onscovid<date("31Dec2020", "DMY") & died_flag==
 tab udca, m 
 
 * Tabulating time since first prescription by whether have 2+ prescriptions in the last 6 months
-tab udca_first udca, m
+tab udca_first udca, row m
 
 * Check number of prescriptions
 bys udca: sum udca_count
 
 * How many COVID-19 deaths by whether had 2+ prescriptions
-tab died_ons_covid_flag_any udca
-tab died_covid_2020 udca
-tab died_flag udca
+tab died_ons_covid_flag_any udca, row 
+tab died_covid_2020 udca, row 
+tab died_flag udca, row
 
 
 * Summary demographics
