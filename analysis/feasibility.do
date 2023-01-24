@@ -15,7 +15,7 @@ import delimited using ./output/input.csv
 foreach var in udca_last_date udca_first_after udca_first_history died_date_ons {
     gen `var'A = date(`var', "YMD")
     format `var'A %dD/N/CY
-    list `var' `var'A in  1/5
+    *list `var' `var'A in  1/5
     drop `var'
 }
 
@@ -55,7 +55,7 @@ recode udca_sa .=0
 tab1 udca udca_sa, m
 tab udca udca_sa, m
 
-tab  udca_count udca, m
+*tab  udca_count udca, m
 
 * when was first udca Rx before index date
 gen udca_first = 0 if udca == 0
@@ -97,13 +97,13 @@ tab udca_first udca, m
 bys udca: sum udca_count
 
 * How many COVID-19 deaths in those with pbc and 2+ prescriptions
-tab died_ons_covid_flag_any if has_pbc==1 & udca==1
-tab died_covid_2020 if has_pbc==1 & udca==1
-tab died_flag if has_pbc==1 & udca==1
+tab died_ons_covid_flag_any has_pbc if udca==1
+tab died_covid_2020 has_pbc if udca==1
+tab died_flag has_pbc if udca==1
 
 * Summary demographics
-tab agegroup udca, col row m 
-tab sex udca, col row m 
+tab agegroup has_pbc if udca==1, col row m 
+tab sex has_pbc if udca==1, col row m 
 
 ** Next import the PBC population
 
@@ -113,7 +113,7 @@ import delimited using ./output/input_pbc.csv, clear
 foreach var in udca_last_date udca_first_after udca_first_history died_date_ons {
     gen `var'A = date(`var', "YMD")
     format `var'A %dD/N/CY
-    list `var' `var'A in  1/5
+    *list `var' `var'A in  1/5
     drop `var'
 }
 
@@ -153,7 +153,7 @@ recode udca_sa .=0
 tab1 udca udca_sa, m
 tab udca udca_sa, m
 
-tab  udca_count udca, m
+*tab  udca_count udca, m
 
 * when was first udca Rx before index date
 gen udca_first = 0 if udca == 0
