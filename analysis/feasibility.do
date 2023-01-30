@@ -217,6 +217,8 @@ tab agegroup udca, row col m
 tab sex udca, row col m 
 
 * Export to table 
+* First drop out categories that will not be in real data > should be zero on server
+drop if agegroup<1 | agegroup>6
 table1_mc, by(udca) vars(udca_first cate \ died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cate \ male bin) saving(./output/tables/udca_pbc.xlsx, replace)
 
 foreach var in all only pbc {
