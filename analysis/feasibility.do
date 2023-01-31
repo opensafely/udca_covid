@@ -117,7 +117,7 @@ tab sex has_pbc if udca==1, row col m
 keep if udca==1
 table1_mc, by(has_pbc) vars(died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cate \ male bin \ udca_first cate) saving(./output/tables/udca_only.xlsx, replace)
 
-table1_mc, by(has_pbc) vars(udca_first cate) saving(./output/tables/udca_first_only.xlsx, replace)
+table1_mc, by(has_pbc) vars(udca_first cat) saving(./output/tables/udca_first_only.xlsx, replace)
 
 ** Next import the PBC population
 
