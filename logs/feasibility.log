@@ -560,6 +560,7 @@ Data are presented as n (%).
  
 file ./output/tables/udca_only.xlsx saved
 
+. 
 . table1_mc, by(has_pbc) vars(udca_first cate) saving(./output/tables/udca_firs
 > t_only.xlsx, replace)
 
@@ -1116,7 +1117,7 @@ Data are presented as n (%).
 file ./output/tables/udca_pbc.xlsx saved
 
 . 
-. foreach var in all only pbc {
+. foreach var in all only pbc first_only {
   2.         import excel using ./output/tables/udca_`var'.xlsx, clear
   3.         export delimited using ./output/tables/udca_`var'.csv, replace 
   4. }
@@ -1129,6 +1130,9 @@ file ./output/tables/udca_only.csv saved
 (13 vars, 16 obs)
 (note: file ./output/tables/udca_pbc.csv not found)
 file ./output/tables/udca_pbc.csv saved
+(13 vars, 4 obs)
+(note: file ./output/tables/udca_first_only.csv not found)
+file ./output/tables/udca_first_only.csv saved
 
 . 
 . 
@@ -1137,7 +1141,7 @@ file ./output/tables/udca_pbc.csv saved
 . 
 end of do-file
 
-. . file open output using "/tmp/feasibility.do.Oah3.out", write text replace
+. . file open output using "/tmp/feasibility.do.YZMC.out", write text replace
 
 . . file write output "success" 
 

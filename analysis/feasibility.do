@@ -116,6 +116,7 @@ tab sex has_pbc if udca==1, row col m
 * Export to table 
 keep if udca==1
 table1_mc, by(has_pbc) vars(died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cate \ male bin \ udca_first cate) saving(./output/tables/udca_only.xlsx, replace)
+
 table1_mc, by(has_pbc) vars(udca_first cate) saving(./output/tables/udca_first_only.xlsx, replace)
 
 ** Next import the PBC population
@@ -222,7 +223,7 @@ tab sex udca, row col m
 drop if agegroup<1 | agegroup>6
 table1_mc, by(udca) vars(udca_first cate \ died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cate \ male bin) saving(./output/tables/udca_pbc.xlsx, replace)
 
-foreach var in all only pbc {
+foreach var in all only pbc first_only {
 	import excel using ./output/tables/udca_`var'.xlsx, clear
 	export delimited using ./output/tables/udca_`var'.csv, replace 
 }
