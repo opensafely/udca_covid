@@ -101,7 +101,7 @@ bys udca: sum udca_count
 
 * Export to table 
 preserve
-table1_mc, by(udca) vars(has_pbc bin \ udca_first cate) saving(./output/tables/udca_all.xlsx, replace)
+table1_mc, by(udca) vars(has_pbc bin) saving(./output/tables/udca_all.xlsx, replace)
 restore 
 
 * How many COVID-19 deaths in those with pbc and 2+ prescriptions
@@ -115,7 +115,7 @@ tab sex has_pbc if udca==1, row col m
 
 * Export to table 
 keep if udca==1
-table1_mc, by(has_pbc) vars(died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cate \ male bin) saving(./output/tables/udca_only.xlsx, replace)
+table1_mc, by(has_pbc) vars(died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cate \ male bin \ udca_first cate) saving(./output/tables/udca_only.xlsx, replace)
 
 ** Next import the PBC population
 
