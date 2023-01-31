@@ -23,3 +23,5 @@ actions:
     outputs:
       moderately_sensitive:
         log: logs/feasibility.log
+        table: output/tables/udca*.csv
+      
