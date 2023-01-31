@@ -560,6 +560,36 @@ Data are presented as n (%).
  
 file ./output/tables/udca_only.xlsx saved
 
+. table1_mc, by(has_pbc) vars(udca_first cate) saving(./output/tables/udca_firs
+> t_only.xlsx, replace)
+
+  +------------------------------------+
+  | factor       N_0   N_1   m_0   m_1 |
+  |------------------------------------|
+  | udca_first    49    51    51    53 |
+  +------------------------------------+
+   N_ ... #records used below,   m_ ... #records not used
+ 
+  +----------------------------------------------------------------------------
+> ---------+
+  |                                                 has_pbc = 0   has_pbc = 1  
+>  p-value |
+  |----------------------------------------------------------------------------
+> ---------|
+  |                                                 N=100         N=104        
+>          |
+  |----------------------------------------------------------------------------
+> ---------|
+  | udca_first   2 to 3 yr before exposure window   0 ( 0%)       2 ( 4%)      
+>   0.50   |
+  |              5+ yr before exposure window       49 (100%)     49 (96%)     
+>          |
+  +----------------------------------------------------------------------------
+> ---------+
+Data are presented as n (%).
+ 
+file ./output/tables/udca_first_only.xlsx saved
+
 . 
 . ** Next import the PBC population
 . 
@@ -1107,7 +1137,7 @@ file ./output/tables/udca_pbc.csv saved
 . 
 end of do-file
 
-. . file open output using "/tmp/feasibility.do.YjLG.out", write text replace
+. . file open output using "/tmp/feasibility.do.Oah3.out", write text replace
 
 . . file write output "success" 
 
