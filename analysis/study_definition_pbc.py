@@ -86,7 +86,14 @@ study = StudyDefinition(
         return_expectations={
             "date": {"latest": "2020-02-29"}
         },
-    ),    
+    ),
+
+    #obeticholic acid prescribing high cost drugs
+    ob_acid=patients.with_high_cost_drugs(
+        drug_name_matches="obeticholic acid",
+        returning="binary_flag",
+        on_or_after="2019-03-01",
+    ),
 
     #OUTCOMES
      died_ons_covid_flag_any=patients.with_these_codes_on_death_certificate(
