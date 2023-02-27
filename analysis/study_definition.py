@@ -46,6 +46,13 @@ study = StudyDefinition(
         on_or_before = "index_date"
     ),
 
+    has_psc=patients.with_these_clinical_events(
+        psc_codes,
+        returning = "binary_flag",
+        include_date_of_match = "True",
+        on_or_before = "index_date"
+    ),
+
     #Ursodeoxycholic acid 
     udca_count=patients.with_these_medications(
         udca_codes, 
@@ -87,6 +94,13 @@ study = StudyDefinition(
             "date": {"latest": "2020-02-29"}
         },
     ),    
+
+    #obeticholic acid prescribing high cost drugs
+    oba=patients.with_high_cost_drugs(
+        drug_name_matches="obeticholic acid",
+        returning="binary_flag",
+        on_or_after="2019-03-01",
+    ),
 
     #OUTCOMES
      died_ons_covid_flag_any=patients.with_these_codes_on_death_certificate(
