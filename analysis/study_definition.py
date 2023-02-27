@@ -99,7 +99,7 @@ study = StudyDefinition(
     oba=patients.with_high_cost_drugs(
         drug_name_matches="obeticholic acid",
         returning="binary_flag",
-        on_or_after="2019-03-01",
+        on_or_after="2019-09-01",
     ),
 
     #OUTCOMES
