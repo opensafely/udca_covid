@@ -7,6 +7,11 @@ pbc_codes = codelist_from_csv(
     column="code",
 )
 
+psc_codes = codelist_from_csv(
+    "codelists/user-ruthcostello-primary-sclerosing-cholangitis.csv",
+    system = "snomed",
+    column =  "code",
+)
 udca_codes = codelist_from_csv(
     "codelists/opensafely-ursodeoxycholic_acid.csv",
     system = "snomed",

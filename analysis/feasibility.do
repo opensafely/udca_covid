@@ -101,7 +101,7 @@ bys udca: sum udca_count
 
 * Export to table 
 preserve
-table1_mc, by(udca) vars(has_pbc bin) saving(./output/tables/udca_all.xlsx, replace)
+table1_mc, by(udca) vars(has_pbc bin has_psc bin) saving(./output/tables/udca_all.xlsx, replace)
 restore 
 
 * How many COVID-19 deaths in those with pbc and 2+ prescriptions
@@ -109,15 +109,31 @@ tab died_ons_covid_flag_any has_pbc if udca==1, row
 tab died_covid_2020 has_pbc if udca==1, row col
 tab died_flag has_pbc if udca==1, row col
 
+* How many COVID-19 deaths in those with psc and 2+ prescriptions
+tab died_ons_covid_flag_any has_psc if udca==1, row
+tab died_covid_2020 has_psc if udca==1, row col
+tab died_flag has_psc if udca==1, row col
+
 * Summary demographics
 tab agegroup has_pbc if udca==1, row col m 
 tab sex has_pbc if udca==1, row col m 
+
+tab agegroup has_psc if udca==1, row col m 
+tab sex has_psc if udca==1, row col m 
 
 * Export to table 
 keep if udca==1
 table1_mc, by(has_pbc) vars(died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cat \ male bin) saving(./output/tables/udca_only.xlsx, replace)
 
 table1_mc, by(has_pbc) vars(udca_first cat) saving(./output/tables/udca_first_only.xlsx, replace)
+
+table1_mc, by(has_psc) vars(died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cat \ male bin) saving(./output/tables/udca_only.xlsx, replace)
+
+table1_mc, by(has_psc) vars(udca_first cat) saving(./output/tables/udca_first_only.xlsx, replace)
+
+* Deaths in those prescribed OBA with PBC 
+keep if has_pbc 
+table1_mc, by(oba) vars(died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cat \ male bin) saving(./output/tables/oba_only.xlsx, replace) 
 
 ** Next import the PBC population
 
@@ -198,9 +214,12 @@ gen died_date_onscovid = died_date_onsA if died_ons_covid_flag_any == 1
 gen died_covid_2020 = (died_date_onscovid<date("31Dec2020", "DMY") & died_flag==1)
 
 **** Summary INFORMATION
-** Currently dataset includes all people with a pbc diagnosis, how many have 2+ udca prescription
-* Tabulate pbc diagnosis vs those with 2+ prescriptions in 6 months prior
+** Currently dataset includes all people with a pbc or psc diagnosis, how many have 2+ udca prescription
+* Tabulate pbc or psc diagnosis vs those with 2+ prescriptions in 6 months prior
 tab udca, m 
+
+* Determine number with psc vs pbc with 2+ prescriptions
+tab has_pbc has_psc if udca==1
 
 * Tabulating time since first prescription by whether have 2+ prescriptions in the last 6 months
 tab udca_first udca, col m
@@ -217,18 +236,20 @@ tab died_flag udca, row col
 * Summary demographics
 tab agegroup udca, row col m 
 tab sex udca, row col m 
-tab ob_acid udca, row col m 
+tab oba udca, row col m 
 
 * Export to table 
 * First drop out categories that will not be in real data > should be zero on server
 drop if agegroup<1 | agegroup>6
-table1_mc, by(udca) vars(died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cat \ male bin) saving(./output/tables/udca_pbc.xlsx, replace)
+table1_mc, by(udca) vars(has_pbc bin \ died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cat \ male bin) saving(./output/tables/udca_pbc.xlsx, replace)
 
 foreach var in all only pbc first_only {
 	import excel using ./output/tables/udca_`var'.xlsx, clear
 	export delimited using ./output/tables/udca_`var'.csv, replace 
 }
 
+import excel using ./output/tables/oba_only.xlsx, clear 
+export delimited using ./output/tables/oba_only.csv, replace 
 
 
 

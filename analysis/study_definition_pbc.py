@@ -15,7 +15,7 @@ study = StudyDefinition(
         (age >=18 AND age <= 110) AND
         (NOT died) AND
         (sex = 'M' OR sex = 'F') AND
-        has_pbc=1
+        (has_pbc=1 OR has_psc=1)
         """,
         has_follow_up=patients.registered_with_one_practice_between(
             "index_date - 3 months", "index_date"
@@ -41,6 +41,12 @@ study = StudyDefinition(
     ),
     has_pbc=patients.with_these_clinical_events(
         pbc_codes,
+        returning = "binary_flag",
+        include_date_of_match = "True",
+        on_or_before = "index_date"
+    ),
+    has_psc=patients.with_these_clinical_events(
+        psc_codes,
         returning = "binary_flag",
         include_date_of_match = "True",
         on_or_before = "index_date"
@@ -89,10 +95,10 @@ study = StudyDefinition(
     ),
 
     #obeticholic acid prescribing high cost drugs
-    ob_acid=patients.with_high_cost_drugs(
+    oba=patients.with_high_cost_drugs(
         drug_name_matches="obeticholic acid",
         returning="binary_flag",
-        on_or_after="2019-03-01",
+        on_or_after="2019-09-01",
     ),
 
     #OUTCOMES
