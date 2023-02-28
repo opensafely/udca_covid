@@ -89,6 +89,11 @@ gen died_date_onscovid = died_date_onsA if died_ons_covid_flag_any == 1
 
 gen died_covid_2020 = (died_date_onscovid<date("31Dec2020", "DMY") & died_flag==1)
 
+gen pbc_psc = (has_pbc==1)
+replace pbc_psc = 2 if has_psc==1
+tab pbc_psc, m
+tab has_pbc has_psc 
+
 **** Summary INFORMATION
 ** Currently dataset includes all people with at least one udca prescription
 * Tabulate pbc diagnosis vs those with 2+ prescriptions in 6 months prior
@@ -101,7 +106,7 @@ bys udca: sum udca_count
 
 * Export to table 
 preserve
-table1_mc, by(udca) vars(has_pbc bin has_psc bin) saving(./output/tables/udca_all.xlsx, replace)
+table1_mc, by(udca) vars(has_pbc bin \ has_psc bin) saving(./output/tables/udca_all.xlsx, replace)
 restore 
 
 * How many COVID-19 deaths in those with pbc and 2+ prescriptions
