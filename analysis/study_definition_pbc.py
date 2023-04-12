@@ -94,6 +94,16 @@ study = StudyDefinition(
         },
     ),
 
+    udca_count_fu=patients.with_these_medications(
+        udca_codes, 
+        between=["2020-03-01", "2022-12-31"],
+        returning="number_of_matches_in_period",
+        return_expectations={
+            "int": {"distribution": "normal", "mean": 3, "stddev": 2},
+            "incidence": 0.30,
+        },
+    ),
+
     #obeticholic acid prescribing high cost drugs
     oba=patients.with_high_cost_drugs(
         drug_name_matches="obeticholic acid",
