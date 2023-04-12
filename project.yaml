@@ -26,3 +26,9 @@ actions:
         table: output/tables/udca*.csv
         table_oba: output/tables/oba*.csv
       
+  extract_udca: 
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_additional
+    needs: [generate_study_population_pbc]
+    outputs:
+      highly_sensitive:
+        cohort: output/input_additional.csv
