@@ -12,8 +12,10 @@ from datetime import datetime, timedelta
 
 COHORT = "output/input_pbc.csv"
 
-#from variables_udca import consecutive_drugs_x
-#variables_udca = consecutive_drugs_x(udca, "index_date", udca_codes, 20)
+# This script finds each prescription date for all people identified in study_definition_pbc
+# The number of iterations is based on the maximum value counted in the variable udca_count_fu in the study definition
+# To update as 334 is maximum (duplicates?) sticking with 40 for now = 1 per month plus leeway
+# Index date is first January 2020 to make sure have exposure status correct at 1st March 2020
 def consecutive_drugs_x(name, codelist, index_date, n, return_expectations):
     def var_signature(name, codelist, on_or_after, return_expectations):
         return {
@@ -38,13 +40,13 @@ study = StudyDefinition(
         "incidence" : 0.5,
     },
     population=patients.which_exist_in_file(COHORT), 
-    index_date="2020-03-01",
+    index_date="2020-01-01",
 
     **consecutive_drugs_x(
         name="udca",
         codelist=udca_codes,
         index_date="index_date",
-        n=20,
+        n=40,
         return_expectations={
             "date": {"earliest": "2020-03-01", "latest": "today"}
         },

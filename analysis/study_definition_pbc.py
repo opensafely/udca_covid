@@ -24,6 +24,17 @@ study = StudyDefinition(
             on_or_before="index_date"
         ),
     ),
+    dereg_date=patients.date_deregistered_from_all_supported_practices(
+        on_or_after="index_date",
+        date_format="YYYY-MM-DD",
+        return_expectations={"date": {"earliest": "2020-03-01"}}
+    ),
+    died_fu=patients.died_from_any_cause(
+            on_or_after="index_date",
+            returning="date_of_death",
+            date_format="YYYY-MM-DD",
+            return_expectations={"date": {"earliest": "2020-03-01"}}
+    ),
     # Age
     age=patients.age_as_of(
             "index_date",
