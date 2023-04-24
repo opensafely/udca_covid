@@ -32,3 +32,11 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/input_additional.csv
+
+  prep_drug_data: 
+    run: stata-mp:latest analysis/drug_prep.do
+    needs: [extract_udca, generate_study_population_pbc]
+    outputs:
+      moderately_sensitive:
+        log: logs/drug_prep.log
+        drug_data: output/time_varying_udca.dta

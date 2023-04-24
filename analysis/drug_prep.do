@@ -32,13 +32,19 @@ reshape long udcaA, i(patient_id) j(presc_number)
 drop if udcaA==.
 
 * Check that prescriptions are in order
-gen order_flag = (udcaA<udcaA[_n-1] & patient_id==patient_id)
+gen order_flag = (udcaA<udcaA[_n-1] & patient_id==patient_id[_n-1])
 tab order_flag 
 * Create flag if any out of order prescriptions in the data - should only be in dummy data 
 egen out_of_order = max(order_flag)
+tab out_of_order
 
 * Sort if out of order - should only apply to dummy data 
-sort patient_id udcaA if out_of_order==1 
+sort patient_id udcaA 
+
+drop order_flag
+* Check in order
+gen order_flag = (udcaA<udcaA[_n-1] & patient_id==patient_id[_n-1])
+tab order_flag
 
 * Identify prescriptions with the same date 
 bys patient_id: gen dup_presc = (udcaA==udcaA[_n-1])
@@ -51,6 +57,10 @@ drop order_flag out_of_order dup_presc
 * Assume end date is 60 days after prescription generated
 gen stop_date = udcaA + 60 
 format stop_date %dD/N/CY 
+
+* Drop rows where prescriptions ends prior to March 2020
+count if stop_date <= date("01March2020", "DMY")
+drop if stop_date <= date("01March2020", "DMY")
 
 * Collapse adjacent prescriptions that are continuous prescribing into one period 
 * Flag if start date is greater than assumed stop date of previous prescription 
@@ -83,22 +93,42 @@ drop new_record to_expand
 
 * Update to match follow-up time
 * merge variables from original study definition 
-merge m:1 patient_id using `tempfile', keep(dereg_date, died_fu) 
+merge m:1 patient_id using `tempfile', keepusing(dereg_date died_date_ons) 
 
 * Determine end of follow-up date
 gen dereg_dateA = date(dereg_date, "YMD")
 format %dD/N/CY dereg_dateA
 drop dereg_date
-gen died_fuA = date(died_fu, "YMD")
-format %dD/N/CY died_fuA
-drop died_fu
+gen died_dateA = date(died_date_ons, "YMD")
+format %dD/N/CY died_dateA
+drop died_date_ons
 gen end_study = date("31/12/2022", "DMY")
-egen end_date = rowmin(dereg_dateA end_study died_fu)
+egen end_date = rowmin(dereg_dateA end_study died_dateA)
 
-*** Update start and end of follow-up for cohort
+** Update start and end of follow-up for cohort
+* Identify prescriptions that start prior to March 2020
+gen start_prior = (start < date("01/03/2020", "DMY"))
+replace start = date("01/03/2020", "DMY") if start_prior==1
 
+* Identify rows that end after study end date for person 
+gen end_after = (stop > end_date )
+gen end_before = (start > end_date) 
 
+tab end_after
+tab end_before 
 
+* Drop whole rows that are after end_date 
+drop if end_before 
+
+* Check those flagged as ending after are last row only 
+bys patient_id: gen last = _n==_N
+tab last end_after 
+
+replace stop = end_date if end_after==1 & end_before==0
+
+count if start > stop 
+
+save ./output/time_varying_udca
 
 
 
