@@ -44,6 +44,15 @@ study = StudyDefinition(
             "category": {"ratios": {"M": 0.49, "F": 0.5, "U": 0.01}},
         },
     ),
+    # STP
+    stp=patients.registered_practice_as_of(
+            "index_date",
+            returning="stp_code",
+            return_expectations={
+               "category": {"ratios": {"STP1": 0.3, "STP2": 0.2, "STP3": 0.5}},
+            },
+    ),
+    # Has PBC or PSC diagnosis
     has_pbc=patients.with_these_clinical_events(
         pbc_codes,
         returning = "binary_flag",

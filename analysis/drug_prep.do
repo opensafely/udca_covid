@@ -52,7 +52,11 @@ tab dup_presc
 * Drop them 
 drop if dup_presc 
 
-drop order_flag out_of_order dup_presc 
+drop order_flag out_of_order dup_presc presc_number
+
+* Re-count number of prescriptions 
+gen udca=1
+bys patient_id: egen total_no_presc = total(udca)
 
 * Assume end date is 60 days after prescription generated
 gen stop_date = udcaA + 60 
@@ -72,9 +76,8 @@ bys patient_id (udcaA): gen spell_sum = sum(spell)
 bys patient_id spell_sum (udcaA): gen start = udcaA[1] 
 bys patient_id spell_sum (udcaA): gen stop = stop_date[_N] 
 format start stop %dD/N/CY
-keep patient_id start stop 
+keep patient_id start stop udca total_no_presc
 duplicates drop 
-gen udca=1
 
 * Add in rows where there are gaps in prescriptions 
 bys patient_id (start): gen to_expand = 1 + (stop < start[_n+1])*(start[_n+1]~=.)
@@ -94,6 +97,13 @@ drop new_record to_expand
 * Update to match follow-up time
 * merge variables from original study definition 
 merge m:1 patient_id using `tempfile', keepusing(dereg_date died_date_ons) 
+tab _merge
+
+* Update variables for people without prescriptions 
+replace start = date("01/03/2020", "DMY") if _merge==2
+replace udca = 0 if _merge==2
+replace stop = date("31/12/2022", "DMY") if _merge==2
+replace total_no_presc = 0 if _merge==2
 
 * Determine end of follow-up date
 gen dereg_dateA = date(dereg_date, "YMD")
@@ -104,6 +114,8 @@ format %dD/N/CY died_dateA
 drop died_date_ons
 gen end_study = date("31/12/2022", "DMY")
 egen end_date = rowmin(dereg_dateA end_study died_dateA)
+* Count number of days of follow-up 
+gen total_fu = end_date - date("01/03/2020", "DMY")
 
 ** Update start and end of follow-up for cohort
 * Identify prescriptions that start prior to March 2020
@@ -127,6 +139,9 @@ tab last end_after
 replace stop = end_date if end_after==1 & end_before==0
 
 count if start > stop 
+
+* Drop unnecessary variables
+drop _merge - end_date start_prior - last
 
 save ./output/time_varying_udca
 
