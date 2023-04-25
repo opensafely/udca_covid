@@ -37,11 +37,10 @@ actions:
     run: stata-mp:latest analysis/drug_prep.do
     needs: [extract_udca, generate_study_population_pbc]
     outputs:
-      highly sensitive:
-        drug_data: output/time_varying_udca.dta
       moderately_sensitive:
         log: logs/drug_prep.log
-        
+        drug_data: output/time_varying_udca.dta
+
   drug_descriptives:
     run: stata-mp:latest analysis/udca_descriptives.do
     needs: [prep_drug_data, generate_study_population_pbc]
