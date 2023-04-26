@@ -10,12 +10,14 @@ from cohortextractor import (
 from codelists import *
 from datetime import datetime, timedelta
 
+# Use cohort identified in study_definition_pbc.py
 COHORT = "output/input_pbc.csv"
 
 # This script finds each prescription date for all people identified in study_definition_pbc
 # The number of iterations is based on the maximum value counted in the variable udca_count_fu in the study definition
-# To update as 334 is maximum (duplicates?) sticking with 40 for now = 1 per month plus leeway
-# Index date is first January 2020 to make sure have exposure status correct at 1st March 2020
+# It loops over 334 times as this was the maximum number of prescriptions during follow-up
+#  on last run (duplicates?) - number likly to need updating if study definition re-run
+# Index date is 1st January 2020 to make sure have exposure status correct at 1st March 2020
 def consecutive_drugs_x(name, codelist, index_date, n, return_expectations):
     def var_signature(name, codelist, on_or_after, return_expectations):
         return {
@@ -46,7 +48,7 @@ study = StudyDefinition(
         name="udca",
         codelist=udca_codes,
         index_date="index_date",
-        n=40,
+        n=334,
         return_expectations={
             "date": {"earliest": "2020-03-01", "latest": "today"}
         },

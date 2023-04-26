@@ -11,7 +11,7 @@ cap log using ./logs/feasibility.log, replace
 
 cap mkdir ./output/tables/
 
-** First import udca population
+/** First import udca population
 import delimited using ./output/input.csv
 
 * Format dates 
@@ -139,7 +139,7 @@ table1_mc, by(has_psc) vars(udca_first cat) saving(./output/tables/udca_first_on
 * Deaths in those prescribed OBA with PBC 
 keep if has_pbc 
 table1_mc, by(oba) vars(died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cat \ male bin) saving(./output/tables/oba_only.xlsx, replace) 
-
+*/
 ** Next import the PBC population
 
 import delimited using ./output/input_pbc.csv, clear
