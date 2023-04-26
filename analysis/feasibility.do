@@ -248,13 +248,13 @@ tab oba udca, row col m
 drop if agegroup<1 | agegroup>6
 table1_mc, by(udca) vars(has_pbc bin \ died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cat \ male bin) saving(./output/tables/udca_pbc.xlsx, replace)
 
-foreach var in all only pbc first_only {
+foreach var in /*all only*/ pbc /*first_only*/ {
 	import excel using ./output/tables/udca_`var'.xlsx, clear
 	export delimited using ./output/tables/udca_`var'.csv, replace 
 }
 
-import excel using ./output/tables/oba_only.xlsx, clear 
-export delimited using ./output/tables/oba_only.csv, replace 
+*import excel using ./output/tables/oba_only.xlsx, clear 
+*export delimited using ./output/tables/oba_only.csv, replace 
 
 
 

@@ -24,7 +24,7 @@ actions:
       moderately_sensitive:
         log: logs/feasibility.log
         table: output/tables/udca*.csv
-        table_oba: output/tables/oba*.csv
+        #table_oba: output/tables/oba*.csv
       
   extract_udca: 
     run: cohortextractor:latest generate_cohort --study-definition study_definition_additional
