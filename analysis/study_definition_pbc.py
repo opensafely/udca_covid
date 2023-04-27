@@ -1,4 +1,4 @@
-from cohortextractor import StudyDefinition, patients, codelist, codelist_from_csv  # NOQA
+from cohortextractor import StudyDefinition, patients, codelist, codelist_from_csv, filter_codes_by_category  # NOQA
 
 from codelists import*
 
@@ -52,6 +52,64 @@ study = StudyDefinition(
                "category": {"ratios": {"STP1": 0.3, "STP2": 0.2, "STP3": 0.5}},
             },
     ),
+    #Ethnicity
+    eth=patients.with_these_clinical_events(
+                ethnicity_codes,
+                returning="category",
+                find_last_match_in_period=True,
+                include_date_of_match=False,
+                return_expectations={
+                    "category": {"ratios": {"1": 0.2, "2": 0.2, "3": 0.2, "4": 0.2, "5": 0.2}},
+                    "incidence": 1.00,
+                     },
+                ),
+            # fill missing ethnicity from SUS
+        ethnicity_sus=patients.with_ethnicity_from_sus(
+                returning="group_6",
+                use_most_frequent_code=True,
+                return_expectations={
+                    "category": {"ratios": {"1": 0.2, "2": 0.2, "3": 0.2, "4": 0.2, "5": 0.2}},
+                    "incidence": 1.00,
+                },
+            ),
+        ethnicity=patients.categorised_as(
+            {"0": "DEFAULT",
+                "1": "eth='1' OR (NOT eth AND ethnicity_sus='1')",
+                "2": "eth='2' OR (NOT eth AND ethnicity_sus='2')",
+                "3": "eth='3' OR (NOT eth AND ethnicity_sus='3')",
+                "4": "eth='4' OR (NOT eth AND ethnicity_sus='4')",
+                "5": "eth='5' OR (NOT eth AND ethnicity_sus='5')",
+            },
+            return_expectations={
+                "category": {"ratios": {"0": 0.05, "1": 0.15, "2": 0.2, "3": 0.2, "4": 0.2, "5": 0.2}},
+                "incidence": 1.0,
+                    },
+        ),
+     smoking_status=patients.categorised_as(
+        {
+            "S": "most_recent_smoking_code = 'S'",
+            "E": """
+                     most_recent_smoking_code = 'E' OR (    
+                       most_recent_smoking_code = 'N' AND ever_smoked   
+                     )  
+                """,
+            "N": "most_recent_smoking_code = 'N' AND NOT ever_smoked",
+            "M": "DEFAULT",
+        },
+        return_expectations={
+            "category": {"ratios": {"S": 0.4, "E": 0.3, "N": 0.2, "M": 0.1}}
+            },
+        most_recent_smoking_code=patients.with_these_clinical_events(
+            clear_smoking_codes,
+            find_last_match_in_period=True,
+            on_or_before="2019-04-01",
+            returning="category",
+            ),
+        ever_smoked=patients.with_these_clinical_events(
+            filter_codes_by_category(clear_smoking_codes, include=["S", "E"]),
+            on_or_before="2019-04-01",
+            ),
+        ),
     # Has PBC or PSC diagnosis
     has_pbc=patients.with_these_clinical_events(
         pbc_codes,
@@ -136,4 +194,5 @@ study = StudyDefinition(
         date_format="YYYY-MM-DD",
         return_expectations={"date": {"earliest": "2020-03-01"}},
     ),
+    
 )   

@@ -1,0 +1,20 @@
+code,term
+B150,Hepatitis A with hepatic coma
+B160,Acute hepatitis B with delta-agent (coinfection) with hepatic coma
+B162,Acute hepatitis B without delta-agent with hepatic coma
+B190,Unspecified viral hepatitis with hepatic coma
+I85,Oesophageal varices
+I850,Oesophageal varices with bleeding
+I859,Oesophageal varices without bleeding
+I982,Oesophageal varices without bleeding in diseases classified elsewhere
+I983,Oesophageal varices with bleeding in diseases classified elsewhere
+K703,Alcoholic cirrhosis of liver
+K717,Toxic liver disease with fibrosis and cirrhosis of liver
+K74,Fibrosis and cirrhosis of liver
+K743,Primary biliary cirrhosis
+K744,Secondary biliary cirrhosis
+K745,"Biliary cirrhosis, unspecified"
+K746,Other and unspecified cirrhosis of liver
+K766,Portal hypertension
+K767,Hepatorenal syndrome
+R18,Ascites

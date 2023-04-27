@@ -23,6 +23,36 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/covid-identification/2020-06-03/",
       "downloaded_at": "2023-01-20 09:18:05.696374Z",
       "sha": "124db6929439379b7dacd55ba26ae4f2ed9370bc"
+    },
+    "opensafely-condition-advanced-decompensated-cirrhosis-of-the-liver.csv": {
+      "id": "opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver/071038cf",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver/071038cf/",
+      "downloaded_at": "2023-04-27 11:27:44.362434Z",
+      "sha": "cc91d2287dc30a4417140d1d2960dea6eecd61dc"
+    },
+    "opensafely-condition-advanced-decompensated-cirrhosis-of-the-liver-and-associated-conditions-icd-10.csv": {
+      "id": "opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver-and-associated-conditions-icd-10/00e40554",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver-and-associated-conditions-icd-10/00e40554/",
+      "downloaded_at": "2023-04-27 11:27:44.487395Z",
+      "sha": "d0b25cdc87dd1916e6b9e038456d25e8c28cd811"
+    },
+    "opensafely-ethnicity-snomed-0removed.csv": {
+      "id": "opensafely/ethnicity-snomed-0removed/2e641f61",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity-snomed-0removed/2e641f61/",
+      "downloaded_at": "2023-04-27 11:27:44.612396Z",
+      "sha": "8b849b5b785d80306e488d0109640c8c1d2da01b"
+    },
+    "opensafely-smoking-clear.csv": {
+      "id": "opensafely/smoking-clear/2020-04-29",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/smoking-clear/2020-04-29/",
+      "downloaded_at": "2023-04-27 11:27:44.722006Z",
+      "sha": "0b5f3afe1db96dcce5141220e893a42ba2e5a8f7"
+    },
+    "opensafely-smoking-unclear.csv": {
+      "id": "opensafely/smoking-unclear/2020-04-29",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/smoking-unclear/2020-04-29/",
+      "downloaded_at": "2023-04-27 11:27:44.846772Z",
+      "sha": "d9dad3e9d9491f765863b2617114c521957b6db1"
     }
   }
 }

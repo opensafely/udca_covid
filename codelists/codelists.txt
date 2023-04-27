@@ -8,5 +8,13 @@ opensafely/ursodeoxycholic_acid/738c74e0
 
 opensafely/covid-identification/2020-06-03
 
+# Decompensated liver disease
+opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver/071038cf
+opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver-and-associated-conditions-icd-10/00e40554
 
+# Ethnicity - SNOMED
+opensafely/ethnicity-snomed-0removed/2e641f61/
 
+# Smoking
+opensafely/smoking-clear/2020-04-29
+opensafely/smoking-unclear/2020-04-29

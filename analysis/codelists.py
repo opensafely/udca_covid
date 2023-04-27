@@ -24,3 +24,23 @@ covid_identification = codelist_from_csv(
     system="icd10",
     column="icd10_code",
 )
+
+# Ethnicity
+ethnicity_codes = codelist_from_csv(
+    "codelists/opensafely-ethnicity-snomed-0removed.csv",
+    system="snomed",
+    column="snomedcode",
+    category_column="Grouping_6",)
+
+clear_smoking_codes = codelist_from_csv(
+    "codelists/opensafely-smoking-clear.csv",
+    system="ctv3",
+    column="CTV3Code",
+    category_column="Category",
+)
+unclear_smoking_codes = codelist_from_csv(
+    "codelists/opensafely-smoking-unclear.csv",
+    system="ctv3",
+    column="CTV3Code",
+    category_column="Category",
+)
