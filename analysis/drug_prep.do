@@ -19,7 +19,7 @@ save `tempfile'
 import delimited using ./output/input_additional.csv, clear
 
 * Format dates 
-forvalues i=1/40 {
+forvalues i=1/334 {
 gen udcaA`i' = date(udca_`i', "YMD")
 format udcaA`i' %dD/N/CY
 drop udca_`i'
