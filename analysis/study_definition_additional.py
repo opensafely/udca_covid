@@ -32,7 +32,7 @@ def consecutive_drugs_x(name, codelist, index_date, n, return_expectations):
         }  
     variables=var_signature(f"{name}_1", codelist, index_date, return_expectations)
     for i in range(2, n+1):
-        variables.update(var_signature(f"{name}_{i}", codelist, f"{name}_{i-1}", return_expectations))
+        variables.update(var_signature(f"{name}_{i}", codelist, f"{name}_{i-1} + 1 day", return_expectations))
     return variables
 
 study = StudyDefinition(

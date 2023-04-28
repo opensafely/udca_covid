@@ -231,6 +231,7 @@ tab udca_first udca, col m
 
 * Check number of prescriptions
 bys udca: sum udca_count
+bys udca: sum udca_count_fu, d 
 
 * How many COVID-19 deaths by whether had 2+ prescriptions
 tab died_ons_covid_flag_any udca, row col 
