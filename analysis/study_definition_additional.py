@@ -48,7 +48,7 @@ study = StudyDefinition(
         name="udca",
         codelist=udca_codes,
         index_date="index_date",
-        n=334,
+        n=335,
         return_expectations={
             "date": {"earliest": "2020-03-01", "latest": "today"}
         },
