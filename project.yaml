@@ -24,5 +24,29 @@ actions:
       moderately_sensitive:
         log: logs/feasibility.log
         table: output/tables/udca*.csv
-        table_oba: output/tables/oba*.csv
+        #table_oba: output/tables/oba*.csv
       
+  extract_udca: 
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_additional
+    needs: [generate_study_population_pbc]
+    outputs:
+      highly_sensitive:
+        cohort: output/input_additional.csv
+
+  prep_drug_data: 
+    run: stata-mp:latest analysis/drug_prep.do
+    needs: [extract_udca, generate_study_population_pbc]
+    outputs:
+      moderately_sensitive:
+        log: logs/drug_prep.log
+        drug_data: output/time_varying_udca.dta
+
+  drug_descriptives:
+    run: stata-mp:latest analysis/udca_descriptives.do
+    needs: [prep_drug_data, generate_study_population_pbc]
+    outputs:
+      moderately_sensitive:
+        log: logs/udca_descriptives.log
+        summary: output/tables/udca_descriptives.txt
+
+  
