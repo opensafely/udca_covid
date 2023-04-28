@@ -6,23 +6,317 @@
 . tempfile tempfile 
 
 . import delimited using ./output/input_pbc.csv
-(17 vars, 1,000 obs)
+(23 vars, 1,000 obs)
 
 . save `tempfile' 
-file /tmp/St00015.000001 saved
+file /tmp/St00016.000001 saved
 
 . 
 . ** First import udca population
 . import delimited using ./output/input_additional.csv, clear
-(41 vars, 1,000 obs)
+(335 vars, 1,000 obs)
 
 . 
 . * Format dates 
-. forvalues i=1/40 {
+. forvalues i=1/334 {
   2. gen udcaA`i' = date(udca_`i', "YMD")
   3. format udcaA`i' %dD/N/CY
   4. drop udca_`i'
   5. }
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
 (500 missing values generated)
 (500 missing values generated)
 (500 missing values generated)
@@ -68,21 +362,36 @@ file /tmp/St00015.000001 saved
 . * Reshape to long format 
 . reshape long udcaA, i(patient_id) j(presc_number)
 (note: j = 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26
->  27 28 29 30 31 32 33 34 35 36 37 38 39 40)
+>  27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 5
+> 2 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 
+> 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102
+>  103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 
+> 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 1
+> 41 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 16
+> 0 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179
+>  180 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198 
+> 199 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 2
+> 18 219 220 221 222 223 224 225 226 227 228 229 230 231 232 233 234 235 236 23
+> 7 238 239 240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255 256
+>  257 258 259 260 261 262 263 264 265 266 267 268 269 270 271 272 273 274 275 
+> 276 277 278 279 280 281 282 283 284 285 286 287 288 289 290 291 292 293 294 2
+> 95 296 297 298 299 300 301 302 303 304 305 306 307 308 309 310 311 312 313 31
+> 4 315 316 317 318 319 320 321 322 323 324 325 326 327 328 329 330 331 332 333
+>  334)
 
 Data                               wide   ->   long
 -----------------------------------------------------------------------------
-Number of obs.                     1000   ->   40000
-Number of variables                  41   ->       3
-j variable (40 values)                    ->   presc_number
+Number of obs.                     1000   ->  334000
+Number of variables                 335   ->       3
+j variable (334 values)                   ->   presc_number
 xij variables:
-              udcaA1 udcaA2 ... udcaA40   ->   udcaA
+             udcaA1 udcaA2 ... udcaA334   ->   udcaA
 -----------------------------------------------------------------------------
 
 . 
 . * Drop rows where there is no prescription
 . drop if udcaA==.
-(20,000 observations deleted)
+(167,000 observations deleted)
 
 . 
 . * Check that prescriptions are in order
@@ -92,10 +401,10 @@ xij variables:
 
  order_flag |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     10,497       52.48       52.48
-          1 |      9,503       47.52      100.00
+          0 |     83,984       50.29       50.29
+          1 |     83,016       49.71      100.00
 ------------+-----------------------------------
-      Total |     20,000      100.00
+      Total |    167,000      100.00
 
 . * Create flag if any out of order prescriptions in the data - should only be 
 > in dummy data 
@@ -106,9 +415,9 @@ xij variables:
 out_of_orde |
           r |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |     20,000      100.00      100.00
+          1 |    167,000      100.00      100.00
 ------------+-----------------------------------
-      Total |     20,000      100.00
+      Total |    167,000      100.00
 
 . 
 . * Sort if out of order - should only apply to dummy data 
@@ -124,9 +433,9 @@ out_of_orde |
 
  order_flag |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     20,000      100.00      100.00
+          0 |    167,000      100.00      100.00
 ------------+-----------------------------------
-      Total |     20,000      100.00
+      Total |    167,000      100.00
 
 . 
 . * Identify prescriptions with the same date 
@@ -136,14 +445,14 @@ out_of_orde |
 
   dup_presc |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     19,809       99.05       99.05
-          1 |        191        0.95      100.00
+          0 |    155,368       93.03       93.03
+          1 |     11,632        6.97      100.00
 ------------+-----------------------------------
-      Total |     20,000      100.00
+      Total |    167,000      100.00
 
 . * Drop them 
 . drop if dup_presc 
-(191 observations deleted)
+(11,632 observations deleted)
 
 . 
 . drop order_flag out_of_order dup_presc presc_number
@@ -194,7 +503,7 @@ out_of_orde |
 
 Duplicates in terms of all variables
 
-(12,425 observations deleted)
+(154,338 observations deleted)
 
 . 
 . * Add in rows where there are gaps in prescriptions 
@@ -205,13 +514,13 @@ Duplicates in terms of all variables
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,000       13.54       13.54
-          2 |      6,384       86.46      100.00
+          1 |      1,000       97.09       97.09
+          2 |         30        2.91      100.00
 ------------+-----------------------------------
-      Total |      7,384      100.00
+      Total |      1,030      100.00
 
 . expand to_expand 
-(6,384 observations created)
+(30 observations created)
 
 . 
 . * Flag new rows
@@ -223,20 +532,20 @@ Duplicates in terms of all variables
  to_expand |         0          1 |     Total
 -----------+----------------------+----------
          1 |     1,000          0 |     1,000 
-         2 |     6,384      6,384 |    12,768 
+         2 |        30         30 |        60 
 -----------+----------------------+----------
-     Total |     7,384      6,384 |    13,768 
+     Total |     1,030         30 |     1,060 
 
 . 
 . * Updating new rows 
 . replace udca=0 if new_record==1
-(6,384 real changes made)
+(30 real changes made)
 
 . replace start = stop if new_record==1
-(6,384 real changes made)
+(30 real changes made)
 
 . replace stop = start[_n+1] if new_record==1
-(6,384 real changes made)
+(30 real changes made)
 
 . drop new_record to_expand
 
@@ -247,48 +556,48 @@ Duplicates in terms of all variables
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                        13,318
-        from master                    12,417  (_merge==1)
-        from using                        901  (_merge==2)
+    not matched                         1,862
+        from master                       958  (_merge==1)
+        from using                        904  (_merge==2)
 
-    matched                             1,351  (_merge==3)
+    matched                               102  (_merge==3)
     -----------------------------------------
 
 . tab _merge
 
                  _merge |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
-        master only (1) |     12,417       84.65       84.65
-         using only (2) |        901        6.14       90.79
-            matched (3) |      1,351        9.21      100.00
+        master only (1) |        958       48.78       48.78
+         using only (2) |        904       46.03       94.81
+            matched (3) |        102        5.19      100.00
 ------------------------+-----------------------------------
-                  Total |     14,669      100.00
+                  Total |      1,964      100.00
 
 . 
 . * Update variables for people without prescriptions 
 . replace start = date("01/03/2020", "DMY") if _merge==2
-(901 real changes made)
+(904 real changes made)
 
 . replace udca = 0 if _merge==2
-(901 real changes made)
+(904 real changes made)
 
 . replace stop = date("31/12/2022", "DMY") if _merge==2
-(901 real changes made)
+(904 real changes made)
 
 . replace total_no_presc = 0 if _merge==2
-(901 real changes made)
+(904 real changes made)
 
 . 
 . * Determine end of follow-up date
 . gen dereg_dateA = date(dereg_date, "YMD")
-(13,533 missing values generated)
+(1,458 missing values generated)
 
 . format %dD/N/CY dereg_dateA
 
 . drop dereg_date
 
 . gen died_dateA = date(died_date_ons, "YMD")
-(13,575 missing values generated)
+(1,460 missing values generated)
 
 . format %dD/N/CY died_dateA
 
@@ -320,24 +629,24 @@ Duplicates in terms of all variables
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     11,530       78.60       78.60
-          1 |      3,139       21.40      100.00
+          0 |        321       16.34       16.34
+          1 |      1,643       83.66      100.00
 ------------+-----------------------------------
-      Total |     14,669      100.00
+      Total |      1,964      100.00
 
 . tab end_before 
 
  end_before |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     13,105       89.34       89.34
-          1 |      1,564       10.66      100.00
+          0 |      1,958       99.69       99.69
+          1 |          6        0.31      100.00
 ------------+-----------------------------------
-      Total |     14,669      100.00
+      Total |      1,964      100.00
 
 . 
 . * Drop whole rows that are after end_date 
 . drop if end_before 
-(1,564 observations deleted)
+(6 observations deleted)
 
 . 
 . * Check those flagged as ending after are last row only 
@@ -348,14 +657,14 @@ Duplicates in terms of all variables
            |       end_after
       last |         0          1 |     Total
 -----------+----------------------+----------
-         0 |    10,334        872 |    11,206 
-         1 |     1,196        703 |     1,899 
+         0 |        40         14 |        54 
+         1 |       281      1,623 |     1,904 
 -----------+----------------------+----------
-     Total |    11,530      1,575 |    13,105 
+     Total |       321      1,637 |     1,958 
 
 . 
 . replace stop = end_date if end_after==1 & end_before==0
-(1,575 real changes made)
+(1,637 real changes made)
 
 . 
 . count if start > stop 
@@ -381,7 +690,7 @@ file ./output/time_varying_udca.dta saved
 . 
 end of do-file
 
-. . file open output using "/tmp/drug_prep.do.PiZA.out", write text replace
+. . file open output using "/tmp/drug_prep.do.OD3n.out", write text replace
 
 . . file write output "success" 
 
