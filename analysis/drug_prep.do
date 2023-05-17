@@ -18,7 +18,10 @@ save `tempfile'
 ** First import udca population
 import delimited using ./output/input_additional.csv, clear
 
-* Format dates 
+missings report, minimum(12400)
+missing dropvars udca_*, force
+
+/* Format dates 
 forvalues i=1/334 {
 gen udcaA`i' = date(udca_`i', "YMD")
 format udcaA`i' %dD/N/CY
@@ -145,7 +148,7 @@ drop _merge - end_date start_prior - last
 
 save ./output/time_varying_udca
 
-
+*/
 
 
 
