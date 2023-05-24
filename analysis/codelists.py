@@ -44,3 +44,34 @@ unclear_smoking_codes = codelist_from_csv(
     column="CTV3Code",
     category_column="Category",
 )
+
+budesonide_codes = codelist_from_csv(
+    "codelists/user-ruthcostello-budesonide.csv",
+    system="snomed",
+    column="code",
+)
+
+fenofibrate_codes = codelist_from_csv(
+    "codelists/user-ruthcostello-fenofibrates.csv",
+    system="snomed",
+    column="code",
+)
+
+gc_codes=codelist_from_csv(
+    "codelists/opensafely-asthma-oral-prednisolone-medication.csv",
+    system="snomed",
+    column="snomed_id",
+)
+
+severe_disease_codes_snomed=codelist_from_csv(
+    "codelists/opensafely-condition-advanced-decompensated-cirrhosis-of-the-liver.csv",
+    system="snomed",
+    column="code",
+)
+
+severe_disease_codes_icd=codelist_from_csv(
+    "codelists/opensafely-condition-advanced-decompensated-cirrhosis-of-the-liver-and-associated-conditions-icd-10.csv",
+    system="icd10",
+    column="code",
+)
+

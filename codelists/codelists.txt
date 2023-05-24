@@ -18,3 +18,58 @@ opensafely/ethnicity-snomed-0removed/2e641f61/
 # Smoking
 opensafely/smoking-clear/2020-04-29
 opensafely/smoking-unclear/2020-04-29
+
+# Budenoside
+user/ruthcostello/budesonide/090fa297
+
+# Fenofibrates
+user/ruthcostello/fenofibrates/56f0bc2c
+
+# Steroids
+opensafely/asthma-oral-prednisolone-medication/2020-04-27
+
+# COVID high risk conditions
+nhsd/downs-syndrome-snomed-ct/3bb246d7
+nhsd/downs-syndrome-icd-10/22a2d3a2
+nhsd/sickle-spl-atriskv4-snomed-ct/7083ed37
+nhsd/sickle-spl-hes-icd-10/789c2d19
+opensafely/cancer-excluding-lung-and-haematological-snomed/2020-04-15
+opensafely/lung-cancer-snomed/2020-04-15
+opensafely/chemotherapy-or-radiotherapy-snomed/2020-04-15
+nhsd/haematopoietic-stem-cell-transplant-snomed/3ec3ac16
+nhsd/haematopoietic-stem-cell-transplant-icd-10/395e2c2a
+nhsd/haematopoietic-stem-cell-transplant-opcs4/204eb8f5
+nhsd/haematological-malignancies-icd-10/073f45c0
+nhsd/haematological-malignancies-snomed/31a49191
+nhsd/ckd-stage-5-snomed-ct/2808538e
+nhsd/ckd-stage-5-icd-10/7bad9258
+nhsd/liver-cirrhosis/64f239d0
+nhsd/liver-cirrhosis-icd-10/3e6506cd
+nhsd/immunosuppresant-drugs-pra-dmd/526d9f5f
+nhsd/immunosuppresant-drugs-pra-snomed/6b7d1294
+nhsd/oral-steroid-drugs-pra-dmd/44292c02
+nhsd/oral-steroid-drugs-snomed/1ae93909
+nhsd/immunosupression-pcdcluster-snomed-ct/0993606d
+user/bangzheng/nhsd-immunosupression-pcdcluster-snomed-ct-new/7c9a7542
+nhsd/hiv-aids-snomed/68ca529e
+nhsd/hiv-aids-icd10/01d9c5d4
+nhsd/transplant-spl-atriskv4-snomed-ct/57747a02
+user/bangzheng/nhsd-transplant-spl-atriskv4-snomed-ct-new/15a9e878
+nhsd/transplant-spl-hes-opcs4/1b47de52
+nhsd/transplant-thymus-gland-spl-hes-opcs4/5feb5f2d
+nhsd/transplant-replacement-of-organ-spl-hes-opcs4/46dbebf8
+nhsd/transplant-conjunctiva-spl-hes-opcs4/2dcc78c3
+nhsd/transplant-conjunctiva-y-codes-spl-hes-opcs4/14bd058e
+nhsd/transplant-stomach-spl-hes-opcs4/6550df19
+nhsd/transplant-ileum_1-spl-hes-opcs4/3331f8af
+nhsd/transplant-ileum_2-spl-hes-opcs4/1a22857a
+nhsd/transplant-ileum_1-y-codes-spl-hes-opcs4/01131245
+nhsd/transplant-ileum_2-y-codes-spl-hes-opcs4/68039f0f
+nhsd/multiple-sclerosis-snomed-ct/7336ad2d
+nhsd/multiple-sclerosis/4be2c69b
+nhsd/motor-neurone-disease-snomed-ct/5a2739f8
+nhsd/motor-neurone-disease-icd-10/4117c6c3
+nhsd/myasthenia-gravis-snomed-ct/0c462063
+nhsd/myasthenia-gravis/32d35366
+nhsd/huntingtons-snomed-ct/25559398
+nhsd/huntingtons/7e01ad05

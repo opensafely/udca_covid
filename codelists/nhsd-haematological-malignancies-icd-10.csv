@@ -1,0 +1,25 @@
+code,term
+C81,Hodgkin lymphoma
+C82,Follicular lymphoma
+C83,Non-follicular lymphoma
+C84,Mature T/NK-cell lymphomas
+C85,Other and unspecified types of non-Hodgkin lymphoma
+C86,Other specified types of T/NK-cell lymphoma
+C88,Malignant immunoproliferative diseases
+C90,Multiple myeloma and malignant plasma cell neoplasms
+C91,Lymphoid leukaemia
+C92,Myeloid leukaemia
+C93,Monocytic leukaemia
+C94,Other leukaemias of specified cell type
+C95,Leukaemia of unspecified cell type
+C96,"Other and unspecified malignant neoplasms of lymphoid, haematopoietic and related tissue"
+D470,Histiocytic and mast cell tumours of uncertain and unknown behaviour
+D475,Chronic eosinophilic leukaemia [hypereosinophilic syndrome]
+D477,"Other specified neoplasms of uncertain or unknown behaviour of lymphoid, haematopoietic and related tissue"
+D479,"Neoplasm of uncertain or unknown behaviour of lymphoid, haematopoietic and related tissue, unspecified"
+D595,Paroxysmal nocturnal haemoglobinuria [Marchiafava-Micheli]
+D71,Functional disorders of polymorphonuclear neutrophils
+D761,Haemophagocytic lymphohistiocytosis
+D898,"Other specified disorders involving the immune mechanism, not elsewhere classified"
+D899,"Disorder involving the immune mechanism, unspecified"
+P615,Transient neonatal neutropenia

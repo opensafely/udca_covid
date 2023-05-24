@@ -1,0 +1,52 @@
+code,term
+B171,Allotransplantation of thymus gland
+B178,Other specified transplantation of thymus gland
+B179,Unspecified transplantation of thymus gland
+C437,Transplantation of conjunctiva
+C467,Transplant of corneal lumbal cells
+E531,Double lung transplant
+E532,Single lung transplant
+E533,Single lobe lung transplant
+E538,Other specified transplantation of lung
+E539,Unspecified transplantation of lung
+G261,Allotransplantation of stomach
+G268,Other specified transplantation of stomach
+G269,Unspecified transplantation of stomach
+G681,Allotransplantation of ileum
+G688,Other specified transplantation of ileum
+G689,Unspecified transplantation of ileum
+J011,Orthotopic transplantation of liver NEC
+J012,Heterotopic transplantation of liver
+J013,Replacement of previous liver transplant
+J014,Transplantation of liver cells
+J015,Orthotopic transplantation of whole liver
+J018,Other specified transplantation of liver
+J019,Unspecified transplantation of liver
+J721,Transplantation of spleen
+K01,Transplantation of heart and lung
+K02,Other transplantation of heart
+M012,Allotransplantation of kidney from live donor
+M013,Allotransplantation of kidney from cadaver NEC
+M014,Allotransplantation of kidney from cadaver heart beating
+M015,Allotransplantation of kidney from cadaver heart non-beating
+M018,Other specified transplantation of kidney
+M019,Unspecified transplantation of kidney
+T508,Other specified transplantation of fascia
+T509,Unspecified transplantation of fascia
+T768,Other specified transplantation of muscle
+T769,Unspecified transplantation of muscle
+T860,Bone-marrow transplant rejection
+T861,Kidney transplant failure and rejection
+T862,Heart transplant failure and rejection
+T863,Heart-lung transplant failure and rejection
+T864,Liver transplant failure and rejection
+T868,Failure and rejection of other transplanted organs and tissues
+T869,Failure and rejection of unspecified transplanted organ and tissue
+W342,Allograft of bone marrow NEC
+W343,Allograft of bone marrow from sibling donor
+W344,Allograft of bone marrow from matched unrelated donor
+W345,Allograft of bone marrow from haploidentical donor
+W346,Allograft of bone marrow from unmatched unrelated donor
+W348,Other specified graft of bone marrow
+W349,Unspecified graft of bone marrow
+X336,Allogeneic peripheral blood stem cell transplant

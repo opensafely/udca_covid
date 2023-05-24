@@ -128,6 +128,16 @@ study = StudyDefinition(
             on_or_before="index_date",
             ),
         ),
+
+     bmi=patients.most_recent_bmi(
+        between=["2010-03-01", "2020-03-01"],
+        minimum_age_at_measurement=16,
+        return_expectations={
+            "date": {"earliest": "2010-02-01", "latest": "2020-01-31"},
+            "float": {"distribution": "normal", "mean": 28, "stddev": 8},
+            "incidence": 0.80,
+        }
+    ),
     # Has PBC or PSC diagnosis
     has_pbc=patients.with_these_clinical_events(
         pbc_codes,
@@ -195,14 +205,124 @@ study = StudyDefinition(
     ),
 
     #obeticholic acid prescribing high cost drugs
-    oba=patients.with_high_cost_drugs(
+    oca_bl=patients.with_high_cost_drugs(
         drug_name_matches="obeticholic acid",
         returning="binary_flag",
         on_or_after="2019-09-01",
     ),
 
+    # Budenoside prescribing
+    budenoside_count_fu=patients.with_these_medications(
+        budesonide_codes,
+        between=["2020-03-01", "2022-12-31"],
+        returning="number_of_matches_in_period",
+        return_expectations={
+            "int": {"distribution": "normal", "mean": 3, "stddev": 2},
+            "incidence": 0.30,
+        },
+    ),
+
+    # Fenofibrate prescribing
+    fenofibrate_count_fu=patients.with_these_medications(
+        fenofibrate_codes,
+        between=["2020-03-01", "2022-12-31"],
+        returning="number_of_matches_in_period",
+        return_expectations={
+            "int": {"distribution": "normal", "mean": 3, "stddev": 2},
+            "incidence": 0.30,
+        },
+    ),
+
+    # Steroid prescribing
+    gc_count_fu=patients.with_these_medications(
+        gc_codes,
+        between=["2020-03-01", "2022-12-31"],
+        returning="number_of_matches_in_period",
+        return_expectations={
+            "int": {"distribution": "normal", "mean": 3, "stddev": 2},
+            "incidence": 0.30,
+        },
+    ),
+
+    # rituximab prescribing high cost drugs
+    rituximab_bl=patients.with_high_cost_drugs(
+        drug_name_matches="rituximab",
+        returning="binary_flag",
+        on_or_after="2019-09-01",
+    ),
+
+    # COVID vaccination
+    covid_vacc_date=patients.with_tpp_vaccination_record(
+        target_disease_matches="SARS-2 CORONAVIRUS",
+        on_or_after="2020-12-01",  # check all december to date
+        find_first_match_in_period=True,
+        returning="date",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {
+                "earliest": "2020-12-08",  # first vaccine administered on the 8/12
+                "latest": "2022-12-31",
+            },
+            "incidence": 0.9,
+        },
+    ),
+
+    # Disease severity
+    # Snomed codelist to be updated - awaiting tech support
+    severe_disease_bl = patients.satisfying(
+        """
+        severe_disease_bl_snomed OR
+        severe_disease_bl_icd
+        """,
+        severe_disease_bl_snomed=patients.with_these_clinical_events(
+            severe_disease_codes_snomed,
+            on_or_before="index_date",
+            returning="binary_flag",
+        ),
+        severe_disease_bl_icd=patients.admitted_to_hospital(
+            with_these_diagnoses=severe_disease_codes_icd,
+            on_or_before="index_date",
+            returning="binary_flag",
+        ),
+    ),
+           
+    severe_disease_fu_snomed=patients.with_these_clinical_events(
+        severe_disease_codes_snomed,
+        on_or_after="index_date",
+        returning="date",
+        date_format="YYYY-MM-DD",
+        find_first_match_in_period = True,
+        return_expectations={"date": {"earliest": "2020-03-01"}},
+    ),
+    severe_disease_fu_icd=patients.admitted_to_hospital(
+        with_these_diagnoses=severe_disease_codes_icd,
+        on_or_after="index_date",
+        returning="date_admitted",
+        date_format="YYYY-MM-DD",
+        find_first_match_in_period = True,
+        return_expectations={"date": {"earliest": "2020-03-01"}},
+    ),
+    severe_disease_fu = patients.minimum_of("severe_disease_fu_snomed", "severe_disease_fu_icd"),
+
+    # COVID-19 high risk conditions - to add
+    
     #OUTCOMES
-     died_ons_covid_flag_any=patients.with_these_codes_on_death_certificate(
+    hosp_covid=patients.admitted_to_hospital(
+        returning = "date_admitted",
+        with_these_primary_diagnoses = covid_identification,
+        with_patient_classification = ["1"], # ordinary admissions only - exclude day cases and regular attenders
+        # see https://docs.opensafely.org/study-def-variables/#sus for more info
+        # with_admission_method=["21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"], # emergency admissions only to exclude incidental COVID
+        on_or_after="2020-03-01",
+        find_first_match_in_period = True,
+        date_format = "YYYY-MM-DD",
+        return_expectations = {
+        "date": {"earliest": "2020-03-01"},
+        "rate": "uniform",
+        "incidence": 0.1
+        },
+    ),
+    died_ons_covid_flag_any=patients.with_these_codes_on_death_certificate(
         covid_identification,
         on_or_after="2020-03-01",
         match_only_underlying_cause=False,
