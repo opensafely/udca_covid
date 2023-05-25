@@ -18,11 +18,13 @@ save `tempfile'
 ** First import udca population
 import delimited using ./output/input_additional.csv, clear
 
-missings report, minimum(12400)
-missing dropvars udca_*, force
+describe 
 
-/* Format dates 
-forvalues i=1/334 {
+*missings report, minimum(12400)
+missings dropvars udca_*, force
+
+* Format dates 
+forvalues i=1/179 {
 gen udcaA`i' = date(udca_`i', "YMD")
 format udcaA`i' %dD/N/CY
 drop udca_`i'
