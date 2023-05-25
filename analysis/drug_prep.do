@@ -70,6 +70,9 @@ sum time_previous, d
 gen year = year(udcaA)
 bys year: sum time_previous, d
 
+* Drop records in 2023 as this is after end of study
+drop if year==2023
+
 * Assume end date is 60 days after prescription generated
 gen stop_date = udcaA + 60 
 format stop_date %dD/N/CY 
@@ -101,10 +104,16 @@ bys patient_id start: gen new_record = (_n==2)
 tab to_expand new_record 
 
 * Updating new rows 
+sort patient_id start
 replace udca=0 if new_record==1
 replace start = stop if new_record==1
-replace stop = start[_n+1] if new_record==1
+bys patient_id (start): replace stop = start[_n+1] if new_record==1
 drop new_record to_expand
+
+* Checks 
+count if stop<start 
+sort patient_id start
+count if stop[_n-1]>start & patient_id==patient_id[_n-1]
 
 * Update to match follow-up time
 * merge variables from original study definition 
@@ -151,6 +160,12 @@ tab last end_after
 replace stop = end_date if end_after==1 & end_before==0
 
 count if start > stop 
+
+* Check that time covered by prescriptions equals total follow-up
+gen time = stop - start 
+bys patient_id: egen total_time = total(time)
+
+tab total_time total_fu, m 
 
 * Drop unnecessary variables
 drop _merge - end_date start_prior - last
