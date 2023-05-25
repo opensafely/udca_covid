@@ -23,8 +23,8 @@ describe
 *missings report, minimum(12400)
 missings dropvars udca_*, force
 
-/* Format dates 
-forvalues i=1/334 {
+* Format dates 
+forvalues i=1/179 {
 gen udcaA`i' = date(udca_`i', "YMD")
 format udcaA`i' %dD/N/CY
 drop udca_`i'
