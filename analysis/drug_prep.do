@@ -62,6 +62,13 @@ drop order_flag out_of_order dup_presc presc_number
 * Re-count number of prescriptions 
 gen udca=1
 bys patient_id: egen total_no_presc = total(udca)
+sum total_no_presc, d
+
+* Determine length of time from previous prescription 
+bys patient_id (udcaA): gen time_previous = udcaA - udcaA[_n-1]
+sum time_previous, d 
+gen year = year(udcaA)
+bys year: sum time_previous, d
 
 * Assume end date is 60 days after prescription generated
 gen stop_date = udcaA + 60 
