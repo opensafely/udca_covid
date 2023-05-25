@@ -222,6 +222,127 @@ out_of_orde |
 
 . bys patient_id: egen total_no_presc = total(udca)
 
+. sum total_no_presc, d
+
+                       total_no_presc
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%           13             11
+ 5%           15             11
+10%           16             11       Obs              19,809
+25%           18             11       Sum of Wgt.      19,809
+
+50%           20                      Mean           20.30274
+                        Largest       Std. Dev.      3.065763
+75%           22             29
+90%           24             29       Variance       9.398903
+95%           25             29       Skewness      -.0963922
+99%           27             29       Kurtosis       2.978792
+
+. 
+. * Determine length of time from previous prescription 
+. bys patient_id (udcaA): gen time_previous = udcaA - udcaA[_n-1]
+(1,000 missing values generated)
+
+. sum time_previous, d 
+
+                        time_previous
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            3              1
+10%            6              1       Obs              18,809
+25%           17              1       Sum of Wgt.      18,809
+
+50%           39                      Mean           55.17056
+                        Largest       Std. Dev.      52.84857
+75%           77            410
+90%          125            422       Variance       2792.971
+95%          162            433       Skewness       1.802642
+99%          238            455       Kurtosis       7.460346
+
+. gen year = year(udcaA)
+
+. bys year: sum time_previous, d
+
+-------------------------------------------------------------------------------
+-> year = 2020
+
+                        time_previous
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            3              1
+10%            6              1       Obs               4,176
+25%           14              1       Sum of Wgt.       4,176
+
+50%           33                      Mean           46.64392
+                        Largest       Std. Dev.      43.89903
+75%           66            251
+90%          106            255       Variance       1927.125
+95%          139            257       Skewness       1.567182
+99%          199            284       Kurtosis       5.635472
+
+-------------------------------------------------------------------------------
+-> year = 2021
+
+                        time_previous
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            3              1
+10%            7              1       Obs               6,353
+25%           18              1       Sum of Wgt.       6,353
+
+50%           40                      Mean           57.07414
+                        Largest       Std. Dev.      54.88202
+75%           81            385
+90%          130            386       Variance       3012.036
+95%          168            391       Skewness       1.796887
+99%          252            397       Kurtosis       7.302141
+
+-------------------------------------------------------------------------------
+-> year = 2022
+
+                        time_previous
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            4              1
+10%            7              1       Obs               6,294
+25%           19              1       Sum of Wgt.       6,294
+
+50%           42                      Mean           58.32682
+                        Largest       Std. Dev.      55.01998
+75%           82            403
+90%          132            404       Variance       3027.199
+95%          172            422       Skewness       1.728085
+99%          248            433       Kurtosis        6.96863
+
+-------------------------------------------------------------------------------
+-> year = 2023
+
+                        time_previous
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            3              1
+10%            6              1       Obs               1,986
+25%           18              1       Sum of Wgt.       1,986
+
+50%           42                      Mean           57.00755
+                        Largest       Std. Dev.      54.54557
+75%           78            336
+90%          129            367       Variance        2975.22
+95%          163            410       Skewness       1.984117
+99%          265            455       Kurtosis       8.901403
+
+
+. 
+. * Drop records in 2023 as this is after end of study
+. drop if year==2023
+(1,986 observations deleted)
+
 . 
 . * Assume end date is 60 days after prescription generated
 . gen stop_date = udcaA + 60 
@@ -262,7 +383,7 @@ out_of_orde |
 
 Duplicates in terms of all variables
 
-(12,425 observations deleted)
+(11,137 observations deleted)
 
 . 
 . * Add in rows where there are gaps in prescriptions 
@@ -273,13 +394,13 @@ Duplicates in terms of all variables
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,000       13.54       13.54
-          2 |      6,384       86.46      100.00
+          1 |      1,000       14.96       14.96
+          2 |      5,686       85.04      100.00
 ------------+-----------------------------------
-      Total |      7,384      100.00
+      Total |      6,686      100.00
 
 . expand to_expand 
-(6,384 observations created)
+(5,686 observations created)
 
 . 
 . * Flag new rows
@@ -291,22 +412,34 @@ Duplicates in terms of all variables
  to_expand |         0          1 |     Total
 -----------+----------------------+----------
          1 |     1,000          0 |     1,000 
-         2 |     6,384      6,384 |    12,768 
+         2 |     5,686      5,686 |    11,372 
 -----------+----------------------+----------
-     Total |     7,384      6,384 |    13,768 
+     Total |     6,686      5,686 |    12,372 
 
 . 
 . * Updating new rows 
+. sort patient_id start
+
 . replace udca=0 if new_record==1
-(6,384 real changes made)
+(5,686 real changes made)
 
 . replace start = stop if new_record==1
-(6,384 real changes made)
+(5,686 real changes made)
 
-. replace stop = start[_n+1] if new_record==1
-(6,384 real changes made)
+. bys patient_id (start): replace stop = start[_n+1] if new_record==1
+(5686 real changes made)
 
 . drop new_record to_expand
+
+. 
+. * Checks 
+. count if stop<start 
+  0
+
+. sort patient_id start
+
+. count if stop[_n-1]>start & patient_id==patient_id[_n-1]
+  0
 
 . 
 . * Update to match follow-up time
@@ -315,22 +448,22 @@ Duplicates in terms of all variables
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                        13,516
-        from master                    12,599  (_merge==1)
+    not matched                        12,248
+        from master                    11,331  (_merge==1)
         from using                        917  (_merge==2)
 
-    matched                             1,169  (_merge==3)
+    matched                             1,041  (_merge==3)
     -----------------------------------------
 
 . tab _merge
 
                  _merge |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
-        master only (1) |     12,599       85.80       85.80
-         using only (2) |        917        6.24       92.04
-            matched (3) |      1,169        7.96      100.00
+        master only (1) |     11,331       85.27       85.27
+         using only (2) |        917        6.90       92.17
+            matched (3) |      1,041        7.83      100.00
 ------------------------+-----------------------------------
-                  Total |     14,685      100.00
+                  Total |     13,289      100.00
 
 . 
 . * Update variables for people without prescriptions 
@@ -349,14 +482,14 @@ Duplicates in terms of all variables
 . 
 . * Determine end of follow-up date
 . gen dereg_dateA = date(dereg_date, "YMD")
-(13,561 missing values generated)
+(12,245 missing values generated)
 
 . format %dD/N/CY dereg_dateA
 
 . drop dereg_date
 
 . gen died_dateA = date(died_date_ons, "YMD")
-(13,591 missing values generated)
+(12,267 missing values generated)
 
 . format %dD/N/CY died_dateA
 
@@ -388,24 +521,24 @@ Duplicates in terms of all variables
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     11,539       78.58       78.58
-          1 |      3,146       21.42      100.00
+          0 |     11,539       86.83       86.83
+          1 |      1,750       13.17      100.00
 ------------+-----------------------------------
-      Total |     14,685      100.00
+      Total |     13,289      100.00
 
 . tab end_before 
 
  end_before |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     13,135       89.45       89.45
-          1 |      1,550       10.55      100.00
+          0 |     12,868       96.83       96.83
+          1 |        421        3.17      100.00
 ------------+-----------------------------------
-      Total |     14,685      100.00
+      Total |     13,289      100.00
 
 . 
 . * Drop whole rows that are after end_date 
 . drop if end_before 
-(1,550 observations deleted)
+(421 observations deleted)
 
 . 
 . * Check those flagged as ending after are last row only 
@@ -416,18 +549,37 @@ Duplicates in terms of all variables
            |       end_after
       last |         0          1 |     Total
 -----------+----------------------+----------
-         0 |    10,346        875 |    11,221 
-         1 |     1,193        721 |     1,914 
+         0 |    10,327        627 |    10,954 
+         1 |     1,212        702 |     1,914 
 -----------+----------------------+----------
-     Total |    11,539      1,596 |    13,135 
+     Total |    11,539      1,329 |    12,868 
 
 . 
 . replace stop = end_date if end_after==1 & end_before==0
-(1,596 real changes made)
+(1,329 real changes made)
 
 . 
 . count if start > stop 
   0
+
+. 
+. * Check that time covered by prescriptions equals total follow-up
+. gen time = stop - start 
+
+. bys patient_id: egen total_time = total(time)
+
+. 
+. gen total_time_unequal = total_time!=total_fu
+
+. tab total_time_unequal, m
+
+total_time_ |
+    unequal |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        917        7.13        7.13
+          1 |     11,951       92.87      100.00
+------------+-----------------------------------
+      Total |     12,868      100.00
 
 . 
 . * Drop unnecessary variables
@@ -438,7 +590,7 @@ Duplicates in terms of all variables
 file ./output/time_varying_udca.dta saved
 
 . 
-. */
+. 
 . 
 . 
 . 
@@ -449,7 +601,7 @@ file ./output/time_varying_udca.dta saved
 . 
 end of do-file
 
-. . file open output using "/tmp/drug_prep.do.U9jg.out", write text replace
+. . file open output using "/tmp/drug_prep.do.4Vyu.out", write text replace
 
 . . file write output "success" 
 

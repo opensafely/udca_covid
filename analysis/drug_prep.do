@@ -165,14 +165,15 @@ count if start > stop
 gen time = stop - start 
 bys patient_id: egen total_time = total(time)
 
-tab total_time total_fu, m 
+gen total_time_unequal = total_time!=total_fu
+tab total_time_unequal, m
 
 * Drop unnecessary variables
 drop _merge - end_date start_prior - last
 
 save ./output/time_varying_udca
 
-*/
+
 
 
 
