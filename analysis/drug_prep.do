@@ -18,8 +18,10 @@ save `tempfile'
 ** First import udca population
 import delimited using ./output/input_additional.csv, clear
 
-missings report, minimum(12400)
-missing dropvars udca_*, force
+describe 
+
+*missings report, minimum(12400)
+missings dropvars udca_*, force
 
 /* Format dates 
 forvalues i=1/334 {
