@@ -72,18 +72,6 @@
       "downloaded_at": "2023-05-24 13:26:17.208037Z",
       "sha": "e47cc254975c23f7507cf04bb655454f8b5ece18"
     },
-    "nhsd-downs-syndrome-snomed-ct.csv": {
-      "id": "nhsd/downs-syndrome-snomed-ct/3bb246d7",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/downs-syndrome-snomed-ct/3bb246d7/",
-      "downloaded_at": "2023-05-24 13:26:17.353307Z",
-      "sha": "87740850d5efad6d1d1762de77a6895854a7679c"
-    },
-    "nhsd-downs-syndrome-icd-10.csv": {
-      "id": "nhsd/downs-syndrome-icd-10/22a2d3a2",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/downs-syndrome-icd-10/22a2d3a2/",
-      "downloaded_at": "2023-05-24 13:26:17.482989Z",
-      "sha": "ea6bdda54711d24ea40e4d6ca354c295c5710420"
-    },
     "nhsd-sickle-spl-atriskv4-snomed-ct.csv": {
       "id": "nhsd/sickle-spl-atriskv4-snomed-ct/7083ed37",
       "url": "https://codelists.opensafely.org/codelist/nhsd/sickle-spl-atriskv4-snomed-ct/7083ed37/",
@@ -95,6 +83,12 @@
       "url": "https://codelists.opensafely.org/codelist/nhsd/sickle-spl-hes-icd-10/789c2d19/",
       "downloaded_at": "2023-05-24 13:26:17.779715Z",
       "sha": "5b1407e877e6f8c1c045ac083dd5dbc4c36ef3a4"
+    },
+    "user-bangzheng-cancer-excluding-lung-and-haematological-snomed-new.csv": {
+      "id": "user/bangzheng/cancer-excluding-lung-and-haematological-snomed-new/31cac0ec",
+      "url": "https://codelists.opensafely.org/codelist/user/bangzheng/cancer-excluding-lung-and-haematological-snomed-new/31cac0ec/",
+      "downloaded_at": "2023-05-30 15:14:02.373877Z",
+      "sha": "cac87b571ed24373102d103bbf03d593966bd8bd"
     },
     "opensafely-cancer-excluding-lung-and-haematological-snomed.csv": {
       "id": "opensafely/cancer-excluding-lung-and-haematological-snomed/2020-04-15",
@@ -155,18 +149,6 @@
       "url": "https://codelists.opensafely.org/codelist/nhsd/ckd-stage-5-icd-10/7bad9258/",
       "downloaded_at": "2023-05-24 13:26:19.657021Z",
       "sha": "242f2707db9159f86616ae31397ee63deb396bb5"
-    },
-    "nhsd-liver-cirrhosis.csv": {
-      "id": "nhsd/liver-cirrhosis/64f239d0",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/liver-cirrhosis/64f239d0/",
-      "downloaded_at": "2023-05-24 13:26:19.782248Z",
-      "sha": "bc5a4a1e876c1ddebbc075b1fe772ddb497d6a7a"
-    },
-    "nhsd-liver-cirrhosis-icd-10.csv": {
-      "id": "nhsd/liver-cirrhosis-icd-10/3e6506cd",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/liver-cirrhosis-icd-10/3e6506cd/",
-      "downloaded_at": "2023-05-24 13:26:19.922873Z",
-      "sha": "1731536c7ccb70aadee34fcf2507dc0a2f69a33a"
     },
     "nhsd-immunosuppresant-drugs-pra-dmd.csv": {
       "id": "nhsd/immunosuppresant-drugs-pra-dmd/526d9f5f",
@@ -288,6 +270,12 @@
       "downloaded_at": "2023-05-24 13:26:22.862962Z",
       "sha": "5cf53f1089cc57821fc00b09f45149aa0155d20d"
     },
+    "opensafely-solid-organ-transplantation-snomed.csv": {
+      "id": "opensafely/solid-organ-transplantation-snomed/2020-04-10",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/solid-organ-transplantation-snomed/2020-04-10/",
+      "downloaded_at": "2023-05-30 15:16:23.615967Z",
+      "sha": "cdb61aa51b4400c1aba2f8e4728c1b8130c4fd40"
+    },
     "nhsd-multiple-sclerosis-snomed-ct.csv": {
       "id": "nhsd/multiple-sclerosis-snomed-ct/7336ad2d",
       "url": "https://codelists.opensafely.org/codelist/nhsd/multiple-sclerosis-snomed-ct/7336ad2d/",
@@ -335,6 +323,12 @@
       "url": "https://codelists.opensafely.org/codelist/nhsd/huntingtons/7e01ad05/",
       "downloaded_at": "2023-05-24 13:26:23.994820Z",
       "sha": "96987e57a5813399b57b73c76ac675eee5894ab5"
+    },
+    "nhsd-primary-care-domain-refsets-ld_cod.csv": {
+      "id": "nhsd-primary-care-domain-refsets/ld_cod/20210127",
+      "url": "https://codelists.opensafely.org/codelist/nhsd-primary-care-domain-refsets/ld_cod/20210127/",
+      "downloaded_at": "2023-05-30 14:37:10.417328Z",
+      "sha": "0c5bc3b050a55c2090e16932fd7364a0be775cb4"
     }
   }
 }

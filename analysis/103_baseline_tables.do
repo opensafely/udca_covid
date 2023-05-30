@@ -41,15 +41,23 @@ replace bmi_cat = 0 if bmi_cat==.
 label define bmi 0 "Missing" 1 "Underweight" 2 "Healthy range" 3 "Overweight" 4 "Obese" 5 "Morbidly obese"
 label values bmi_cat bmi
 
+replace oral_steroid_drugs_nhsd=. if oral_steroid_drug_nhsd_3m_count < 2 & oral_steroid_drug_nhsd_12m_count < 4
+gen imid_nhsd=max(oral_steroid_drugs_nhsd, immunosuppresant_drugs_nhsd)
+gen rare_neuro_nhsd = max(multiple_sclerosis_nhsd, motor_neurone_disease_nhsd, myasthenia_gravis_nhsd, huntingtons_disease_nhsd)
+gen solid_organ_transplant_bin = solid_organ_transplant_nhsd_new!=""
+gen any_high_risk_condition = max(learning_disability_nhsd_snomed, cancer_opensafely_snomed_new, haematological_disease_nhsd, ///
+ckd_stage_5_nhsd, imid_nhsd, immunosupression_nhsd_new, hiv_aids_nhsd, solid_organ_transplant_bin, rare_neuro_nhsd)
+
 foreach var in gc budesonide fenofibrate {
-    gen `var'_any = ()`var'_count>=1 & `var'_count!=.)
+    gen `var'_any = (`var'_count>=1 & `var'_count!=.)
 }
 gen udca_any = (udca_count_fu>=1 & udca_count_fu!=.)
 
 * Create tables 
 * Characteristics whole cohort
 preserve
-table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_disease_bl cat \ smoking_status cat \ bmi_cat cat \ has_pbc bin) clear
+table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_disease_bl cat \ smoking_status cat \ bmi_cat cat \ has_pbc bin \ ///
+any_high_risk_condition cat) clear
 export delimited using ./output/tables/baseline_table.csv, replace
 * Rounding numbers in table to nearest 5
 destring _columna_1, gen(n) force
@@ -57,6 +65,20 @@ destring _columnb_1, gen(percent) ignore("-" "%" "(" ")")  force
 gen rounded_n = round(n, 5)
 keep factor level rounded_n percent
 export delimited using ./output/tables/baseline_table_rounded.csv
+restore 
+
+* High risk conditions
+preserve
+table1_mc, vars(learning_disability_nhsd_snomed cat \ cancer_opensafely_snomed_new cat \ haematological_disease_nhsd cat \ ///
+ckd_stage_5_nhsd cat \ imid_nhsd cat \ immunosupression_nhsd_new cat \ hiv_aids_nhsd cat \ solid_organ_transplant_nhsd_new cat \  ///
+rare_neuro_nhsd cat) clear
+export delimited using ./output/tables/high_risk.csv, replace
+* Rounding numbers in table to nearest 5
+destring _columna_1, gen(n) force
+destring _columnb_1, gen(percent) ignore("-" "%" "(" ")")  force
+gen rounded_n = round(n, 5)
+keep factor level rounded_n percent
+export delimited using ./output/tables/high_risk_rounded.csv
 restore 
 
 * Characteristics by any exposure

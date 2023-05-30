@@ -29,10 +29,9 @@ user/ruthcostello/fenofibrates/56f0bc2c
 opensafely/asthma-oral-prednisolone-medication/2020-04-27
 
 # COVID high risk conditions
-nhsd/downs-syndrome-snomed-ct/3bb246d7
-nhsd/downs-syndrome-icd-10/22a2d3a2
 nhsd/sickle-spl-atriskv4-snomed-ct/7083ed37
 nhsd/sickle-spl-hes-icd-10/789c2d19
+user/bangzheng/cancer-excluding-lung-and-haematological-snomed-new/31cac0ec
 opensafely/cancer-excluding-lung-and-haematological-snomed/2020-04-15
 opensafely/lung-cancer-snomed/2020-04-15
 opensafely/chemotherapy-or-radiotherapy-snomed/2020-04-15
@@ -43,8 +42,6 @@ nhsd/haematological-malignancies-icd-10/073f45c0
 nhsd/haematological-malignancies-snomed/31a49191
 nhsd/ckd-stage-5-snomed-ct/2808538e
 nhsd/ckd-stage-5-icd-10/7bad9258
-nhsd/liver-cirrhosis/64f239d0
-nhsd/liver-cirrhosis-icd-10/3e6506cd
 nhsd/immunosuppresant-drugs-pra-dmd/526d9f5f
 nhsd/immunosuppresant-drugs-pra-snomed/6b7d1294
 nhsd/oral-steroid-drugs-pra-dmd/44292c02
@@ -65,6 +62,7 @@ nhsd/transplant-ileum_1-spl-hes-opcs4/3331f8af
 nhsd/transplant-ileum_2-spl-hes-opcs4/1a22857a
 nhsd/transplant-ileum_1-y-codes-spl-hes-opcs4/01131245
 nhsd/transplant-ileum_2-y-codes-spl-hes-opcs4/68039f0f
+opensafely/solid-organ-transplantation-snomed/2020-04-10
 nhsd/multiple-sclerosis-snomed-ct/7336ad2d
 nhsd/multiple-sclerosis/4be2c69b
 nhsd/motor-neurone-disease-snomed-ct/5a2739f8
@@ -73,3 +71,4 @@ nhsd/myasthenia-gravis-snomed-ct/0c462063
 nhsd/myasthenia-gravis/32d35366
 nhsd/huntingtons-snomed-ct/25559398
 nhsd/huntingtons/7e01ad05
+nhsd-primary-care-domain-refsets/ld_cod/20210127

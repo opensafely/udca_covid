@@ -24,7 +24,7 @@ describe
 missings dropvars udca_*, force
 
 * Format dates 
-forvalues i=1/179 {
+forvalues i=1/40 {
 gen udcaA`i' = date(udca_`i', "YMD")
 format udcaA`i' %dD/N/CY
 drop udca_`i'
@@ -127,6 +127,22 @@ gen total_fu = end_date - date("01/03/2020", "DMY")
 gen start_prior = (start < date("01/03/2020", "DMY"))
 replace start = date("01/03/2020", "DMY") if start_prior==1
 
+* Identify first prescriptions that start after March 2020
+bys patient_id (start): gen start_after = 1 + (start > date("01/03/2020", "DMY") & _n==1)
+tab start_after
+expand start_after
+
+* Flag new rows
+bys patient_id start: gen new_record = (_n==2)
+tab start_after new_record 
+
+* Updating new rows 
+sort patient_id start
+replace udca=0 if new_record==1
+replace stop = start if new_record==1
+replace start = date("01/03/2020", "DMY") if new_record==1
+drop new_record start_after
+
 * Identify rows that end after study end date for person 
 gen end_after = (stop > end_date )
 gen end_before = (start > end_date) 
@@ -143,8 +159,32 @@ tab last end_after
 
 replace stop = end_date if end_after==1 & end_before==0
 
+* Identify prescriptions that end prior to end of follow-up 
+bys patient_id (start): gen stop_prior = 1 + (stop < end_date & _n==_N)
+tab stop_prior
+expand stop_prior
+
+* Flag new rows
+bys patient_id start: gen new_record = (_n==2)
+tab stop_prior new_record 
+
+* Updating new rows 
+sort patient_id start
+replace udca=0 if new_record==1
+replace start =  stop if new_record==1
+replace stop = end_date if new_record==1
+drop new_record stop_prior
+
 count if start > stop 
 
+* Check that time covered by prescriptions equals total follow-up
+gen time = stop - start 
+bys patient_id: egen total_time = total(time)
+
+gen total_time_unequal = total_time!=total_fu
+tab total_time_unequal, m
+
+save ./output/time_varying_udca_all_vars
 * Drop unnecessary variables
 drop _merge - end_date start_prior - last
 
