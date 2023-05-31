@@ -53,6 +53,10 @@ foreach var in gc budesonide fenofibrate {
 }
 gen udca_any = (udca_count_fu>=1 & udca_count_fu!=.)
 
+gen vacc_any = covid_vacc_date!=""
+
+gen severe_disease_fu = severe_disease_fu_date!=""
+
 * Create tables 
 * Characteristics whole cohort
 preserve
@@ -98,7 +102,7 @@ restore
 
 * Additional medications by any exposure
 preserve 
-table1_mc, vars(budesonide_any bin \ fenofibrate_any bin \ gc_any bin \ oca_bl bin \ rituximab_bl bin) by(udca_any) clear
+table1_mc, vars(budesonide_any bin \ fenofibrate_any bin \ gc_any bin \ oca_bl bin \ rituximab_bl bin \ severe_disease_fu bin \ vacc_any bin ) by(udca_any) clear
 export delimited using ./output/tables/additional_meds_udca.csv, replace
 * Rounding numbers in table to nearest 5
 destring _columna_1, gen(n1) force

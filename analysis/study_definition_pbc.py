@@ -339,7 +339,7 @@ study = StudyDefinition(
         find_first_match_in_period = True,
         return_expectations={"date": {"earliest": "2020-03-01"}},
     ),
-    severe_disease_fu = patients.minimum_of("severe_disease_fu_snomed", "severe_disease_fu_icd"),
+    severe_disease_fu_date = patients.minimum_of("severe_disease_fu_snomed", "severe_disease_fu_icd"),
 
     # COVID-19 high risk conditions 
 
