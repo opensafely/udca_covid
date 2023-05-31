@@ -186,7 +186,7 @@ tab total_time_unequal, m
 
 save ./output/time_varying_udca_all_vars
 * Drop unnecessary variables
-drop _merge - end_date start_prior - last
+keep patient_id start stop udca 
 
 save ./output/time_varying_udca
 

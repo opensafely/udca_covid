@@ -3,7 +3,7 @@
 . tempfile tempfile 
 
 . import delimited using ./output/input_pbc.csv
-(32 vars, 1,000 obs)
+(94 vars, 1,000 obs)
 
 . save `tempfile' 
 file /tmp/St00015.000001 saved
@@ -14,7 +14,9 @@ file /tmp/St00015.000001 saved
 (note: file ./output/tables/udca_descriptives.txt not found)
 
 . 
-. use ./output/time_varying_udca, clear 
+. use ./output/time_varying_udca_all_vars, clear 
+
+. drop last 
 
 . bys patient_id: gen last = _n==_N 
 
@@ -27,15 +29,15 @@ file /tmp/St00015.000001 saved
       Percentiles      Smallest
  1%            0              0
  5%            0              0
-10%            0              0       Obs               1,917
-25%            0              0       Sum of Wgt.       1,917
+10%            0              0       Obs               1,895
+25%            0              0       Sum of Wgt.       1,895
 
-50%           14                      Mean           10.33333
-                        Largest       Std. Dev.      10.15239
+50%           15                      Mean           10.46332
+                        Largest       Std. Dev.      10.16956
 75%           20             28
-90%           23             28       Variance        103.071
-95%           24             29       Skewness       .0570262
-99%           26             29       Kurtosis       1.177714
+90%           23             28       Variance       103.4199
+95%           24             29       Skewness       .0393317
+99%           26             29       Kurtosis       1.182572
 
 . file write tablecontent _tab ("Number of obervations") _tab ("Mean") _tab ("S
 > D") _tab ("Median") _tab ("25th percentile") _tab ("75th percentile") _tab ("
@@ -52,17 +54,17 @@ file /tmp/St00015.000001 saved
                           total_fu
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%           25              2
- 5%          113              4
-10%          247              4       Obs               1,917
-25%          672              7       Sum of Wgt.       1,917
+ 1%           25              3
+ 5%          114              4
+10%          232              5       Obs               1,895
+25%          667              5       Sum of Wgt.       1,895
 
-50%         1035                      Mean           834.1836
-                        Largest       Std. Dev.      319.5059
+50%         1035                      Mean           829.6032
+                        Largest       Std. Dev.      324.6559
 75%         1035           1035
-90%         1035           1035       Variance         102084
-95%         1035           1035       Skewness      -1.326915
-99%         1035           1035       Kurtosis       3.260277
+90%         1035           1035       Variance       105401.5
+95%         1035           1035       Skewness      -1.283462
+99%         1035           1035       Kurtosis       3.097494
 
 . file write tablecontent ("Total length of follow-up") _tab %3.1f (r(N)) _tab 
 > %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _t
@@ -78,22 +80,22 @@ file /tmp/St00015.000001 saved
 
 . * From this generate variable with time off udca 
 . bys patient_id: egen time_off_udca = max(time_udca) if udca==0
-(6460 missing values generated)
+(6419 missing values generated)
 
 . bys patient_id (time_off_udca): replace time_off_udca = time_off_udca[_n-1] i
 > f time_off_udca==. & time_off_udca[_n-1]!=.
-(6460 real changes made)
+(6419 real changes made)
 
 . * Update time_udca to only contain time on udca 
 . replace time_udca=. if udca==0
-(7,714 real changes made, 7,714 to missing)
+(7,688 real changes made, 7,688 to missing)
 
 . bys patient_id: egen time_on_udca = max(time_udca)
-(920 missing values generated)
+(902 missing values generated)
 
 . * Check on and off equals total time of follow-up 
 . count if time_on_udca + time_off_udca!=total_fu
-  920
+  902
 
 . 
 . sum time_on_udca if last==1, d 
@@ -101,17 +103,17 @@ file /tmp/St00015.000001 saved
                         time_on_udca
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%          101             26
- 5%          419             37
-10%          503             63       Obs                 997
-25%          586             77       Sum of Wgt.         997
+ 1%          115             23
+ 5%          413             28
+10%          504             60       Obs                 993
+25%          581             60       Sum of Wgt.         993
 
-50%          654                      Mean           637.3821
-                        Largest       Std. Dev.      130.0013
-75%          719            866
-90%          769            866       Variance       16900.33
-95%          799            867       Skewness      -1.767607
-99%          840            893       Kurtosis       7.946099
+50%          658                      Mean           638.9688
+                        Largest       Std. Dev.       128.713
+75%          723            887
+90%          772            890       Variance       16567.03
+95%          801            898       Skewness      -1.583777
+99%          858            916       Kurtosis       7.367255
 
 . file write tablecontent ("Total time on UDCA") _tab %3.1f (r(N)) _tab %3.1f (
 > r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %3.1
@@ -123,17 +125,17 @@ file /tmp/St00015.000001 saved
                         time_off_udca
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%           19              2
- 5%           89              4
-10%          195              4       Obs               1,917
-25%          308              7       Sum of Wgt.       1,917
+ 1%           21              1
+ 5%          103              2
+10%          187              3       Obs               1,895
+25%          297              4       Sum of Wgt.       1,895
 
-50%          410                      Mean           502.6917
-                        Largest       Std. Dev.      294.9715
-75%          682           1035
-90%         1035           1035       Variance       87008.21
-95%         1035           1035       Skewness       .6683491
-99%         1035           1035       Kurtosis       2.329983
+50%          404                      Mean           494.7768
+                        Largest       Std. Dev.      295.8118
+75%          667           1035
+90%         1035           1035       Variance       87504.61
+95%         1035           1035       Skewness       .7146834
+99%         1035           1035       Kurtosis       2.378721
 
 . file write tablecontent ("Total time off UDCA") _tab %3.1f (r(N)) _tab %3.1f 
 > (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %3.
@@ -149,15 +151,15 @@ file /tmp/St00015.000001 saved
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            1              1       Obs               1,917
-25%            1              1       Sum of Wgt.       1,917
+10%            1              1       Obs               1,895
+25%            1              1       Sum of Wgt.       1,895
 
-50%            7                      Mean           7.393845
-                        Largest       Std. Dev.      6.529108
+50%            8                      Mean           7.444327
+                        Largest       Std. Dev.      6.516322
 75%           14             20
-90%           16             20       Variance       42.62925
-95%           17             21       Skewness       .2049825
-99%           18             21       Kurtosis       1.319452
+90%           16             20       Variance       42.46245
+95%           17             21       Skewness       .1823646
+99%           19             21       Kurtosis        1.30653
 
 . file write tablecontent ("Number of rows") _tab %3.1f (r(N)) _tab %3.1f (r(me
 > an)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %3.1f (r
@@ -169,7 +171,7 @@ file /tmp/St00015.000001 saved
 . 
 end of do-file
 
-. . file open output using "/tmp/102_udca_descriptives.do.75ls.out", write text
+. . file open output using "/tmp/102_udca_descriptives.do.OmNb.out", write text
 >  replace
 
 . . file write output "success" 

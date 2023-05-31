@@ -70,7 +70,7 @@ restore
 * High risk conditions
 preserve
 table1_mc, vars(learning_disability_nhsd_snomed cat \ cancer_opensafely_snomed_new cat \ haematological_disease_nhsd cat \ ///
-ckd_stage_5_nhsd cat \ imid_nhsd cat \ immunosupression_nhsd_new cat \ hiv_aids_nhsd cat \ solid_organ_transplant_nhsd_new cat \  ///
+ckd_stage_5_nhsd cat \ imid_nhsd cat \ immunosupression_nhsd_new cat \ hiv_aids_nhsd cat \ solid_organ_transplant_bin cat \  ///
 rare_neuro_nhsd cat) clear
 export delimited using ./output/tables/high_risk.csv, replace
 * Rounding numbers in table to nearest 5
@@ -107,7 +107,7 @@ destring _columnb_1, gen(percent1) ignore("-" "%" "(" ")")  force
 destring _columnb_0, gen(percent0) ignore("-" "%" "(" ")")  force
 gen rounded_n1 = round(n1, 5)
 gen rounded_n0 = round(n0, 5)
-keep factor level rounded_n0 percent0 rounded_n1 percent1
+keep factor rounded_n0 percent0 rounded_n1 percent1
 export delimited using ./output/tables/additional_meds_udca_rounded.csv
 restore 
 

@@ -6,7 +6,7 @@
 . tempfile tempfile 
 
 . import delimited using ./output/input_pbc.csv
-(32 vars, 1,000 obs)
+(94 vars, 1,000 obs)
 
 . save `tempfile' 
 file /tmp/St00015.000001 saved
@@ -14,14 +14,14 @@ file /tmp/St00015.000001 saved
 . 
 . ** First import udca population
 . import delimited using ./output/input_additional.csv, clear
-(41 vars, 1,000 obs)
+(335 vars, 1,000 obs)
 
 . 
 . describe 
 
 Contains data
   obs:         1,000                          
- vars:            41                          
+ vars:           335                          
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -66,6 +66,300 @@ udca_37         str10   %10s
 udca_38         str10   %10s                  
 udca_39         str10   %10s                  
 udca_40         str10   %10s                  
+udca_41         str10   %10s                  
+udca_42         str10   %10s                  
+udca_43         str10   %10s                  
+udca_44         str10   %10s                  
+udca_45         str10   %10s                  
+udca_46         str10   %10s                  
+udca_47         str10   %10s                  
+udca_48         str10   %10s                  
+udca_49         str10   %10s                  
+udca_50         str10   %10s                  
+udca_51         str10   %10s                  
+udca_52         str10   %10s                  
+udca_53         str10   %10s                  
+udca_54         str10   %10s                  
+udca_55         str10   %10s                  
+udca_56         str10   %10s                  
+udca_57         str10   %10s                  
+udca_58         str10   %10s                  
+udca_59         str10   %10s                  
+udca_60         str10   %10s                  
+udca_61         str10   %10s                  
+udca_62         str10   %10s                  
+udca_63         str10   %10s                  
+udca_64         str10   %10s                  
+udca_65         str10   %10s                  
+udca_66         str10   %10s                  
+udca_67         str10   %10s                  
+udca_68         str10   %10s                  
+udca_69         str10   %10s                  
+udca_70         str10   %10s                  
+udca_71         str10   %10s                  
+udca_72         str10   %10s                  
+udca_73         str10   %10s                  
+udca_74         str10   %10s                  
+udca_75         str10   %10s                  
+udca_76         str10   %10s                  
+udca_77         str10   %10s                  
+udca_78         str10   %10s                  
+udca_79         str10   %10s                  
+udca_80         str10   %10s                  
+udca_81         str10   %10s                  
+udca_82         str10   %10s                  
+udca_83         str10   %10s                  
+udca_84         str10   %10s                  
+udca_85         str10   %10s                  
+udca_86         str10   %10s                  
+udca_87         str10   %10s                  
+udca_88         str10   %10s                  
+udca_89         str10   %10s                  
+udca_90         str10   %10s                  
+udca_91         str10   %10s                  
+udca_92         str10   %10s                  
+udca_93         str10   %10s                  
+udca_94         str10   %10s                  
+udca_95         str10   %10s                  
+udca_96         str10   %10s                  
+udca_97         str10   %10s                  
+udca_98         str10   %10s                  
+udca_99         str10   %10s                  
+udca_100        str10   %10s                  
+udca_101        str10   %10s                  
+udca_102        str10   %10s                  
+udca_103        str10   %10s                  
+udca_104        str10   %10s                  
+udca_105        str10   %10s                  
+udca_106        str10   %10s                  
+udca_107        str10   %10s                  
+udca_108        str10   %10s                  
+udca_109        str10   %10s                  
+udca_110        str10   %10s                  
+udca_111        str10   %10s                  
+udca_112        str10   %10s                  
+udca_113        str10   %10s                  
+udca_114        str10   %10s                  
+udca_115        str10   %10s                  
+udca_116        str10   %10s                  
+udca_117        str10   %10s                  
+udca_118        str10   %10s                  
+udca_119        str10   %10s                  
+udca_120        str10   %10s                  
+udca_121        str10   %10s                  
+udca_122        str10   %10s                  
+udca_123        str10   %10s                  
+udca_124        str10   %10s                  
+udca_125        str10   %10s                  
+udca_126        str10   %10s                  
+udca_127        str10   %10s                  
+udca_128        str10   %10s                  
+udca_129        str10   %10s                  
+udca_130        str10   %10s                  
+udca_131        str10   %10s                  
+udca_132        str10   %10s                  
+udca_133        str10   %10s                  
+udca_134        str10   %10s                  
+udca_135        str10   %10s                  
+udca_136        str10   %10s                  
+udca_137        str10   %10s                  
+udca_138        str10   %10s                  
+udca_139        str10   %10s                  
+udca_140        str10   %10s                  
+udca_141        str10   %10s                  
+udca_142        str10   %10s                  
+udca_143        str10   %10s                  
+udca_144        str10   %10s                  
+udca_145        str10   %10s                  
+udca_146        str10   %10s                  
+udca_147        str10   %10s                  
+udca_148        str10   %10s                  
+udca_149        str10   %10s                  
+udca_150        str10   %10s                  
+udca_151        str10   %10s                  
+udca_152        str10   %10s                  
+udca_153        str10   %10s                  
+udca_154        str10   %10s                  
+udca_155        str10   %10s                  
+udca_156        str10   %10s                  
+udca_157        str10   %10s                  
+udca_158        str10   %10s                  
+udca_159        str10   %10s                  
+udca_160        str10   %10s                  
+udca_161        str10   %10s                  
+udca_162        str10   %10s                  
+udca_163        str10   %10s                  
+udca_164        str10   %10s                  
+udca_165        str10   %10s                  
+udca_166        str10   %10s                  
+udca_167        str10   %10s                  
+udca_168        str10   %10s                  
+udca_169        str10   %10s                  
+udca_170        str10   %10s                  
+udca_171        str10   %10s                  
+udca_172        str10   %10s                  
+udca_173        str10   %10s                  
+udca_174        str10   %10s                  
+udca_175        str10   %10s                  
+udca_176        str10   %10s                  
+udca_177        str10   %10s                  
+udca_178        str10   %10s                  
+udca_179        str10   %10s                  
+udca_180        str10   %10s                  
+udca_181        str10   %10s                  
+udca_182        str10   %10s                  
+udca_183        str10   %10s                  
+udca_184        str10   %10s                  
+udca_185        str10   %10s                  
+udca_186        str10   %10s                  
+udca_187        str10   %10s                  
+udca_188        str10   %10s                  
+udca_189        str10   %10s                  
+udca_190        str10   %10s                  
+udca_191        str10   %10s                  
+udca_192        str10   %10s                  
+udca_193        str10   %10s                  
+udca_194        str10   %10s                  
+udca_195        str10   %10s                  
+udca_196        str10   %10s                  
+udca_197        str10   %10s                  
+udca_198        str10   %10s                  
+udca_199        str10   %10s                  
+udca_200        str10   %10s                  
+udca_201        str10   %10s                  
+udca_202        str10   %10s                  
+udca_203        str10   %10s                  
+udca_204        str10   %10s                  
+udca_205        str10   %10s                  
+udca_206        str10   %10s                  
+udca_207        str10   %10s                  
+udca_208        str10   %10s                  
+udca_209        str10   %10s                  
+udca_210        str10   %10s                  
+udca_211        str10   %10s                  
+udca_212        str10   %10s                  
+udca_213        str10   %10s                  
+udca_214        str10   %10s                  
+udca_215        str10   %10s                  
+udca_216        str10   %10s                  
+udca_217        str10   %10s                  
+udca_218        str10   %10s                  
+udca_219        str10   %10s                  
+udca_220        str10   %10s                  
+udca_221        str10   %10s                  
+udca_222        str10   %10s                  
+udca_223        str10   %10s                  
+udca_224        str10   %10s                  
+udca_225        str10   %10s                  
+udca_226        str10   %10s                  
+udca_227        str10   %10s                  
+udca_228        str10   %10s                  
+udca_229        str10   %10s                  
+udca_230        str10   %10s                  
+udca_231        str10   %10s                  
+udca_232        str10   %10s                  
+udca_233        str10   %10s                  
+udca_234        str10   %10s                  
+udca_235        str10   %10s                  
+udca_236        str10   %10s                  
+udca_237        str10   %10s                  
+udca_238        str10   %10s                  
+udca_239        str10   %10s                  
+udca_240        str10   %10s                  
+udca_241        str10   %10s                  
+udca_242        str10   %10s                  
+udca_243        str10   %10s                  
+udca_244        str10   %10s                  
+udca_245        str10   %10s                  
+udca_246        str10   %10s                  
+udca_247        str10   %10s                  
+udca_248        str10   %10s                  
+udca_249        str10   %10s                  
+udca_250        str10   %10s                  
+udca_251        str10   %10s                  
+udca_252        str10   %10s                  
+udca_253        str10   %10s                  
+udca_254        str10   %10s                  
+udca_255        str10   %10s                  
+udca_256        str10   %10s                  
+udca_257        str10   %10s                  
+udca_258        str10   %10s                  
+udca_259        str10   %10s                  
+udca_260        str10   %10s                  
+udca_261        str10   %10s                  
+udca_262        str10   %10s                  
+udca_263        str10   %10s                  
+udca_264        str10   %10s                  
+udca_265        str10   %10s                  
+udca_266        str10   %10s                  
+udca_267        str10   %10s                  
+udca_268        str10   %10s                  
+udca_269        str10   %10s                  
+udca_270        str10   %10s                  
+udca_271        str10   %10s                  
+udca_272        str10   %10s                  
+udca_273        str10   %10s                  
+udca_274        str10   %10s                  
+udca_275        str10   %10s                  
+udca_276        str10   %10s                  
+udca_277        str10   %10s                  
+udca_278        str10   %10s                  
+udca_279        str10   %10s                  
+udca_280        str10   %10s                  
+udca_281        str10   %10s                  
+udca_282        str10   %10s                  
+udca_283        str10   %10s                  
+udca_284        str10   %10s                  
+udca_285        str10   %10s                  
+udca_286        str10   %10s                  
+udca_287        str10   %10s                  
+udca_288        str10   %10s                  
+udca_289        str10   %10s                  
+udca_290        str10   %10s                  
+udca_291        str10   %10s                  
+udca_292        str10   %10s                  
+udca_293        str10   %10s                  
+udca_294        str10   %10s                  
+udca_295        str10   %10s                  
+udca_296        str10   %10s                  
+udca_297        str10   %10s                  
+udca_298        str10   %10s                  
+udca_299        str10   %10s                  
+udca_300        str10   %10s                  
+udca_301        str10   %10s                  
+udca_302        str10   %10s                  
+udca_303        str10   %10s                  
+udca_304        str10   %10s                  
+udca_305        str10   %10s                  
+udca_306        str10   %10s                  
+udca_307        str10   %10s                  
+udca_308        str10   %10s                  
+udca_309        str10   %10s                  
+udca_310        str10   %10s                  
+udca_311        str10   %10s                  
+udca_312        str10   %10s                  
+udca_313        str10   %10s                  
+udca_314        str10   %10s                  
+udca_315        str10   %10s                  
+udca_316        str10   %10s                  
+udca_317        str10   %10s                  
+udca_318        str10   %10s                  
+udca_319        str10   %10s                  
+udca_320        str10   %10s                  
+udca_321        str10   %10s                  
+udca_322        str10   %10s                  
+udca_323        str10   %10s                  
+udca_324        str10   %10s                  
+udca_325        str10   %10s                  
+udca_326        str10   %10s                  
+udca_327        str10   %10s                  
+udca_328        str10   %10s                  
+udca_329        str10   %10s                  
+udca_330        str10   %10s                  
+udca_331        str10   %10s                  
+udca_332        str10   %10s                  
+udca_333        str10   %10s                  
+udca_334        str10   %10s                  
 patient_id      int     %8.0g                 
 -------------------------------------------------------------------------------
 Sorted by: 
@@ -79,7 +373,43 @@ Checking missings in udca_1 udca_2 udca_3 udca_4 udca_5 udca_6 udca_7 udca_8
     udca_9 udca_10 udca_11 udca_12 udca_13 udca_14 udca_15 udca_16 udca_17
     udca_18 udca_19 udca_20 udca_21 udca_22 udca_23 udca_24 udca_25 udca_26
     udca_27 udca_28 udca_29 udca_30 udca_31 udca_32 udca_33 udca_34 udca_35
-    udca_36 udca_37 udca_38 udca_39 udca_40:
+    udca_36 udca_37 udca_38 udca_39 udca_40 udca_41 udca_42 udca_43 udca_44
+    udca_45 udca_46 udca_47 udca_48 udca_49 udca_50 udca_51 udca_52 udca_53
+    udca_54 udca_55 udca_56 udca_57 udca_58 udca_59 udca_60 udca_61 udca_62
+    udca_63 udca_64 udca_65 udca_66 udca_67 udca_68 udca_69 udca_70 udca_71
+    udca_72 udca_73 udca_74 udca_75 udca_76 udca_77 udca_78 udca_79 udca_80
+    udca_81 udca_82 udca_83 udca_84 udca_85 udca_86 udca_87 udca_88 udca_89
+    udca_90 udca_91 udca_92 udca_93 udca_94 udca_95 udca_96 udca_97 udca_98
+    udca_99 udca_100 udca_101 udca_102 udca_103 udca_104 udca_105 udca_106
+    udca_107 udca_108 udca_109 udca_110 udca_111 udca_112 udca_113 udca_114
+    udca_115 udca_116 udca_117 udca_118 udca_119 udca_120 udca_121 udca_122
+    udca_123 udca_124 udca_125 udca_126 udca_127 udca_128 udca_129 udca_130
+    udca_131 udca_132 udca_133 udca_134 udca_135 udca_136 udca_137 udca_138
+    udca_139 udca_140 udca_141 udca_142 udca_143 udca_144 udca_145 udca_146
+    udca_147 udca_148 udca_149 udca_150 udca_151 udca_152 udca_153 udca_154
+    udca_155 udca_156 udca_157 udca_158 udca_159 udca_160 udca_161 udca_162
+    udca_163 udca_164 udca_165 udca_166 udca_167 udca_168 udca_169 udca_170
+    udca_171 udca_172 udca_173 udca_174 udca_175 udca_176 udca_177 udca_178
+    udca_179 udca_180 udca_181 udca_182 udca_183 udca_184 udca_185 udca_186
+    udca_187 udca_188 udca_189 udca_190 udca_191 udca_192 udca_193 udca_194
+    udca_195 udca_196 udca_197 udca_198 udca_199 udca_200 udca_201 udca_202
+    udca_203 udca_204 udca_205 udca_206 udca_207 udca_208 udca_209 udca_210
+    udca_211 udca_212 udca_213 udca_214 udca_215 udca_216 udca_217 udca_218
+    udca_219 udca_220 udca_221 udca_222 udca_223 udca_224 udca_225 udca_226
+    udca_227 udca_228 udca_229 udca_230 udca_231 udca_232 udca_233 udca_234
+    udca_235 udca_236 udca_237 udca_238 udca_239 udca_240 udca_241 udca_242
+    udca_243 udca_244 udca_245 udca_246 udca_247 udca_248 udca_249 udca_250
+    udca_251 udca_252 udca_253 udca_254 udca_255 udca_256 udca_257 udca_258
+    udca_259 udca_260 udca_261 udca_262 udca_263 udca_264 udca_265 udca_266
+    udca_267 udca_268 udca_269 udca_270 udca_271 udca_272 udca_273 udca_274
+    udca_275 udca_276 udca_277 udca_278 udca_279 udca_280 udca_281 udca_282
+    udca_283 udca_284 udca_285 udca_286 udca_287 udca_288 udca_289 udca_290
+    udca_291 udca_292 udca_293 udca_294 udca_295 udca_296 udca_297 udca_298
+    udca_299 udca_300 udca_301 udca_302 udca_303 udca_304 udca_305 udca_306
+    udca_307 udca_308 udca_309 udca_310 udca_311 udca_312 udca_313 udca_314
+    udca_315 udca_316 udca_317 udca_318 udca_319 udca_320 udca_321 udca_322
+    udca_323 udca_324 udca_325 udca_326 udca_327 udca_328 udca_329 udca_330
+    udca_331 udca_332 udca_333 udca_334:
 1000 observations with missing values
 
 note: no variables qualify
@@ -141,7 +471,7 @@ note: no variables qualify
 Data                               wide   ->   long
 -----------------------------------------------------------------------------
 Number of obs.                     1000   ->   40000
-Number of variables                  41   ->       3
+Number of variables                 335   ->     297
 j variable (40 values)                    ->   presc_number
 xij variables:
               udcaA1 udcaA2 ... udcaA40   ->   udcaA
@@ -160,8 +490,8 @@ xij variables:
 
  order_flag |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     10,497       52.48       52.48
-          1 |      9,503       47.52      100.00
+          0 |     10,487       52.44       52.44
+          1 |      9,513       47.56      100.00
 ------------+-----------------------------------
       Total |     20,000      100.00
 
@@ -204,14 +534,14 @@ out_of_orde |
 
   dup_presc |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     19,809       99.05       99.05
-          1 |        191        0.95      100.00
+          0 |     19,828       99.14       99.14
+          1 |        172        0.86      100.00
 ------------+-----------------------------------
       Total |     20,000      100.00
 
 . * Drop them 
 . drop if dup_presc 
-(191 observations deleted)
+(172 observations deleted)
 
 . 
 . drop order_flag out_of_order dup_presc presc_number
@@ -262,7 +592,7 @@ out_of_orde |
 
 Duplicates in terms of all variables
 
-(12,425 observations deleted)
+(12,410 observations deleted)
 
 . 
 . * Add in rows where there are gaps in prescriptions 
@@ -273,13 +603,13 @@ Duplicates in terms of all variables
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,000       13.54       13.54
-          2 |      6,384       86.46      100.00
+          1 |      1,000       13.48       13.48
+          2 |      6,418       86.52      100.00
 ------------+-----------------------------------
-      Total |      7,384      100.00
+      Total |      7,418      100.00
 
 . expand to_expand 
-(6,384 observations created)
+(6,418 observations created)
 
 . 
 . * Flag new rows
@@ -291,20 +621,20 @@ Duplicates in terms of all variables
  to_expand |         0          1 |     Total
 -----------+----------------------+----------
          1 |     1,000          0 |     1,000 
-         2 |     6,384      6,384 |    12,768 
+         2 |     6,418      6,418 |    12,836 
 -----------+----------------------+----------
-     Total |     7,384      6,384 |    13,768 
+     Total |     7,418      6,418 |    13,836 
 
 . 
 . * Updating new rows 
 . replace udca=0 if new_record==1
-(6,384 real changes made)
+(6,418 real changes made)
 
 . replace start = stop if new_record==1
-(6,384 real changes made)
+(6,418 real changes made)
 
 . replace stop = start[_n+1] if new_record==1
-(6,384 real changes made)
+(6,418 real changes made)
 
 . drop new_record to_expand
 
@@ -315,48 +645,48 @@ Duplicates in terms of all variables
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                        13,516
-        from master                    12,599  (_merge==1)
-        from using                        917  (_merge==2)
+    not matched                        13,294
+        from master                    12,399  (_merge==1)
+        from using                        895  (_merge==2)
 
-    matched                             1,169  (_merge==3)
+    matched                             1,437  (_merge==3)
     -----------------------------------------
 
 . tab _merge
 
                  _merge |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
-        master only (1) |     12,599       85.80       85.80
-         using only (2) |        917        6.24       92.04
-            matched (3) |      1,169        7.96      100.00
+        master only (1) |     12,399       84.17       84.17
+         using only (2) |        895        6.08       90.25
+            matched (3) |      1,437        9.75      100.00
 ------------------------+-----------------------------------
-                  Total |     14,685      100.00
+                  Total |     14,731      100.00
 
 . 
 . * Update variables for people without prescriptions 
 . replace start = date("01/03/2020", "DMY") if _merge==2
-(917 real changes made)
+(895 real changes made)
 
 . replace udca = 0 if _merge==2
-(917 real changes made)
+(895 real changes made)
 
 . replace stop = date("31/12/2022", "DMY") if _merge==2
-(917 real changes made)
+(895 real changes made)
 
 . replace total_no_presc = 0 if _merge==2
-(917 real changes made)
+(895 real changes made)
 
 . 
 . * Determine end of follow-up date
 . gen dereg_dateA = date(dereg_date, "YMD")
-(13,561 missing values generated)
+(13,511 missing values generated)
 
 . format %dD/N/CY dereg_dateA
 
 . drop dereg_date
 
 . gen died_dateA = date(died_date_ons, "YMD")
-(13,591 missing values generated)
+(13,615 missing values generated)
 
 . format %dD/N/CY died_dateA
 
@@ -386,10 +716,10 @@ Duplicates in terms of all variables
 
 start_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |     13,685       93.19       93.19
-          2 |      1,000        6.81      100.00
+          1 |     13,731       93.21       93.21
+          2 |      1,000        6.79      100.00
 ------------+-----------------------------------
-      Total |     14,685      100.00
+      Total |     14,731      100.00
 
 . expand start_after
 (1,000 observations created)
@@ -403,10 +733,10 @@ start_after |      Freq.     Percent        Cum.
 start_afte |      new_record
          r |         0          1 |     Total
 -----------+----------------------+----------
-         1 |    13,685          0 |    13,685 
+         1 |    13,731          0 |    13,731 
          2 |     1,000      1,000 |     2,000 
 -----------+----------------------+----------
-     Total |    14,685      1,000 |    15,685 
+     Total |    14,731      1,000 |    15,731 
 
 . 
 . * Updating new rows 
@@ -434,24 +764,24 @@ start_afte |      new_record
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     12,536       79.92       79.92
-          1 |      3,149       20.08      100.00
+          0 |     12,491       79.40       79.40
+          1 |      3,240       20.60      100.00
 ------------+-----------------------------------
-      Total |     15,685      100.00
+      Total |     15,731      100.00
 
 . tab end_before 
 
  end_before |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     14,135       90.12       90.12
-          1 |      1,550        9.88      100.00
+          0 |     14,075       89.47       89.47
+          1 |      1,656       10.53      100.00
 ------------+-----------------------------------
-      Total |     15,685      100.00
+      Total |     15,731      100.00
 
 . 
 . * Drop whole rows that are after end_date 
 . drop if end_before 
-(1,550 observations deleted)
+(1,656 observations deleted)
 
 . 
 . * Check those flagged as ending after are last row only 
@@ -462,14 +792,14 @@ start_afte |      new_record
            |       end_after
       last |         0          1 |     Total
 -----------+----------------------+----------
-         0 |    12,212          6 |    12,218 
-         1 |       324      1,593 |     1,917 
+         0 |    12,175          5 |    12,180 
+         1 |       316      1,579 |     1,895 
 -----------+----------------------+----------
-     Total |    12,536      1,599 |    14,135 
+     Total |    12,491      1,584 |    14,075 
 
 . 
 . replace stop = end_date if end_after==1 & end_before==0
-(1,599 real changes made)
+(1,584 real changes made)
 
 . 
 . * Identify prescriptions that end prior to end of follow-up 
@@ -479,13 +809,13 @@ start_afte |      new_record
 
  stop_prior |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |     14,096       99.72       99.72
-          2 |         39        0.28      100.00
+          1 |     14,043       99.77       99.77
+          2 |         32        0.23      100.00
 ------------+-----------------------------------
-      Total |     14,135      100.00
+      Total |     14,075      100.00
 
 . expand stop_prior
-(39 observations created)
+(32 observations created)
 
 . 
 . * Flag new rows
@@ -496,23 +826,23 @@ start_afte |      new_record
            |      new_record
 stop_prior |         0          1 |     Total
 -----------+----------------------+----------
-         1 |    14,096          0 |    14,096 
-         2 |        39         39 |        78 
+         1 |    14,043          0 |    14,043 
+         2 |        32         32 |        64 
 -----------+----------------------+----------
-     Total |    14,135         39 |    14,174 
+     Total |    14,075         32 |    14,107 
 
 . 
 . * Updating new rows 
 . sort patient_id start
 
 . replace udca=0 if new_record==1
-(39 real changes made)
+(32 real changes made)
 
 . replace start =  stop if new_record==1
-(39 real changes made)
+(32 real changes made)
 
 . replace stop = end_date if new_record==1
-(39 real changes made)
+(32 real changes made)
 
 . drop new_record stop_prior
 
@@ -534,9 +864,9 @@ stop_prior |         0          1 |     Total
 total_time_ |
     unequal |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     14,174      100.00      100.00
+          0 |     14,107      100.00      100.00
 ------------+-----------------------------------
-      Total |     14,174      100.00
+      Total |     14,107      100.00
 
 . 
 . save ./output/time_varying_udca_all_vars
@@ -561,7 +891,7 @@ file ./output/time_varying_udca.dta saved
 . 
 end of do-file
 
-. . file open output using "/tmp/101_drug_prep.do.ogDt.out", write text replace
+. . file open output using "/tmp/101_drug_prep.do.zfg8.out", write text replace
 
 . . file write output "success" 
 

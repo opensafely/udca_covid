@@ -16,7 +16,8 @@ save `tempfile'
 
 file open tablecontent using ./output/tables/udca_descriptives.txt, write text replace
 
-use ./output/time_varying_udca, clear 
+use ./output/time_varying_udca_all_vars, clear 
+drop last 
 bys patient_id: gen last = _n==_N 
 
 * summarise total number of prescriptions during follow-up 
