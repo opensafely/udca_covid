@@ -242,7 +242,7 @@ tab died_flag udca, row col
 * Summary demographics
 tab agegroup udca, row col m 
 tab sex udca, row col m 
-tab oba udca, row col m 
+tab oca_bl udca, row col m 
 
 * Export to table 
 * First drop out categories that will not be in real data > should be zero on server
