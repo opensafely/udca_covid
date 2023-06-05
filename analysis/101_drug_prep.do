@@ -62,6 +62,16 @@ drop order_flag out_of_order dup_presc presc_number
 * Re-count number of prescriptions 
 gen udca=1
 bys patient_id: egen total_no_presc = total(udca)
+sum total_no_presc, d
+
+* Determine length of time from previous prescription 
+bys patient_id (udcaA): gen time_previous = udcaA - udcaA[_n-1]
+sum time_previous, d 
+gen year = year(udcaA)
+bys year: sum time_previous, d
+
+* Drop records in 2023 as this is after end of study
+drop if year==2023
 
 * Assume end date is 60 days after prescription generated
 gen stop_date = udcaA + 60 
@@ -94,10 +104,16 @@ bys patient_id start: gen new_record = (_n==2)
 tab to_expand new_record 
 
 * Updating new rows 
+sort patient_id start
 replace udca=0 if new_record==1
 replace start = stop if new_record==1
-replace stop = start[_n+1] if new_record==1
+bys patient_id (start): replace stop = start[_n+1] if new_record==1
 drop new_record to_expand
+
+* Checks 
+count if stop<start 
+sort patient_id start
+count if stop[_n-1]>start & patient_id==patient_id[_n-1]
 
 * Update to match follow-up time
 * merge variables from original study definition 
@@ -190,7 +206,7 @@ keep patient_id start stop udca
 
 save ./output/time_varying_udca
 
-*/
+
 
 
 
