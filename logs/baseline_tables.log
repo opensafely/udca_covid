@@ -262,9 +262,10 @@ Data are presented as n (%).
 file ./output/tables/baseline_table.csv saved
 
 . * Rounding numbers in table to nearest 5
-. destring _columna_1, gen(n) force
-_columna_1: contains nonnumeric characters; n generated as int
-(3 missing values generated)
+. destring _columna_1, gen(n) ignore(",") force
+_columna_1: contains nonnumeric characters not specified in ignore()
+_columna_1: character , removed; n generated as int
+(2 missing values generated)
 
 . destring _columnb_1, gen(percent) ignore("-" "%" "(" ")")  force
 _columnb_1: contains nonnumeric characters not specified in ignore()
@@ -272,10 +273,10 @@ _columnb_1: characters space % ( ) removed; percent generated as double
 (2 missing values generated)
 
 . gen rounded_n = round(n, 5)
-(3 missing values generated)
+(2 missing values generated)
 
 . tostring rounded_n, gen(n_rounded)
-n_rounded generated as str3
+n_rounded generated as str4
 
 . replace n_rounded = "redacted" if (n_rounded=="5" | n_rounded=="4" | n_rounde
 > d=="3" | n_rounded=="2" | n_rounded=="1" | n_rounded=="0")
@@ -361,8 +362,9 @@ Data are presented as n (%).
 file ./output/tables/high_risk.csv saved
 
 . * Rounding numbers in table to nearest 5
-. destring _columna_1, gen(n) force
-_columna_1: contains nonnumeric characters; n generated as int
+. destring _columna_1, gen(n) ignore(",") force
+_columna_1: contains nonnumeric characters not specified in ignore(); n generat
+> ed as int
 (2 missing values generated)
 
 . destring _columnb_1, gen(percent) ignore("-" "%" "(" ")")  force
@@ -516,7 +518,7 @@ file ./output/tables/baseline_table_udca.csv saved
 
 . * Rounding numbers in table to nearest 5
 . forvalues i=0/1 {   
-  2.     destring _columna_`i', gen(n`i') force
+  2.     destring _columna_`i', gen(n`i') ignore(",") force
   3.     destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
   4.     gen rounded_n`i' = round(n`i', 5)
   5.     tostring rounded_n`i', gen(n`i'_rounded)
@@ -524,7 +526,8 @@ file ./output/tables/baseline_table_udca.csv saved
 > =="4" | n`i'_rounded=="3" | n`i'_rounded=="2" | n`i'_rounded=="1" | n`i'_roun
 > ded=="0")
   7. }
-_columna_0: contains nonnumeric characters; n0 generated as int
+_columna_0: contains nonnumeric characters not specified in ignore(); n0 genera
+> ted as int
 (2 missing values generated)
 _columnb_0: contains nonnumeric characters not specified in ignore()
 _columnb_0: characters space % ( ) removed; percent0 generated as double
@@ -532,7 +535,8 @@ _columnb_0: characters space % ( ) removed; percent0 generated as double
 (2 missing values generated)
 n0_rounded generated as str3
 (0 real changes made)
-_columna_1: contains nonnumeric characters; n1 generated as int
+_columna_1: contains nonnumeric characters not specified in ignore(); n1 genera
+> ted as int
 (2 missing values generated)
 _columnb_1: contains nonnumeric characters not specified in ignore()
 _columnb_1: characters space % ( ) removed; percent1 generated as double
@@ -604,32 +608,38 @@ file ./output/tables/additional_meds_udca.csv saved
 
 . * Rounding numbers in table to nearest 5
 . forvalues i=0/1 {   
-  2.     destring _columna_`i', gen(n`i') force
+  2.     destring _columna_`i', gen(n`i') ignore(",") force
   3.     destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
   4.     gen rounded_n`i' = round(n`i', 5)
   5.     tostring rounded_n`i', gen(n`i'_rounded)
-  6.     replace n`i'_rounded = "redacted" if (n`i'_rounded=="5" | n`i'_rounded
-> =="4" | n`i'_rounded=="3" | n`i'_rounded=="2" | n`i'_rounded=="1" | n`i'_roun
-> ded=="0")
-  7. }
-_columna_0: contains nonnumeric characters; n0 generated as int
+  6.     tostring percent`i', gen(percent_`i')
+  7.     replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
+  8.     replace percent_`i' = "redacted" if (rounded_n`i'<=5)
+  9. }
+_columna_0: contains nonnumeric characters not specified in ignore(); n0 genera
+> ted as int
 (2 missing values generated)
 _columnb_0: contains nonnumeric characters not specified in ignore()
 _columnb_0: characters space % ( ) removed; percent0 generated as double
 (2 missing values generated)
 (2 missing values generated)
 n0_rounded generated as str3
+percent_0 generated as str4
 (0 real changes made)
-_columna_1: contains nonnumeric characters; n1 generated as int
+(0 real changes made)
+_columna_1: contains nonnumeric characters not specified in ignore(); n1 genera
+> ted as int
 (2 missing values generated)
 _columnb_1: contains nonnumeric characters not specified in ignore()
 _columnb_1: characters space % ( ) removed; percent1 generated as double
 (2 missing values generated)
 (2 missing values generated)
 n1_rounded generated as str3
+percent_1 generated as str4
+(0 real changes made)
 (0 real changes made)
 
-. keep factor n0_rounded percent0 n1_rounded percent1
+. keep factor n0_rounded percent_0 n1_rounded percent_1
 
 . export delimited using ./output/tables/additional_meds_udca_rounded.csv
 file ./output/tables/additional_meds_udca_rounded.csv saved
@@ -642,7 +652,7 @@ file ./output/tables/additional_meds_udca_rounded.csv saved
 . 
 end of do-file
 
-. . file open output using "/tmp/103_baseline_tables.do.hXdH.out", write text r
+. . file open output using "/tmp/103_baseline_tables.do.OmMy.out", write text r
 > eplace
 
 . . file write output "success" 
