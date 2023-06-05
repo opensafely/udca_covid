@@ -64,10 +64,12 @@ table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_disease
 any_high_risk_condition cat) clear
 export delimited using ./output/tables/baseline_table.csv, replace
 * Rounding numbers in table to nearest 5
-destring _columna_1, gen(n) force
+destring _columna_1, gen(n) ignore(",") force
 destring _columnb_1, gen(percent) ignore("-" "%" "(" ")")  force
 gen rounded_n = round(n, 5)
-keep factor level rounded_n percent
+tostring rounded_n, gen(n_rounded)
+replace n_rounded = "redacted" if (n_rounded=="5" | n_rounded=="4" | n_rounded=="3" | n_rounded=="2" | n_rounded=="1" | n_rounded=="0")
+keep factor level n_rounded percent
 export delimited using ./output/tables/baseline_table_rounded.csv
 restore 
 
@@ -78,10 +80,12 @@ ckd_stage_5_nhsd cat \ imid_nhsd cat \ immunosupression_nhsd_new cat \ hiv_aids_
 rare_neuro_nhsd cat) clear
 export delimited using ./output/tables/high_risk.csv, replace
 * Rounding numbers in table to nearest 5
-destring _columna_1, gen(n) force
+destring _columna_1, gen(n) ignore(",") force
 destring _columnb_1, gen(percent) ignore("-" "%" "(" ")")  force
 gen rounded_n = round(n, 5)
-keep factor level rounded_n percent
+tostring rounded_n, gen(n_rounded)
+replace n_rounded = "redacted" if (n_rounded=="5" | n_rounded=="4" | n_rounded=="3" | n_rounded=="2" | n_rounded=="1" | n_rounded=="0")
+keep factor level n_rounded percent
 export delimited using ./output/tables/high_risk_rounded.csv
 restore 
 
@@ -90,13 +94,14 @@ preserve
 table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_disease_bl cat \ smoking_status cat \ bmi_cat cat \ has_pbc bin) by(udca_any) clear
 export delimited using ./output/tables/baseline_table_udca.csv, replace
 * Rounding numbers in table to nearest 5
-destring _columna_1, gen(n1) force
-destring _columna_0, gen(n0) force
-destring _columnb_1, gen(percent1) ignore("-" "%" "(" ")")  force
-destring _columnb_0, gen(percent0) ignore("-" "%" "(" ")")  force
-gen rounded_n1 = round(n1, 5)
-gen rounded_n0 = round(n0, 5)
-keep factor level rounded_n0 percent0 rounded_n1 percent1
+forvalues i=0/1 {   
+    destring _columna_`i', gen(n`i') ignore(",") force
+    destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
+    gen rounded_n`i' = round(n`i', 5)
+    tostring rounded_n`i', gen(n`i'_rounded)
+    replace n`i'_rounded = "redacted" if (n`i'_rounded=="5" | n`i'_rounded=="4" | n`i'_rounded=="3" | n`i'_rounded=="2" | n`i'_rounded=="1" | n`i'_rounded=="0")
+}
+keep factor n0_rounded percent0 n1_rounded percent1
 export delimited using ./output/tables/baseline_table_udca_rounded.csv
 restore 
 
@@ -105,13 +110,14 @@ preserve
 table1_mc, vars(budesonide_any bin \ fenofibrate_any bin \ gc_any bin \ oca_bl bin \ rituximab_bl bin \ severe_disease_fu bin \ vacc_any bin ) by(udca_any) clear
 export delimited using ./output/tables/additional_meds_udca.csv, replace
 * Rounding numbers in table to nearest 5
-destring _columna_1, gen(n1) force
-destring _columna_0, gen(n0) force
-destring _columnb_1, gen(percent1) ignore("-" "%" "(" ")")  force
-destring _columnb_0, gen(percent0) ignore("-" "%" "(" ")")  force
-gen rounded_n1 = round(n1, 5)
-gen rounded_n0 = round(n0, 5)
-keep factor rounded_n0 percent0 rounded_n1 percent1
+forvalues i=0/1 {   
+    destring _columna_`i', gen(n`i') ignore(",") force
+    destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
+    gen rounded_n`i' = round(n`i', 5)
+    tostring rounded_n`i', gen(n`i'_rounded)
+    replace n`i'_rounded = "redacted" if (n`i'_rounded=="5" | n`i'_rounded=="4" | n`i'_rounded=="3" | n`i'_rounded=="2" | n`i'_rounded=="1" | n`i'_rounded=="0")
+}
+keep factor n0_rounded percent0 n1_rounded percent1
 export delimited using ./output/tables/additional_meds_udca_rounded.csv
 restore 
 

@@ -274,7 +274,14 @@ _columnb_1: characters space % ( ) removed; percent generated as double
 . gen rounded_n = round(n, 5)
 (3 missing values generated)
 
-. keep factor level rounded_n percent
+. tostring rounded_n, gen(n_rounded)
+n_rounded generated as str3
+
+. replace n_rounded = "redacted" if (n_rounded=="5" | n_rounded=="4" | n_rounde
+> d=="3" | n_rounded=="2" | n_rounded=="1" | n_rounded=="0")
+(0 real changes made)
+
+. keep factor level n_rounded percent
 
 . export delimited using ./output/tables/baseline_table_rounded.csv
 file ./output/tables/baseline_table_rounded.csv saved
@@ -366,7 +373,15 @@ _columnb_1: characters space % ( ) removed; percent generated as double
 . gen rounded_n = round(n, 5)
 (2 missing values generated)
 
-. keep factor level rounded_n percent
+. tostring rounded_n, gen(n_rounded)
+n_rounded generated as str4
+
+. replace n_rounded = "redacted" if (n_rounded=="5" | n_rounded=="4" | n_rounde
+> d=="3" | n_rounded=="2" | n_rounded=="1" | n_rounded=="0")
+variable n_rounded was str4 now str8
+(1 real change made)
+
+. keep factor level n_rounded percent
 
 . export delimited using ./output/tables/high_risk_rounded.csv
 file ./output/tables/high_risk_rounded.csv saved
@@ -500,31 +515,34 @@ Data are presented as n (%).
 file ./output/tables/baseline_table_udca.csv saved
 
 . * Rounding numbers in table to nearest 5
-. destring _columna_1, gen(n1) force
-_columna_1: contains nonnumeric characters; n1 generated as int
-(2 missing values generated)
-
-. destring _columna_0, gen(n0) force
+. forvalues i=0/1 {   
+  2.     destring _columna_`i', gen(n`i') force
+  3.     destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
+  4.     gen rounded_n`i' = round(n`i', 5)
+  5.     tostring rounded_n`i', gen(n`i'_rounded)
+  6.     replace n`i'_rounded = "redacted" if (n`i'_rounded=="5" | n`i'_rounded
+> =="4" | n`i'_rounded=="3" | n`i'_rounded=="2" | n`i'_rounded=="1" | n`i'_roun
+> ded=="0")
+  7. }
 _columna_0: contains nonnumeric characters; n0 generated as int
 (2 missing values generated)
-
-. destring _columnb_1, gen(percent1) ignore("-" "%" "(" ")")  force
-_columnb_1: contains nonnumeric characters not specified in ignore()
-_columnb_1: characters space % ( ) removed; percent1 generated as double
-(2 missing values generated)
-
-. destring _columnb_0, gen(percent0) ignore("-" "%" "(" ")")  force
 _columnb_0: contains nonnumeric characters not specified in ignore()
 _columnb_0: characters space % ( ) removed; percent0 generated as double
 (2 missing values generated)
-
-. gen rounded_n1 = round(n1, 5)
 (2 missing values generated)
-
-. gen rounded_n0 = round(n0, 5)
+n0_rounded generated as str3
+(0 real changes made)
+_columna_1: contains nonnumeric characters; n1 generated as int
 (2 missing values generated)
+_columnb_1: contains nonnumeric characters not specified in ignore()
+_columnb_1: characters space % ( ) removed; percent1 generated as double
+(2 missing values generated)
+(2 missing values generated)
+n1_rounded generated as str3
+variable n1_rounded was str3 now str8
+(1 real change made)
 
-. keep factor level rounded_n0 percent0 rounded_n1 percent1
+. keep factor n0_rounded percent0 n1_rounded percent1
 
 . export delimited using ./output/tables/baseline_table_udca_rounded.csv
 file ./output/tables/baseline_table_udca_rounded.csv saved
@@ -585,31 +603,33 @@ Data are presented as n (%).
 file ./output/tables/additional_meds_udca.csv saved
 
 . * Rounding numbers in table to nearest 5
-. destring _columna_1, gen(n1) force
-_columna_1: contains nonnumeric characters; n1 generated as int
-(2 missing values generated)
-
-. destring _columna_0, gen(n0) force
+. forvalues i=0/1 {   
+  2.     destring _columna_`i', gen(n`i') force
+  3.     destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
+  4.     gen rounded_n`i' = round(n`i', 5)
+  5.     tostring rounded_n`i', gen(n`i'_rounded)
+  6.     replace n`i'_rounded = "redacted" if (n`i'_rounded=="5" | n`i'_rounded
+> =="4" | n`i'_rounded=="3" | n`i'_rounded=="2" | n`i'_rounded=="1" | n`i'_roun
+> ded=="0")
+  7. }
 _columna_0: contains nonnumeric characters; n0 generated as int
 (2 missing values generated)
-
-. destring _columnb_1, gen(percent1) ignore("-" "%" "(" ")")  force
-_columnb_1: contains nonnumeric characters not specified in ignore()
-_columnb_1: characters space % ( ) removed; percent1 generated as double
-(2 missing values generated)
-
-. destring _columnb_0, gen(percent0) ignore("-" "%" "(" ")")  force
 _columnb_0: contains nonnumeric characters not specified in ignore()
 _columnb_0: characters space % ( ) removed; percent0 generated as double
 (2 missing values generated)
-
-. gen rounded_n1 = round(n1, 5)
 (2 missing values generated)
-
-. gen rounded_n0 = round(n0, 5)
+n0_rounded generated as str3
+(0 real changes made)
+_columna_1: contains nonnumeric characters; n1 generated as int
 (2 missing values generated)
+_columnb_1: contains nonnumeric characters not specified in ignore()
+_columnb_1: characters space % ( ) removed; percent1 generated as double
+(2 missing values generated)
+(2 missing values generated)
+n1_rounded generated as str3
+(0 real changes made)
 
-. keep factor rounded_n0 percent0 rounded_n1 percent1
+. keep factor n0_rounded percent0 n1_rounded percent1
 
 . export delimited using ./output/tables/additional_meds_udca_rounded.csv
 file ./output/tables/additional_meds_udca_rounded.csv saved
@@ -622,7 +642,7 @@ file ./output/tables/additional_meds_udca_rounded.csv saved
 . 
 end of do-file
 
-. . file open output using "/tmp/103_baseline_tables.do.SBl9.out", write text r
+. . file open output using "/tmp/103_baseline_tables.do.hXdH.out", write text r
 > eplace
 
 . . file write output "success" 
