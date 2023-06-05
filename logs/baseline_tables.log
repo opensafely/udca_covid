@@ -1,0 +1,635 @@
+
+. 
+. import delimited using ./output/input_pbc.csv, clear
+(94 vars, 1,000 obs)
+
+. 
+. * Prepare variables for table 
+. replace ethnicity=6 if ethnicity==0
+(55 real changes made)
+
+. label define eth5                       1 "White"                            
+>            ///
+>                             2 "Mixed"                           ///          
+>                                    
+>                             3 "Asian"                                   ///
+>                             4 "Black"                                   ///
+>                             5 "Other"                                   ///
+>                             6 "Unknown"
+
+.                     
+. 
+. label values ethnicity eth5
+
+. safetab ethnicity, m
+10
+
+  ethnicity |      Freq.     Percent        Cum.
+------------+-----------------------------------
+      White |        156       15.60       15.60
+      Mixed |        195       19.50       35.10
+      Asian |        194       19.40       54.50
+      Black |        211       21.10       75.60
+      Other |        189       18.90       94.50
+    Unknown |         55        5.50      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+. *(2) IMD
+. replace imd=6 if imd==0
+(58 real changes made)
+
+. 
+. * Create age categories
+. egen age_cat = cut(age), at(18, 40, 60, 80, 120) icodes
+(202 missing values generated)
+
+. label define age 0 "18 - 40 years" 1 "41 - 60 years" 2 "61 - 80 years" 3 ">80
+>  years"
+
+. label values age_cat age
+
+. bys age_cat: sum age
+
+-------------------------------------------------------------------------------
+-> age_cat = 18 - 40 years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |        297    28.60606    6.108509         18         39
+
+-------------------------------------------------------------------------------
+-> age_cat = 41 - 60 years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |        267    49.74906    5.743969         40         59
+
+-------------------------------------------------------------------------------
+-> age_cat = 61 - 80 years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |        179    68.71508    5.253393         60         79
+
+-------------------------------------------------------------------------------
+-> age_cat = >80 years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |         55    84.36364    4.097712         80         99
+
+-------------------------------------------------------------------------------
+-> age_cat = .
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |        202     7.90099     5.22052          0         17
+
+
+. 
+. * BMI categories
+. egen bmi_cat = cut(bmi), at(0, 1, 18.5, 24.9, 29.9, 39.9, 100) icodes
+
+. bys bmi_cat: sum bmi
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 0
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        199           0           0          0          0
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |         75    15.24662    2.997751   4.711616   18.43334
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 2
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        203    22.17208    1.876575   18.52966   24.89043
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 3
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        188    27.31599    1.499595   24.92921   29.89093
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 4
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        277    34.03541    2.683299   29.91696     39.765
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 5
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |         58     43.9229    3.595622   39.98227   57.32217
+
+
+. * add missing . to zero category
+. replace bmi_cat = 0 if bmi_cat==. 
+(0 real changes made)
+
+. label define bmi 0 "Missing" 1 "Underweight" 2 "Healthy range" 3 "Overweight"
+>  4 "Obese" 5 "Morbidly obese"
+
+. label values bmi_cat bmi
+
+. 
+. replace oral_steroid_drugs_nhsd=. if oral_steroid_drug_nhsd_3m_count < 2 & or
+> al_steroid_drug_nhsd_12m_count < 4
+(945 real changes made, 945 to missing)
+
+. gen imid_nhsd=max(oral_steroid_drugs_nhsd, immunosuppresant_drugs_nhsd)
+
+. gen rare_neuro_nhsd = max(multiple_sclerosis_nhsd, motor_neurone_disease_nhsd
+> , myasthenia_gravis_nhsd, huntingtons_disease_nhsd)
+
+. gen solid_organ_transplant_bin = solid_organ_transplant_nhsd_new!=""
+
+. gen any_high_risk_condition = max(learning_disability_nhsd_snomed, cancer_ope
+> nsafely_snomed_new, haematological_disease_nhsd, ///
+> ckd_stage_5_nhsd, imid_nhsd, immunosupression_nhsd_new, hiv_aids_nhsd, solid_
+> organ_transplant_bin, rare_neuro_nhsd)
+
+. 
+. foreach var in gc budesonide fenofibrate {
+  2.     gen `var'_any = (`var'_count>=1 & `var'_count!=.)
+  3. }
+
+. gen udca_any = (udca_count_fu>=1 & udca_count_fu!=.)
+
+. 
+. gen vacc_any = covid_vacc_date!=""
+
+. 
+. gen severe_disease_fu = severe_disease_fu_date!=""
+
+. 
+. * Create tables 
+. * Characteristics whole cohort
+. preserve
+
+. table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_dise
+> ase_bl cat \ smoking_status cat \ bmi_cat cat \ has_pbc bin \ ///
+> any_high_risk_condition cat) clear
+
+  +---------------------------------------+
+  | factor                      N_1   m_1 |
+  |---------------------------------------|
+  | age_cat                     798   202 |
+  |---------------------------------------|
+  | sex                       1,000     0 |
+  |---------------------------------------|
+  | imd                       1,000     0 |
+  |---------------------------------------|
+  | ethnicity                 1,000     0 |
+  |---------------------------------------|
+  | severe_disease_bl         1,000     0 |
+  |---------------------------------------|
+  | smoking_status              500   500 |
+  |---------------------------------------|
+  | bmi_cat                   1,000     0 |
+  |---------------------------------------|
+  | has_pbc                   1,000     0 |
+  |---------------------------------------|
+  | any_high_risk_condition   1,000     0 |
+  +---------------------------------------+
+   N_ ... #records used below,   m_ ... #records not used
+ 
+  +-----------------------------------------------------------+
+  |                                            Total          |
+  |-----------------------------------------------------------|
+  |                                            N=1,000        |
+  |-----------------------------------------------------------|
+  | age_cat                   18 - 40 years    297 (37.2%)    |
+  |                           41 - 60 years    267 (33.5%)    |
+  |                           61 - 80 years    179 (22.4%)    |
+  |                           >80 years        55 ( 6.9%)     |
+  |-----------------------------------------------------------|
+  | sex                       F                478 (47.8%)    |
+  |                           M                507 (50.7%)    |
+  |                           U                15 ( 1.5%)     |
+  |-----------------------------------------------------------|
+  | imd                       1                214 (21.4%)    |
+  |                           2                186 (18.6%)    |
+  |                           3                184 (18.4%)    |
+  |                           4                177 (17.7%)    |
+  |                           5                181 (18.1%)    |
+  |                           6                58 ( 5.8%)     |
+  |-----------------------------------------------------------|
+  | ethnicity                 White            156 (15.6%)    |
+  |                           Mixed            195 (19.5%)    |
+  |                           Asian            194 (19.4%)    |
+  |                           Black            211 (21.1%)    |
+  |                           Other            189 (18.9%)    |
+  |                           Unknown          55 ( 5.5%)     |
+  |-----------------------------------------------------------|
+  | severe_disease_bl         0                500 (50.0%)    |
+  |                           1                500 (50.0%)    |
+  |-----------------------------------------------------------|
+  | smoking_status            E                126 (25.2%)    |
+  |                           M                44 ( 8.8%)     |
+  |                           N                107 (21.4%)    |
+  |                           S                223 (44.6%)    |
+  |-----------------------------------------------------------|
+  | bmi_cat                   Missing          199 (19.9%)    |
+  |                           Underweight      75 ( 7.5%)     |
+  |                           Healthy range    203 (20.3%)    |
+  |                           Overweight       188 (18.8%)    |
+  |                           Obese            277 (27.7%)    |
+  |                           Morbidly obese   58 ( 5.8%)     |
+  |-----------------------------------------------------------|
+  | has_pbc                                    500 (50.0%)    |
+  |-----------------------------------------------------------|
+  | any_high_risk_condition   1                1,000 (100.0%) |
+  +-----------------------------------------------------------+
+Data are presented as n (%).
+ 
+
+. export delimited using ./output/tables/baseline_table.csv, replace
+(note: file ./output/tables/baseline_table.csv not found)
+file ./output/tables/baseline_table.csv saved
+
+. * Rounding numbers in table to nearest 5
+. destring _columna_1, gen(n) force
+_columna_1: contains nonnumeric characters; n generated as int
+(3 missing values generated)
+
+. destring _columnb_1, gen(percent) ignore("-" "%" "(" ")")  force
+_columnb_1: contains nonnumeric characters not specified in ignore()
+_columnb_1: characters space % ( ) removed; percent generated as double
+(2 missing values generated)
+
+. gen rounded_n = round(n, 5)
+(3 missing values generated)
+
+. keep factor level rounded_n percent
+
+. export delimited using ./output/tables/baseline_table_rounded.csv
+file ./output/tables/baseline_table_rounded.csv saved
+
+. restore 
+
+. 
+. * High risk conditions
+. preserve
+
+. table1_mc, vars(learning_disability_nhsd_snomed cat \ cancer_opensafely_snome
+> d_new cat \ haematological_disease_nhsd cat \ ///
+> ckd_stage_5_nhsd cat \ imid_nhsd cat \ immunosupression_nhsd_new cat \ hiv_ai
+> ds_nhsd cat \ solid_organ_transplant_bin cat \  ///
+> rare_neuro_nhsd cat) clear
+
+  +-----------------------------------------------+
+  | factor                              N_1   m_1 |
+  |-----------------------------------------------|
+  | learning_disability_nhsd_snomed   1,000     0 |
+  |-----------------------------------------------|
+  | cancer_opensafely_snomed_new      1,000     0 |
+  |-----------------------------------------------|
+  | haematological_disease_nhsd       1,000     0 |
+  |-----------------------------------------------|
+  | ckd_stage_5_nhsd                  1,000     0 |
+  |-----------------------------------------------|
+  | imid_nhsd                         1,000     0 |
+  |-----------------------------------------------|
+  | immunosupression_nhsd_new         1,000     0 |
+  |-----------------------------------------------|
+  | hiv_aids_nhsd                     1,000     0 |
+  |-----------------------------------------------|
+  | solid_organ_transplant_bin        1,000     0 |
+  |-----------------------------------------------|
+  | rare_neuro_nhsd                   1,000     0 |
+  +-----------------------------------------------+
+   N_ ... #records used below,   m_ ... #records not used
+ 
+  +-------------------------------------------------------+
+  |                                           Total       |
+  |-------------------------------------------------------|
+  |                                           N=1,000     |
+  |-------------------------------------------------------|
+  | learning_disability_nhsd_snomed   0       500 (50.0%) |
+  |                                   1       500 (50.0%) |
+  |-------------------------------------------------------|
+  | cancer_opensafely_snomed_new      0       500 (50.0%) |
+  |                                   1       500 (50.0%) |
+  |-------------------------------------------------------|
+  | haematological_disease_nhsd       0       25 ( 2.5%)  |
+  |                                   1       975 (97.5%) |
+  |-------------------------------------------------------|
+  | ckd_stage_5_nhsd                  0       255 (25.5%) |
+  |                                   1       745 (74.5%) |
+  |-------------------------------------------------------|
+  | imid_nhsd                         0       486 (48.6%) |
+  |                                   1       514 (51.4%) |
+  |-------------------------------------------------------|
+  | immunosupression_nhsd_new         0       500 (50.0%) |
+  |                                   1       500 (50.0%) |
+  |-------------------------------------------------------|
+  | hiv_aids_nhsd                     0       743 (74.3%) |
+  |                                   1       257 (25.7%) |
+  |-------------------------------------------------------|
+  | solid_organ_transplant_bin        0       487 (48.7%) |
+  |                                   1       513 (51.3%) |
+  |-------------------------------------------------------|
+  | rare_neuro_nhsd                   0       1 ( 0.1%)   |
+  |                                   1       999 (99.9%) |
+  +-------------------------------------------------------+
+Data are presented as n (%).
+ 
+
+. export delimited using ./output/tables/high_risk.csv, replace
+(note: file ./output/tables/high_risk.csv not found)
+file ./output/tables/high_risk.csv saved
+
+. * Rounding numbers in table to nearest 5
+. destring _columna_1, gen(n) force
+_columna_1: contains nonnumeric characters; n generated as int
+(2 missing values generated)
+
+. destring _columnb_1, gen(percent) ignore("-" "%" "(" ")")  force
+_columnb_1: contains nonnumeric characters not specified in ignore()
+_columnb_1: characters space % ( ) removed; percent generated as double
+(2 missing values generated)
+
+. gen rounded_n = round(n, 5)
+(2 missing values generated)
+
+. keep factor level rounded_n percent
+
+. export delimited using ./output/tables/high_risk_rounded.csv
+file ./output/tables/high_risk_rounded.csv saved
+
+. restore 
+
+. 
+. * Characteristics by any exposure
+. preserve 
+
+. table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_dise
+> ase_bl cat \ smoking_status cat \ bmi_cat cat \ has_pbc bin) by(udca_any) cle
+> ar
+
+  +-------------------------------------------+
+  | factor              N_0   N_1   m_0   m_1 |
+  |-------------------------------------------|
+  | age_cat             603   195   148    54 |
+  |-------------------------------------------|
+  | sex                 751   249     0     0 |
+  |-------------------------------------------|
+  | imd                 751   249     0     0 |
+  |-------------------------------------------|
+  | ethnicity           751   249     0     0 |
+  |-------------------------------------------|
+  | severe_disease_bl   751   249     0     0 |
+  |-------------------------------------------|
+  | smoking_status      369   131   382   118 |
+  |-------------------------------------------|
+  | bmi_cat             751   249     0     0 |
+  |-------------------------------------------|
+  | has_pbc             751   249     0     0 |
+  +-------------------------------------------+
+   N_ ... #records used below,   m_ ... #records not used
+ 
+  +----------------------------------------------------------------------------
+> +
+  |                                      udca_any = 0   udca_any = 1   p-value 
+> |
+  |----------------------------------------------------------------------------
+> |
+  |                                      N=751          N=249                  
+> |
+  |----------------------------------------------------------------------------
+> |
+  | age_cat             18 - 40 years    220 (36.5%)    77 (39.5%)      0.76   
+> |
+  |                     41 - 60 years    201 (33.3%)    66 (33.8%)             
+> |
+  |                     61 - 80 years    138 (22.9%)    41 (21.0%)             
+> |
+  |                     >80 years        44 ( 7.3%)     11 ( 5.6%)             
+> |
+  |----------------------------------------------------------------------------
+> |
+  | sex                 F                345 (45.9%)    133 (53.4%)     0.12   
+> |
+  |                     M                394 (52.5%)    113 (45.4%)            
+> |
+  |                     U                12 ( 1.6%)     3 ( 1.2%)              
+> |
+  |----------------------------------------------------------------------------
+> |
+  | imd                 1                164 (21.8%)    50 (20.1%)      0.60   
+> |
+  |                     2                146 (19.4%)    40 (16.1%)             
+> |
+  |                     3                134 (17.8%)    50 (20.1%)             
+> |
+  |                     4                131 (17.4%)    46 (18.5%)             
+> |
+  |                     5                130 (17.3%)    51 (20.5%)             
+> |
+  |                     6                46 ( 6.1%)     12 ( 4.8%)             
+> |
+  |----------------------------------------------------------------------------
+> |
+  | ethnicity           White            116 (15.4%)    40 (16.1%)      0.056  
+> |
+  |                     Mixed            148 (19.7%)    47 (18.9%)             
+> |
+  |                     Asian            160 (21.3%)    34 (13.7%)             
+> |
+  |                     Black            149 (19.8%)    62 (24.9%)             
+> |
+  |                     Other            142 (18.9%)    47 (18.9%)             
+> |
+  |                     Unknown          36 ( 4.8%)     19 ( 7.6%)             
+> |
+  |----------------------------------------------------------------------------
+> |
+  | severe_disease_bl   0                373 (49.7%)    127 (51.0%)     0.71   
+> |
+  |                     1                378 (50.3%)    122 (49.0%)            
+> |
+  |----------------------------------------------------------------------------
+> |
+  | smoking_status      E                91 (24.7%)     35 (26.7%)      0.64   
+> |
+  |                     M                30 ( 8.1%)     14 (10.7%)             
+> |
+  |                     N                83 (22.5%)     24 (18.3%)             
+> |
+  |                     S                165 (44.7%)    58 (44.3%)             
+> |
+  |----------------------------------------------------------------------------
+> |
+  | bmi_cat             Missing          155 (20.6%)    44 (17.7%)      0.74   
+> |
+  |                     Underweight      54 ( 7.2%)     21 ( 8.4%)             
+> |
+  |                     Healthy range    150 (20.0%)    53 (21.3%)             
+> |
+  |                     Overweight       146 (19.4%)    42 (16.9%)             
+> |
+  |                     Obese            202 (26.9%)    75 (30.1%)             
+> |
+  |                     Morbidly obese   44 ( 5.9%)     14 ( 5.6%)             
+> |
+  |----------------------------------------------------------------------------
+> |
+  | has_pbc                              379 (50.5%)    121 (48.6%)     0.61   
+> |
+  +----------------------------------------------------------------------------
+> +
+Data are presented as n (%).
+ 
+
+. export delimited using ./output/tables/baseline_table_udca.csv, replace
+(note: file ./output/tables/baseline_table_udca.csv not found)
+file ./output/tables/baseline_table_udca.csv saved
+
+. * Rounding numbers in table to nearest 5
+. destring _columna_1, gen(n1) force
+_columna_1: contains nonnumeric characters; n1 generated as int
+(2 missing values generated)
+
+. destring _columna_0, gen(n0) force
+_columna_0: contains nonnumeric characters; n0 generated as int
+(2 missing values generated)
+
+. destring _columnb_1, gen(percent1) ignore("-" "%" "(" ")")  force
+_columnb_1: contains nonnumeric characters not specified in ignore()
+_columnb_1: characters space % ( ) removed; percent1 generated as double
+(2 missing values generated)
+
+. destring _columnb_0, gen(percent0) ignore("-" "%" "(" ")")  force
+_columnb_0: contains nonnumeric characters not specified in ignore()
+_columnb_0: characters space % ( ) removed; percent0 generated as double
+(2 missing values generated)
+
+. gen rounded_n1 = round(n1, 5)
+(2 missing values generated)
+
+. gen rounded_n0 = round(n0, 5)
+(2 missing values generated)
+
+. keep factor level rounded_n0 percent0 rounded_n1 percent1
+
+. export delimited using ./output/tables/baseline_table_udca_rounded.csv
+file ./output/tables/baseline_table_udca_rounded.csv saved
+
+. restore 
+
+. 
+. * Additional medications by any exposure
+. preserve 
+
+. table1_mc, vars(budesonide_any bin \ fenofibrate_any bin \ gc_any bin \ oca_b
+> l bin \ rituximab_bl bin \ severe_disease_fu bin \ vacc_any bin ) by(udca_any
+> ) clear
+
+  +-------------------------------------------+
+  | factor              N_0   N_1   m_0   m_1 |
+  |-------------------------------------------|
+  | budesonide_any      751   249     0     0 |
+  |-------------------------------------------|
+  | fenofibrate_any     751   249     0     0 |
+  |-------------------------------------------|
+  | gc_any              751   249     0     0 |
+  |-------------------------------------------|
+  | oca_bl              751   249     0     0 |
+  |-------------------------------------------|
+  | rituximab_bl        751   249     0     0 |
+  |-------------------------------------------|
+  | severe_disease_fu   751   249     0     0 |
+  |-------------------------------------------|
+  | vacc_any            751   249     0     0 |
+  +-------------------------------------------+
+   N_ ... #records used below,   m_ ... #records not used
+ 
+  +-----------------------------------------------------------+
+  |                     udca_any = 0   udca_any = 1   p-value |
+  |-----------------------------------------------------------|
+  |                     N=751          N=249                  |
+  |-----------------------------------------------------------|
+  | budesonide_any      179 (23.8%)    64 (25.7%)      0.55   |
+  |-----------------------------------------------------------|
+  | fenofibrate_any     179 (23.8%)    74 (29.7%)      0.064  |
+  |-----------------------------------------------------------|
+  | gc_any              184 (24.5%)    68 (27.3%)      0.38   |
+  |-----------------------------------------------------------|
+  | oca_bl              378 (50.3%)    122 (49.0%)     0.71   |
+  |-----------------------------------------------------------|
+  | rituximab_bl        379 (50.5%)    121 (48.6%)     0.61   |
+  |-----------------------------------------------------------|
+  | severe_disease_fu   552 (73.5%)    187 (75.1%)     0.62   |
+  |-----------------------------------------------------------|
+  | vacc_any            678 (90.3%)    223 (89.6%)     0.74   |
+  +-----------------------------------------------------------+
+Data are presented as n (%).
+ 
+
+. export delimited using ./output/tables/additional_meds_udca.csv, replace
+(note: file ./output/tables/additional_meds_udca.csv not found)
+file ./output/tables/additional_meds_udca.csv saved
+
+. * Rounding numbers in table to nearest 5
+. destring _columna_1, gen(n1) force
+_columna_1: contains nonnumeric characters; n1 generated as int
+(2 missing values generated)
+
+. destring _columna_0, gen(n0) force
+_columna_0: contains nonnumeric characters; n0 generated as int
+(2 missing values generated)
+
+. destring _columnb_1, gen(percent1) ignore("-" "%" "(" ")")  force
+_columnb_1: contains nonnumeric characters not specified in ignore()
+_columnb_1: characters space % ( ) removed; percent1 generated as double
+(2 missing values generated)
+
+. destring _columnb_0, gen(percent0) ignore("-" "%" "(" ")")  force
+_columnb_0: contains nonnumeric characters not specified in ignore()
+_columnb_0: characters space % ( ) removed; percent0 generated as double
+(2 missing values generated)
+
+. gen rounded_n1 = round(n1, 5)
+(2 missing values generated)
+
+. gen rounded_n0 = round(n0, 5)
+(2 missing values generated)
+
+. keep factor rounded_n0 percent0 rounded_n1 percent1
+
+. export delimited using ./output/tables/additional_meds_udca_rounded.csv
+file ./output/tables/additional_meds_udca_rounded.csv saved
+
+. restore 
+
+. 
+. 
+. 
+. 
+end of do-file
+
+. . file open output using "/tmp/103_baseline_tables.do.SBl9.out", write text r
+> eplace
+
+. . file write output "success" 
+
+. . file close output
+
+. 
+end of do-file
+
+
