@@ -115,9 +115,11 @@ forvalues i=0/1 {
     destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
     gen rounded_n`i' = round(n`i', 5)
     tostring rounded_n`i', gen(n`i'_rounded)
+    tostring percent`i', gen(percent_`i')
     replace n`i'_rounded = "redacted" if (n`i'_rounded=="5" | n`i'_rounded=="4" | n`i'_rounded=="3" | n`i'_rounded=="2" | n`i'_rounded=="1" | n`i'_rounded=="0")
+    replace percent_`i' = "redacted" if (n`i'_rounded=="5" | n`i'_rounded=="4" | n`i'_rounded=="3" | n`i'_rounded=="2" | n`i'_rounded=="1" | n`i'_rounded=="0")
 }
-keep factor n0_rounded percent0 n1_rounded percent1
+keep factor n0_rounded percent_0 n1_rounded percent_1
 export delimited using ./output/tables/additional_meds_udca_rounded.csv
 restore 
 
