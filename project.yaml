@@ -57,3 +57,11 @@ actions:
         log: logs/baseline_tables.log
         chars: output/tables/baseline*.csv
         meds: output/tables/additional*.csv
+
+  analysis:
+    run: stata-mp:latest analysis/104_propensity_score.do
+    needs: [generate_study_population_pbc]
+    outputs:
+      moderately_sensitive:
+        log: logs/propensity_score.log
+        

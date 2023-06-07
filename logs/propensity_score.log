@@ -1,0 +1,293 @@
+
+. 
+. import delimited using ./output/input_pbc.csv, clear
+(97 vars, 1,000 obs)
+
+. 
+. * Prepare variables for table 
+. replace ethnicity=6 if ethnicity==0
+(54 real changes made)
+
+. label define eth5                       1 "White"                            
+>            ///
+>                             2 "Mixed"                           ///          
+>                                    
+>                             3 "Asian"                                   ///
+>                             4 "Black"                                   ///
+>                             5 "Other"                                   ///
+>                             6 "Unknown"
+
+.                     
+. 
+. label values ethnicity eth5
+
+. safetab ethnicity, m
+10
+
+  ethnicity |      Freq.     Percent        Cum.
+------------+-----------------------------------
+      White |        157       15.70       15.70
+      Mixed |        200       20.00       35.70
+      Asian |        191       19.10       54.80
+      Black |        188       18.80       73.60
+      Other |        210       21.00       94.60
+    Unknown |         54        5.40      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+. *(2) IMD
+. replace imd=6 if imd==0
+(61 real changes made)
+
+. 
+. * Create age categories
+. egen age_cat = cut(age), at(18, 40, 60, 80, 120) icodes
+(205 missing values generated)
+
+. label define age 0 "18 - 40 years" 1 "41 - 60 years" 2 "61 - 80 years" 3 ">80
+>  years"
+
+. label values age_cat age
+
+. bys age_cat: sum age
+
+-------------------------------------------------------------------------------
+-> age_cat = 18 - 40 years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |        275    28.40364    6.241548         18         39
+
+-------------------------------------------------------------------------------
+-> age_cat = 41 - 60 years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |        278     49.3705    5.747653         40         59
+
+-------------------------------------------------------------------------------
+-> age_cat = 61 - 80 years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |        197    68.00508    5.887983         60         79
+
+-------------------------------------------------------------------------------
+-> age_cat = >80 years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |         45    85.68889    4.094465         80         95
+
+-------------------------------------------------------------------------------
+-> age_cat = .
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |        205    9.014634    5.212615          0         17
+
+
+. 
+. * Sex 
+. gen male=(sex=="M")
+
+. replace male = 0 if sex == "F"
+(0 real changes made)
+
+. label define male 0"Female" 1"Male"
+
+. label values male male
+
+. safetab male, miss
+5
+
+       male |      Freq.     Percent        Cum.
+------------+-----------------------------------
+     Female |        493       49.30       49.30
+       Male |        507       50.70      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+. 
+. * BMI categories
+. egen bmi_cat = cut(bmi), at(0, 1, 18.5, 24.9, 29.9, 39.9, 100) icodes
+
+. bys bmi_cat: sum bmi
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 0
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        199           0           0          0          0
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |         95    14.11928    3.562657   1.034895   18.45594
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 2
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        176    22.12876    1.745695   18.55834   24.89843
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 3
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        217     27.5001    1.501998   24.92286    29.8848
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 4
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        264    33.95687    2.675602   29.90091   39.80875
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 5
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |         49    43.73118    3.458137   39.92422   55.14725
+
+
+. * add missing . to zero category
+. replace bmi_cat = 0 if bmi_cat==. 
+(0 real changes made)
+
+. label define bmi 0 "Missing" 1 "Underweight" 2 "Healthy range" 3 "Overweight"
+>  4 "Obese" 5 "Morbidly obese"
+
+. label values bmi_cat bmi
+
+. 
+. * Smoking status
+. gen smoking = 0 if smoking_status=="N"
+(911 missing values generated)
+
+. replace smoking = 1 if smoking_status=="S"
+(206 real changes made)
+
+. replace smoking = 2 if smoking_status=="E"
+(156 real changes made)
+
+. replace smoking = 3 if smoking==.
+(549 real changes made)
+
+. 
+. label define smok 1 "Current smoker" 2 "Ex-smoker" 0 "Never smoked" 3 "Unknow
+> n"
+
+. label values smoking smok
+
+. 
+. 
+. replace oral_steroid_drugs_nhsd=. if oral_steroid_drug_nhsd_3m_count < 2 & or
+> al_steroid_drug_nhsd_12m_count < 4
+(929 real changes made, 929 to missing)
+
+. gen imid_nhsd=max(oral_steroid_drugs_nhsd, immunosuppresant_drugs_nhsd)
+
+. gen rare_neuro_nhsd = max(multiple_sclerosis_nhsd, motor_neurone_disease_nhsd
+> , myasthenia_gravis_nhsd, huntingtons_disease_nhsd)
+
+. gen solid_organ_transplant_bin = solid_organ_transplant_nhsd_new!=""
+
+. gen any_high_risk_condition = max(learning_disability_nhsd_snomed, cancer_ope
+> nsafely_snomed_new, haematological_disease_nhsd, ///
+> ckd_stage_5_nhsd, imid_nhsd, immunosupression_nhsd_new, hiv_aids_nhsd, solid_
+> organ_transplant_bin, rare_neuro_nhsd)
+
+. 
+. foreach var in udca gc budesonide fenofibrate {
+  2.     gen `var'_any = (`var'_count_fu>=1 & `var'_count_fu!=.)
+  3.     gen `var'_bl = (`var'_count_bl>=1 & `var'_count_bl!=.)
+  4. }
+
+. 
+. * Determine study end date 
+. foreach date in dereg_date died_date_ons hosp_covid {
+  2.     gen `date'A = date(`date', "YMD")
+  3.     format %dD/N/CY `date'A
+  4.     drop `date'
+  5. }
+(500 missing values generated)
+(500 missing values generated)
+(900 missing values generated)
+
+. gen end_study = date("31/12/2020", "DMY")
+
+. * End date if died 
+. egen end_date_died = rowmin(dereg_dateA end_study died_date_onsA)
+
+. * End date for hospital admission outcome 
+. egen end_date_admit = rowmin(dereg_dateA end_study died_date_onsA hosp_covidA
+> )
+
+. * generate index date 
+. gen indexdate = date("01/03/2020", "DMY")
+
+. 
+. * Model treatment allocation on the set of confounding variables (include age
+>  and bmi as continuous variables)
+. * First DAG minimal adjustment set: age, sex, COVID-19 high risk conditions, 
+> ethnicity & IMD
+. logistic udca_bl (age male any_high_risk_condition i.ethnicity i.imd)
+note: any_high_risk_condition omitted because of collinearity
+
+Logistic regression                             Number of obs     =      1,000
+                                                LR chi2(12)       =       8.33
+                                                Prob > chi2       =     0.7584
+Log likelihood = -557.06646                     Pseudo R2         =     0.0074
+
+------------------------------------------------------------------------------
+     udca_bl | Odds Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         age |   1.000452   .0031679     0.14   0.886     .9942628    1.006681
+        male |   1.228565    .181168     1.40   0.163     .9201895    1.640283
+any_high_r~n |          1  (omitted)
+             |
+   ethnicity |
+      Mixed  |   .6915775     .16943    -1.51   0.132     .4278627    1.117834
+      Asian  |   .7318319   .1804384    -1.27   0.205     .4513792    1.186537
+      Black  |   .7420525    .182795    -1.21   0.226     .4578805    1.202589
+      Other  |   .8187862   .1940239    -0.84   0.399     .5145947    1.302794
+    Unknown  |   .8463292    .303681    -0.46   0.642     .4188997    1.709892
+             |
+         imd |
+          2  |   1.218087   .2983492     0.81   0.421     .7536878    1.968636
+          3  |   1.134794   .2816227     0.51   0.610     .6977083    1.845697
+          4  |   1.041193   .2541106     0.17   0.869     .6453412     1.67986
+          5  |   .9984056   .2404261    -0.01   0.995      .622772    1.600608
+          6  |   .6238457   .2437327    -1.21   0.227     .2900801    1.341641
+             |
+       _cons |   .3553806   .0997352    -3.69   0.000     .2050263     .615996
+------------------------------------------------------------------------------
+Note: _cons estimates baseline odds.
+
+. 
+. * Estimate propensity scores
+. predict propensity_dag
+(option pr assumed; Pr(udca_bl))
+
+. 
+. * Calculate ATT weights 
+. gen att_weight_dag = pexposure + (1-exposure)*(propensity_dag/(1-propensity_d
+> ag))
+pexposure not found
+r(111);
+
+end of do-file
+r(111);
+
+end of do-file
+
+r(111);
+
+
