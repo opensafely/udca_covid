@@ -46,15 +46,15 @@ unclear_smoking_codes = codelist_from_csv(
 )
 
 budesonide_codes = codelist_from_csv(
-    "codelists/user-ruthcostello-budesonide.csv",
+    "codelists/user-ruthcostello-budesonide-dmd.csv",
     system="snomed",
-    column="code",
+    column="dmd_id",
 )
 
 fenofibrate_codes = codelist_from_csv(
-    "codelists/user-ruthcostello-fenofibrates.csv",
+    "codelists/user-ruthcostello-fenofibrates-dmd.csv",
     system="snomed",
-    column="code",
+    column="dmd_id",
 )
 
 gc_codes=codelist_from_csv(

@@ -180,17 +180,17 @@ study = StudyDefinition(
         pbc_codes,
         returning = "binary_flag",
         include_date_of_match = "True",
-        on_or_before = "index_date"
+        on_or_before = "index_date - 6 months"
     ),
     has_psc=patients.with_these_clinical_events(
         psc_codes,
         returning = "binary_flag",
         include_date_of_match = "True",
-        on_or_before = "index_date"
+        on_or_before = "index_date - 6 months"
     ),
 
     #Ursodeoxycholic acid 
-    udca_count=patients.with_these_medications(
+    udca_count_bl=patients.with_these_medications(
         udca_codes, 
         between=["2019-09-01", "2020-02-29"],
         returning="number_of_matches_in_period",
@@ -259,6 +259,16 @@ study = StudyDefinition(
         },
     ),
 
+    budesonide_count_bl=patients.with_these_medications(
+        budesonide_codes,
+        between=["2020-02-29", "2019-09-01"],
+        returning="number_of_matches_in_period",
+        return_expectations={
+            "int": {"distribution": "normal", "mean": 3, "stddev": 2},
+            "incidence": 0.30,
+        },
+    ),
+
     # Fenofibrate prescribing
     fenofibrate_count_fu=patients.with_these_medications(
         fenofibrate_codes,
@@ -270,10 +280,30 @@ study = StudyDefinition(
         },
     ),
 
+    fenofibrate_count_bl=patients.with_these_medications(
+        fenofibrate_codes,
+        between=["2020-02-29", "2019-09-01"],
+        returning="number_of_matches_in_period",
+        return_expectations={
+            "int": {"distribution": "normal", "mean": 3, "stddev": 2},
+            "incidence": 0.30,
+        },
+    ),
+
     # Steroid prescribing
     gc_count_fu=patients.with_these_medications(
         gc_codes,
         between=["2020-03-01", "2022-12-31"],
+        returning="number_of_matches_in_period",
+        return_expectations={
+            "int": {"distribution": "normal", "mean": 3, "stddev": 2},
+            "incidence": 0.30,
+        },
+    ),
+
+    gc_count_bl=patients.with_these_medications(
+        gc_codes,
+        between=["2020-02-29", "2019-09-01"],
         returning="number_of_matches_in_period",
         return_expectations={
             "int": {"distribution": "normal", "mean": 3, "stddev": 2},

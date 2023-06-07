@@ -20,10 +20,10 @@ opensafely/smoking-clear/2020-04-29
 opensafely/smoking-unclear/2020-04-29
 
 # Budenoside
-user/ruthcostello/budesonide/090fa297
+user/ruthcostello/budesonide-dmd/60f50875
 
 # Fenofibrates
-user/ruthcostello/fenofibrates/56f0bc2c
+user/ruthcostello/fenofibrates-dmd/3de148f7
 
 # Steroids
 opensafely/asthma-oral-prednisolone-medication/2020-04-27

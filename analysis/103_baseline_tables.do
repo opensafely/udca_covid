@@ -48,10 +48,10 @@ gen solid_organ_transplant_bin = solid_organ_transplant_nhsd_new!=""
 gen any_high_risk_condition = max(learning_disability_nhsd_snomed, cancer_opensafely_snomed_new, haematological_disease_nhsd, ///
 ckd_stage_5_nhsd, imid_nhsd, immunosupression_nhsd_new, hiv_aids_nhsd, solid_organ_transplant_bin, rare_neuro_nhsd)
 
-foreach var in gc budesonide fenofibrate {
-    gen `var'_any = (`var'_count>=1 & `var'_count!=.)
+foreach var in udca gc budesonide fenofibrate {
+    gen `var'_any = (`var'_count_fu>=1 & `var'_count_fu!=.)
+    gen `var'_bl = (`var'_count_bl>=1 & `var'_count_bl!=.)
 }
-gen udca_any = (udca_count_fu>=1 & udca_count_fu!=.)
 
 gen vacc_any = covid_vacc_date!=""
 
@@ -91,7 +91,7 @@ restore
 
 * Characteristics by any exposure
 preserve 
-table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_disease_bl cat \ smoking_status cat \ bmi_cat cat \ has_pbc bin) by(udca_any) clear
+table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_disease_bl cat \ smoking_status cat \ bmi_cat cat \ has_pbc bin) by(udca_bl) clear
 export delimited using ./output/tables/baseline_table_udca.csv, replace
 * Rounding numbers in table to nearest 5
 forvalues i=0/1 {   
@@ -101,13 +101,13 @@ forvalues i=0/1 {
     tostring rounded_n`i', gen(n`i'_rounded)
     replace n`i'_rounded = "redacted" if (n`i'_rounded=="5" | n`i'_rounded=="4" | n`i'_rounded=="3" | n`i'_rounded=="2" | n`i'_rounded=="1" | n`i'_rounded=="0")
 }
-keep factor n0_rounded percent0 n1_rounded percent1
+keep factor level n0_rounded percent0 n1_rounded percent1
 export delimited using ./output/tables/baseline_table_udca_rounded.csv
 restore 
 
 * Additional medications by any exposure
 preserve 
-table1_mc, vars(budesonide_any bin \ fenofibrate_any bin \ gc_any bin \ oca_bl bin \ rituximab_bl bin \ severe_disease_fu bin \ vacc_any bin ) by(udca_any) clear
+table1_mc, vars(budesonide_bl bin \ fenofibrate_bl bin \ gc_bl bin \ oca_bl bin \ rituximab_bl bin \ severe_disease_fu bin \ vacc_any bin ) by(udca_bl) clear
 export delimited using ./output/tables/additional_meds_udca.csv, replace
 * Rounding numbers in table to nearest 5
 forvalues i=0/1 {   
