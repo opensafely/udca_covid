@@ -72,12 +72,10 @@ bys year: sum time_previous, d
 
 * Drop records in 2023 as this is after end of study
 drop if year==2023
-
-* Create two files one with 60 days prescription end the other with 90 days 
 foreach i in 60 90 {
-    preserve 
+    preserve
     * Assume end date is 60 or 90 days after prescription generated
-    gen stop_date = udcaA + `i' 
+    gen stop_date = udcaA + `i'
     format stop_date %dD/N/CY 
 
     * Drop rows where prescriptions ends prior to March 2020
@@ -120,7 +118,7 @@ foreach i in 60 90 {
 
     * Update to match follow-up time
     * merge variables from original study definition 
-    merge m:1 patient_id using `tempfile', keepusing(dereg_date died_date_ons) 
+    merge m:1 patient_id using `tempfile', keepusing(dereg_date died_date_ons udca_count_bl) 
     tab _merge
 
     * Update variables for people without prescriptions 

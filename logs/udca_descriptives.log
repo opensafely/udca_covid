@@ -3,7 +3,7 @@
 . tempfile tempfile 
 
 . import delimited using ./output/input_pbc.csv
-(94 vars, 1,000 obs)
+(97 vars, 1,000 obs)
 
 . save `tempfile' 
 file /tmp/St00015.000001 saved
@@ -14,7 +14,7 @@ file /tmp/St00015.000001 saved
 (note: file ./output/tables/udca_descriptives.txt not found)
 
 . 
-. use ./output/time_varying_udca_all_vars, clear 
+. use ./output/time_varying_udca_all_vars_60, clear 
 
 . drop last 
 
@@ -29,23 +29,22 @@ file /tmp/St00015.000001 saved
       Percentiles      Smallest
  1%            0              0
  5%            0              0
-10%            0              0       Obs               1,895
-25%            0              0       Sum of Wgt.       1,895
+10%            0              0       Obs               1,893
+25%            0              0       Sum of Wgt.       1,893
 
-50%           15                      Mean           10.46332
-                        Largest       Std. Dev.      10.16956
-75%           20             28
-90%           23             28       Variance       103.4199
-95%           24             29       Skewness       .0393317
-99%           26             29       Kurtosis       1.182572
+50%           75                      Mean           45.47279
+                        Largest       Std. Dev.       43.2312
+75%           86            101
+90%           92            102       Variance       1868.936
+95%           94            102       Skewness       -.079081
+99%           99            103       Kurtosis       1.050686
 
 . file write tablecontent _tab ("Number of obervations") _tab ("Mean") _tab ("S
-> D") _tab ("Median") _tab ("25th percentile") _tab ("75th percentile") _tab ("
-> minimum") _tab ("maximum") _n 
+> D") _tab ("Median") _tab ("25th percentile") _tab ("75th percentile") _n 
 
-. file write tablecontent ("Number of prescriptions") _tab %3.1f (r(N)) _tab %3
-> .1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab
->  %3.1f (r(p75)) _tab %3.1f (r(min)) _tab %3.1f (r(max)) _n 
+. file write tablecontent ("Number of prescriptions 60") _tab %3.1f (r(N)) _tab
+>  %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _
+> tab %3.1f (r(p75)) _n 
 
 . 
 . * Summarise follow-up 
@@ -54,21 +53,21 @@ file /tmp/St00015.000001 saved
                           total_fu
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%           25              3
- 5%          114              4
-10%          232              5       Obs               1,895
-25%          667              5       Sum of Wgt.       1,895
+ 1%           27              2
+ 5%          110              5
+10%          244              7       Obs               1,893
+25%          694              7       Sum of Wgt.       1,893
 
-50%         1035                      Mean           829.6032
-                        Largest       Std. Dev.      324.6559
+50%         1035                      Mean           838.0507
+                        Largest       Std. Dev.      319.5349
 75%         1035           1035
-90%         1035           1035       Variance       105401.5
-95%         1035           1035       Skewness      -1.283462
-99%         1035           1035       Kurtosis       3.097494
+90%         1035           1035       Variance       102102.5
+95%         1035           1035       Skewness      -1.357897
+99%         1035           1035       Kurtosis       3.334547
 
-. file write tablecontent ("Total length of follow-up") _tab %3.1f (r(N)) _tab 
-> %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _t
-> ab %3.1f (r(p75)) _tab %3.1f (r(min)) _tab %3.1f (r(max)) _n 
+. file write tablecontent ("Total length of follow-up 60") _tab %3.1f (r(N)) _t
+> ab %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25))
+>  _tab %3.1f (r(p75)) _n 
 
 . 
 . * Summarise proportion of time on udca 
@@ -80,22 +79,22 @@ file /tmp/St00015.000001 saved
 
 . * From this generate variable with time off udca 
 . bys patient_id: egen time_off_udca = max(time_udca) if udca==0
-(6419 missing values generated)
+(1637 missing values generated)
 
 . bys patient_id (time_off_udca): replace time_off_udca = time_off_udca[_n-1] i
 > f time_off_udca==. & time_off_udca[_n-1]!=.
-(6419 real changes made)
+(1637 real changes made)
 
 . * Update time_udca to only contain time on udca 
 . replace time_udca=. if udca==0
-(7,688 real changes made, 7,688 to missing)
+(2,539 real changes made, 2,539 to missing)
 
 . bys patient_id: egen time_on_udca = max(time_udca)
-(902 missing values generated)
+(896 missing values generated)
 
 . * Check on and off equals total time of follow-up 
 . count if time_on_udca + time_off_udca!=total_fu
-  902
+  896
 
 . 
 . sum time_on_udca if last==1, d 
@@ -103,21 +102,21 @@ file /tmp/St00015.000001 saved
                         time_on_udca
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%          115             23
- 5%          413             28
-10%          504             60       Obs                 993
-25%          581             60       Sum of Wgt.         993
+ 1%           98              7
+ 5%          647             21
+10%          962             26       Obs                 997
+25%          997             44       Sum of Wgt.         997
 
-50%          658                      Mean           638.9688
-                        Largest       Std. Dev.       128.713
-75%          723            887
-90%          772            890       Variance       16567.03
-95%          801            898       Skewness      -1.583777
-99%          858            916       Kurtosis       7.367255
+50%         1015                      Mean           972.4313
+                        Largest       Std. Dev.      161.8849
+75%         1027           1034
+90%         1032           1034       Variance       26206.73
+95%         1033           1034       Skewness      -4.279605
+99%         1034           1034       Kurtosis       21.17395
 
-. file write tablecontent ("Total time on UDCA") _tab %3.1f (r(N)) _tab %3.1f (
-> r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %3.1
-> f (r(p75)) _tab %3.1f (r(min)) _tab %3.1f (r(max)) _n 
+. file write tablecontent ("Total time on UDCA 60") _tab %3.1f (r(N)) _tab %3.1
+> f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %
+> 3.1f (r(p75)) _n 
 
 . 
 . sum time_off_udca if last==1, d 
@@ -125,21 +124,21 @@ file /tmp/St00015.000001 saved
                         time_off_udca
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%           21              1
- 5%          103              2
-10%          187              3       Obs               1,895
-25%          297              4       Sum of Wgt.       1,895
+ 1%            1              1
+ 5%            3              1
+10%            6              1       Obs               1,893
+25%           15              1       Sum of Wgt.       1,893
 
-50%          404                      Mean           494.7768
-                        Largest       Std. Dev.      295.8118
-75%          667           1035
-90%         1035           1035       Variance       87504.61
-95%         1035           1035       Skewness       .7146834
-99%         1035           1035       Kurtosis       2.378721
+50%           52                      Mean           325.8933
+                        Largest       Std. Dev.      404.0353
+75%          694           1035
+90%         1035           1035       Variance       163244.5
+95%         1035           1035       Skewness       .8512337
+99%         1035           1035       Kurtosis       2.009308
 
-. file write tablecontent ("Total time off UDCA") _tab %3.1f (r(N)) _tab %3.1f 
-> (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %3.
-> 1f (r(p75)) _tab %3.1f (r(min)) _tab %3.1f (r(max)) _n 
+. file write tablecontent ("Total time off UDCA 60") _tab %3.1f (r(N)) _tab %3.
+> 1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab 
+> %3.1f (r(p75)) _n 
 
 . 
 . bys patient_id: gen rows = _N 
@@ -151,19 +150,297 @@ file /tmp/St00015.000001 saved
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            1              1       Obs               1,895
-25%            1              1       Sum of Wgt.       1,895
+10%            1              1       Obs               1,893
+25%            1              1       Sum of Wgt.       1,893
 
-50%            8                      Mean           7.444327
-                        Largest       Std. Dev.      6.516322
-75%           14             20
-90%           16             20       Variance       42.46245
-95%           17             21       Skewness       .1823646
-99%           19             21       Kurtosis        1.30653
+50%            2                      Mean           2.206022
+                        Largest       Std. Dev.      1.622003
+75%            3              8
+90%            4              8       Variance       2.630894
+95%            6             10       Skewness       1.518271
+99%            8             10       Kurtosis       4.871035
 
-. file write tablecontent ("Number of rows") _tab %3.1f (r(N)) _tab %3.1f (r(me
-> an)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %3.1f (r
-> (p75)) _tab %3.1f (r(min)) _tab %3.1f (r(max)) _n
+. file write tablecontent ("Number of rows 60") _tab %3.1f (r(N)) _tab %3.1f (r
+> (mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %3.1f
+>  (r(p75)) _n _n 
+
+. 
+. * Summarising switching
+. gen udca_bl = (udca_count_bl>=1 & udca_count_bl!=.) 
+
+. gen yr_start = year(start)
+
+. sum yr_start 
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    yr_start |      4,176    2020.343    .6762461       2020       2022
+
+. gen switch_2020_i = udca!=udca_bl & yr_start==2020
+
+. bys patient_id: egen switch_2020 = max(switch_2020_i)
+
+. bys patient_id: egen switch_2020_total = total(switch_2020_i)
+
+. gen switch_2020_start = (switch_2020==1 & udca_bl==0)
+
+. gen switch_2020_stop = (switch_2020==1 & udca_bl==1)
+
+. gen switch_2020_multi = (switch_2020_total>1 & switch_2020_total!=.)
+
+. keep if last==1
+(2,283 observations deleted)
+
+. tab switch_2020  
+
+switch_2020 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        664       35.08       35.08
+          1 |      1,229       64.92      100.00
+------------+-----------------------------------
+      Total |      1,893      100.00
+
+. safecount if switch_2020==1
+  1,229
+
+. file write tablecontent ("switching") _tab ("Number switched") _tab ("Percent
+>  switched") _tab ("Switched from unexposed") _tab ("Percent switched unexpose
+> d") _tab ("Switched from exposed") _tab ("Percent switched exposed") _n 
+
+. file write tablecontent ("2020 60") _tab %3.1f (r(N)) _tab  
+
+. local percent = (r(N)/_N)*100
+
+. safecount if switch_2020_start==1
+  976
+
+. file write tablecontent (`percent') _tab  %3.1f (r(N)) _tab 
+
+. local percent_stt = (r(N)/_N)*100
+
+. safecount if switch_2020_stop==1
+  253
+
+. file write tablecontent (`percent_stt') _tab  %3.1f (r(N)) _tab 
+
+. local percent_stp = (r(N)/_N)*100
+
+. file write tablecontent (`percent_stp') _n _n 
+
+. 
+. * For 90 day prescriptions 
+. use ./output/time_varying_udca_all_vars_90, clear 
+
+. drop last 
+
+. bys patient_id: gen last = _n==_N 
+
+. 
+. * summarise total number of prescriptions during follow-up 
+. sum total_no_presc if last==1, d 
+
+                       total_no_presc
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0              0
+ 5%            0              0
+10%            0              0       Obs               1,893
+25%            0              0       Sum of Wgt.       1,893
+
+50%           75                      Mean           45.47279
+                        Largest       Std. Dev.       43.2312
+75%           86            101
+90%           92            102       Variance       1868.936
+95%           94            102       Skewness       -.079081
+99%           99            103       Kurtosis       1.050686
+
+. file write tablecontent _tab ("Number of obervations") _tab ("Mean") _tab ("S
+> D") _tab ("Median") _tab ("25th percentile") _tab ("75th percentile") _n 
+
+. file write tablecontent ("Number of prescriptions 90") _tab %3.1f (r(N)) _tab
+>  %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _
+> tab %3.1f (r(p75)) _n 
+
+. 
+. * Summarise follow-up 
+. sum total_fu if last==1, d
+
+                          total_fu
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%           27              2
+ 5%          110              5
+10%          244              7       Obs               1,893
+25%          694              7       Sum of Wgt.       1,893
+
+50%         1035                      Mean           838.0507
+                        Largest       Std. Dev.      319.5349
+75%         1035           1035
+90%         1035           1035       Variance       102102.5
+95%         1035           1035       Skewness      -1.357897
+99%         1035           1035       Kurtosis       3.334547
+
+. file write tablecontent ("Total length of follow-up 90") _tab %3.1f (r(N)) _t
+> ab %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25))
+>  _tab %3.1f (r(p75)) _n 
+
+. 
+. * Summarise proportion of time on udca 
+. * First generate time for each row 
+. *gen time = stop - start 
+. * Generate total time on & off udca 
+. * First calculate time for both on and off within one variable 
+. bys patient_id udca: egen time_udca = total(time)
+
+. * From this generate variable with time off udca 
+. bys patient_id: egen time_off_udca = max(time_udca) if udca==0
+(1060 missing values generated)
+
+. bys patient_id (time_off_udca): replace time_off_udca = time_off_udca[_n-1] i
+> f time_off_udca==. & time_off_udca[_n-1]!=.
+(1060 real changes made)
+
+. * Update time_udca to only contain time on udca 
+. replace time_udca=. if udca==0
+(1,957 real changes made, 1,957 to missing)
+
+. bys patient_id: egen time_on_udca = max(time_udca)
+(896 missing values generated)
+
+. * Check on and off equals total time of follow-up 
+. count if time_on_udca + time_off_udca!=total_fu
+  896
+
+. 
+. sum time_on_udca if last==1, d 
+
+                        time_on_udca
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%           98              7
+ 5%          647             21
+10%          986             26       Obs                 997
+25%         1010             44       Sum of Wgt.         997
+
+50%         1024                      Mean           980.2588
+                        Largest       Std. Dev.       162.905
+75%         1030           1034
+90%         1033           1034       Variance       26538.04
+95%         1034           1034       Skewness      -4.325324
+99%         1034           1034       Kurtosis       21.43342
+
+. file write tablecontent ("Total time on UDCA 90") _tab %3.1f (r(N)) _tab %3.1
+> f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %
+> 3.1f (r(p75)) _n 
+
+. 
+. sum time_off_udca if last==1, d 
+
+                        time_off_udca
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            2              1
+10%            3              1       Obs               1,893
+25%            9              1       Sum of Wgt.       1,893
+
+50%           38                      Mean           321.7707
+                        Largest       Std. Dev.       407.012
+75%          694           1035
+90%         1035           1035       Variance       165658.8
+95%         1035           1035       Skewness       .8470627
+99%         1035           1035       Kurtosis       2.000507
+
+. file write tablecontent ("Total time off UDCA 90") _tab %3.1f (r(N)) _tab %3.
+> 1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab 
+> %3.1f (r(p75)) _n 
+
+. 
+. bys patient_id: gen rows = _N 
+
+. sum rows if last==1, d 
+
+                            rows
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            1              1
+10%            1              1       Obs               1,893
+25%            1              1       Sum of Wgt.       1,893
+
+50%            2                      Mean           1.593767
+                        Largest       Std. Dev.      .6744375
+75%            2              4
+90%            2              6       Variance        .454866
+95%            2              6       Skewness       1.600502
+99%            4              6       Kurtosis       8.133935
+
+. file write tablecontent ("Number of rows 90") _tab %3.1f (r(N)) _tab %3.1f (r
+> (mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %3.1f
+>  (r(p75)) _n
+
+. 
+. * Summarising switching
+. gen udca_bl = (udca_count_bl>=1 & udca_count_bl!=.) 
+
+. gen yr_start = year(start)
+
+. sum yr_start 
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    yr_start |      3,017    2020.046    .2679844       2020       2022
+
+. gen switch_2020_i = udca!=udca_bl & yr_start==2020
+
+. bys patient_id: egen switch_2020 = max(switch_2020_i)
+
+. bys patient_id: egen switch_2020_total = total(switch_2020_i)
+
+. gen switch_2020_start = (switch_2020==1 & udca_bl==0)
+
+. gen switch_2020_stop = (switch_2020==1 & udca_bl==1)
+
+. gen switch_2020_multi = (switch_2020_total>1 & switch_2020_total!=.)
+
+. keep if last==1
+(1,124 observations deleted)
+
+. tab switch_2020  
+
+switch_2020 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        664       35.08       35.08
+          1 |      1,229       64.92      100.00
+------------+-----------------------------------
+      Total |      1,893      100.00
+
+. safecount if switch_2020==1
+  1,229
+
+. file write tablecontent ("switching") _tab ("Number switched") _tab ("Percent
+>  switched") _tab ("Switched from unexposed") _tab ("Percent switched unexpose
+> d") _tab ("Switched from exposed") _tab ("Percent switched exposed") _n 
+
+. file write tablecontent ("2020 90") _tab %3.1f (r(N)) _tab  
+
+. local percent = (r(N)/_N)*100
+
+. safecount if switch_2020_start==1
+  976
+
+. file write tablecontent (`percent') _tab  %3.1f (r(N)) _tab 
+
+. local percent_stt = (r(N)/_N)*100
+
+. safecount if switch_2020_stop==1
+  253
+
+. file write tablecontent (`percent_stt') _tab  %3.1f (r(N)) _tab 
+
+. local percent_stp = (r(N)/_N)*100
+
+. file write tablecontent (`percent_stp') _n _n 
 
 . 
 . file close tablecontent
@@ -171,7 +448,7 @@ file /tmp/St00015.000001 saved
 . 
 end of do-file
 
-. . file open output using "/tmp/102_udca_descriptives.do.OmNb.out", write text
+. . file open output using "/tmp/102_udca_descriptives.do.Q2Rd.out", write text
 >  replace
 
 . . file write output "success" 

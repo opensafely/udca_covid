@@ -52,7 +52,31 @@ file write tablecontent ("Total time off UDCA 60") _tab %3.1f (r(N)) _tab %3.1f 
 
 bys patient_id: gen rows = _N 
 sum rows if last==1, d 
-file write tablecontent ("Number of rows 60") _tab %3.1f (r(N)) _tab %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %3.1f (r(p75)) _n
+file write tablecontent ("Number of rows 60") _tab %3.1f (r(N)) _tab %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %3.1f (r(p75)) _n _n 
+
+* Summarising switching
+gen udca_bl = (udca_count_bl>=1 & udca_count_bl!=.) 
+gen yr_start = year(start)
+sum yr_start 
+gen switch_2020_i = udca!=udca_bl & yr_start==2020
+bys patient_id: egen switch_2020 = max(switch_2020_i)
+bys patient_id: egen switch_2020_total = total(switch_2020_i)
+gen switch_2020_start = (switch_2020==1 & udca_bl==0)
+gen switch_2020_stop = (switch_2020==1 & udca_bl==1)
+gen switch_2020_multi = (switch_2020_total>1 & switch_2020_total!=.)
+keep if last==1
+tab switch_2020  
+safecount if switch_2020==1
+file write tablecontent ("switching") _tab ("Number switched") _tab ("Percent switched") _tab ("Switched from unexposed") _tab ("Percent switched unexposed") _tab ("Switched from exposed") _tab ("Percent switched exposed") _n 
+file write tablecontent ("2020 60") _tab %3.1f (r(N)) _tab  
+local percent = (r(N)/_N)*100
+safecount if switch_2020_start==1
+file write tablecontent (`percent') _tab  %3.1f (r(N)) _tab 
+local percent_stt = (r(N)/_N)*100
+safecount if switch_2020_stop==1
+file write tablecontent (`percent_stt') _tab  %3.1f (r(N)) _tab 
+local percent_stp = (r(N)/_N)*100
+file write tablecontent (`percent_stp') _n _n 
 
 * For 90 day prescriptions 
 use ./output/time_varying_udca_all_vars_90, clear 
@@ -92,5 +116,29 @@ file write tablecontent ("Total time off UDCA 90") _tab %3.1f (r(N)) _tab %3.1f 
 bys patient_id: gen rows = _N 
 sum rows if last==1, d 
 file write tablecontent ("Number of rows 90") _tab %3.1f (r(N)) _tab %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %3.1f (r(p75)) _n
+
+* Summarising switching
+gen udca_bl = (udca_count_bl>=1 & udca_count_bl!=.) 
+gen yr_start = year(start)
+sum yr_start 
+gen switch_2020_i = udca!=udca_bl & yr_start==2020
+bys patient_id: egen switch_2020 = max(switch_2020_i)
+bys patient_id: egen switch_2020_total = total(switch_2020_i)
+gen switch_2020_start = (switch_2020==1 & udca_bl==0)
+gen switch_2020_stop = (switch_2020==1 & udca_bl==1)
+gen switch_2020_multi = (switch_2020_total>1 & switch_2020_total!=.)
+keep if last==1
+tab switch_2020  
+safecount if switch_2020==1
+file write tablecontent ("switching") _tab ("Number switched") _tab ("Percent switched") _tab ("Switched from unexposed") _tab ("Percent switched unexposed") _tab ("Switched from exposed") _tab ("Percent switched exposed") _n 
+file write tablecontent ("2020 90") _tab %3.1f (r(N)) _tab  
+local percent = (r(N)/_N)*100
+safecount if switch_2020_start==1
+file write tablecontent (`percent') _tab  %3.1f (r(N)) _tab 
+local percent_stt = (r(N)/_N)*100
+safecount if switch_2020_stop==1
+file write tablecontent (`percent_stt') _tab  %3.1f (r(N)) _tab 
+local percent_stp = (r(N)/_N)*100
+file write tablecontent (`percent_stp') _n _n 
 
 file close tablecontent
