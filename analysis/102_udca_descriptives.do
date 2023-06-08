@@ -62,7 +62,7 @@ gen switch_2020_i = udca!=udca_bl & yr_start==2020
 bys patient_id: egen switch_2020 = max(switch_2020_i)
 bys patient_id: egen switch_2020_total = total(switch_2020_i)
 gen switch_2020_start = (switch_2020==1 & udca_bl==0)
-gen switch_2020_end = (switch_2020==1 & udca_bl==1)
+gen switch_2020_stop = (switch_2020==1 & udca_bl==1)
 gen switch_2020_multi = (switch_2020_total>1 & switch_2020_total!=.)
 keep if last==1
 tab switch_2020  
@@ -125,7 +125,7 @@ gen switch_2020_i = udca!=udca_bl & yr_start==2020
 bys patient_id: egen switch_2020 = max(switch_2020_i)
 bys patient_id: egen switch_2020_total = total(switch_2020_i)
 gen switch_2020_start = (switch_2020==1 & udca_bl==0)
-gen switch_2020_end = (switch_2020==1 & udca_bl==1)
+gen switch_2020_stop = (switch_2020==1 & udca_bl==1)
 gen switch_2020_multi = (switch_2020_total>1 & switch_2020_total!=.)
 keep if last==1
 tab switch_2020  
