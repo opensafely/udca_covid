@@ -49,16 +49,16 @@ label values agegroup agegroup
 
 /* EXPOSURE INFORMATION ====================================================*/
 rename udca_last_date udca_date
-gen udca = 1 if udca_count != . & udca_count >= 2
+gen udca = 1 if udca_count_bl != . & udca_count_bl >= 2
 recode udca .=0
 
-gen udca_sa = 1 if udca_count != . & udca_count >= 1 & udca_date != . & udca_date >= mdy(12,1,2019)
+gen udca_sa = 1 if udca_count_bl != . & udca_count_bl >= 1 & udca_date != . & udca_date >= mdy(12,1,2019)
 recode udca_sa .=0
 
 tab1 udca udca_sa, m
 tab udca udca_sa, m
 
-*tab  udca_count udca, m
+*tab  udca_count_bl udca, m
 
 * when was first udca Rx before index date
 gen udca_first = 0 if udca == 0
@@ -102,7 +102,7 @@ tab has_pbc udca, m
 * Tabulating time since first prescription by whether have 2+ prescriptions in the last 6 months
 tab udca_first udca, m col
 
-bys udca: sum udca_count
+bys udca: sum udca_count_bl
 
 * Export to table 
 preserve
@@ -145,7 +145,7 @@ table1_mc, by(oba) vars(died_ons_covid_flag_any bin \ died_covid_2020 bin \ died
 import delimited using ./output/input_pbc.csv, clear
 
 * Format dates 
-foreach var in udca_last_date udca_first_after udca_first_history died_date_ons {
+foreach var in udca_last_date udca_first_after udca_first_history died_date_ons hosp_covid {
     gen `var'A = date(`var', "YMD")
     format `var'A %dD/N/CY
     *list `var' `var'A in  1/5
@@ -179,16 +179,16 @@ label values agegroup agegroup
 
 /* EXPOSURE INFORMATION ====================================================*/
 rename udca_last_date udca_date
-gen udca = 1 if udca_count != . & udca_count >= 2
+gen udca = 1 if udca_count_bl != . & udca_count_bl >= 2
 recode udca .=0
 
-gen udca_sa = 1 if udca_count != . & udca_count >= 1 & udca_date != . & udca_date >= mdy(12,1,2019)
+gen udca_sa = 1 if udca_count_bl != . & udca_count_bl >= 1 & udca_date != . & udca_date >= mdy(12,1,2019)
 recode udca_sa .=0
 
 tab1 udca udca_sa, m
 tab udca udca_sa, m
 
-*tab  udca_count udca, m
+*tab  udca_count_bl udca, m
 
 * when was first udca Rx before index date
 gen udca_first = 0 if udca == 0
@@ -218,6 +218,10 @@ gen died_flag = died_date_onsA!=.
 gen died_date_onscovid = died_date_onsA if died_ons_covid_flag_any == 1
 gen died_covid_2020 = (died_date_onscovid<date("31Dec2020", "DMY") & died_flag==1)
 
+* Flag hospitalised with covid 
+gen hosp_flag = hosp_covidA!=.
+gen hosp_flag_2020 = hosp_covidA<date("31Dec2020", "DMY") & hosp_flag==1
+
 **** Summary INFORMATION
 ** Currently dataset includes all people with a pbc or psc diagnosis, how many have 2+ udca prescription
 * Tabulate pbc or psc diagnosis vs those with 2+ prescriptions in 6 months prior
@@ -230,7 +234,7 @@ tab has_pbc has_psc if udca==1
 tab udca_first udca, col m
 
 * Check number of prescriptions
-bys udca: sum udca_count
+bys udca: sum udca_count_bl
 bys udca: sum udca_count_fu, d 
 
 * How many COVID-19 deaths by whether had 2+ prescriptions
@@ -247,7 +251,7 @@ tab oca_bl udca, row col m
 * Export to table 
 * First drop out categories that will not be in real data > should be zero on server
 drop if agegroup<1 | agegroup>6
-table1_mc, by(udca) vars(has_pbc bin \ died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ agegroup cat \ male bin) saving(./output/tables/udca_pbc.xlsx, replace)
+table1_mc, by(udca) vars(has_pbc bin \ died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ hosp_flag bin \ hosp_flag_2020 bin\ agegroup cat \ male bin) saving(./output/tables/udca_pbc.xlsx, replace)
 
 foreach var in /*all only*/ pbc /*first_only*/ {
 	import excel using ./output/tables/udca_`var'.xlsx, clear
