@@ -5,6 +5,7 @@ AUTHOR:					R Costello
 DESCRIPTION OF FILE:	Generate propensity score  
 ==============================================================================*/
 adopath + ./analysis/ado 
+cap mkdir ./output/tempdata
 cap mkdir ./output/tables
 
 * Open a log file
@@ -77,10 +78,18 @@ foreach date in dereg_date died_date_ons hosp_covid {
     drop `date'
 }
 gen end_study = date("31/12/2020", "DMY")
+
 * End date if died 
 egen end_date_died = rowmin(dereg_dateA end_study died_date_onsA)
 * End date for hospital admission outcome 
-egen end_date_admit = rowmin(dereg_dateA end_study died_date_onsA hosp_covidA)
+egen end_date_hosp = rowmin(dereg_dateA end_study died_date_onsA hosp_covidA)
+* Flag died 2020 - will match end date 
+gen died_covid_2020 = (died_date_onsA<=date("31Dec2020", "DMY") & died_ons_covid_flag_any==1)
+
+* Flag hospital admission 
+gen hosp_flag = hosp_covidA!=.
+gen hosp_covid_2020 = hosp_covidA<date("31Dec2020", "DMY") & hosp_flag==1 
+
 * generate index date 
 gen indexdate = date("01/03/2020", "DMY")
 
@@ -92,7 +101,7 @@ logistic udca_bl (age male any_high_risk_condition i.ethnicity i.imd)
 predict propensity_dag
 
 * Calculate ATT weights 
-gen att_weight_dag = pexposure + (1-exposure)*(propensity_dag/(1-propensity_dag))
+gen att_weight_dag = udca_bl + (1-udca_bl)*(propensity_dag/(1-propensity_dag))
 
 * Next adjust for additional variables 
 logistic udca_bl (age male any_high_risk_condition i.ethnicity i.imd bmi i.smoking severe_disease_bl oca_bl budesonide_bl)
@@ -104,17 +113,64 @@ predict propensity_all
 gen att_weight_all = udca_bl + (1-udca_bl)*(propensity_all/(1-propensity_all))
 
 * Fit weighted Cox regression w/ robust standard errors
-* COVID-19 death outcome 
-stset end_date_died, failure(died_ons_covid_flag_any) origin(indexdate) enter(indexdate) scale(365.25) id(patient_id)
-stcox udca_bl, strata(stp) 
-* DAG minimal adjustment set 
-stset end_date_died [pweight=att_weight_dag], failure(died_ons_covid_flag_any) origin(indexdate) enter(indexdate) scale(365.25) id(patient_id)
-stcox udca_bl, strata(stp) vce(robust)
-* All adjustments 
-stset end_date_died [pweight=att_weight_all], failure(died_ons_covid_flag_any) origin(indexdate) enter(indexdate) scale(365.25) id(patient_id)
-stcox udca_bl, strata(stp) vce(robust)
-
-* Add writing to file 
+* COVID-19 death outcome and hospitalisation outcomes 
+foreach outcome in died hosp { 
+    file open tablecontent using ./output/tables/covid_`outcome'_cox_models.txt, write text replace
+    file write tablecontent ("UDCA exposure") _tab ("denominator") _tab ("events") _tab ("total_person_wks") _tab ("Rate") _tab ("unadj_hr") _tab ///
+    ("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci") _tab ("dag_adj_hr") _tab ("dag_adj_ci") _tab ("dag_adj_lci") _tab ("dag_adj_uci") _tab ("f_adj_hr") _tab ("f_adj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
+    stset end_date_`outcome', failure(`outcome'_covid_2020) origin(indexdate) enter(indexdate) scale(365.25) id(patient_id)
+    stcox i.udca_bl, strata(stp) 
+    estimates save "./output/tempdata/crude_`outcome'", replace 
+    eststo model0
+    parmest, label eform format(estimate p lb ub) saving("./output/tempdata/surv_crude_`outcome'", replace) idstr("crude_`outcome'") 
+    estat phtest, d
+    * DAG minimal adjustment set 
+    stset end_date_`outcome' [pweight=att_weight_dag], failure(`outcome'_covid_2020) origin(indexdate) enter(indexdate) scale(365.25) id(patient_id)
+    stcox i.udca_bl, strata(stp) vce(robust)
+    estimates save "./output/tempdata/adj_dag_`outcome'", replace 
+    eststo model1
+    parmest, label eform format(estimate p lb ub) saving("./output/tempdata/surv_dag_adj_`outcome'", replace) idstr("adj_dag_`outcome'") 
+    estat phtest, d
+    * All adjustments 
+    stset end_date_`outcome' [pweight=att_weight_all], failure(`outcome'_covid_2020) origin(indexdate) enter(indexdate) scale(365.25) id(patient_id)
+    stcox i.udca_bl, strata(stp) vce(robust)
+    estimates save "./output/tempdata/adj_all_`outcome'", replace 
+    eststo model2
+    parmest, label eform format(estimate p lb ub) saving("./output/tempdata/surv_adj_all_`outcome'", replace) idstr("adj_all_`outcome'") 
+    estat phtest, d
+    eststo clear
+    bysort udca_bl: egen total_follow_up_`outcome' = total(_t)
+    * Writing results to file 
+    forvalues i=0/1 {
+        qui safecount if udca_bl==`i'
+        local denominator = r(N)
+        qui safecount if udca_bl == `i'  & `outcome'_covid_2020 == 1
+        local event = r(N)
+        qui su total_follow_up_`outcome' if udca_bl == `i'
+        local person_mth = r(mean)/30
+        local rate = 100000*(`event'/`person_mth')
+        if `event'>10 & `event'!=. {
+                        file write tablecontent ("UDCA `i'") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab  
+                        cap estimates use "./output/tempdata/crude_`outcome'" 
+                        cap lincom `i'.udca_bl, eform
+                        file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _tab
+                        cap estimates clear
+                        cap estimates use "./output/tempdata/adj_dag_`outcome'" 
+                        cap lincom `i'.udca_bl, eform
+                        file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub))  _tab
+                        cap estimates clear
+                        cap estimates use "./output/tempdata/adj_all_`outcome'" 
+                        cap lincom `i'.udca_bl, eform
+                        file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _n
+                        cap estimates clear
+                    }
+                    else {
+                        file write tablecontent ("UDCA `i'") _tab ("redact") _n
+                        continue
+                    }
+        }
+        file close tablecontent 
+    }
 
 
 

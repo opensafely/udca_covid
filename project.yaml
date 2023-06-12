@@ -64,4 +64,5 @@ actions:
     outputs:
       moderately_sensitive:
         log: logs/propensity_score.log
+        output: output/tables/covid*
         
