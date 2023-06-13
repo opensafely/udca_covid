@@ -237,6 +237,8 @@ tab udca_first udca, col m
 bys udca: sum udca_count_bl
 bys udca: sum udca_count_fu, d 
 
+gen one_udca_bl = udca_count_bl==1
+
 * How many COVID-19 deaths by whether had 2+ prescriptions
 tab died_ons_covid_flag_any udca, row col 
 tab died_covid_2020 udca, row col 
@@ -251,12 +253,14 @@ tab oca_bl udca, row col m
 * Export to table 
 * First drop out categories that will not be in real data > should be zero on server
 drop if agegroup<1 | agegroup>6
-table1_mc, by(udca) vars(has_pbc bin \ died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ hosp_flag bin \ hosp_flag_2020 bin\ agegroup cat \ male bin) saving(./output/tables/udca_pbc.xlsx, replace)
-
-foreach var in /*all only*/ pbc /*first_only*/ {
-	import excel using ./output/tables/udca_`var'.xlsx, clear
-	export delimited using ./output/tables/udca_`var'.csv, replace 
-}
+table1_mc, by(udca) vars(has_pbc bin \ one_udca_bl bin \ died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ hosp_flag bin \ hosp_flag_2020 bin\ agegroup cat \ male bin) clear
+export delimited using ./output/tables/udca_pbc.csv
+describe
+destring _columna_1, gen(n) ignore(",") force
+destring _columnb_1, gen(percent) ignore("-" "%" "(" ")") force
+gen rounded_n = round(n, 5)
+keep factor level rounded_n percent
+export delimited using ./output/tables/udca_pbc_rounded.csv
 
 *import excel using ./output/tables/oba_only.xlsx, clear 
 *export delimited using ./output/tables/oba_only.csv, replace 

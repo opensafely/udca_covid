@@ -39,6 +39,7 @@ actions:
     outputs:
       moderately_sensitive:
         log: logs/drug_prep.log
+      highly_sensitive:
         drug_data: output/time_varying_udca*.dta
 
   drug_descriptives:
