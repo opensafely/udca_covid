@@ -256,10 +256,13 @@ drop if agegroup<1 | agegroup>6
 table1_mc, by(udca) vars(has_pbc bin \ one_udca_bl bin \ died_ons_covid_flag_any bin \ died_covid_2020 bin \ died_flag bin \ hosp_flag bin \ hosp_flag_2020 bin\ agegroup cat \ male bin) clear
 export delimited using ./output/tables/udca_pbc.csv
 describe
-destring _columna_1, gen(n) ignore(",") force
-destring _columnb_1, gen(percent) ignore("-" "%" "(" ")") force
-gen rounded_n = round(n, 5)
-keep factor level rounded_n percent
+destring _columna_0, gen(n0) ignore(",") force
+destring _columna_1, gen(n1) ignore(",") force
+destring _columnb_0, gen(percent0) ignore("-" "%" "(" ")") force
+destring _columnb_1, gen(percent1) ignore("-" "%" "(" ")") force
+gen rounded_n0 = round(n0, 5)
+gen rounded_n1 = round(n1, 5)
+keep factor level rounded_n0 percent0 rounded_n1 percent1
 export delimited using ./output/tables/udca_pbc_rounded.csv
 
 *import excel using ./output/tables/oba_only.xlsx, clear 
