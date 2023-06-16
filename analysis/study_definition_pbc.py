@@ -805,9 +805,24 @@ study = StudyDefinition(
   huntingtons_disease_nhsd = patients.maximum_of("huntingtons_disease_nhsd_snomed", "huntingtons_disease_nhsd_icd10"),
     
     #OUTCOMES
-    hosp_covid=patients.admitted_to_hospital(
+    hosp_covid_primary=patients.admitted_to_hospital(
         returning = "date_admitted",
         with_these_primary_diagnoses = covid_identification,
+        with_patient_classification = ["1"], # ordinary admissions only - exclude day cases and regular attenders
+        # see https://docs.opensafely.org/study-def-variables/#sus for more info
+        # with_admission_method=["21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"], # emergency admissions only to exclude incidental COVID
+        on_or_after="2020-03-01",
+        find_first_match_in_period = True,
+        date_format = "YYYY-MM-DD",
+        return_expectations = {
+        "date": {"earliest": "2020-03-01"},
+        "rate": "uniform",
+        "incidence": 0.1
+        },
+    ),
+    hosp_covid_any=patients.admitted_to_hospital(
+        returning = "date_admitted",
+        with_these_diagnoses = covid_identification,
         with_patient_classification = ["1"], # ordinary admissions only - exclude day cases and regular attenders
         # see https://docs.opensafely.org/study-def-variables/#sus for more info
         # with_admission_method=["21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"], # emergency admissions only to exclude incidental COVID
