@@ -187,7 +187,7 @@ gen udca_bl_30 = 1 if udca_count_bl != . & udca_count_bl >= 1 & udca_date != . &
 recode udca_bl_30 .=0
 * Create variable for 1 or more prescriptions in 90 days prior to baseline 
 gen udca_bl_90 = 1 if udca_count_bl != . & udca_count_bl >= 1 & udca_date != . & udca_date >= mdy(12,1,2019)
-recode udca_bl_30 .=0
+recode udca_bl_90 .=0
 
 tab udca_bl udca_bl_30, m
 tab udca_bl udca_bl_90, m
