@@ -25,10 +25,10 @@
       "sha": "124db6929439379b7dacd55ba26ae4f2ed9370bc"
     },
     "opensafely-condition-advanced-decompensated-cirrhosis-of-the-liver.csv": {
-      "id": "opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver/071038cf",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver/071038cf/",
-      "downloaded_at": "2023-04-27 11:27:44.362434Z",
-      "sha": "cc91d2287dc30a4417140d1d2960dea6eecd61dc"
+      "id": "opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver/5e42487f",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver/5e42487f/",
+      "downloaded_at": "2023-06-19 10:15:26.578118Z",
+      "sha": "30168b948211c8a823aabb2ec60ff55b34dd82c4"
     },
     "opensafely-condition-advanced-decompensated-cirrhosis-of-the-liver-and-associated-conditions-icd-10.csv": {
       "id": "opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver-and-associated-conditions-icd-10/00e40554",

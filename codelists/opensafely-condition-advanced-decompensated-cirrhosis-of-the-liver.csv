@@ -11,7 +11,28 @@ code,term
 1092691000119109,Hepatic coma due to subacute liver failure
 1092801000119102,Hepatic ascites co-occurrent with chronic active hepatitis due to toxic liver disease
 109819003,Obstructive biliary cirrhosis
+109841003,Liver cell carcinoma
 111370006,Cirrhosis of liver not due to alcohol
+1137357005,Hepatic coma due to viral hepatitis D
+1148573000,Hepatic failure following surgical procedure
+1186612004,Metastatic hepatocellular carcinoma
+1186629001,Primary fibrolamellar hepatocellular carcinoma
+1186630006,Primary liver cell carcinoma
+1186631005,Primary combined hepatocellular carcinoma and cholangiocarcinoma
+1187643003,"Acute infantile liver failure, cerebellar ataxia, peripheral sensory motor neuropathy syndrome"
+1197204009,Adult hepatocellular carcinoma
+1197661009,Esophageal varices with bleeding due to schistosomiasis
+1197664001,Secondary portal hypertension
+1197694007,Esophageal varices with bleeding due to toxic liver disease
+1197695008,Esophageal varices with bleeding due to viral hepatitis
+1197696009,Esophageal varices with bleeding due to hepatic fibrosis
+1197697000,Esophageal varices with bleeding due to primary biliary cholangitis
+1197698005,Esophageal varices with bleeding due to alcoholic liver disease
+1197700001,Esophageal varices with bleeding due to autoimmune hepatitis
+1197736003,Chronic hepatic failure due to portosystemic shunt
+12074006,Ligation of gastric varices
+1208349005,Pediatric hepatocellular carcinoma
+1208726006,Fever-associated acute infantile liver failure syndrome
 123604002,Toxic cirrhosis
 123605001,Nutritional cirrhosis
 123606000,Cholangiolitic cirrhosis
@@ -19,7 +40,12 @@ code,term
 123716002,Latent cirrhosis
 123717006,Advanced cirrhosis
 125921000119106,Hepatic coma due to acute hepatitis C
+1259465009,Dementia due to hepatic failure
 128072003,Acquired portal-systemic shunt due to cirrhosis
+128646008,"Hepatocellular carcinoma, scirrhous"
+128648009,"Hepatocellular carcinoma, spindle cell variant"
+128649001,"Hepatocellular carcinoma, clear cell type"
+128650001,"Hepatocellular carcinoma, pleomorphic type"
 13124004,Ascites
 13920009,Hepatic encephalopathy
 140519000,O/E - ascites
@@ -35,11 +61,12 @@ code,term
 150557006,Ascites tap
 153091000119109,Hepatic coma due to chronic hepatitis B with delta agent
 155479001,Oesophageal varices
+155808003,(Acute/subacute necrosis of liver) or (acute liver failure)
 155809006,(Cirrhosis &/or chronic liver dis) or (alcoholic liver disease)
 155811002,Alcoholic cirrhosis of liver
 155814005,Cirrhosis - non-alcoholic
-155815006,Biliary cirrhosis (& [primary])
 155821005,Portal hypertension
+15619004,"Hepatocellular carcinoma, fibrolamellar"
 158530005,[D]Ascites
 15999000,Mixed micro and macronodular cirrhosis
 16060001,Hepatic coma due to viral hepatitis A
@@ -60,15 +87,15 @@ code,term
 173660005,Rigid esophagoscopy and injection sclerotherapy of varices
 173661009,Rigid esophagoscopy and banding of esophageal varices
 173679008,Balloon tamponade of esophagus
-1761006,Biliary cirrhosis
+175802001,Peritoneal to venous drainage of ascites
 176411000000108,Acute hepatic failure due to drugs
 17709002,Bleeding esophageal varices
 178012008,Percutaneous drainage of ascites
 178013003,Peritoneovenous shunt for ascites (& [LeVeen] or [Denver])
 178014009,Drainage of ascites NEC
+184068004,Chronic active hepatitis
 186624004,Hepatic coma due to acute hepatitis B with delta agent
 186628001,Hepatic coma due to viral hepatitis C
-188446007,Malignant ascites
 195473005,(Oesophageal varices) or (other varicose veins)
 195474004,Esophageal varices associated with another disorder
 195475003,"Esophageal varices with bleeding, associated with another disorder"
@@ -78,8 +105,12 @@ code,term
 195479009,Esophageal varices in diseases EC NOS
 195483009,Oesophageal varices NOS
 195643006,[X]Esophageal varices in diseases classified elsewhere
+196121006,Lung: [cirrhosis of] or [postinflammatory pulmonary fibrosis]
+197270009,Acute hepatic failure
+197275004,Subacute hepatic failure
 197279005,Cirrhosis and chronic liver disease
 197280008,Cirrhosis: [florid] or [alcoholic]
+197283005,Alcoholic hepatic failure
 197290000,(Cirrhosis - non alcoholic) or (portal cirrhosis)
 197291001,Unilobular portal cirrhosis
 197292008,Cirrhosis of liver: [multilobular portal] or [postnecrotic]
@@ -87,31 +118,44 @@ code,term
 197294009,Fatty portal cirrhosis
 197295005,Macronodular cirrhosis
 197296006,Capsular portal cirrhosis
+197297002,Cirrhosis: [cardiac portal] or [congestive]
 197298007,Cirrhosis: [juvenile portal] or [childhood function] or [Indian childhood]
 197299004,Pigmentary portal cirrhosis
 197300007,Pipestem portal cirrhosis
 197301006,Toxic portal cirrhosis
 197302004,Cirrhosis secondary to cholestasis
 197303009,Bacterial portal cirrhosis
+197304003,Cardituberculous cirrhosis
 197305002,Syphilitic portal cirrhosis
 197307005,Infectious cirrhosis NOS
 197308000,Portal cirrhosis unspecified
 197309008,(Liver cirrhosis: [named variants] or [NOS]) or (hepatic fibrosis)
-197311004,Biliary cirrhosis NOS
+197316009,Portal fibrosis without cirrhosis
 197332007,Hepatic: [coma] or [encephalopathy]
+197334008,Hepatic failure
+197335009,(Hepatic failure (& [NOS]) or (other sequelae of chronic liver disease)
 197362001,Toxic liver disease with fibrosis and cirrhosis of liver
 197553002,[X]Other and unspecified cirrhosis of liver
 19943007,Cirrhosis of liver
 207252009,[D]Ascites
 207254005,[D]Ascites NOS
+213230009,Hepatic failure as a complication of care
 213231008,Hepatorenal syndrome as a complication of care
 21861000,Micronodular cirrhosis
+22508003,Hepatic failure due to a procedure
 22846003,Hepatorenal syndrome following delivery
 235184005,Operation on esophageal varices
 235201007,Sclerotherapy of esophageal varices
 235212007,Balloon tamponade of esophagus using Sengstaken-Blakemore tube
 235213002,Balloon tamponade of esophagus using Minnesota tube
+235236006,Sclerotherapy of gastric varices
+235247004,Balloon tamponade of stomach
+235881000,Alcoholic hepatic failure
+235882007,Liver failure NOS
+235883002,Hepatic failure NOS
 235884008,Fulminant hepatic failure
+235885009,Subfulminant hepatic failure
+235886005,Chronic hepatic failure
 235891006,Cirrhosis of liver NOS
 235892004,Florid cirrhosis
 235894003,Portal cirrhosis
@@ -119,7 +163,12 @@ code,term
 235896001,Infectious cirrhosis
 235897005,Hypoxia-associated cirrhosis
 236004002,Ascites co-occurrent and due to hepatic disorder
+236006000,Metabolic ascites
 236067006,Bleeding oesophageal varices
+238310002,Intraperitoneal reinfusion of ascites
+24807004,Bleeding gastric varices
+253018005,Fibrolamellar hepatocellular carcinoma
+25370001,Hepatocellular carcinoma
 26206000,Hepatic coma due to viral hepatitis B
 264974007,Peritoneal to venous drainage of ascites
 265349006,Other specified open operation on esophageal varices
@@ -127,29 +176,40 @@ code,term
 266467008,Alcoholic cirrhosis of liver
 266468003,Cirrhosis - non-alcoholic
 266469006,Multilobular portal cirrhosis
+266470007,Cardiac portal cirrhosis
 266471006,Juvenile portal cirrhosis
 266472004,Non-alcoholic cirrhosis NOS
+266536009,(Acute/subacute necrosis of liver) or (acute liver failure)
 266537000,(Cirrhosis &/or chronic liver dis) or (alcoholic liver disease)
-266540000,Biliary cirrhosis (& [primary])
 271440004,Cirrhosis secondary to cholestasis
 27156006,Posthepatitic cirrhosis
 274433001,Ascites tap
+274902006,Combined hepatocellular carcinoma and cholangiocarcinoma
+284721000000107,Compensation for liver failure - OPCS Classification of Interventions and Procedures
+284731000000109,Compensation for liver failure NOS
+284741000000100,Other specified compensation for liver failure
 28670008,Esophageal varices
+291411000000108,Compensation for liver failure
+291431000000100,Other specified compensation for liver failure
+291441000000109,Compensation for liver failure NOS
 302455000,Drainage of ascites
+303091000000103,Compensation for liver failure - OPCS Classification of Interventions and Procedures
+303101000000106,Compensation for liver failure NOS
+303111000000108,Other specified compensation for liver failure
 307311001,Infected ascites
 308129003,Esophageal varices in cirrhosis of the liver
 309783001,Esophageal varices in alcoholic cirrhosis of the liver
 31005002,Hepatorenal syndrome due to a procedure
 312980002,Esophageal varices NOS
-31712002,Primary biliary cholangitis
 33144001,Parasitic cirrhosis
 34742003,Portal hypertension
-37688005,Clonorchiasis with biliary cirrhosis
+371139006,Early cirrhosis
 38436007,Esophagogastric tamponade with balloon
 389026000,Ascites
 397041000000101,[D]Ascites NOS
 399126000,Bronze cirrhosis
 40946000,Hepatic coma due to viral hepatitis
+413438002,Acute hepatic failure due to drugs
 417371000000102,[X]Esophageal varices in diseases classified elsewhere
 419728003,Portal cirrhosis
 420054005,Alcoholic cirrhosis
@@ -157,60 +217,87 @@ code,term
 424340000,Hepatic coma due to chronic hepatitis B
 425413006,Drug-induced cirrhosis of liver
 43904005,Macronodular cirrhosis
-442039000,Measurement of albumin gradient between serum specimen and ascitic fluid specimen
+445237003,Portopulmonary hypertension
+446727002,Endoscopy of upper gastrointestinal tract and injection of varix of stomach
+446738002,Injection of varix of stomach
 446739005,Endoscopy of upper gastrointestinal tract and banding of varix of esophagus
+446740007,Banding of varix of stomach
 446742004,Endoscopy of upper gastrointestinal tract and injection of varix of esophagus
+446743009,Endoscopy of upper gastrointestinal tract and banding of varix of stomach
 449901005,Hepatic encephalopathy in fulminant hepatic failure
 449902003,Portal systemic encephalopathy
+4501007,Tuberculous ascites
 45256007,Cruveilhier-Baumgarten syndrome
 470757009,Tense ascites
 470758004,Refractory ascites
 470971000000107,[X]Other and unspecified cirrhosis of liver
+49111000119106,History of hepatocellular carcinoma
 499461000000105,[D]Ascites
 51292008,Hepatorenal syndrome
+52178006,Combined hepatocellular carcinoma and cholangiocarcinoma
+52985009,Chylous ascites
 533781000000107,Drainage of ascites NEC
 536002,Glissonian cirrhosis
 539081000000106,On examination - ascites NOS
 589541000000101,Infectious cirrhosis NOS
 589551000000103,Portal cirrhosis unspecified
-589561000000100,Biliary cirrhosis NOS
 59701000119109,History of portal hypertension
+59927004,Hepatic failure
 6183001,Indian childhood cirrhosis
 62216007,Familial arthrogryposis-cholestatic hepatorenal syndrome
 652571000000102,Esophageal varices in diseases EC NOS
+662321000000103,Liver failure NOS
+662331000000101,Hepatic failure NOS
 662341000000105,Cirrhosis of liver NOS
 663501000000108,Open operation on esophageal varices NOS
 671731000000104,Non-alcoholic cirrhosis NOS
 67364009,Ligation of esophageal varices
 675401000000103,Esophageal varices NOS
 696141000000105,Other specified open operation on esophageal varices
+698364008,Transgastric plication of gastric varices
 699074005,Transgastric plication of esophageal varices
 699189004,North American Indian childhood cirrhosis
+707420003,Portal hypertension due to cystic fibrosis
 708248004,End stage liver disease
+708973006,Metastatic hepatocellular carcinoma
+713542007,Portal hypertension caused by antiretroviral drug
 713652000,Decompensated liver disease
-715401008,Primary biliary cirrhosis co-occurrent with systemic scleroderma
 715864007,Non-Wilsonian hepatic copper toxicosis of infancy and childhood
+71603004,Hemorrhagic ascites
 716203000,Decompensated cirrhosis of liver
+717865007,Gastric varices without bleeding
+720461006,Acute infantile liver failure due to synthesis defect of mitochondrial deoxyribonucleic acid encoded protein
 721160006,Downhill varices of esophagus
 721206006,Solitary varix of esophagus
+722864002,Acute hepatic failure caused by hepatitis virus
+722865001,Subacute hepatic failure caused by hepatitis virus
 722867009,Idiopathic portal hypertension
-725416005,Cardiomyopathy co-occurrent and due to cirrhosis of liver
+725416005,Cardiomyopathy due to cirrhosis of liver
 725938001,Cirrhosis of liver caused by methotrexate
 725939009,Cirrhosis of liver caused by amiodarone
 725940006,Cirrhosis of liver caused by methyldopa
 72836002,Hepatic coma
 73282006,Esophagoscopy for injection of esophageal varices
 735733008,Cirrhosis of liver co-occurrent and due to primary sclerosing cholangitis
+736155004,Education for liver failure
+74669004,Cardiac cirrhosis
 75393009,Alcoholic cirrhosis of liver
 76301009,Florid cirrhosis
 764962002,Hepatoencephalopathy due to combined oxidative phosphorylation defect type 1
+773411000000107,Liver failure support management
+774207004,Acute infantile liver failure with multisystemic involvement syndrome
 776981000000103,Cirrhosis associated with cystic fibrosis
+778131000000103,Cystic fibrosis related cirrhosis
 78208005,Pigment cirrhosis
+793061000000106,Education for liver failure
+80444007,Stapling of gastric varices
 831000119103,Cirrhosis of liver due to chronic hepatitis C
 843571000000100,Endoscopic banding of oesophageal varices using fluoroscopic guidance
 86454000,Postnecrotic cirrhosis
+86781004,Hemochromatosis
 871619002,Cirrhosis of liver due to and following cardiac procedure
 89305009,Abdominal paracentesis
 89580002,Cryptogenic cirrhosis
 897004000,Esophageal varices due to cirrhosis of liver
 897005004,Esophageal varices due to cirrhosis of liver caused by alcohol
+91109007,Gastric varices

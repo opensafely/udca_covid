@@ -23,8 +23,8 @@ describe
 *missings report, minimum(12400)
 missings dropvars udca_*, force
 
-* Format dates 
-forvalues i=1/187 {
+* Format dates 187
+forvalues i=1/40 {
     gen udcaA`i' = date(udca_`i', "YMD")
     format udcaA`i' %dD/N/CY
     drop udca_`i'
@@ -174,7 +174,7 @@ forvalues i = 60(30)180 {
     bys patient_id (start): gen last = _n==_N
     tab last end_after 
     * Check how many records end after end date - should just be one
-    bys patientid: egen tot_end_after = total(end_after)
+    bys patient_id: egen tot_end_after = total(end_after)
 
     replace stop = end_date if end_after==1 & end_before==0
 
