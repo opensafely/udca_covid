@@ -24,7 +24,7 @@ describe
 missings dropvars udca_*, force
 
 * Format dates 
-forvalues i=1/179 {
+forvalues i=1/187 {
     gen udcaA`i' = date(udca_`i', "YMD")
     format udcaA`i' %dD/N/CY
     drop udca_`i'
