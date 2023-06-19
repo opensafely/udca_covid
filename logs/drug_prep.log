@@ -6,7 +6,7 @@
 . tempfile tempfile 
 
 . import delimited using ./output/input_pbc.csv
-(32 vars, 1,000 obs)
+(98 vars, 1,000 obs)
 
 . save `tempfile' 
 file /tmp/St00015.000001 saved
@@ -87,9 +87,9 @@ note: no variables qualify
 . 
 . * Format dates 
 . forvalues i=1/40 {
-  2. gen udcaA`i' = date(udca_`i', "YMD")
-  3. format udcaA`i' %dD/N/CY
-  4. drop udca_`i'
+  2.     gen udcaA`i' = date(udca_`i', "YMD")
+  3.     format udcaA`i' %dD/N/CY
+  4.     drop udca_`i'
   5. }
 (500 missing values generated)
 (500 missing values generated)
@@ -343,54 +343,154 @@ out_of_orde |
 . drop if year==2023
 (1,986 observations deleted)
 
-. 
-. * Assume end date is 60 days after prescription generated
-. gen stop_date = udcaA + 60 
-
-. format stop_date %dD/N/CY 
-
-. 
-. * Drop rows where prescriptions ends prior to March 2020
-. count if stop_date <= date("01March2020", "DMY")
+. forvalues i = 60(30)180 {
+  2.     preserve
+  3.     * Assume end date is 60 to 180 days after prescription generated
+.     gen stop_date = udcaA + `i'
+  4.     format stop_date %dD/N/CY 
+  5. 
+.     * Drop rows where prescriptions ends prior to March 2020
+.     count if stop_date <= date("01March2020", "DMY")
+  6.     drop if stop_date <= date("01March2020", "DMY")
+  7. 
+.     * Collapse adjacent prescriptions that are continuous prescribing into on
+> e period 
+.     * Flag if start date is greater than assumed stop date of previous prescr
+> iption 
+.     bys patient_id (udcaA): gen spell = udcaA > stop_date[_n-1]
+  8.     bys patient_id (udcaA): replace spell = 1 if _n==1
+  9.     * Flag each row associated with each spell 
+.     bys patient_id (udcaA): gen spell_sum = sum(spell) 
+ 10.     * Start date of spell 
+.     bys patient_id spell_sum (udcaA): gen start = udcaA[1] 
+ 11.     bys patient_id spell_sum (udcaA): gen stop = stop_date[_N] 
+ 12.     format start stop %dD/N/CY
+ 13.     keep patient_id start stop udca total_no_presc
+ 14.     duplicates drop 
+ 15. 
+.     * Add in rows where there are gaps in prescriptions 
+.     bys patient_id (start): gen to_expand = 1 + (stop < start[_n+1])*(start[_
+> n+1]~=.)
+ 16.     tab to_expand 
+ 17.     expand to_expand 
+ 18. 
+.     * Flag new rows
+.     bys patient_id start: gen new_record = (_n==2)
+ 19.     tab to_expand new_record 
+ 20. 
+.     * Updating new rows 
+.     sort patient_id start
+ 21.     replace udca=0 if new_record==1
+ 22.     replace start = stop if new_record==1
+ 23.     bys patient_id (start): replace stop = start[_n+1] if new_record==1
+ 24.     drop new_record to_expand
+ 25. 
+.     * Checks 
+.     count if stop<start 
+ 26.     sort patient_id start
+ 27.     count if stop[_n-1]>start & patient_id==patient_id[_n-1]
+ 28. 
+.     * Update to match follow-up time
+.     * merge variables from original study definition 
+.     merge m:1 patient_id using `tempfile', keepusing(dereg_date died_date_ons
+>  udca_count_bl) 
+ 29.     tab _merge
+ 30. 
+.     * Update variables for people without prescriptions 
+.     replace start = date("01/03/2020", "DMY") if _merge==2
+ 31.     replace udca = 0 if _merge==2
+ 32.     replace stop = date("31/12/2022", "DMY") if _merge==2
+ 33.     replace total_no_presc = 0 if _merge==2
+ 34. 
+.     * Determine end of follow-up date
+.     gen dereg_dateA = date(dereg_date, "YMD")
+ 35.     format %dD/N/CY dereg_dateA
+ 36.     drop dereg_date
+ 37.     gen died_dateA = date(died_date_ons, "YMD")
+ 38.     format %dD/N/CY died_dateA
+ 39.     drop died_date_ons
+ 40.     gen end_study = date("31/12/2022", "DMY")
+ 41.     egen end_date = rowmin(dereg_dateA end_study died_dateA)
+ 42.     * Count number of days of follow-up 
+.     gen total_fu = end_date - date("01/03/2020", "DMY")
+ 43. 
+.     ** Update start and end of follow-up for cohort
+.     * Identify prescriptions that start prior to March 2020
+.     gen start_prior = (start < date("01/03/2020", "DMY"))
+ 44.     replace start = date("01/03/2020", "DMY") if start_prior==1
+ 45. 
+.     * Identify first prescriptions that start after March 2020
+.     bys patient_id (start): gen start_after = 1 + (start > date("01/03/2020",
+>  "DMY") & _n==1)
+ 46.     tab start_after
+ 47.     expand start_after
+ 48. 
+.     * Flag new rows
+.     bys patient_id start: gen new_record = (_n==2)
+ 49.     tab start_after new_record 
+ 50. 
+.     * Updating new rows 
+.     sort patient_id start
+ 51.     replace udca=0 if new_record==1
+ 52.     replace stop = start if new_record==1
+ 53.     replace start = date("01/03/2020", "DMY") if new_record==1
+ 54.     drop new_record start_after
+ 55. 
+.     * Identify rows that end after study end date for person 
+.     gen end_after = (stop > end_date )
+ 56.     gen end_before = (start > end_date) 
+ 57. 
+.     tab end_after
+ 58.     tab end_before 
+ 59. 
+.     * Drop whole rows that are after end_date 
+.     drop if end_before 
+ 60. 
+.     * Check those flagged as ending after are last row only 
+.     bys patient_id: gen last = _n==_N
+ 61.     tab last end_after 
+ 62. 
+.     replace stop = end_date if end_after==1 & end_before==0
+ 63. 
+.     * Identify prescriptions that end prior to end of follow-up 
+.     bys patient_id (start): gen stop_prior = 1 + (stop < end_date & _n==_N)
+ 64.     tab stop_prior
+ 65.     expand stop_prior
+ 66. 
+.     * Flag new rows
+.     bys patient_id start: gen new_record = (_n==2)
+ 67.     tab stop_prior new_record 
+ 68. 
+.     * Updating new rows 
+.     sort patient_id start
+ 69.     replace udca=0 if new_record==1
+ 70.     replace start =  stop if new_record==1
+ 71.     replace stop = end_date if new_record==1
+ 72.     drop new_record stop_prior
+ 73. 
+.     count if start > stop 
+ 74. 
+.     * Check that time covered by prescriptions equals total follow-up
+.     gen time = stop - start 
+ 75.     bys patient_id: egen total_time = total(time)
+ 76. 
+.     gen total_time_unequal = total_time!=total_fu
+ 77.     tab total_time_unequal, m
+ 78. 
+.     save ./output/time_varying_udca_all_vars_`i'
+ 79.     * Drop unnecessary variables
+.     keep patient_id start stop udca 
+ 80. 
+.     save ./output/time_varying_udca_`i'
+ 81.     restore
+ 82. }
   0
-
-. drop if stop_date <= date("01March2020", "DMY")
 (0 observations deleted)
-
-. 
-. * Collapse adjacent prescriptions that are continuous prescribing into one pe
-> riod 
-. * Flag if start date is greater than assumed stop date of previous prescripti
-> on 
-. bys patient_id (udcaA): gen spell = udcaA > stop_date[_n-1]
-
-. bys patient_id (udcaA): replace spell = 1 if _n==1
 (1000 real changes made)
-
-. * Flag each row associated with each spell 
-. bys patient_id (udcaA): gen spell_sum = sum(spell) 
-
-. * Start date of spell 
-. bys patient_id spell_sum (udcaA): gen start = udcaA[1] 
-
-. bys patient_id spell_sum (udcaA): gen stop = stop_date[_N] 
-
-. format start stop %dD/N/CY
-
-. keep patient_id start stop udca total_no_presc
-
-. duplicates drop 
 
 Duplicates in terms of all variables
 
 (11,137 observations deleted)
-
-. 
-. * Add in rows where there are gaps in prescriptions 
-. bys patient_id (start): gen to_expand = 1 + (stop < start[_n+1])*(start[_n+1]
-> ~=.)
-
-. tab to_expand 
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
@@ -398,15 +498,7 @@ Duplicates in terms of all variables
           2 |      5,686       85.04      100.00
 ------------+-----------------------------------
       Total |      6,686      100.00
-
-. expand to_expand 
 (5,686 observations created)
-
-. 
-. * Flag new rows
-. bys patient_id start: gen new_record = (_n==2)
-
-. tab to_expand new_record 
 
            |      new_record
  to_expand |         0          1 |     Total
@@ -415,179 +507,603 @@ Duplicates in terms of all variables
          2 |     5,686      5,686 |    11,372 
 -----------+----------------------+----------
      Total |     6,686      5,686 |    12,372 
-
-. 
-. * Updating new rows 
-. sort patient_id start
-
-. replace udca=0 if new_record==1
 (5,686 real changes made)
-
-. replace start = stop if new_record==1
 (5,686 real changes made)
-
-. bys patient_id (start): replace stop = start[_n+1] if new_record==1
 (5686 real changes made)
-
-. drop new_record to_expand
-
-. 
-. * Checks 
-. count if stop<start 
   0
-
-. sort patient_id start
-
-. count if stop[_n-1]>start & patient_id==patient_id[_n-1]
   0
-
-. 
-. * Update to match follow-up time
-. * merge variables from original study definition 
-. merge m:1 patient_id using `tempfile', keepusing(dereg_date died_date_ons) 
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                        12,248
-        from master                    11,331  (_merge==1)
-        from using                        917  (_merge==2)
+    not matched                        12,082
+        from master                    11,177  (_merge==1)
+        from using                        905  (_merge==2)
 
-    matched                             1,041  (_merge==3)
+    matched                             1,195  (_merge==3)
     -----------------------------------------
-
-. tab _merge
 
                  _merge |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
-        master only (1) |     11,331       85.27       85.27
-         using only (2) |        917        6.90       92.17
-            matched (3) |      1,041        7.83      100.00
+        master only (1) |     11,177       84.18       84.18
+         using only (2) |        905        6.82       91.00
+            matched (3) |      1,195        9.00      100.00
 ------------------------+-----------------------------------
-                  Total |     13,289      100.00
-
-. 
-. * Update variables for people without prescriptions 
-. replace start = date("01/03/2020", "DMY") if _merge==2
-(917 real changes made)
-
-. replace udca = 0 if _merge==2
-(917 real changes made)
-
-. replace stop = date("31/12/2022", "DMY") if _merge==2
-(917 real changes made)
-
-. replace total_no_presc = 0 if _merge==2
-(917 real changes made)
-
-. 
-. * Determine end of follow-up date
-. gen dereg_dateA = date(dereg_date, "YMD")
-(12,245 missing values generated)
-
-. format %dD/N/CY dereg_dateA
-
-. drop dereg_date
-
-. gen died_dateA = date(died_date_ons, "YMD")
-(12,267 missing values generated)
-
-. format %dD/N/CY died_dateA
-
-. drop died_date_ons
-
-. gen end_study = date("31/12/2022", "DMY")
-
-. egen end_date = rowmin(dereg_dateA end_study died_dateA)
-
-. * Count number of days of follow-up 
-. gen total_fu = end_date - date("01/03/2020", "DMY")
-
-. 
-. ** Update start and end of follow-up for cohort
-. * Identify prescriptions that start prior to March 2020
-. gen start_prior = (start < date("01/03/2020", "DMY"))
-
-. replace start = date("01/03/2020", "DMY") if start_prior==1
+                  Total |     13,277      100.00
+(905 real changes made)
+(905 real changes made)
+(905 real changes made)
+(905 real changes made)
+(12,205 missing values generated)
+(12,327 missing values generated)
 (0 real changes made)
 
-. 
-. * Identify rows that end after study end date for person 
-. gen end_after = (stop > end_date )
+start_after |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |     12,277       92.47       92.47
+          2 |      1,000        7.53      100.00
+------------+-----------------------------------
+      Total |     13,277      100.00
+(1,000 observations created)
 
-. gen end_before = (start > end_date) 
-
-. 
-. tab end_after
+start_afte |      new_record
+         r |         0          1 |     Total
+-----------+----------------------+----------
+         1 |    12,277          0 |    12,277 
+         2 |     1,000      1,000 |     2,000 
+-----------+----------------------+----------
+     Total |    13,277      1,000 |    14,277 
+(1,000 real changes made)
+(1,000 real changes made)
+(1,000 real changes made)
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     11,539       86.83       86.83
-          1 |      1,750       13.17      100.00
+          0 |     12,541       87.84       87.84
+          1 |      1,736       12.16      100.00
 ------------+-----------------------------------
-      Total |     13,289      100.00
-
-. tab end_before 
+      Total |     14,277      100.00
 
  end_before |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     12,868       96.83       96.83
-          1 |        421        3.17      100.00
+          0 |     13,842       96.95       96.95
+          1 |        435        3.05      100.00
 ------------+-----------------------------------
-      Total |     13,289      100.00
-
-. 
-. * Drop whole rows that are after end_date 
-. drop if end_before 
-(421 observations deleted)
-
-. 
-. * Check those flagged as ending after are last row only 
-. bys patient_id: gen last = _n==_N
-
-. tab last end_after 
+      Total |     14,277      100.00
+(435 observations deleted)
 
            |       end_after
       last |         0          1 |     Total
 -----------+----------------------+----------
-         0 |    10,327        627 |    10,954 
-         1 |     1,212        702 |     1,914 
+         0 |    11,928          9 |    11,937 
+         1 |       613      1,292 |     1,905 
 -----------+----------------------+----------
-     Total |    11,539      1,329 |    12,868 
+     Total |    12,541      1,301 |    13,842 
+(1,301 real changes made)
 
-. 
-. replace stop = end_date if end_after==1 & end_before==0
-(1,329 real changes made)
+ stop_prior |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |     13,533       97.77       97.77
+          2 |        309        2.23      100.00
+------------+-----------------------------------
+      Total |     13,842      100.00
+(309 observations created)
 
-. 
-. count if start > stop 
+           |      new_record
+stop_prior |         0          1 |     Total
+-----------+----------------------+----------
+         1 |    13,533          0 |    13,533 
+         2 |       309        309 |       618 
+-----------+----------------------+----------
+     Total |    13,842        309 |    14,151 
+(309 real changes made)
+(309 real changes made)
+(309 real changes made)
   0
-
-. 
-. * Check that time covered by prescriptions equals total follow-up
-. gen time = stop - start 
-
-. bys patient_id: egen total_time = total(time)
-
-. 
-. gen total_time_unequal = total_time!=total_fu
-
-. tab total_time_unequal, m
 
 total_time_ |
     unequal |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        917        7.13        7.13
-          1 |     11,951       92.87      100.00
+          0 |     14,151      100.00      100.00
 ------------+-----------------------------------
-      Total |     12,868      100.00
+      Total |     14,151      100.00
+file ./output/time_varying_udca_all_vars_60.dta saved
+file ./output/time_varying_udca_60.dta saved
+  0
+(0 observations deleted)
+(1000 real changes made)
 
-. 
-. * Drop unnecessary variables
-. drop _merge - end_date start_prior - last
+Duplicates in terms of all variables
 
-. 
-. save ./output/time_varying_udca
-file ./output/time_varying_udca.dta saved
+(13,558 observations deleted)
+
+  to_expand |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      1,000       23.45       23.45
+          2 |      3,265       76.55      100.00
+------------+-----------------------------------
+      Total |      4,265      100.00
+(3,265 observations created)
+
+           |      new_record
+ to_expand |         0          1 |     Total
+-----------+----------------------+----------
+         1 |     1,000          0 |     1,000 
+         2 |     3,265      3,265 |     6,530 
+-----------+----------------------+----------
+     Total |     4,265      3,265 |     7,530 
+(3,265 real changes made)
+(3,265 real changes made)
+(3265 real changes made)
+  0
+  0
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         7,740
+        from master                     6,835  (_merge==1)
+        from using                        905  (_merge==2)
+
+    matched                               695  (_merge==3)
+    -----------------------------------------
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |      6,835       81.03       81.03
+         using only (2) |        905       10.73       91.76
+            matched (3) |        695        8.24      100.00
+------------------------+-----------------------------------
+                  Total |      8,435      100.00
+(905 real changes made)
+(905 real changes made)
+(905 real changes made)
+(905 real changes made)
+(7,627 missing values generated)
+(7,695 missing values generated)
+(0 real changes made)
+
+start_after |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      7,435       88.14       88.14
+          2 |      1,000       11.86      100.00
+------------+-----------------------------------
+      Total |      8,435      100.00
+(1,000 observations created)
+
+start_afte |      new_record
+         r |         0          1 |     Total
+-----------+----------------------+----------
+         1 |     7,435          0 |     7,435 
+         2 |     1,000      1,000 |     2,000 
+-----------+----------------------+----------
+     Total |     8,435      1,000 |     9,435 
+(1,000 real changes made)
+(1,000 real changes made)
+(1,000 real changes made)
+
+  end_after |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      7,746       82.10       82.10
+          1 |      1,689       17.90      100.00
+------------+-----------------------------------
+      Total |      9,435      100.00
+
+ end_before |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      9,195       97.46       97.46
+          1 |        240        2.54      100.00
+------------+-----------------------------------
+      Total |      9,435      100.00
+(240 observations deleted)
+
+           |       end_after
+      last |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     7,272         18 |     7,290 
+         1 |       474      1,431 |     1,905 
+-----------+----------------------+----------
+     Total |     7,746      1,449 |     9,195 
+(1,449 real changes made)
+
+ stop_prior |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      9,029       98.19       98.19
+          2 |        166        1.81      100.00
+------------+-----------------------------------
+      Total |      9,195      100.00
+(166 observations created)
+
+           |      new_record
+stop_prior |         0          1 |     Total
+-----------+----------------------+----------
+         1 |     9,029          0 |     9,029 
+         2 |       166        166 |       332 
+-----------+----------------------+----------
+     Total |     9,195        166 |     9,361 
+(166 real changes made)
+(166 real changes made)
+(166 real changes made)
+  0
+
+total_time_ |
+    unequal |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      9,361      100.00      100.00
+------------+-----------------------------------
+      Total |      9,361      100.00
+file ./output/time_varying_udca_all_vars_90.dta saved
+file ./output/time_varying_udca_90.dta saved
+  0
+(0 observations deleted)
+(1000 real changes made)
+
+Duplicates in terms of all variables
+
+(15,001 observations deleted)
+
+  to_expand |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      1,000       35.44       35.44
+          2 |      1,822       64.56      100.00
+------------+-----------------------------------
+      Total |      2,822      100.00
+(1,822 observations created)
+
+           |      new_record
+ to_expand |         0          1 |     Total
+-----------+----------------------+----------
+         1 |     1,000          0 |     1,000 
+         2 |     1,822      1,822 |     3,644 
+-----------+----------------------+----------
+     Total |     2,822      1,822 |     4,644 
+(1,822 real changes made)
+(1,822 real changes made)
+(1822 real changes made)
+  0
+  0
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         5,092
+        from master                     4,187  (_merge==1)
+        from using                        905  (_merge==2)
+
+    matched                               457  (_merge==3)
+    -----------------------------------------
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |      4,187       75.46       75.46
+         using only (2) |        905       16.31       91.76
+            matched (3) |        457        8.24      100.00
+------------------------+-----------------------------------
+                  Total |      5,549      100.00
+(905 real changes made)
+(905 real changes made)
+(905 real changes made)
+(905 real changes made)
+(4,875 missing values generated)
+(4,901 missing values generated)
+(0 real changes made)
+
+start_after |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      4,549       81.98       81.98
+          2 |      1,000       18.02      100.00
+------------+-----------------------------------
+      Total |      5,549      100.00
+(1,000 observations created)
+
+start_afte |      new_record
+         r |         0          1 |     Total
+-----------+----------------------+----------
+         1 |     4,549          0 |     4,549 
+         2 |     1,000      1,000 |     2,000 
+-----------+----------------------+----------
+     Total |     5,549      1,000 |     6,549 
+(1,000 real changes made)
+(1,000 real changes made)
+(1,000 real changes made)
+
+  end_after |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,893       74.71       74.71
+          1 |      1,656       25.29      100.00
+------------+-----------------------------------
+      Total |      6,549      100.00
+
+ end_before |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      6,410       97.88       97.88
+          1 |        139        2.12      100.00
+------------+-----------------------------------
+      Total |      6,549      100.00
+(139 observations deleted)
+
+           |       end_after
+      last |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     4,438         67 |     4,505 
+         1 |       455      1,450 |     1,905 
+-----------+----------------------+----------
+     Total |     4,893      1,517 |     6,410 
+(1,517 real changes made)
+
+ stop_prior |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      6,311       98.46       98.46
+          2 |         99        1.54      100.00
+------------+-----------------------------------
+      Total |      6,410      100.00
+(99 observations created)
+
+           |      new_record
+stop_prior |         0          1 |     Total
+-----------+----------------------+----------
+         1 |     6,311          0 |     6,311 
+         2 |        99         99 |       198 
+-----------+----------------------+----------
+     Total |     6,410         99 |     6,509 
+(99 real changes made)
+(99 real changes made)
+(99 real changes made)
+  0
+
+total_time_ |
+    unequal |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      6,509      100.00      100.00
+------------+-----------------------------------
+      Total |      6,509      100.00
+file ./output/time_varying_udca_all_vars_120.dta saved
+file ./output/time_varying_udca_120.dta saved
+  0
+(0 observations deleted)
+(1000 real changes made)
+
+Duplicates in terms of all variables
+
+(15,767 observations deleted)
+
+  to_expand |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      1,000       48.64       48.64
+          2 |      1,056       51.36      100.00
+------------+-----------------------------------
+      Total |      2,056      100.00
+(1,056 observations created)
+
+           |      new_record
+ to_expand |         0          1 |     Total
+-----------+----------------------+----------
+         1 |     1,000          0 |     1,000 
+         2 |     1,056      1,056 |     2,112 
+-----------+----------------------+----------
+     Total |     2,056      1,056 |     3,112 
+(1,056 real changes made)
+(1,056 real changes made)
+(1056 real changes made)
+  0
+  0
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         3,708
+        from master                     2,803  (_merge==1)
+        from using                        905  (_merge==2)
+
+    matched                               309  (_merge==3)
+    -----------------------------------------
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |      2,803       69.78       69.78
+         using only (2) |        905       22.53       92.31
+            matched (3) |        309        7.69      100.00
+------------------------+-----------------------------------
+                  Total |      4,017      100.00
+(905 real changes made)
+(905 real changes made)
+(905 real changes made)
+(905 real changes made)
+(3,409 missing values generated)
+(3,417 missing values generated)
+(0 real changes made)
+
+start_after |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      3,017       75.11       75.11
+          2 |      1,000       24.89      100.00
+------------+-----------------------------------
+      Total |      4,017      100.00
+(1,000 observations created)
+
+start_afte |      new_record
+         r |         0          1 |     Total
+-----------+----------------------+----------
+         1 |     3,017          0 |     3,017 
+         2 |     1,000      1,000 |     2,000 
+-----------+----------------------+----------
+     Total |     4,017      1,000 |     5,017 
+(1,000 real changes made)
+(1,000 real changes made)
+(1,000 real changes made)
+
+  end_after |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      3,369       67.15       67.15
+          1 |      1,648       32.85      100.00
+------------+-----------------------------------
+      Total |      5,017      100.00
+
+ end_before |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,923       98.13       98.13
+          1 |         94        1.87      100.00
+------------+-----------------------------------
+      Total |      5,017      100.00
+(94 observations deleted)
+
+           |       end_after
+      last |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     2,769        249 |     3,018 
+         1 |       600      1,305 |     1,905 
+-----------+----------------------+----------
+     Total |     3,369      1,554 |     4,923 
+(1,554 real changes made)
+
+ stop_prior |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      4,861       98.74       98.74
+          2 |         62        1.26      100.00
+------------+-----------------------------------
+      Total |      4,923      100.00
+(62 observations created)
+
+           |      new_record
+stop_prior |         0          1 |     Total
+-----------+----------------------+----------
+         1 |     4,861          0 |     4,861 
+         2 |        62         62 |       124 
+-----------+----------------------+----------
+     Total |     4,923         62 |     4,985 
+(62 real changes made)
+(62 real changes made)
+(62 real changes made)
+  0
+
+total_time_ |
+    unequal |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,985      100.00      100.00
+------------+-----------------------------------
+      Total |      4,985      100.00
+file ./output/time_varying_udca_all_vars_150.dta saved
+file ./output/time_varying_udca_150.dta saved
+  0
+(0 observations deleted)
+(1000 real changes made)
+
+Duplicates in terms of all variables
+
+(16,241 observations deleted)
+
+  to_expand |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      1,000       63.21       63.21
+          2 |        582       36.79      100.00
+------------+-----------------------------------
+      Total |      1,582      100.00
+(582 observations created)
+
+           |      new_record
+ to_expand |         0          1 |     Total
+-----------+----------------------+----------
+         1 |     1,000          0 |     1,000 
+         2 |       582        582 |     1,164 
+-----------+----------------------+----------
+     Total |     1,582        582 |     2,164 
+(582 real changes made)
+(582 real changes made)
+(582 real changes made)
+  0
+  0
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         2,864
+        from master                     1,959  (_merge==1)
+        from using                        905  (_merge==2)
+
+    matched                               205  (_merge==3)
+    -----------------------------------------
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |      1,959       63.83       63.83
+         using only (2) |        905       29.49       93.32
+            matched (3) |        205        6.68      100.00
+------------------------+-----------------------------------
+                  Total |      3,069      100.00
+(905 real changes made)
+(905 real changes made)
+(905 real changes made)
+(905 real changes made)
+(2,517 missing values generated)
+(2,517 missing values generated)
+(0 real changes made)
+
+start_after |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      2,069       67.42       67.42
+          2 |      1,000       32.58      100.00
+------------+-----------------------------------
+      Total |      3,069      100.00
+(1,000 observations created)
+
+start_afte |      new_record
+         r |         0          1 |     Total
+-----------+----------------------+----------
+         1 |     2,069          0 |     2,069 
+         2 |     1,000      1,000 |     2,000 
+-----------+----------------------+----------
+     Total |     3,069      1,000 |     4,069 
+(1,000 real changes made)
+(1,000 real changes made)
+(1,000 real changes made)
+
+  end_after |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,437       59.89       59.89
+          1 |      1,632       40.11      100.00
+------------+-----------------------------------
+      Total |      4,069      100.00
+
+ end_before |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,015       98.67       98.67
+          1 |         54        1.33      100.00
+------------+-----------------------------------
+      Total |      4,069      100.00
+(54 observations deleted)
+
+           |       end_after
+      last |         0          1 |     Total
+-----------+----------------------+----------
+         0 |     1,626        484 |     2,110 
+         1 |       811      1,094 |     1,905 
+-----------+----------------------+----------
+     Total |     2,437      1,578 |     4,015 
+(1,578 real changes made)
+
+ stop_prior |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      3,977       99.05       99.05
+          2 |         38        0.95      100.00
+------------+-----------------------------------
+      Total |      4,015      100.00
+(38 observations created)
+
+           |      new_record
+stop_prior |         0          1 |     Total
+-----------+----------------------+----------
+         1 |     3,977          0 |     3,977 
+         2 |        38         38 |        76 
+-----------+----------------------+----------
+     Total |     4,015         38 |     4,053 
+(38 real changes made)
+(38 real changes made)
+(38 real changes made)
+  0
+
+total_time_ |
+    unequal |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,053      100.00      100.00
+------------+-----------------------------------
+      Total |      4,053      100.00
+file ./output/time_varying_udca_all_vars_180.dta saved
+file ./output/time_varying_udca_180.dta saved
 
 . 
 . 
@@ -601,7 +1117,7 @@ file ./output/time_varying_udca.dta saved
 . 
 end of do-file
 
-. . file open output using "/tmp/drug_prep.do.4Vyu.out", write text replace
+. . file open output using "/tmp/101_drug_prep.do.N2gA.out", write text replace
 
 . . file write output "success" 
 

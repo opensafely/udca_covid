@@ -3,7 +3,7 @@
 . tempfile tempfile 
 
 . import delimited using ./output/input_pbc.csv
-(97 vars, 1,000 obs)
+(98 vars, 1,000 obs)
 
 . save `tempfile' 
 file /tmp/St00015.000001 saved
@@ -13,434 +13,567 @@ file /tmp/St00015.000001 saved
 > t replace
 (note: file ./output/tables/udca_descriptives.txt not found)
 
-. 
-. use ./output/time_varying_udca_all_vars_60, clear 
-
-. drop last 
-
-. bys patient_id: gen last = _n==_N 
+. file write tablecontent _tab ("Number of obervations") _tab ("Mean") _tab ("S
+> D") _tab ("Median") _tab ("25th percentile") _tab ("75th percentile") _n 
 
 . 
-. * summarise total number of prescriptions during follow-up 
-. sum total_no_presc if last==1, d 
+. forvalues i=60(30)180 {
+  2.     use ./output/time_varying_udca_all_vars_`i', clear 
+  3.     drop last 
+  4.     bys patient_id: gen last = _n==_N 
+  5. 
+.     * summarise total number of prescriptions during follow-up 
+.     sum total_no_presc if last==1, d 
+  6.     file write tablecontent ("Number of prescriptions `i'") _tab %3.1f (r(
+> N)) _tab %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r
+> (p25)) _tab %3.1f (r(p75)) _n 
+  7. 
+.     * Summarise follow-up 
+.     sum total_fu if last==1, d
+  8.     file write tablecontent ("Total length of follow-up `i'") _tab %3.1f (
+> r(N)) _tab %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f 
+> (r(p25)) _tab %3.1f (r(p75)) _n 
+  9. 
+.     * Summarise proportion of time on udca 
+.     * First generate time for each row 
+.     *gen time = stop - start 
+.     * Generate total time on & off udca 
+.     * First calculate time for both on and off within one variable 
+.     bys patient_id udca: egen time_udca = total(time)
+ 10.     * From this generate variable with time off udca 
+.     bys patient_id: egen time_off_udca = max(time_udca) if udca==0
+ 11.     bys patient_id (time_off_udca): replace time_off_udca = time_off_udca[
+> _n-1] if time_off_udca==. & time_off_udca[_n-1]!=.
+ 12.     * Update time_udca to only contain time on udca 
+.     replace time_udca=. if udca==0
+ 13.     bys patient_id: egen time_on_udca = max(time_udca)
+ 14.     * Check on and off equals total time of follow-up 
+.     count if time_on_udca + time_off_udca!=total_fu
+ 15. 
+.     sum time_on_udca if last==1, d 
+ 16.     file write tablecontent ("Total time on UDCA `i'") _tab %3.1f (r(N)) _
+> tab %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)
+> ) _tab %3.1f (r(p75)) _n 
+ 17. 
+.     sum time_off_udca if last==1, d 
+ 18.     file write tablecontent ("Total time off UDCA `i'") _tab %3.1f (r(N)) 
+> _tab %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25
+> )) _tab %3.1f (r(p75)) _n 
+ 19. 
+.     bys patient_id: gen rows = _N 
+ 20.     sum rows if last==1, d 
+ 21.     file write tablecontent ("Number of rows `i'") _tab %3.1f (r(N)) _tab 
+> %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _t
+> ab %3.1f (r(p75)) _n _n 
+ 22. 
+.     * Summarising switching
+.     gen udca_bl = (udca_count_bl>=1 & udca_count_bl!=.) 
+ 23.     gen yr_start = year(start)
+ 24.     sum yr_start 
+ 25.     gen switch_2020_`i'_i = udca!=udca_bl & yr_start==2020
+ 26.     bys patient_id: egen switch_2020_`i' = max(switch_2020_`i'_i)
+ 27.     bys patient_id: egen switch_2020_`i'_total = total(switch_2020_`i'_i)
+ 28.     gen switch_2020_`i'_start = (switch_2020_`i'==1 & udca_bl==0)
+ 29.     gen switch_2020_`i'_stop = (switch_2020_`i'==1 & udca_bl==1)
+ 30.     gen switch_2020_`i'_multi = (switch_2020_`i'_total>1 & switch_2020_`i'
+> _total!=.)
+ 31.     keep if last==1
+ 32.     tab switch_2020_`i'  
+ 33.     safecount if switch_2020_`i'==1
+ 34.     file write tablecontent ("switching") _tab ("Number switched") _tab ("
+> Percent switched") _tab ("Switched from unexposed") _tab ("Percent switched u
+> nexposed") _tab ("Switched from exposed") _tab ("Percent switched exposed") _
+> n 
+ 35.     file write tablecontent ("2020 `i'") _tab %3.1f (r(N)) _tab  
+ 36.     local percent = (r(N)/_N)*100
+ 37.     safecount if switch_2020_`i'_start==1
+ 38.     file write tablecontent (`percent') _tab  %3.1f (r(N)) _tab 
+ 39.     local percent_stt = (r(N)/_N)*100
+ 40.     safecount if switch_2020_`i'_stop==1
+ 41.     file write tablecontent (`percent_stt') _tab  %3.1f (r(N)) _tab 
+ 42.     local percent_stp = (r(N)/_N)*100
+ 43.     file write tablecontent (`percent_stp') _n _n 
+ 44. }
 
                        total_no_presc
 -------------------------------------------------------------
       Percentiles      Smallest
  1%            0              0
  5%            0              0
-10%            0              0       Obs               1,893
-25%            0              0       Sum of Wgt.       1,893
+10%            0              0       Obs               1,905
+25%            0              0       Sum of Wgt.       1,905
 
-50%           75                      Mean           45.47279
-                        Largest       Std. Dev.       43.2312
-75%           86            101
-90%           92            102       Variance       1868.936
-95%           94            102       Skewness       -.079081
-99%           99            103       Kurtosis       1.050686
-
-. file write tablecontent _tab ("Number of obervations") _tab ("Mean") _tab ("S
-> D") _tab ("Median") _tab ("25th percentile") _tab ("75th percentile") _n 
-
-. file write tablecontent ("Number of prescriptions 60") _tab %3.1f (r(N)) _tab
->  %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _
-> tab %3.1f (r(p75)) _n 
-
-. 
-. * Summarise follow-up 
-. sum total_fu if last==1, d
+50%           14                      Mean           10.39843
+                        Largest       Std. Dev.      10.15103
+75%           20             28
+90%           23             28       Variance       103.0434
+95%           24             29       Skewness       .0448164
+99%           26             29       Kurtosis       1.177608
 
                           total_fu
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%           27              2
- 5%          110              5
-10%          244              7       Obs               1,893
-25%          694              7       Sum of Wgt.       1,893
+ 1%           20              3
+ 5%          112              4
+10%          221              5       Obs               1,905
+25%          662              7       Sum of Wgt.       1,905
 
-50%         1035                      Mean           838.0507
-                        Largest       Std. Dev.      319.5349
+50%         1035                      Mean           832.0719
+                        Largest       Std. Dev.      325.1018
 75%         1035           1035
-90%         1035           1035       Variance       102102.5
-95%         1035           1035       Skewness      -1.357897
-99%         1035           1035       Kurtosis       3.334547
-
-. file write tablecontent ("Total length of follow-up 60") _tab %3.1f (r(N)) _t
-> ab %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25))
->  _tab %3.1f (r(p75)) _n 
-
-. 
-. * Summarise proportion of time on udca 
-. * First generate time for each row 
-. *gen time = stop - start 
-. * Generate total time on & off udca 
-. * First calculate time for both on and off within one variable 
-. bys patient_id udca: egen time_udca = total(time)
-
-. * From this generate variable with time off udca 
-. bys patient_id: egen time_off_udca = max(time_udca) if udca==0
-(1637 missing values generated)
-
-. bys patient_id (time_off_udca): replace time_off_udca = time_off_udca[_n-1] i
-> f time_off_udca==. & time_off_udca[_n-1]!=.
-(1637 real changes made)
-
-. * Update time_udca to only contain time on udca 
-. replace time_udca=. if udca==0
-(2,539 real changes made, 2,539 to missing)
-
-. bys patient_id: egen time_on_udca = max(time_udca)
-(896 missing values generated)
-
-. * Check on and off equals total time of follow-up 
-. count if time_on_udca + time_off_udca!=total_fu
-  896
-
-. 
-. sum time_on_udca if last==1, d 
+90%         1035           1035       Variance       105691.2
+95%         1035           1035       Skewness      -1.310726
+99%         1035           1035       Kurtosis       3.176148
+(6458 missing values generated)
+(6458 real changes made)
+(7,693 real changes made, 7,693 to missing)
+(907 missing values generated)
+  907
 
                         time_on_udca
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%           98              7
- 5%          647             21
-10%          962             26       Obs                 997
-25%          997             44       Sum of Wgt.         997
+ 1%           66              4
+ 5%          420             15
+10%          500             22       Obs                 998
+25%          587             25       Sum of Wgt.         998
 
-50%         1015                      Mean           972.4313
-                        Largest       Std. Dev.      161.8849
-75%         1027           1034
-90%         1032           1034       Variance       26206.73
-95%         1033           1034       Skewness      -4.279605
-99%         1034           1034       Kurtosis       21.17395
-
-. file write tablecontent ("Total time on UDCA 60") _tab %3.1f (r(N)) _tab %3.1
-> f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %
-> 3.1f (r(p75)) _n 
-
-. 
-. sum time_off_udca if last==1, d 
+50%          656                      Mean           637.1473
+                        Largest       Std. Dev.      133.0357
+75%          720            866
+90%          769            866       Variance       17698.51
+95%          799            867       Skewness      -1.892168
+99%          842            893       Kurtosis       8.599325
 
                         time_off_udca
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%            1              1
- 5%            3              1
-10%            6              1       Obs               1,893
-25%           15              1       Sum of Wgt.       1,893
+ 1%           16              3
+ 5%          104              4
+10%          187              5       Obs               1,905
+25%          303              7       Sum of Wgt.       1,905
 
-50%           52                      Mean           325.8933
-                        Largest       Std. Dev.      404.0353
-75%          694           1035
-90%         1035           1035       Variance       163244.5
-95%         1035           1035       Skewness       .8512337
-99%         1035           1035       Kurtosis       2.009308
-
-. file write tablecontent ("Total time off UDCA 60") _tab %3.1f (r(N)) _tab %3.
-> 1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab 
-> %3.1f (r(p75)) _n 
-
-. 
-. bys patient_id: gen rows = _N 
-
-. sum rows if last==1, d 
+50%          406                      Mean           498.2803
+                        Largest       Std. Dev.      295.7706
+75%          657           1035
+90%         1035           1035       Variance       87480.26
+95%         1035           1035       Skewness       .7056436
+99%         1035           1035       Kurtosis       2.375393
 
                             rows
 -------------------------------------------------------------
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            1              1       Obs               1,893
-25%            1              1       Sum of Wgt.       1,893
+10%            1              1       Obs               1,905
+25%            1              1       Sum of Wgt.       1,905
 
-50%            2                      Mean           2.206022
-                        Largest       Std. Dev.      1.622003
-75%            3              8
-90%            4              8       Variance       2.630894
-95%            6             10       Skewness       1.518271
-99%            8             10       Kurtosis       4.871035
-
-. file write tablecontent ("Number of rows 60") _tab %3.1f (r(N)) _tab %3.1f (r
-> (mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %3.1f
->  (r(p75)) _n _n 
-
-. 
-. * Summarising switching
-. gen udca_bl = (udca_count_bl>=1 & udca_count_bl!=.) 
-
-. gen yr_start = year(start)
-
-. sum yr_start 
+50%            8                      Mean           7.428346
+                        Largest       Std. Dev.       6.53049
+75%           14             20
+90%           16             21       Variance       42.64731
+95%           17             21       Skewness       .1973149
+99%           19             22       Kurtosis       1.323763
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    yr_start |      4,176    2020.343    .6762461       2020       2022
+    yr_start |     14,151     2020.91    .8287452       2020       2022
+(12,246 observations deleted)
 
-. gen switch_2020_i = udca!=udca_bl & yr_start==2020
-
-. bys patient_id: egen switch_2020 = max(switch_2020_i)
-
-. bys patient_id: egen switch_2020_total = total(switch_2020_i)
-
-. gen switch_2020_start = (switch_2020==1 & udca_bl==0)
-
-. gen switch_2020_stop = (switch_2020==1 & udca_bl==1)
-
-. gen switch_2020_multi = (switch_2020_total>1 & switch_2020_total!=.)
-
-. keep if last==1
-(2,283 observations deleted)
-
-. tab switch_2020  
-
-switch_2020 |      Freq.     Percent        Cum.
+switch_2020 |
+        _60 |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        664       35.08       35.08
-          1 |      1,229       64.92      100.00
+          0 |        694       36.43       36.43
+          1 |      1,211       63.57      100.00
 ------------+-----------------------------------
-      Total |      1,893      100.00
-
-. safecount if switch_2020==1
-  1,229
-
-. file write tablecontent ("switching") _tab ("Number switched") _tab ("Percent
->  switched") _tab ("Switched from unexposed") _tab ("Percent switched unexpose
-> d") _tab ("Switched from exposed") _tab ("Percent switched exposed") _n 
-
-. file write tablecontent ("2020 60") _tab %3.1f (r(N)) _tab  
-
-. local percent = (r(N)/_N)*100
-
-. safecount if switch_2020_start==1
-  976
-
-. file write tablecontent (`percent') _tab  %3.1f (r(N)) _tab 
-
-. local percent_stt = (r(N)/_N)*100
-
-. safecount if switch_2020_stop==1
-  253
-
-. file write tablecontent (`percent_stt') _tab  %3.1f (r(N)) _tab 
-
-. local percent_stp = (r(N)/_N)*100
-
-. file write tablecontent (`percent_stp') _n _n 
-
-. 
-. * For 90 day prescriptions 
-. use ./output/time_varying_udca_all_vars_90, clear 
-
-. drop last 
-
-. bys patient_id: gen last = _n==_N 
-
-. 
-. * summarise total number of prescriptions during follow-up 
-. sum total_no_presc if last==1, d 
+      Total |      1,905      100.00
+  1,211
+  972
+  239
 
                        total_no_presc
 -------------------------------------------------------------
       Percentiles      Smallest
  1%            0              0
  5%            0              0
-10%            0              0       Obs               1,893
-25%            0              0       Sum of Wgt.       1,893
+10%            0              0       Obs               1,905
+25%            0              0       Sum of Wgt.       1,905
 
-50%           75                      Mean           45.47279
-                        Largest       Std. Dev.       43.2312
-75%           86            101
-90%           92            102       Variance       1868.936
-95%           94            102       Skewness       -.079081
-99%           99            103       Kurtosis       1.050686
-
-. file write tablecontent _tab ("Number of obervations") _tab ("Mean") _tab ("S
-> D") _tab ("Median") _tab ("25th percentile") _tab ("75th percentile") _n 
-
-. file write tablecontent ("Number of prescriptions 90") _tab %3.1f (r(N)) _tab
->  %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _
-> tab %3.1f (r(p75)) _n 
-
-. 
-. * Summarise follow-up 
-. sum total_fu if last==1, d
+50%           14                      Mean           10.39843
+                        Largest       Std. Dev.      10.15103
+75%           20             28
+90%           23             28       Variance       103.0434
+95%           24             29       Skewness       .0448164
+99%           26             29       Kurtosis       1.177608
 
                           total_fu
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%           27              2
- 5%          110              5
-10%          244              7       Obs               1,893
-25%          694              7       Sum of Wgt.       1,893
+ 1%           20              3
+ 5%          112              4
+10%          221              5       Obs               1,905
+25%          662              7       Sum of Wgt.       1,905
 
-50%         1035                      Mean           838.0507
-                        Largest       Std. Dev.      319.5349
+50%         1035                      Mean           832.0719
+                        Largest       Std. Dev.      325.1018
 75%         1035           1035
-90%         1035           1035       Variance       102102.5
-95%         1035           1035       Skewness      -1.357897
-99%         1035           1035       Kurtosis       3.334547
-
-. file write tablecontent ("Total length of follow-up 90") _tab %3.1f (r(N)) _t
-> ab %3.1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25))
->  _tab %3.1f (r(p75)) _n 
-
-. 
-. * Summarise proportion of time on udca 
-. * First generate time for each row 
-. *gen time = stop - start 
-. * Generate total time on & off udca 
-. * First calculate time for both on and off within one variable 
-. bys patient_id udca: egen time_udca = total(time)
-
-. * From this generate variable with time off udca 
-. bys patient_id: egen time_off_udca = max(time_udca) if udca==0
-(1060 missing values generated)
-
-. bys patient_id (time_off_udca): replace time_off_udca = time_off_udca[_n-1] i
-> f time_off_udca==. & time_off_udca[_n-1]!=.
-(1060 real changes made)
-
-. * Update time_udca to only contain time on udca 
-. replace time_udca=. if udca==0
-(1,957 real changes made, 1,957 to missing)
-
-. bys patient_id: egen time_on_udca = max(time_udca)
-(896 missing values generated)
-
-. * Check on and off equals total time of follow-up 
-. count if time_on_udca + time_off_udca!=total_fu
-  896
-
-. 
-. sum time_on_udca if last==1, d 
+90%         1035           1035       Variance       105691.2
+95%         1035           1035       Skewness      -1.310726
+99%         1035           1035       Kurtosis       3.176148
+(4138 missing values generated)
+(4138 real changes made)
+(5,223 real changes made, 5,223 to missing)
+(907 missing values generated)
+  907
 
                         time_on_udca
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%           98              7
- 5%          647             21
-10%          986             26       Obs                 997
-25%         1010             44       Sum of Wgt.         997
+ 1%           90              4
+ 5%          529             15
+10%          625             22       Obs                 998
+25%          727             25       Sum of Wgt.         998
 
-50%         1024                      Mean           980.2588
-                        Largest       Std. Dev.       162.905
-75%         1030           1034
-90%         1033           1034       Variance       26538.04
-95%         1034           1034       Skewness      -4.325324
-99%         1034           1034       Kurtosis       21.43342
-
-. file write tablecontent ("Total time on UDCA 90") _tab %3.1f (r(N)) _tab %3.1
-> f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %
-> 3.1f (r(p75)) _n 
-
-. 
-. sum time_off_udca if last==1, d 
+50%        800.5                      Mean            772.022
+                        Largest       Std. Dev.      152.4102
+75%          861            991
+90%          917            997       Variance       23228.86
+95%          939            997       Skewness      -2.335186
+99%          971           1001       Kurtosis       10.52628
 
                         time_off_udca
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%            1              1
- 5%            2              1
-10%            3              1       Obs               1,893
-25%            9              1       Sum of Wgt.       1,893
+ 1%           15              3
+ 5%           78              3
+10%          111              4       Obs               1,905
+25%          184              5       Sum of Wgt.       1,905
 
-50%           38                      Mean           321.7707
-                        Largest       Std. Dev.       407.012
-75%          694           1035
-90%         1035           1035       Variance       165658.8
-95%         1035           1035       Skewness       .8470627
-99%         1035           1035       Kurtosis       2.000507
-
-. file write tablecontent ("Total time off UDCA 90") _tab %3.1f (r(N)) _tab %3.
-> 1f (r(mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab 
-> %3.1f (r(p75)) _n 
-
-. 
-. bys patient_id: gen rows = _N 
-
-. sum rows if last==1, d 
+50%          286                      Mean           427.6215
+                        Largest       Std. Dev.      332.3303
+75%          657           1035
+90%         1035           1035       Variance       110443.4
+95%         1035           1035       Skewness       .8630903
+99%         1035           1035       Kurtosis       2.258788
 
                             rows
 -------------------------------------------------------------
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            1              1       Obs               1,893
-25%            1              1       Sum of Wgt.       1,893
+10%            1              1       Obs               1,905
+25%            1              1       Sum of Wgt.       1,905
 
-50%            2                      Mean           1.593767
-                        Largest       Std. Dev.      .6744375
-75%            2              4
-90%            2              6       Variance        .454866
-95%            2              6       Skewness       1.600502
-99%            4              6       Kurtosis       8.133935
-
-. file write tablecontent ("Number of rows 90") _tab %3.1f (r(N)) _tab %3.1f (r
-> (mean)) _tab %3.1f (r(sd)) _tab %3.1f (r(p50)) _tab %3.1f (r(p25)) _tab %3.1f
->  (r(p75)) _n
-
-. 
-. * Summarising switching
-. gen udca_bl = (udca_count_bl>=1 & udca_count_bl!=.) 
-
-. gen yr_start = year(start)
-
-. sum yr_start 
+50%            4                      Mean           4.913911
+                        Largest       Std. Dev.      4.115831
+75%            8             16
+90%           10             16       Variance       16.94006
+95%           12             16       Skewness       .3806255
+99%           14             16       Kurtosis       1.656875
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    yr_start |      3,017    2020.046    .2679844       2020       2022
+    yr_start |      9,361     2020.81    .8303583       2020       2022
+(7,456 observations deleted)
 
-. gen switch_2020_i = udca!=udca_bl & yr_start==2020
-
-. bys patient_id: egen switch_2020 = max(switch_2020_i)
-
-. bys patient_id: egen switch_2020_total = total(switch_2020_i)
-
-. gen switch_2020_start = (switch_2020==1 & udca_bl==0)
-
-. gen switch_2020_stop = (switch_2020==1 & udca_bl==1)
-
-. gen switch_2020_multi = (switch_2020_total>1 & switch_2020_total!=.)
-
-. keep if last==1
-(1,124 observations deleted)
-
-. tab switch_2020  
-
-switch_2020 |      Freq.     Percent        Cum.
+switch_2020 |
+        _90 |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        664       35.08       35.08
-          1 |      1,229       64.92      100.00
+          0 |        694       36.43       36.43
+          1 |      1,211       63.57      100.00
 ------------+-----------------------------------
-      Total |      1,893      100.00
+      Total |      1,905      100.00
+  1,211
+  972
+  239
 
-. safecount if switch_2020==1
-  1,229
+                       total_no_presc
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0              0
+ 5%            0              0
+10%            0              0       Obs               1,905
+25%            0              0       Sum of Wgt.       1,905
 
-. file write tablecontent ("switching") _tab ("Number switched") _tab ("Percent
->  switched") _tab ("Switched from unexposed") _tab ("Percent switched unexpose
-> d") _tab ("Switched from exposed") _tab ("Percent switched exposed") _n 
+50%           14                      Mean           10.39843
+                        Largest       Std. Dev.      10.15103
+75%           20             28
+90%           23             28       Variance       103.0434
+95%           24             29       Skewness       .0448164
+99%           26             29       Kurtosis       1.177608
 
-. file write tablecontent ("2020 90") _tab %3.1f (r(N)) _tab  
+                          total_fu
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%           20              3
+ 5%          112              4
+10%          221              5       Obs               1,905
+25%          662              7       Sum of Wgt.       1,905
 
-. local percent = (r(N)/_N)*100
+50%         1035                      Mean           832.0719
+                        Largest       Std. Dev.      325.1018
+75%         1035           1035
+90%         1035           1035       Variance       105691.2
+95%         1035           1035       Skewness      -1.310726
+99%         1035           1035       Kurtosis       3.176148
+(2747 missing values generated)
+(2747 real changes made)
+(3,762 real changes made, 3,762 to missing)
+(907 missing values generated)
+  907
 
-. safecount if switch_2020_start==1
-  976
+                        time_on_udca
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          120              4
+ 5%          603             15
+10%          717             22       Obs                 998
+25%          814             25       Sum of Wgt.         998
 
-. file write tablecontent (`percent') _tab  %3.1f (r(N)) _tab 
+50%          884                      Mean           848.6754
+                        Largest       Std. Dev.      159.2964
+75%          939           1028
+90%          984           1029       Variance       25375.35
+95%         1000           1032       Skewness      -2.770724
+99%         1022           1033       Kurtosis       12.65845
 
-. local percent_stt = (r(N)/_N)*100
+                        time_off_udca
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%           10              2
+ 5%           35              2
+10%           58              3       Obs               1,905
+25%          116              3       Sum of Wgt.       1,905
 
-. safecount if switch_2020_stop==1
-  253
+50%          215                      Mean            387.464
+                        Largest       Std. Dev.      356.4183
+75%          657           1035
+90%         1035           1035       Variance         127034
+95%         1035           1035       Skewness       .8804797
+99%         1035           1035       Kurtosis       2.195897
 
-. file write tablecontent (`percent_stt') _tab  %3.1f (r(N)) _tab 
+                            rows
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            1              1
+10%            1              1       Obs               1,905
+25%            1              1       Sum of Wgt.       1,905
 
-. local percent_stp = (r(N)/_N)*100
+50%            2                      Mean           3.416798
+                        Largest       Std. Dev.       2.68272
+75%            6             10
+90%            8             11       Variance       7.196987
+95%            8             12       Skewness       .6190125
+99%           10             12       Kurtosis       2.084684
 
-. file write tablecontent (`percent_stp') _n _n 
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    yr_start |      6,509    2020.669    .8161051       2020       2022
+(4,604 observations deleted)
+
+switch_2020 |
+       _120 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        694       36.43       36.43
+          1 |      1,211       63.57      100.00
+------------+-----------------------------------
+      Total |      1,905      100.00
+  1,211
+  972
+  239
+
+                       total_no_presc
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0              0
+ 5%            0              0
+10%            0              0       Obs               1,905
+25%            0              0       Sum of Wgt.       1,905
+
+50%           14                      Mean           10.39843
+                        Largest       Std. Dev.      10.15103
+75%           20             28
+90%           23             28       Variance       103.0434
+95%           24             29       Skewness       .0448164
+99%           26             29       Kurtosis       1.177608
+
+                          total_fu
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%           20              3
+ 5%          112              4
+10%          221              5       Obs               1,905
+25%          662              7       Sum of Wgt.       1,905
+
+50%         1035                      Mean           832.0719
+                        Largest       Std. Dev.      325.1018
+75%         1035           1035
+90%         1035           1035       Variance       105691.2
+95%         1035           1035       Skewness      -1.310726
+99%         1035           1035       Kurtosis       3.176148
+(2005 missing values generated)
+(2005 real changes made)
+(2,980 real changes made, 2,980 to missing)
+(907 missing values generated)
+  907
+
+                        time_on_udca
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          132              4
+ 5%          634             15
+10%          765             22       Obs                 998
+25%          867             25       Sum of Wgt.         998
+
+50%        933.5                      Mean           892.2926
+                        Largest       Std. Dev.      160.7556
+75%          981           1033
+90%         1014           1033       Variance       25842.35
+95%         1024           1034       Skewness      -3.141186
+99%         1031           1034       Kurtosis         14.627
+
+                        time_off_udca
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            5              1
+ 5%           15              1
+10%           30              2       Obs               1,905
+25%           81              2       Sum of Wgt.       1,905
+
+50%          173                      Mean           364.6136
+                        Largest       Std. Dev.      370.7352
+75%          657           1035
+90%         1035           1035       Variance       137444.6
+95%         1035           1035       Skewness       .8815501
+99%         1035           1035       Kurtosis       2.157952
+
+                            rows
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            1              1
+10%            1              1       Obs               1,905
+25%            1              1       Sum of Wgt.       1,905
+
+50%            2                      Mean           2.616798
+                        Largest       Std. Dev.      1.940591
+75%            4             10
+90%            6             10       Variance       3.765894
+95%            6             10       Skewness       .9704749
+99%            8             10       Kurtosis       3.066837
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    yr_start |      4,985    2020.516    .7739028       2020       2022
+(3,080 observations deleted)
+
+switch_2020 |
+       _150 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        694       36.43       36.43
+          1 |      1,211       63.57      100.00
+------------+-----------------------------------
+      Total |      1,905      100.00
+  1,211
+  972
+  239
+
+                       total_no_presc
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0              0
+ 5%            0              0
+10%            0              0       Obs               1,905
+25%            0              0       Sum of Wgt.       1,905
+
+50%           14                      Mean           10.39843
+                        Largest       Std. Dev.      10.15103
+75%           20             28
+90%           23             28       Variance       103.0434
+95%           24             29       Skewness       .0448164
+99%           26             29       Kurtosis       1.177608
+
+                          total_fu
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%           20              3
+ 5%          112              4
+10%          221              5       Obs               1,905
+25%          662              7       Sum of Wgt.       1,905
+
+50%         1035                      Mean           832.0719
+                        Largest       Std. Dev.      325.1018
+75%         1035           1035
+90%         1035           1035       Variance       105691.2
+95%         1035           1035       Skewness      -1.310726
+99%         1035           1035       Kurtosis       3.176148
+(1552 missing values generated)
+(1552 real changes made)
+(2,501 real changes made, 2,501 to missing)
+(907 missing values generated)
+  907
+
+                        time_on_udca
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          132              4
+ 5%          659             15
+10%          799             22       Obs                 998
+25%          901             25       Sum of Wgt.         998
+
+50%          960                      Mean           917.0912
+                        Largest       Std. Dev.      160.9357
+75%         1002           1034
+90%         1023           1034       Variance        25900.3
+95%         1028           1034       Skewness      -3.410408
+99%         1033           1034       Kurtosis       16.10582
+
+                        time_off_udca
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            3              1
+ 5%           10              1
+10%           20              1       Obs               1,905
+25%           54              1       Sum of Wgt.       1,905
+
+50%          149                      Mean            351.622
+                        Largest       Std. Dev.      379.0214
+75%          657           1035
+90%         1035           1035       Variance       143657.2
+95%         1035           1035       Skewness       .8809048
+99%         1035           1035       Kurtosis       2.135289
+
+                            rows
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            1              1
+10%            1              1       Obs               1,905
+25%            1              1       Sum of Wgt.       1,905
+
+50%            2                      Mean           2.127559
+                        Largest       Std. Dev.      1.410123
+75%            4              8
+90%            4              8       Variance       1.988447
+95%            4              8       Skewness       1.154928
+99%            6              8       Kurtosis       3.512036
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    yr_start |      4,053    2020.364    .6905451       2020       2022
+(2,148 observations deleted)
+
+switch_2020 |
+       _180 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        694       36.43       36.43
+          1 |      1,211       63.57      100.00
+------------+-----------------------------------
+      Total |      1,905      100.00
+  1,211
+  972
+  239
 
 . 
 . file close tablecontent
@@ -448,7 +581,7 @@ switch_2020 |      Freq.     Percent        Cum.
 . 
 end of do-file
 
-. . file open output using "/tmp/102_udca_descriptives.do.Q2Rd.out", write text
+. . file open output using "/tmp/102_udca_descriptives.do.zpFE.out", write text
 >  replace
 
 . . file write output "success" 

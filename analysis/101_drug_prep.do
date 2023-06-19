@@ -72,9 +72,9 @@ bys year: sum time_previous, d
 
 * Drop records in 2023 as this is after end of study
 drop if year==2023
-foreach i in 60 90 {
+forvalues i = 60(30)180 {
     preserve
-    * Assume end date is 60 or 90 days after prescription generated
+    * Assume end date is 60 to 180 days after prescription generated
     gen stop_date = udcaA + `i'
     format stop_date %dD/N/CY 
 
