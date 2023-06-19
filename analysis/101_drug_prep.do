@@ -171,8 +171,10 @@ forvalues i = 60(30)180 {
     drop if end_before 
 
     * Check those flagged as ending after are last row only 
-    bys patient_id: gen last = _n==_N
+    bys patient_id (start): gen last = _n==_N
     tab last end_after 
+    * Check how many records end after end date - should just be one
+    bys patientid: egen tot_end_after = total(end_after)
 
     replace stop = end_date if end_after==1 & end_before==0
 
