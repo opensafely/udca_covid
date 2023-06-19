@@ -15,12 +15,12 @@ import delimited using ./output/input_pbc.csv
 save `tempfile' 
 
 file open tablecontent using ./output/tables/udca_descriptives.txt, write text replace
-file write tablecontent _tab ("Number of obervations") _tab ("Mean") _tab ("SD") _tab ("Median") _tab ("25th percentile") _tab ("75th percentile") _n 
 
 forvalues i=60(30)180 {
     use ./output/time_varying_udca_all_vars_`i', clear 
     drop last 
     bys patient_id: gen last = _n==_N 
+    file write tablecontent _tab ("Number of obervations") _tab ("Mean") _tab ("SD") _tab ("Median") _tab ("25th percentile") _tab ("75th percentile") _n 
 
     * summarise total number of prescriptions during follow-up 
     sum total_no_presc if last==1, d 
