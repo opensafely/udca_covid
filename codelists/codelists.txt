@@ -10,7 +10,11 @@ opensafely/covid-identification/2020-06-03
 
 # Decompensated liver disease
 opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver/5e42487f
-opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver-and-associated-conditions-icd-10/00e40554
+opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver-and-associated-conditions-icd-10/6bc0084d
+
+# Liver transplant 
+user/ruthcostello/liver-transplant-opcs4/71258839
+user/ruthcostello/liver-transplant/07823b79
 
 # Ethnicity - SNOMED
 opensafely/ethnicity-snomed-0removed/2e641f61/
