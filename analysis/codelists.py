@@ -75,13 +75,13 @@ severe_disease_codes_icd=codelist_from_csv(
     column="code",
 )
 
-liver_transplant_snomed=codelist_from_csv(
+liver_transplant_snomed_codes=codelist_from_csv(
   "codelists/user-ruthcostello-liver-transplant.csv",
   system="snomed",
   column="code",
 )
 
-liver_transplant_opcs=codelist_from_csv(
+liver_transplant_opcs_codes=codelist_from_csv(
   "codelists/user-ruthcostello-liver-transplant-opcs4.csv",
   system="opcs4",
   column="code",

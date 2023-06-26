@@ -15,7 +15,8 @@ study = StudyDefinition(
         (age >=18 AND age <= 110) AND
         (NOT died) AND
         (sex = 'M' OR sex = 'F') AND
-        (has_pbc=1 OR has_psc=1)
+        (has_pbc=1 OR has_psc=1) AND
+        (NOT bl_liver_transplant)
         """,
         has_follow_up=patients.registered_with_one_practice_between(
             "index_date - 6 months", "index_date"
@@ -187,6 +188,44 @@ study = StudyDefinition(
         returning = "binary_flag",
         include_date_of_match = "True",
         on_or_before = "index_date - 6 months"
+    ),
+
+    liver_transplant_bl=patients.satisfying(
+      """
+      bl_liver_transplant_snomed OR
+      bl_liver_transplant_opcs
+      """,
+      bl_liver_transplant_snomed=patients.with_these_clinical_events(
+        liver_transplant_snomed_codes,
+        returning = "binary_flag",
+        on_or_before = "index_date"
+      ),
+      bl_liver_transplant_opcs=patients.admitted_to_hospital(
+        on_or_before = "index_date",
+        with_these_procedures = liver_transplant_opcs_codes,
+        returning = "binary_flag",
+      ),
+    ),
+
+    liver_transplant_fu=patients.satisfying(
+      """
+      fu_liver_transplant_snomed OR
+      fu_liver_transplant_opcs
+      """,
+      fu_liver_transplant_snomed=patients.with_these_clinical_events(
+        liver_transplant_snomed_codes,
+        returning = "date",
+        date_format = "YYYY-MM-DD",
+        on_or_after = "index_date",
+        find_first_match_in_period = "True",
+      ),
+      fu_liver_transplant_opcs=patients.admitted_to_hospital(
+        on_or_after = "index_date",
+        with_these_procedures = liver_transplant_opcs_codes,
+        returning = "date_admitted",
+        date_format = "YYYY-MM-DD",
+        find_first_match_in_period = "True",
+      ),
     ),
 
     #Ursodeoxycholic acid 
