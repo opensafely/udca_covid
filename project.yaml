@@ -50,6 +50,16 @@ actions:
         log: logs/udca_descriptives.log
         summary: output/tables/udca_descriptives.txt
 
+  time_varying_prep:
+    run: stata-mp:latest analysis/103_time_varying_prep.do
+    needs: [generate_study_population_pbc, prep_drug_data]
+    outputs:
+      highly_sensitive:
+        datasets: output/tv*.dta
+      moderately_sensitive:
+        log: logs/time_varying.log
+        
+
   baseline_tables:
     run: stata-mp:latest analysis/103_baseline_tables.do
     needs: [generate_study_population_pbc]
