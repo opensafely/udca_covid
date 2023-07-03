@@ -55,7 +55,16 @@ foreach var in udca gc budesonide fenofibrate {
 
 gen vacc_any = covid_vacc_date!=""
 
+* Generate variable with number of vaccinations 
+foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth {
+    gen `var'= (`var'_date!=.)    
+}
+egen total_vaccs = rowmax(covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth)
+tab total_vaccs 
+
 gen severe_disease_fu = severe_disease_fu_date!=""
+
+
 
 * Create tables 
 * Characteristics whole cohort
@@ -89,7 +98,9 @@ keep factor level n_rounded percent
 export delimited using ./output/tables/high_risk_rounded.csv
 restore 
 
-* Characteristics by any exposure
+
+
+* Characteristics by exposure status at baseline 
 preserve 
 table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_disease_bl cat \ smoking_status cat \ bmi_cat cat \ has_pbc bin) by(udca_bl) clear
 export delimited using ./output/tables/baseline_table_udca.csv, replace
@@ -107,7 +118,7 @@ restore
 
 * Additional medications by any exposure
 preserve 
-table1_mc, vars(budesonide_bl bin \ fenofibrate_bl bin \ gc_bl bin \ oca_bl bin \ rituximab_bl bin \ severe_disease_fu bin \ vacc_any bin ) by(udca_bl) clear
+table1_mc, vars(budesonide_bl bin \ fenofibrate_bl bin \ gc_bl bin \ oca_bl bin \ rituximab_bl bin \ severe_disease_fu bin \ vacc_any bin  \ total_vaccs cat) by(udca_bl) clear
 export delimited using ./output/tables/additional_meds_udca.csv, replace
 * Rounding numbers in table to nearest 5
 forvalues i=0/1 {   
@@ -123,5 +134,27 @@ keep factor n0_rounded percent_0 n1_rounded percent_1
 export delimited using ./output/tables/additional_meds_udca_rounded.csv
 restore 
 
+* Checking outcomes 
+foreach var in died_date_ons hosp_covid_primary hosp_covid_any {
+    gen `var'A = date(`var', "YMD")
+    format `var'A %dD/N/CY
+    drop `var'
+}
+* Flag if died
+gen died_flag = died_date_onsA!=.
+* Generate date if died of covid
+gen died_date_onscovid = died_date_onsA if died_ons_covid_flag_any == 1
 
+* Flag hospitalised with covid 
+gen hosp_any_flag = hosp_covid_anyA!=.
+
+* Composite outcome 
+gen hosp_died = (died_ons_covid_flag_any==1 | hosp_any_flag==1)
+gen hosp_died_dateA = rowmin(died_date_onsA hosp_covid_anyA)
+
+
+tab udca_bl died_ons_covid_flag_any
+tab udca_bl hosp_any_flag
+
+* Add cumulative incidence plots 
 

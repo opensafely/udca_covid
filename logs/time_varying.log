@@ -3,7 +3,7 @@
 . tempfile tempfile 
 
 . import delimited using ./output/input_pbc.csv
-(102 vars, 1,000 obs)
+(106 vars, 1,000 obs)
 
 . save `tempfile' 
 file /tmp/St00015.000001 saved
@@ -13,61 +13,64 @@ file /tmp/St00015.000001 saved
 > assessment times 
 . use ./output/time_varying_udca_120, clear 
 
+. merge m:1 patient_id using `tempfile', keepusing(severe_disease_fu_date sever
+> e_disease_bl covid_vacc_first_date liver_transplant_fu_date dereg_date died_d
+> ate_ons)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         1,834
+        from master                     1,834  (_merge==1)
+        from using                          0  (_merge==2)
+
+    matched                             1,090  (_merge==3)
+    -----------------------------------------
+
+. * Only using start date as this is when udca exposure or 6 monthly check occu
+> rs
 . drop stop
 
 . gen expand=1
 
 . bys patient_id (start): replace expand=6 if _n==_N 
-(1908 real changes made)
+(1909 real changes made)
 
 . expand expand, generate(newv)
-(9,540 observations created)
+(9,545 observations created)
 
 . bys patient_id newv: gen number = _n 
 
 . replace start = date("01/09/2020", "DMY") if newv==1 & number==1
-(1,908 real changes made)
+(1,909 real changes made)
 
 . replace start = date("01/03/2021", "DMY") if newv==1 & number==2
-(1,908 real changes made)
+(1,909 real changes made)
 
 . replace start = date("01/09/2021", "DMY") if newv==1 & number==3
-(1,908 real changes made)
+(1,909 real changes made)
 
 . replace start = date("01/03/2022", "DMY") if newv==1 & number==4
-(1,908 real changes made)
+(1,909 real changes made)
 
 . replace start = date("01/09/2022", "DMY") if newv==1 & number==5
-(1,908 real changes made)
+(1,909 real changes made)
 
 . 
 . sort patient_id start 
 
-. 
-. merge m:1 patient_id using `tempfile', keepusing(severe_disease_fu_date sever
-> e_disease_bl covid_vacc_fu_date liver_transplant_fu_date dereg_date died_date
-> _ons)
-
-    Result                           # of obs.
-    -----------------------------------------
-    not matched                         6,364
-        from master                     6,364  (_merge==1)
-        from using                          0  (_merge==2)
-
-    matched                             6,090  (_merge==3)
-    -----------------------------------------
+. drop newv
 
 . 
 . * Determine end of follow-up date
 . gen dereg_dateA = date(dereg_date, "YMD")
-(9,409 missing values generated)
+(9,421 missing values generated)
 
 . format %dD/N/CY dereg_dateA
 
 . drop dereg_date
 
 . gen died_dateA = date(died_date_ons, "YMD")
-(9,414 missing values generated)
+(9,412 missing values generated)
 
 . format %dD/N/CY died_dateA
 
@@ -78,11 +81,12 @@ file /tmp/St00015.000001 saved
 . egen end_date = rowmin(dereg_dateA end_study died_dateA)
 
 . 
-. * Determine number of days between each covariate and dates 
+. * Determine number of days between each covariate and dates of UDCA change or
+>  6 monthly check date 
 . 
 . * Format dates  and identify date nearest after covariate updates 
-. foreach var in covid_vacc_fu_date severe_disease_fu_date liver_transplant_fu_
-> date {
+. foreach var in covid_vacc_first_date severe_disease_fu_date liver_transplant_
+> fu_date {
   2.     gen `var'A = date(`var', "YMD")
   3.     format `var'A %dD/N/CY 
   4.     drop `var'
@@ -93,45 +97,49 @@ file /tmp/St00015.000001 saved
   7.     * Find earliest start date after covariate update
 .     bys patient_id (time_`var'): gen `var'_update = start[1] if `var'A!=.
   8.     format `var'_update %dD/N/CY 
-  9. }
-(6,967 missing values generated)
-(6,967 missing values generated)
-(3,753 real changes made, 3,753 to missing)
-(6,967 missing values generated)
-(7,901 missing values generated)
-(7,901 missing values generated)
-(2,666 real changes made, 2,666 to missing)
-(7,901 missing values generated)
-(12,211 missing values generated)
-(12,211 missing values generated)
-(151 real changes made, 151 to missing)
-(12,211 missing values generated)
+  9.     count if `var'_update < `var'A
+ 10. }
+(6,980 missing values generated)
+(6,980 missing values generated)
+(3,806 real changes made, 3,806 to missing)
+(6,980 missing values generated)
+  892
+(7,898 missing values generated)
+(7,898 missing values generated)
+(2,614 real changes made, 2,614 to missing)
+(7,898 missing values generated)
+  849
+(12,274 missing values generated)
+(12,274 missing values generated)
+(118 real changes made, 118 to missing)
+(12,274 missing values generated)
+  49
 
 . * For severe disease only update variable if no severe disease at baseline 
 . replace severe_disease_fu_date_update = . if severe_disease_bl==1
-(2,284 real changes made, 2,284 to missing)
+(2,325 real changes made, 2,325 to missing)
 
 . 
 . * Keep only change dates to create time-varying dataset
-. keep patient_id covid_vacc_fu_date_update severe_disease_fu_date_update liver
-> _transplant_fu_date_update severe_disease_bl end_date
+. keep patient_id covid_vacc_first_date_update severe_disease_fu_date_update li
+> ver_transplant_fu_date_update severe_disease_bl end_date
 
 . duplicates drop 
 
 Duplicates in terms of all variables
 
-(10,546 observations deleted)
+(10,560 observations deleted)
 
 . * Create file for each covariate to merge onto udca exposure file 
 . * First covid vaccination and liver transplant as all people will begin at ze
 > ro 
-. foreach var in covid_vacc liver_transplant {
+. foreach var in covid_vacc_first liver_transplant_fu {
   2.     preserve
-  3.     keep patient_id `var'_fu_date_update end_date
+  3.     keep patient_id `var'_date_update end_date
   4.     * Drop updates after the end of follow-up 
-.     replace `var'_fu_date = . if `var'_fu_date>end_date 
+.     replace `var'_date = . if `var'_date>end_date 
   5.     * Flag if variable is updated
-.     gen `var'=(`var'_fu_date_update!=.)
+.     gen `var'=(`var'_date_update!=.)
   6.     * Create extra row if variable is updated 
 .     gen expand = `var'+1
   7.     tab expand
@@ -139,8 +147,8 @@ Duplicates in terms of all variables
   9.     * Update variables so row for when zero and row for when updated - if 
 > not updated whole time will be zero 
 .     gen start = date("01/03/2020", "DMY") if newv==0
- 10.     replace start = `var'_fu_date_update if newv==1
- 11.     gen stop = `var'_fu_date_update if newv==0
+ 10.     replace start = `var'_date_update if newv==1
+ 11.     gen stop = `var'_date_update if newv==0
  12.     replace stop = end_date if stop==.
  13.     replace `var'=0 if newv==0
  14.     save ./output/tv_`var'_check, replace
@@ -153,48 +161,48 @@ Duplicates in terms of all variables
  19.     save ./output/tv_`var', replace
  20.     restore
  21. }
-(406 real changes made, 406 to missing)
+(434 real changes made, 434 to missing)
 
      expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,413       74.06       74.06
-          2 |        495       25.94      100.00
+          1 |      1,442       75.54       75.54
+          2 |        467       24.46      100.00
 ------------+-----------------------------------
-      Total |      1,908      100.00
-(495 observations created)
-(495 missing values generated)
-(495 real changes made)
-(1,908 missing values generated)
-(1,908 real changes made)
-(495 real changes made)
-(note: file ./output/tv_covid_vacc_check.dta not found)
-file ./output/tv_covid_vacc_check.dta saved
-  21
-(21 observations deleted)
+      Total |      1,909      100.00
+(467 observations created)
+(467 missing values generated)
+(467 real changes made)
+(1,909 missing values generated)
+(1,909 real changes made)
+(467 real changes made)
+(note: file ./output/tv_covid_vacc_first_check.dta not found)
+file ./output/tv_covid_vacc_first_check.dta saved
+  23
+(23 observations deleted)
   0
-(note: file ./output/tv_covid_vacc.dta not found)
-file ./output/tv_covid_vacc.dta saved
-(14 real changes made, 14 to missing)
+(note: file ./output/tv_covid_vacc_first.dta not found)
+file ./output/tv_covid_vacc_first.dta saved
+(9 real changes made, 9 to missing)
 
      expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,882       98.64       98.64
-          2 |         26        1.36      100.00
+          1 |      1,886       98.80       98.80
+          2 |         23        1.20      100.00
 ------------+-----------------------------------
-      Total |      1,908      100.00
-(26 observations created)
-(26 missing values generated)
-(26 real changes made)
-(1,908 missing values generated)
-(1,908 real changes made)
-(26 real changes made)
-(note: file ./output/tv_liver_transplant_check.dta not found)
-file ./output/tv_liver_transplant_check.dta saved
+      Total |      1,909      100.00
+(23 observations created)
+(23 missing values generated)
+(23 real changes made)
+(1,909 missing values generated)
+(1,909 real changes made)
+(23 real changes made)
+(note: file ./output/tv_liver_transplant_fu_check.dta not found)
+file ./output/tv_liver_transplant_fu_check.dta saved
   2
 (2 observations deleted)
   0
-(note: file ./output/tv_liver_transplant.dta not found)
-file ./output/tv_liver_transplant.dta saved
+(note: file ./output/tv_liver_transplant_fu.dta not found)
+file ./output/tv_liver_transplant_fu.dta saved
 
 . 
 . * Same for liver disease severity, but variable can start at 1 so remains as 
@@ -206,7 +214,7 @@ file ./output/tv_liver_transplant.dta saved
 . * Drop updates after the end of follow-up 
 . replace severe_disease_fu_date_update=. if severe_disease_fu_date_update>end_
 > date 
-(130 real changes made, 130 to missing)
+(141 real changes made, 141 to missing)
 
 . * Flag if variable is updated
 . gen severe_disease=(severe_disease_fu_date_update!=.)
@@ -216,10 +224,10 @@ file ./output/tv_liver_transplant.dta saved
 severe_dise |
         ase |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,665       87.26       87.26
-          1 |        243       12.74      100.00
+          0 |      1,680       88.00       88.00
+          1 |        229       12.00      100.00
 ------------+-----------------------------------
-      Total |      1,908      100.00
+      Total |      1,909      100.00
 
 . replace severe_disease = 0 if severe_disease_bl==1
 (0 real changes made)
@@ -231,30 +239,30 @@ severe_dise |
 
      expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,665       87.26       87.26
-          2 |        243       12.74      100.00
+          1 |      1,680       88.00       88.00
+          2 |        229       12.00      100.00
 ------------+-----------------------------------
-      Total |      1,908      100.00
+      Total |      1,909      100.00
 
 . expand expand, gen(newv)
-(243 observations created)
+(229 observations created)
 
 . * Update variables so row for when zero and row for when updated - if not upd
 > ated whole time will be zero 
 . gen start = date("01/03/2020", "DMY") if newv==0
-(243 missing values generated)
+(229 missing values generated)
 
 . replace start = severe_disease_fu_date_update if newv==1
-(243 real changes made)
+(229 real changes made)
 
 . gen stop = severe_disease_fu_date_update if newv==0
-(1,908 missing values generated)
+(1,909 missing values generated)
 
 . replace stop = end_date if stop==.
-(1,908 real changes made)
+(1,909 real changes made)
 
 . replace severe_disease=0 if newv==0 & severe_disease_bl==0
-(243 real changes made)
+(229 real changes made)
 
 . replace severe_disease=1 if newv==0 & severe_disease_bl==1
 (500 real changes made)
@@ -267,11 +275,11 @@ file ./output/tv_severe_disease_check.dta saved
 
 . * Check data 
 . count if start==stop
-  13
+  8
 
 . * drop start==stop but should not drop any in real data 
 . drop if start==stop 
-(13 observations deleted)
+(8 observations deleted)
 
 . count if stop<start
   0
@@ -283,28 +291,437 @@ file ./output/tv_severe_disease.dta saved
 . restore
 
 . 
+. * Make age time-varying i.e. updating on 1st January each year 
+. use `tempfile', clear 
+
+. * Determine end of follow-up date
+. gen dereg_dateA = date(dereg_date, "YMD")
+(500 missing values generated)
+
+. format %dD/N/CY dereg_dateA
+
+. drop dereg_date
+
+. gen died_dateA = date(died_date_ons, "YMD")
+(500 missing values generated)
+
+. format %dD/N/CY died_dateA
+
+. drop died_date_ons
+
+. gen end_study = date("31/12/2022", "DMY")
+
+. egen end_date = rowmin(dereg_dateA end_study died_dateA)
+
+. keep patient_id age end_date
+
+. gen yr_end = year(end_date)
+
+. * Add rows to update age
+. gen expand = 3 if yr_end==2022
+(486 missing values generated)
+
+. replace expand = 2 if yr_end==2021
+(252 real changes made)
+
+. replace expand = 1 if yr_end==2020
+(234 real changes made)
+
+. tab expand, m
+
+     expand |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        234       23.40       23.40
+          2 |        252       25.20       48.60
+          3 |        514       51.40      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+. expand expand, gen(newv)
+(1,280 observations created)
+
+. tab newv, nolabel
+
+       newv |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,000       43.86       43.86
+          1 |      1,280       56.14      100.00
+------------+-----------------------------------
+      Total |      2,280      100.00
+
+. bys patient_id newv: gen number = _n 
+
+. tab newv number, nolabel
+
+           |        number
+      newv |         1          2 |     Total
+-----------+----------------------+----------
+         0 |     1,000          0 |     1,000 
+         1 |       766        514 |     1,280 
+-----------+----------------------+----------
+     Total |     1,766        514 |     2,280 
+
+. gen start = date("01/03/2020", "DMY") if newv==0
+(1,280 missing values generated)
+
+. replace start = date("01/01/2021", "DMY") if newv==1 & number==1
+(766 real changes made)
+
+. replace start = date("01/01/2022", "DMY") if newv==1 & number==2
+(514 real changes made)
+
+. gen stop = date("01/01/2021", "DMY") if newv==0 
+(1,280 missing values generated)
+
+. replace stop = end_date if newv==0 & end_date<stop 
+(234 real changes made)
+
+. replace stop = date("01/01/2022", "DMY") if newv==1 & number==1 
+(766 real changes made)
+
+. replace stop = end_date if newv==1 & number==1 & end_date<stop
+(252 real changes made)
+
+. replace stop = date("31/12/2022", "DMY") if newv==1 & number==2 
+(514 real changes made)
+
+. replace stop = end_date if newv==1 & number==2 & end_date<stop
+(207 real changes made)
+
+. gen age_tv = age if newv==0
+(1,280 missing values generated)
+
+. replace age_tv = age+1 if newv==1 & number==1
+(766 real changes made)
+
+. replace age_tv = age+2 if newv==1 & number==2
+(514 real changes made)
+
+. keep patient_id start stop age_tv 
+
+. drop if start==stop
+(2 observations deleted)
+
+. save ./output/tv_age, replace 
+(note: file ./output/tv_age.dta not found)
+file ./output/tv_age.dta saved
+
+. 
 . * Merge files together 
 . use ./output/tv_severe_disease, clear 
 
-. tvc_merge start stop using ./output/tv_covid_vacc, id(patient_id)
+. tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
 
-. tvc_merge start stop using ./output/tv_liver_transplant, id(patient_id)
+. tvc_merge start stop using ./output/tv_liver_transplant_fu, id(patient_id)
 
 . tvc_merge start stop using ./output/time_varying_udca_120, id(patient_id)
+
+. tvc_merge start stop using ./output/tv_age, id(patient_id)
 
 . save ./output/tv_vars, replace 
 (note: file ./output/tv_vars.dta not found)
 file ./output/tv_vars.dta saved
 
 . 
-. use `tempfile', clear 
+. /* Format file with static covariates: sex, region, covid high risk condition
+> s, 
+> ethnicity, imd, bmi, smoking. */
+. 
+. ** Need to decide on second line therapies 
+. use `tempfile', clear
 
-. ** Need to prepare data for analysis and then merge on time-varying covariate
-> s 
+. describe 
+
+Contains data from /tmp/St00015.000001
+  obs:         1,000                          
+ vars:           106                          3 Jul 2023 10:35
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+dereg_date      str10   %10s                  
+has_pbc_date    int     %8.0g                 
+has_psc_date    int     %8.0g                 
+fu_liver_tran~d str10   %10s                  
+fu_liver_tran~s str10   %10s                  
+udca_last_date  str10   %10s                  
+udca_first_af~r str10   %10s                  
+udca_first_hi~y str10   %10s                  
+covid_va~t_date str10   %10s                  
+covid_vacc_se~e str10   %10s                  
+covid_vacc_th~e str10   %10s                  
+covid_vacc_fo~e str10   %10s                  
+covid_~fth_date str10   %10s                  
+severe_disea~ed str10   %10s                  
+severe_disea~cd str10   %10s                  
+solid_organ_t~m str10   %10s                  solid_organ_transplant_nhsd_snome
+                                                > d
+solid_organ_n~w str10   %10s                  
+solid_organ_t~s byte    %8.0g                 solid_organ_transplant_nhsd_opcs4
+transplant_al~4 byte    %8.0g                 
+transplant_th~4 str10   %10s                  
+transplant_co~p byte    %8.0g                 transplant_conjunctiva_y_code_opc
+                                                > s4
+transplant_co~4 str10   %10s                  
+transplant_st~4 str10   %10s                  
+transplant_il.. byte    %8.0g                 transplant_ileum_1_Y_codes_opcs4
+transplant_il.. byte    %8.0g                 transplant_ileum_2_Y_codes_opcs4
+transpl~1_opcs4 str10   %10s                  
+transpl~2_opcs4 str10   %10s                  
+hosp_covid_pr~y str10   %10s                  
+hosp_covid_any  str10   %10s                  
+died_date_ons   str10   %10s                  
+age             byte    %8.0g                 
+sex             str1    %9s                   
+stp             str4    %9s                   
+region_nhs      str24   %24s                  
+has_msoa        byte    %8.0g                 
+imd             byte    %8.0g                 
+eth             byte    %8.0g                 
+ethnicity_sus   byte    %8.0g                 
+ethnicity       byte    %8.0g                 
+smoking_status  str1    %9s                   
+bmi             float   %9.0g                 
+has_pbc         byte    %8.0g                 
+has_psc         byte    %8.0g                 
+liver_transpl~l byte    %8.0g                 
+udca_count_bl   byte    %8.0g                 
+udca_count_fu   byte    %8.0g                 
+oca_bl          byte    %8.0g                 
+budesonide_co~u byte    %8.0g                 
+budesonide_co~l byte    %8.0g                 
+fenofibrate_c~u byte    %8.0g                 
+fenofibrate_c~l byte    %8.0g                 
+gc_count_fu     byte    %8.0g                 
+gc_count_bl     byte    %8.0g                 
+rituximab_bl    byte    %8.0g                 
+severe_diseas~l byte    %8.0g                 
+learning_disa~d byte    %8.0g                 
+cancer_opensa~d byte    %8.0g                 
+cancer_opensa~w byte    %8.0g                 
+cancer_opensa~r byte    %8.0g                 
+haematopoieti~d byte    %8.0g                 
+haematopoiet~10 byte    %8.0g                 
+haematopoieti~4 byte    %8.0g                 
+haematologica~m byte    %8.0g                 haematological_malignancies_snome
+                                                > d
+haematologica~1 byte    %8.0g                 haematological_malignancies_icd10
+sickle_cell_d~d byte    %8.0g                 
+sickle_cell_~10 byte    %8.0g                 
+haematopoieti~_ byte    %8.0g                 haematopoietic_stem_cell_snomed_e
+                                                > ver
+haematopoie~0_e byte    %8.0g                 haematopoietic_stem_cell_icd10_ev
+                                                > er
+haematopoie~4_e byte    %8.0g                 haematopoietic_stem_cell_opcs4_ev
+                                                > er
+v70             byte    %8.0g                 haematological_malignancies_snome
+                                                > d_ever
+v71             byte    %8.0g                 haematological_malignancies_icd10
+                                                > _ever
+ckd_stage_5_~ed byte    %8.0g                 
+ckd_stage_5_~10 byte    %8.0g                 
+immunosuppres~d byte    %8.0g                 
+oral_steroid_~d byte    %8.0g                 
+oral_s~3m_count byte    %8.0g                 
+oral_s~2m_count byte    %8.0g                 
+immunosuppres~r byte    %8.0g                 
+oral_steroid_~r byte    %8.0g                 
+immunosupress~d byte    %8.0g                 
+immunosupress~w byte    %8.0g                 
+hiv_aids_nhsd~d byte    %8.0g                 
+hiv_aids_nhs~10 byte    %8.0g                 
+multiple_scl~ed byte    %8.0g                 
+multiple_scl~10 byte    %8.0g                 
+motor_neurone~e byte    %8.0g                 motor_neurone_disease_nhsd_snomed
+motor_neuron~10 byte    %8.0g                 
+myasthenia_g~ed byte    %8.0g                 
+myasthenia_g~10 byte    %8.0g                 
+huntingtons_~ed byte    %8.0g                 
+huntingtons_~10 byte    %8.0g                 
+died_ons_covi~y byte    %8.0g                 
+died_ons_covi~g byte    %8.0g                 
+liver_transpl~e str10   %10s                  
+severe_diseas~e str10   %10s                  
+haematologica~d byte    %8.0g                 
+haematologica~r byte    %8.0g                 
+ckd_stage_5_~sd byte    %8.0g                 
+hiv_aids_nhsd   byte    %8.0g                 
+solid_organ_t~d str10   %10s                  
+solid_organ_t~w str10   %10s                  
+multiple_scl~sd byte    %8.0g                 
+motor_neurone~d byte    %8.0g                 
+myasthenia_g~sd byte    %8.0g                 
+huntingtons_~sd byte    %8.0g                 
+patient_id      int     %8.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+
+. * Sex
+. gen male = 1 if sex == "M"
+(493 missing values generated)
+
+. replace male = 0 if sex == "F"
+(478 real changes made)
+
+. * Ethnicity
+. replace ethnicity=6 if ethnicity==0
+(41 real changes made)
+
+. label define eth5                       1 "White"                            
+>            ///
+>                             2 "Mixed"                           ///          
+>                                    
+>                             3 "Asian"                                   ///
+>                             4 "Black"                                   ///
+>                             5 "Other"                                   ///
+>                             6 "Unknown"
+
+.                     
+. 
+. label values ethnicity eth5
+
+. safetab ethnicity, m
+10
+
+  ethnicity |      Freq.     Percent        Cum.
+------------+-----------------------------------
+      White |        152       15.20       15.20
+      Mixed |        190       19.00       34.20
+      Asian |        199       19.90       54.10
+      Black |        218       21.80       75.90
+      Other |        200       20.00       95.90
+    Unknown |         41        4.10      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+. * IMD
+. replace imd=6 if imd==0
+(45 real changes made)
+
+. 
+. * BMI categories
+. egen bmi_cat = cut(bmi), at(0, 1, 18.5, 24.9, 29.9, 39.9, 100) icodes
+
+. bys bmi_cat: sum bmi
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 0
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        199           0           0          0          0
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        125     13.9534    3.574112   2.749661   18.48268
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 2
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        189    22.12708    1.835691   18.51279     24.833
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 3
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        188    27.41659    1.492979   24.92099   29.88993
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 4
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        260    34.19291    2.795426   29.90575   39.78086
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 5
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |         39    42.76828    2.615726   39.90075   51.95408
+
+
+. * add missing . to zero category
+. replace bmi_cat = 0 if bmi_cat==. 
+(0 real changes made)
+
+. label define bmi 0 "Missing" 1 "Underweight" 2 "Healthy range" 3 "Overweight"
+>  4 "Obese" 5 "Morbidly obese"
+
+. label values bmi_cat bmi
+
+. 
+. * Smoking status
+. gen smoking = 0 if smoking_status=="N"
+(903 missing values generated)
+
+. replace smoking = 1 if smoking_status=="S"
+(219 real changes made)
+
+. replace smoking = 2 if smoking_status=="E"
+(128 real changes made)
+
+. replace smoking = 3 if smoking==.
+(556 real changes made)
+
+. 
+. * High risk covid conditions
+. replace oral_steroid_drugs_nhsd=. if oral_steroid_drug_nhsd_3m_count < 2 & or
+> al_steroid_drug_nhsd_12m_count < 4
+(934 real changes made, 934 to missing)
+
+. gen imid_nhsd=max(oral_steroid_drugs_nhsd, immunosuppresant_drugs_nhsd)
+
+. gen rare_neuro_nhsd = max(multiple_sclerosis_nhsd, motor_neurone_disease_nhsd
+> , myasthenia_gravis_nhsd, huntingtons_disease_nhsd)
+
+. gen solid_organ_transplant_bin = solid_organ_transplant_nhsd_new!=""
+
+. gen any_high_risk_condition = max(learning_disability_nhsd_snomed, cancer_ope
+> nsafely_snomed_new, haematological_disease_nhsd, ///
+> ckd_stage_5_nhsd, imid_nhsd, immunosupression_nhsd_new, hiv_aids_nhsd, solid_
+> organ_transplant_bin, rare_neuro_nhsd)
+
+. 
+. keep patient_id age male stp any_high_risk_condition ethnicity imd bmi_cat sm
+> oking 
+
+. 
+. merge 1:m patient_id using ./output/tv_vars 
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         1,834
+        from master                         0  (_merge==1)
+        from using                      1,834  (_merge==2)
+
+    matched                             3,015  (_merge==3)
+    -----------------------------------------
+
+. drop _merge 
+
+. save ./output/an_dataset, replace
+(note: file ./output/an_dataset.dta not found)
+file ./output/an_dataset.dta saved
+
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
 . 
 . log close 
       name:  <unnamed>
        log:  /workspace/logs/time_varying.log
   log type:  text
- closed on:  29 Jun 2023, 14:56:46
+ closed on:   3 Jul 2023, 10:35:55
 -------------------------------------------------------------------------------

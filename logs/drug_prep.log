@@ -6,7 +6,7 @@
 . tempfile tempfile 
 
 . import delimited using ./output/input_pbc.csv
-(102 vars, 1,000 obs)
+(106 vars, 1,000 obs)
 
 . save `tempfile' 
 file /tmp/St00015.000001 saved
@@ -645,8 +645,8 @@ xij variables:
 
  order_flag |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     47,174       50.45       50.45
-          1 |     46,326       49.55      100.00
+          0 |     47,241       50.53       50.53
+          1 |     46,259       49.47      100.00
 ------------+-----------------------------------
       Total |     93,500      100.00
 
@@ -689,14 +689,14 @@ out_of_orde |
 
   dup_presc |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     89,994       96.25       96.25
-          1 |      3,506        3.75      100.00
+          0 |     90,145       96.41       96.41
+          1 |      3,355        3.59      100.00
 ------------+-----------------------------------
       Total |     93,500      100.00
 
 . * Drop them 
 . drop if dup_presc 
-(3,506 observations deleted)
+(3,355 observations deleted)
 
 . 
 . drop order_flag out_of_order dup_presc presc_number
@@ -712,17 +712,17 @@ out_of_orde |
                        total_no_presc
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%           76             70
- 5%           80             70
-10%           82             70       Obs              89,994
-25%           86             70       Sum of Wgt.      89,994
+ 1%           76             72
+ 5%           80             72
+10%           82             72       Obs              90,145
+25%           86             72       Sum of Wgt.      90,145
 
-50%           90                      Mean           90.46534
-                        Largest       Std. Dev.      6.495903
-75%           95            110
-90%           98            110       Variance       42.19675
-95%          101            110       Skewness       -.000214
-99%          105            110       Kurtosis       2.979972
+50%           91                      Mean           90.61325
+                        Largest       Std. Dev.      6.494914
+75%           95            111
+90%           99            111       Variance       42.18391
+95%          102            111       Skewness       .0620964
+99%          107            111       Kurtosis       2.993233
 
 . 
 . * Determine length of time from previous prescription 
@@ -736,15 +736,15 @@ out_of_orde |
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            2              1       Obs              88,994
-25%            4              1       Sum of Wgt.      88,994
+10%            2              1       Obs              89,145
+25%            4              1       Sum of Wgt.      89,145
 
-50%            9                      Mean            13.3488
-                        Largest       Std. Dev.      12.74227
-75%           18            138
-90%           30            139       Variance       162.3654
-95%           39            143       Skewness       1.975492
-99%           59            167       Kurtosis       8.927861
+50%            9                      Mean           13.38193
+                        Largest       Std. Dev.       12.8485
+75%           18            130
+90%           30            133       Variance       165.0841
+95%           39            150       Skewness       1.988207
+99%           59            156       Kurtosis       8.953809
 
 . gen year = year(udcaA)
 
@@ -758,15 +758,15 @@ out_of_orde |
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            2              1       Obs              21,596
-25%            4              1       Sum of Wgt.      21,596
+10%            2              1       Obs              21,301
+25%            4              1       Sum of Wgt.      21,301
 
-50%            9                      Mean           12.94332
-                        Largest       Std. Dev.      12.22371
-75%           18            108
-90%           29            112       Variance       149.4191
-95%           37            114       Skewness       1.917186
-99%           56            119       Kurtosis       8.444382
+50%            9                      Mean           13.08657
+                        Largest       Std. Dev.      12.61213
+75%           18            109
+90%           30            116       Variance       159.0659
+95%           38            130       Skewness       2.024661
+99%           59            150       Kurtosis       9.345655
 
 -------------------------------------------------------------------------------
 -> year = 2021
@@ -776,15 +776,15 @@ out_of_orde |
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            2              1       Obs              27,101
-25%            4              1       Sum of Wgt.      27,101
+10%            2              1       Obs              27,034
+25%            4              1       Sum of Wgt.      27,034
 
-50%           10                      Mean           13.47928
-                        Largest       Std. Dev.      12.81255
-75%           18            109
-90%           30            113       Variance       164.1613
-95%           39            139       Skewness       1.972941
-99%           60            167       Kurtosis       9.012902
+50%           10                      Mean           13.52227
+                        Largest       Std. Dev.      12.99699
+75%           19            122
+90%           30            126       Variance       168.9217
+95%           40            127       Skewness       2.034374
+99%           60            156       Kurtosis       9.467506
 
 -------------------------------------------------------------------------------
 -> year = 2022
@@ -794,15 +794,15 @@ out_of_orde |
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            2              1       Obs              27,058
-25%            4              1       Sum of Wgt.      27,058
+10%            2              1       Obs              27,202
+25%            4              1       Sum of Wgt.      27,202
 
-50%           10                      Mean           13.50772
-                        Largest       Std. Dev.      13.01662
-75%           19            117
-90%           30            125       Variance       169.4323
-95%           39            132       Skewness       1.985929
-99%           60            143       Kurtosis       8.920899
+50%            9                      Mean           13.39927
+                        Largest       Std. Dev.       12.7889
+75%           19            109
+90%           30            124       Variance       163.5559
+95%           39            126       Skewness       1.926087
+99%           59            133       Kurtosis       8.327155
 
 -------------------------------------------------------------------------------
 -> year = 2023
@@ -812,21 +812,21 @@ out_of_orde |
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            2              1       Obs              13,239
-25%            4              1       Sum of Wgt.      13,239
+10%            2              1       Obs              13,608
+25%            4              1       Sum of Wgt.      13,608
 
-50%           10                      Mean           13.41831
-                        Largest       Std. Dev.      12.84684
-75%           18            104
-90%           30            125       Variance       165.0414
-95%           39            132       Skewness       2.019802
-99%           60            138       Kurtosis       9.240271
+50%           10                      Mean           13.53079
+                        Largest       Std. Dev.       13.0297
+75%           19            106
+90%           31            110       Variance       169.7731
+95%           39            113       Skewness       1.957239
+99%           60            125       Kurtosis       8.525282
 
 
 . 
 . * Drop records in 2023 as this is after end of study
 . drop if year==2023
-(13,239 observations deleted)
+(13,608 observations deleted)
 
 . forvalues i = 60(30)180 {
   2.     preserve
@@ -977,122 +977,122 @@ out_of_orde |
 
 Duplicates in terms of all variables
 
-(75,085 observations deleted)
+(74,862 observations deleted)
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,000       59.88       59.88
-          2 |        670       40.12      100.00
+          1 |      1,000       59.70       59.70
+          2 |        675       40.30      100.00
 ------------+-----------------------------------
-      Total |      1,670      100.00
-(670 observations created)
+      Total |      1,675      100.00
+(675 observations created)
 
            |      new_record
  to_expand |         0          1 |     Total
 -----------+----------------------+----------
          1 |     1,000          0 |     1,000 
-         2 |       670        670 |     1,340 
+         2 |       675        675 |     1,350 
 -----------+----------------------+----------
-     Total |     1,670        670 |     2,340 
-(670 real changes made)
-(670 real changes made)
-(670 real changes made)
+     Total |     1,675        675 |     2,350 
+(675 real changes made)
+(675 real changes made)
+(675 real changes made)
   0
   0
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         3,036
-        from master                     2,128  (_merge==1)
-        from using                        908  (_merge==2)
+    not matched                         3,040
+        from master                     2,131  (_merge==1)
+        from using                        909  (_merge==2)
 
-    matched                               212  (_merge==3)
+    matched                               219  (_merge==3)
     -----------------------------------------
 
                  _merge |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
-        master only (1) |      2,128       65.52       65.52
-         using only (2) |        908       27.96       93.47
-            matched (3) |        212        6.53      100.00
+        master only (1) |      2,131       65.39       65.39
+         using only (2) |        909       27.89       93.28
+            matched (3) |        219        6.72      100.00
 ------------------------+-----------------------------------
-                  Total |      3,248      100.00
-(908 real changes made)
-(908 real changes made)
-(908 real changes made)
-(908 real changes made)
-(2,690 missing values generated)
-(2,696 missing values generated)
+                  Total |      3,259      100.00
+(909 real changes made)
+(909 real changes made)
+(909 real changes made)
+(909 real changes made)
+(2,697 missing values generated)
+(2,677 missing values generated)
 (0 real changes made)
 
 start_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      2,248       69.21       69.21
-          2 |      1,000       30.79      100.00
+          1 |      2,259       69.32       69.32
+          2 |      1,000       30.68      100.00
 ------------+-----------------------------------
-      Total |      3,248      100.00
+      Total |      3,259      100.00
 (1,000 observations created)
 
 start_afte |      new_record
          r |         0          1 |     Total
 -----------+----------------------+----------
-         1 |     2,248          0 |     2,248 
+         1 |     2,259          0 |     2,259 
          2 |     1,000      1,000 |     2,000 
 -----------+----------------------+----------
-     Total |     3,248      1,000 |     4,248 
+     Total |     3,259      1,000 |     4,259 
 (1,000 real changes made)
 (1,000 real changes made)
 (1,000 real changes made)
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,612       61.49       61.49
-          1 |      1,636       38.51      100.00
+          0 |      2,584       60.67       60.67
+          1 |      1,675       39.33      100.00
 ------------+-----------------------------------
-      Total |      4,248      100.00
+      Total |      4,259      100.00
 
  end_before |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      4,198       98.82       98.82
-          1 |         50        1.18      100.00
+          0 |      4,198       98.57       98.57
+          1 |         61        1.43      100.00
 ------------+-----------------------------------
-      Total |      4,248      100.00
-(50 observations deleted)
+      Total |      4,259      100.00
+(61 observations deleted)
 
            |       end_after
       last |         0          1 |     Total
 -----------+----------------------+----------
-         0 |     2,290          0 |     2,290 
-         1 |       322      1,586 |     1,908 
+         0 |     2,289          0 |     2,289 
+         1 |       295      1,614 |     1,909 
 -----------+----------------------+----------
-     Total |     2,612      1,586 |     4,198 
-(1,586 real changes made)
+     Total |     2,584      1,614 |     4,198 
+(1,614 real changes made)
 
  stop_prior |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      4,190       99.81       99.81
-          2 |          8        0.19      100.00
+          1 |      4,193       99.88       99.88
+          2 |          5        0.12      100.00
 ------------+-----------------------------------
       Total |      4,198      100.00
-(8 observations created)
+(5 observations created)
 
            |      new_record
 stop_prior |         0          1 |     Total
 -----------+----------------------+----------
-         1 |     4,190          0 |     4,190 
-         2 |         8          8 |        16 
+         1 |     4,193          0 |     4,193 
+         2 |         5          5 |        10 
 -----------+----------------------+----------
-     Total |     4,198          8 |     4,206 
-(8 real changes made)
-(8 real changes made)
-(8 real changes made)
+     Total |     4,198          5 |     4,203 
+(5 real changes made)
+(5 real changes made)
+(5 real changes made)
   0
 
 total_time_ |
     unequal |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      4,206      100.00      100.00
+          0 |      4,203      100.00      100.00
 ------------+-----------------------------------
-      Total |      4,206      100.00
+      Total |      4,203      100.00
 file ./output/time_varying_udca_all_vars_60.dta saved
 file ./output/time_varying_udca_60.dta saved
   0
@@ -1101,120 +1101,122 @@ file ./output/time_varying_udca_60.dta saved
 
 Duplicates in terms of all variables
 
-(75,688 observations deleted)
+(75,472 observations deleted)
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,000       93.72       93.72
-          2 |         67        6.28      100.00
+          1 |      1,000       93.90       93.90
+          2 |         65        6.10      100.00
 ------------+-----------------------------------
-      Total |      1,067      100.00
-(67 observations created)
+      Total |      1,065      100.00
+(65 observations created)
 
            |      new_record
  to_expand |         0          1 |     Total
 -----------+----------------------+----------
          1 |     1,000          0 |     1,000 
-         2 |        67         67 |       134 
+         2 |        65         65 |       130 
 -----------+----------------------+----------
-     Total |     1,067         67 |     1,134 
-(67 real changes made)
-(67 real changes made)
-(67 real changes made)
+     Total |     1,065         65 |     1,130 
+(65 real changes made)
+(65 real changes made)
+(65 real changes made)
   0
   0
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         1,938
-        from master                     1,030  (_merge==1)
-        from using                        908  (_merge==2)
+    not matched                         1,930
+        from master                     1,021  (_merge==1)
+        from using                        909  (_merge==2)
 
-    matched                               104  (_merge==3)
+    matched                               109  (_merge==3)
     -----------------------------------------
 
                  _merge |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
-        master only (1) |      1,030       50.44       50.44
-         using only (2) |        908       44.47       94.91
-            matched (3) |        104        5.09      100.00
+        master only (1) |      1,021       50.07       50.07
+         using only (2) |        909       44.58       94.65
+            matched (3) |        109        5.35      100.00
 ------------------------+-----------------------------------
-                  Total |      2,042      100.00
-(908 real changes made)
-(908 real changes made)
-(908 real changes made)
-(908 real changes made)
-(1,538 missing values generated)
-(1,534 missing values generated)
+                  Total |      2,039      100.00
+(909 real changes made)
+(909 real changes made)
+(909 real changes made)
+(909 real changes made)
+(1,531 missing values generated)
+(1,527 missing values generated)
 (0 real changes made)
 
 start_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,042       51.03       51.03
-          2 |      1,000       48.97      100.00
+          1 |      1,039       50.96       50.96
+          2 |      1,000       49.04      100.00
 ------------+-----------------------------------
-      Total |      2,042      100.00
+      Total |      2,039      100.00
 (1,000 observations created)
 
 start_afte |      new_record
          r |         0          1 |     Total
 -----------+----------------------+----------
-         1 |     1,042          0 |     1,042 
+         1 |     1,039          0 |     1,039 
          2 |     1,000      1,000 |     2,000 
 -----------+----------------------+----------
-     Total |     2,042      1,000 |     3,042 
+     Total |     2,039      1,000 |     3,039 
 (1,000 real changes made)
 (1,000 real changes made)
 (1,000 real changes made)
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,438       47.27       47.27
-          1 |      1,604       52.73      100.00
+          0 |      1,411       46.43       46.43
+          1 |      1,628       53.57      100.00
 ------------+-----------------------------------
-      Total |      3,042      100.00
+      Total |      3,039      100.00
 
  end_before |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      3,032       99.67       99.67
-          1 |         10        0.33      100.00
+          0 |      3,032       99.77       99.77
+          1 |          7        0.23      100.00
 ------------+-----------------------------------
-      Total |      3,042      100.00
-(10 observations deleted)
+      Total |      3,039      100.00
+(7 observations deleted)
 
            |       end_after
       last |         0          1 |     Total
 -----------+----------------------+----------
-         0 |     1,124          0 |     1,124 
-         1 |       314      1,594 |     1,908 
+         0 |     1,123          0 |     1,123 
+         1 |       288      1,621 |     1,909 
 -----------+----------------------+----------
-     Total |     1,438      1,594 |     3,032 
-(1,594 real changes made)
+     Total |     1,411      1,621 |     3,032 
+(1,621 real changes made)
 
  stop_prior |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      3,032      100.00      100.00
+          1 |      3,031       99.97       99.97
+          2 |          1        0.03      100.00
 ------------+-----------------------------------
       Total |      3,032      100.00
-(0 observations created)
+(1 observation created)
 
-           | new_record
-stop_prior |         0 |     Total
------------+-----------+----------
-         1 |     3,032 |     3,032 
------------+-----------+----------
-     Total |     3,032 |     3,032 
-(0 real changes made)
-(0 real changes made)
-(0 real changes made)
+           |      new_record
+stop_prior |         0          1 |     Total
+-----------+----------------------+----------
+         1 |     3,031          0 |     3,031 
+         2 |         1          1 |         2 
+-----------+----------------------+----------
+     Total |     3,032          1 |     3,033 
+(1 real change made)
+(1 real change made)
+(1 real change made)
   0
 
 total_time_ |
     unequal |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      3,032      100.00      100.00
+          0 |      3,033      100.00      100.00
 ------------+-----------------------------------
-      Total |      3,032      100.00
+      Total |      3,033      100.00
 file ./output/time_varying_udca_all_vars_90.dta saved
 file ./output/time_varying_udca_90.dta saved
   0
@@ -1223,109 +1225,109 @@ file ./output/time_varying_udca_90.dta saved
 
 Duplicates in terms of all variables
 
-(75,750 observations deleted)
+(75,528 observations deleted)
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,000       99.50       99.50
-          2 |          5        0.50      100.00
+          1 |      1,000       99.11       99.11
+          2 |          9        0.89      100.00
 ------------+-----------------------------------
-      Total |      1,005      100.00
-(5 observations created)
+      Total |      1,009      100.00
+(9 observations created)
 
            |      new_record
  to_expand |         0          1 |     Total
 -----------+----------------------+----------
          1 |     1,000          0 |     1,000 
-         2 |         5          5 |        10 
+         2 |         9          9 |        18 
 -----------+----------------------+----------
-     Total |     1,005          5 |     1,010 
-(5 real changes made)
-(5 real changes made)
-(5 real changes made)
+     Total |     1,009          9 |     1,018 
+(9 real changes made)
+(9 real changes made)
+(9 real changes made)
   0
   0
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         1,824
-        from master                       916  (_merge==1)
-        from using                        908  (_merge==2)
+    not matched                         1,834
+        from master                       925  (_merge==1)
+        from using                        909  (_merge==2)
 
-    matched                                94  (_merge==3)
+    matched                                93  (_merge==3)
     -----------------------------------------
 
                  _merge |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
-        master only (1) |        916       47.76       47.76
-         using only (2) |        908       47.34       95.10
-            matched (3) |         94        4.90      100.00
+        master only (1) |        925       48.00       48.00
+         using only (2) |        909       47.17       95.17
+            matched (3) |         93        4.83      100.00
 ------------------------+-----------------------------------
-                  Total |      1,918      100.00
-(908 real changes made)
-(908 real changes made)
-(908 real changes made)
-(908 real changes made)
-(1,418 missing values generated)
-(1,418 missing values generated)
+                  Total |      1,927      100.00
+(909 real changes made)
+(909 real changes made)
+(909 real changes made)
+(909 real changes made)
+(1,427 missing values generated)
+(1,425 missing values generated)
 (0 real changes made)
 
 start_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |        918       47.86       47.86
-          2 |      1,000       52.14      100.00
+          1 |        927       48.11       48.11
+          2 |      1,000       51.89      100.00
 ------------+-----------------------------------
-      Total |      1,918      100.00
+      Total |      1,927      100.00
 (1,000 observations created)
 
 start_afte |      new_record
          r |         0          1 |     Total
 -----------+----------------------+----------
-         1 |       918          0 |       918 
+         1 |       927          0 |       927 
          2 |     1,000      1,000 |     2,000 
 -----------+----------------------+----------
-     Total |     1,918      1,000 |     2,918 
+     Total |     1,927      1,000 |     2,927 
 (1,000 real changes made)
 (1,000 real changes made)
 (1,000 real changes made)
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,320       45.24       45.24
-          1 |      1,598       54.76      100.00
+          0 |      1,302       44.48       44.48
+          1 |      1,625       55.52      100.00
 ------------+-----------------------------------
-      Total |      2,918      100.00
+      Total |      2,927      100.00
 
  end_before |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,914       99.86       99.86
-          1 |          4        0.14      100.00
+          0 |      2,924       99.90       99.90
+          1 |          3        0.10      100.00
 ------------+-----------------------------------
-      Total |      2,918      100.00
-(4 observations deleted)
+      Total |      2,927      100.00
+(3 observations deleted)
 
            |       end_after
       last |         0          1 |     Total
 -----------+----------------------+----------
-         0 |     1,006          0 |     1,006 
-         1 |       314      1,594 |     1,908 
+         0 |     1,015          0 |     1,015 
+         1 |       287      1,622 |     1,909 
 -----------+----------------------+----------
-     Total |     1,320      1,594 |     2,914 
-(1,594 real changes made)
+     Total |     1,302      1,622 |     2,924 
+(1,622 real changes made)
 
  stop_prior |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      2,914      100.00      100.00
+          1 |      2,924      100.00      100.00
 ------------+-----------------------------------
-      Total |      2,914      100.00
+      Total |      2,924      100.00
 (0 observations created)
 
            | new_record
 stop_prior |         0 |     Total
 -----------+-----------+----------
-         1 |     2,914 |     2,914 
+         1 |     2,924 |     2,924 
 -----------+-----------+----------
-     Total |     2,914 |     2,914 
+     Total |     2,924 |     2,924 
 (0 real changes made)
 (0 real changes made)
 (0 real changes made)
@@ -1334,9 +1336,9 @@ stop_prior |         0 |     Total
 total_time_ |
     unequal |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,914      100.00      100.00
+          0 |      2,924      100.00      100.00
 ------------+-----------------------------------
-      Total |      2,914      100.00
+      Total |      2,924      100.00
 file ./output/time_varying_udca_all_vars_120.dta saved
 file ./output/time_varying_udca_120.dta saved
   0
@@ -1345,7 +1347,7 @@ file ./output/time_varying_udca_120.dta saved
 
 Duplicates in terms of all variables
 
-(75,754 observations deleted)
+(75,536 observations deleted)
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
@@ -1370,84 +1372,84 @@ Duplicates in terms of all variables
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         1,818
-        from master                       910  (_merge==1)
-        from using                        908  (_merge==2)
+    not matched                         1,820
+        from master                       911  (_merge==1)
+        from using                        909  (_merge==2)
 
-    matched                                92  (_merge==3)
+    matched                                91  (_merge==3)
     -----------------------------------------
 
                  _merge |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
-        master only (1) |        910       47.64       47.64
-         using only (2) |        908       47.54       95.18
-            matched (3) |         92        4.82      100.00
+        master only (1) |        911       47.67       47.67
+         using only (2) |        909       47.57       95.24
+            matched (3) |         91        4.76      100.00
 ------------------------+-----------------------------------
-                  Total |      1,910      100.00
-(908 real changes made)
-(908 real changes made)
-(908 real changes made)
-(908 real changes made)
-(1,410 missing values generated)
-(1,410 missing values generated)
+                  Total |      1,911      100.00
+(909 real changes made)
+(909 real changes made)
+(909 real changes made)
+(909 real changes made)
+(1,411 missing values generated)
+(1,411 missing values generated)
 (0 real changes made)
 
 start_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |        910       47.64       47.64
-          2 |      1,000       52.36      100.00
+          1 |        911       47.67       47.67
+          2 |      1,000       52.33      100.00
 ------------+-----------------------------------
-      Total |      1,910      100.00
+      Total |      1,911      100.00
 (1,000 observations created)
 
 start_afte |      new_record
          r |         0          1 |     Total
 -----------+----------------------+----------
-         1 |       910          0 |       910 
+         1 |       911          0 |       911 
          2 |     1,000      1,000 |     2,000 
 -----------+----------------------+----------
-     Total |     1,910      1,000 |     2,910 
+     Total |     1,911      1,000 |     2,911 
 (1,000 real changes made)
 (1,000 real changes made)
 (1,000 real changes made)
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,312       45.09       45.09
-          1 |      1,598       54.91      100.00
+          0 |      1,288       44.25       44.25
+          1 |      1,623       55.75      100.00
 ------------+-----------------------------------
-      Total |      2,910      100.00
+      Total |      2,911      100.00
 
  end_before |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,906       99.86       99.86
-          1 |          4        0.14      100.00
+          0 |      2,910       99.97       99.97
+          1 |          1        0.03      100.00
 ------------+-----------------------------------
-      Total |      2,910      100.00
-(4 observations deleted)
+      Total |      2,911      100.00
+(1 observation deleted)
 
            |       end_after
       last |         0          1 |     Total
 -----------+----------------------+----------
-         0 |       998          0 |       998 
-         1 |       314      1,594 |     1,908 
+         0 |     1,001          0 |     1,001 
+         1 |       287      1,622 |     1,909 
 -----------+----------------------+----------
-     Total |     1,312      1,594 |     2,906 
-(1,594 real changes made)
+     Total |     1,288      1,622 |     2,910 
+(1,622 real changes made)
 
  stop_prior |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      2,906      100.00      100.00
+          1 |      2,910      100.00      100.00
 ------------+-----------------------------------
-      Total |      2,906      100.00
+      Total |      2,910      100.00
 (0 observations created)
 
            | new_record
 stop_prior |         0 |     Total
 -----------+-----------+----------
-         1 |     2,906 |     2,906 
+         1 |     2,910 |     2,910 
 -----------+-----------+----------
-     Total |     2,906 |     2,906 
+     Total |     2,910 |     2,910 
 (0 real changes made)
 (0 real changes made)
 (0 real changes made)
@@ -1456,9 +1458,9 @@ stop_prior |         0 |     Total
 total_time_ |
     unequal |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,906      100.00      100.00
+          0 |      2,910      100.00      100.00
 ------------+-----------------------------------
-      Total |      2,906      100.00
+      Total |      2,910      100.00
 file ./output/time_varying_udca_all_vars_150.dta saved
 file ./output/time_varying_udca_150.dta saved
   0
@@ -1467,7 +1469,7 @@ file ./output/time_varying_udca_150.dta saved
 
 Duplicates in terms of all variables
 
-(75,755 observations deleted)
+(75,537 observations deleted)
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
@@ -1490,84 +1492,84 @@ Duplicates in terms of all variables
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         1,816
-        from master                       908  (_merge==1)
-        from using                        908  (_merge==2)
+    not matched                         1,818
+        from master                       909  (_merge==1)
+        from using                        909  (_merge==2)
 
-    matched                                92  (_merge==3)
+    matched                                91  (_merge==3)
     -----------------------------------------
 
                  _merge |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
-        master only (1) |        908       47.59       47.59
-         using only (2) |        908       47.59       95.18
-            matched (3) |         92        4.82      100.00
+        master only (1) |        909       47.62       47.62
+         using only (2) |        909       47.62       95.23
+            matched (3) |         91        4.77      100.00
 ------------------------+-----------------------------------
-                  Total |      1,908      100.00
-(908 real changes made)
-(908 real changes made)
-(908 real changes made)
-(908 real changes made)
-(1,408 missing values generated)
-(1,408 missing values generated)
+                  Total |      1,909      100.00
+(909 real changes made)
+(909 real changes made)
+(909 real changes made)
+(909 real changes made)
+(1,409 missing values generated)
+(1,409 missing values generated)
 (0 real changes made)
 
 start_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |        908       47.59       47.59
-          2 |      1,000       52.41      100.00
+          1 |        909       47.62       47.62
+          2 |      1,000       52.38      100.00
 ------------+-----------------------------------
-      Total |      1,908      100.00
+      Total |      1,909      100.00
 (1,000 observations created)
 
 start_afte |      new_record
          r |         0          1 |     Total
 -----------+----------------------+----------
-         1 |       908          0 |       908 
+         1 |       909          0 |       909 
          2 |     1,000      1,000 |     2,000 
 -----------+----------------------+----------
-     Total |     1,908      1,000 |     2,908 
+     Total |     1,909      1,000 |     2,909 
 (1,000 real changes made)
 (1,000 real changes made)
 (1,000 real changes made)
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,310       45.05       45.05
-          1 |      1,598       54.95      100.00
+          0 |      1,286       44.21       44.21
+          1 |      1,623       55.79      100.00
 ------------+-----------------------------------
-      Total |      2,908      100.00
+      Total |      2,909      100.00
 
  end_before |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,904       99.86       99.86
-          1 |          4        0.14      100.00
+          0 |      2,908       99.97       99.97
+          1 |          1        0.03      100.00
 ------------+-----------------------------------
-      Total |      2,908      100.00
-(4 observations deleted)
+      Total |      2,909      100.00
+(1 observation deleted)
 
            |       end_after
       last |         0          1 |     Total
 -----------+----------------------+----------
-         0 |       996          0 |       996 
-         1 |       314      1,594 |     1,908 
+         0 |       999          0 |       999 
+         1 |       287      1,622 |     1,909 
 -----------+----------------------+----------
-     Total |     1,310      1,594 |     2,904 
-(1,594 real changes made)
+     Total |     1,286      1,622 |     2,908 
+(1,622 real changes made)
 
  stop_prior |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      2,904      100.00      100.00
+          1 |      2,908      100.00      100.00
 ------------+-----------------------------------
-      Total |      2,904      100.00
+      Total |      2,908      100.00
 (0 observations created)
 
            | new_record
 stop_prior |         0 |     Total
 -----------+-----------+----------
-         1 |     2,904 |     2,904 
+         1 |     2,908 |     2,908 
 -----------+-----------+----------
-     Total |     2,904 |     2,904 
+     Total |     2,908 |     2,908 
 (0 real changes made)
 (0 real changes made)
 (0 real changes made)
@@ -1576,9 +1578,9 @@ stop_prior |         0 |     Total
 total_time_ |
     unequal |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,904      100.00      100.00
+          0 |      2,908      100.00      100.00
 ------------+-----------------------------------
-      Total |      2,904      100.00
+      Total |      2,908      100.00
 file ./output/time_varying_udca_all_vars_180.dta saved
 file ./output/time_varying_udca_180.dta saved
 
@@ -1594,7 +1596,7 @@ file ./output/time_varying_udca_180.dta saved
 . 
 end of do-file
 
-. . file open output using "/tmp/101_drug_prep.do.gLSB.out", write text replace
+. . file open output using "/tmp/101_drug_prep.do.bOOC.out", write text replace
 
 . . file write output "success" 
 
