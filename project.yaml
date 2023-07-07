@@ -62,10 +62,19 @@ actions:
         
 
   baseline_tables:
-    run: stata-mp:latest analysis/103_baseline_tables.do
+    run: stata-mp:latest analysis/104_baseline_tables.do
     needs: [generate_study_population_pbc]
     outputs:
       moderately_sensitive:
         log: logs/baseline_tables.log
         chars: output/tables/baseline*.csv
         meds: output/tables/additional*.csv
+
+  analysis:
+    run: stata-mp:latest analysis/105_analysis.do
+    needs: [time_varying_prep]
+    outputs:
+      moderately_sensitive:
+        log: logs/analysis.log
+        chars: output/graphs/adjcurve*.csv
+        

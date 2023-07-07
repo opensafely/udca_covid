@@ -53,12 +53,12 @@ foreach var in udca gc budesonide fenofibrate {
     gen `var'_bl = (`var'_count_bl>=1 & `var'_count_bl!=.)
 }
 
-gen vacc_any = covid_vacc_date!=""
-
 * Generate variable with number of vaccinations 
 foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth {
-    gen `var'= (`var'_date!=.)    
+    gen `var'= (`var'_date!="")    
 }
+
+egen vacc_any = rowmax(covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth)
 egen total_vaccs = rowmax(covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth)
 tab total_vaccs 
 
@@ -150,11 +150,22 @@ gen hosp_any_flag = hosp_covid_anyA!=.
 
 * Composite outcome 
 gen hosp_died = (died_ons_covid_flag_any==1 | hosp_any_flag==1)
-gen hosp_died_dateA = rowmin(died_date_onsA hosp_covid_anyA)
+egen hosp_died_dateA = rowmin(died_date_onsA hosp_covid_anyA)
 
 
 tab udca_bl died_ons_covid_flag_any
 tab udca_bl hosp_any_flag
 
-* Add cumulative incidence plots 
-
+table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \ hosp_died bin) clear
+export delimited using ./output/tables/baseline_outcomes.csv
+forvalues i=0/1 {   
+    destring _columna_`i', gen(n`i') ignore(",") force
+    destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
+    gen rounded_n`i' = round(n`i', 5)
+    tostring rounded_n`i', gen(n`i'_rounded)
+    tostring percent`i', gen(percent_`i')
+    replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
+    replace percent_`i' = "redacted" if (rounded_n`i'<=5)
+}
+keep factor rounded_n0 percent0 rounded_n1 percent1
+export delimited using ./output/tables/baseline_outcomes_rounded.csv
