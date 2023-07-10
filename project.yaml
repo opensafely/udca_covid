@@ -70,11 +70,19 @@ actions:
         chars: output/tables/baseline*.csv
         meds: output/tables/additional*.csv
 
-  analysis:
-    run: stata-mp:latest analysis/105_analysis.do
+  analysis_plots:
+    run: stata-mp:latest analysis/105_analysis_plots.do
     needs: [time_varying_prep]
     outputs:
       moderately_sensitive:
         log: logs/analysis.log
         chars: output/graphs/adjcurve*.csv
+
+  analysis_models:
+    run: stata-mp:latest analysis/106_analysis_models.do
+    needs: [time_varying_prep]
+    outputs:
+      moderately_sensitive:
+        log: logs/analysis_models.log
+        
         

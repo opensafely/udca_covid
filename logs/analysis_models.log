@@ -1,0 +1,200 @@
+
+. 
+. * Cox models and Schoenfeld residual plots 
+. foreach outcome in died_covid_any hosp_any composite_any {
+  2.     use ./output/an_dataset_`outcome', clear 
+  3.     * Open file to write results
+.     file open tablecontent using ./output/tables/`outcome'_cox_models.txt, wr
+> ite text replace
+  4.     file write tablecontent ("Exposure status") _tab ("denominator") _tab 
+> ("events") _tab ("total_person_wks") _tab ("Rate") _tab ("unadj_hr") _tab ///
+>     ("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci") _tab ("f_adj_hr") _tab
+>  ("f_adj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
+  5.     describe
+  6.     gen index_date = date("01/03/2020", "DMY")
+  7.     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) orig
+> in(index_date)
+  8.     count if `outcome'_flag==1
+  9.     if r(N) > 10 {
+ 10.         * Cox model - crude
+.         stcox udca, strata(stp)
+ 11.         estimates save "./output/tempdata/crude_`outcome'", replace 
+ 12.         eststo model1
+ 13.         parmest, label eform format(estimate p lb ub) saving("./output/tem
+> pdata/surv_crude_`outcome'", replace) idstr("crude_`outcome'") 
+ 14.         estat phtest, plot(`outcome'_flag) ///
+>                     graphregion(fcolor(white)) ///
+>                     ylabel(, nogrid labsize(small)) ///
+>                     xlabel(, labsize(small)) ///
+>                     xtitle("Time", size(small)) ///
+>                     ytitle("Scaled Schoenfeld Residuals", size(small)) ///
+>                     msize(small) ///
+>                     mcolor(gs6) ///
+>                     msymbol(circle_hollow) ///
+>                     scheme(s1mono) ///
+>                     title ("`outcome'", position(11) size(medsmall)) ///
+>                     name(uni_plot_`outcome') ///
+>                     note("")
+ 15.         * Cox model - fully adjusted
+.         stcox udca age_tv male any_high_risk_condition i.ethnicity i.imd bmi_
+> cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, strata(stp)
+ 16.         estimates save "./output/tempdata/adj_model_`outcome'", replace 
+ 17.         eststo model2
+ 18.         parmest, label eform format(estimate p lb ub) saving("./output/tem
+> pdata/surv_adj_`outcome'", replace) idstr("adj_`outcome'") 
+ 19.         estat phtest, plot(`outcome'_flag) ///
+>                     graphregion(fcolor(white)) ///
+>                     ylabel(, nogrid labsize(small)) ///
+>                     xlabel(, labsize(small)) ///
+>                     xtitle("Time", size(small)) ///
+>                     ytitle("Scaled Schoenfeld Residuals", size(small)) ///
+>                     msize(small) ///
+>                     mcolor(gs6) ///
+>                     msymbol(circle_hollow) ///
+>                     scheme(s1mono) ///
+>                     title ("Adjusted `outcome'", position(11) size(medsmall))
+>  ///
+>                     name(adj_plot_`outcome') ///
+>                     note("")
+ 20.         
+.         bys patient_id (start): gen number = _n==_N 
+ 21.         tab number 
+ 22.         qui safecount if udca==0 if number==1
+ 23.         local denominator = r(N)
+ 24.         qui safecount if udca == 0 & `outcome'_flag == 1
+ 25.         local event = r(N)
+ 26.         bysort udca: egen total_follow_up = total(_t) if number==1
+ 27.         qui su total_follow_up if udca==0 & number==1
+ 28.         local person_mth = r(mean)/30
+ 29.         local rate = 100000*(`event'/`person_mth')
+ 30.         if `event'>10 & `event'!=. {
+ 31.             file write tablecontent  ("No UDCA") _tab (`denominator') _tab
+>  (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+ 32.             file write tablecontent ("1.00") _tab _tab ("1.00") _tab _tab 
+> _tab _tab ("1.00") _n
+ 33.             }
+ 34.         else {
+ 35.             file write tablecontent ("No UDCA") _tab ("redact") _n
+ 36.             continue
+ 37.         }
+ 38.         qui safecount if udca==1 if number==1
+ 39.         local denominator = r(N)
+ 40.         qui safecount if udca == 1 & `outcome'_admit == 1
+ 41.         local event = r(N)
+ 42.         qui su total_follow_up if total(_t) if number==1
+ 43.         local person_mth = r(mean)/30
+ 44.         local rate = 100000*(`event'/`person_mth')
+ 45.         if `event'>10 & `event'!=. {
+ 46.             file write tablecontent ("UDCA") _tab (`denominator') _tab (`e
+> vent') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab  
+ 47.             cap estimates use "./output/tempdata/crude_`outcome'" 
+ 48.             cap lincom 1.udca, eform
+ 49.             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f 
+> (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _ta
+> b
+ 50.             cap estimates clear
+ 51.         }
+ 52.         else {
+ 53.             file write tablecontent  ("UDCA") _tab ("redact") _n
+ 54.             continue
+ 55.         }
+ 56.     
+. drop total_follow_up
+ 57.     }
+ 58. else { 
+ 59.     file write tablecontent ("`period'") _tab ("redact") _n
+ 60.     continue
+ 61. }
+ 62. }
+(note: file ./output/tables/died_covid_any_cox_models.txt not found)
+
+Contains data from ./output/an_dataset_died_covid_any.dta
+  obs:         4,967                          
+ vars:            17                          10 Jul 2023 12:26
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+stp             str4    %9s                   
+imd             byte    %8.0g                 
+ethnicity       byte    %8.0g      eth5       
+patient_id      int     %8.0g                 
+male            float   %9.0g                 
+bmi_cat         float   %14.0g     bmi        
+smoking         float   %9.0g                 
+any_high_risk~n float   %9.0g                 
+start           float   %9.0g                 
+stop            float   %9.0g                 
+died_covid_an~g byte    %8.0g                 
+wave            float   %9.0g                 
+age_tv          float   %9.0g                 
+udca            float   %9.0g                 
+liver_trans     float   %9.0g                 
+covid_vacc_fi~t float   %9.0g                 
+severe_disease  float   %9.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+
+                id:  patient_id
+     failure event:  died_covid_any_flag != 0 & died_covid_any_flag < .
+obs. time interval:  (stop[_n-1], stop]
+ enter on or after:  time index_date
+ exit on or before:  failure
+    t for analysis:  (time-origin)
+            origin:  time index_date
+
+------------------------------------------------------------------------------
+      4,967  total observations
+          0  exclusions
+------------------------------------------------------------------------------
+      4,967  observations remaining, representing
+      1,000  subjects
+        153  failures in single-failure-per-subject data
+    651,528  total analysis time at risk and under observation
+                                                at risk from t =         0
+                                     earliest observed entry t =         0
+                                          last observed exit t =     1,035
+  153
+
+         failure _d:  died_covid_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+
+Iteration 0:   log likelihood = -361.07731
+Iteration 1:   log likelihood = -360.52069
+Iteration 2:   log likelihood = -360.50284
+Iteration 3:   log likelihood = -360.50281
+Refining estimates:
+Iteration 0:   log likelihood = -360.50281
+
+Stratified Cox regr. -- no ties
+
+No. of subjects =        1,000                  Number of obs    =       2,433
+No. of failures =          153
+Time at risk    =       651528
+                                                LR chi2(1)       =        1.15
+Log likelihood  =   -360.50281                  Prob > chi2      =      0.2838
+
+------------------------------------------------------------------------------
+          _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        udca |   .6000562   .3088266    -0.99   0.321     .2188316    1.645409
+------------------------------------------------------------------------------
+                                                             Stratified by stp
+(note: file ./output/tempdata/crude_died_covid_any.ster not found)
+file ./output/tempdata/crude_died_covid_any.ster saved
+(note: file ./output/tempdata/surv_crude_died_covid_any.dta not found)
+file ./output/tempdata/surv_crude_died_covid_any.dta saved
+died_covid_any_flag not found in model
+r(198);
+
+end of do-file
+r(198);
+
+end of do-file
+
+r(198);
+
+

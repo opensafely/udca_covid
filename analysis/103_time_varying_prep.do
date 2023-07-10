@@ -19,6 +19,8 @@ save `tempfile'
 use ./output/time_varying_udca_120, clear 
 codebook patient_id
 merge m:1 patient_id using `tempfile', keepusing(severe_disease_fu_date severe_disease_bl covid_vacc_first_date liver_transplant_fu_date dereg_date died_date_ons)
+* Should only be required for dummy data 
+keep if _merge==3
 * Only using start date as this is when udca exposure or 6 monthly check occurs
 drop stop
 gen expand=1
@@ -71,7 +73,8 @@ duplicates drop
 codebook patient_id
 * Create file for each covariate to merge onto udca exposure file 
 * First covid vaccination and liver transplant as all people will begin at zero 
-foreach var in covid_vacc_first liver_transplant_fu {
+rename liver_transplant_fu_date_update liver_trans_date_update
+foreach var in covid_vacc_first liver_trans {
     preserve
     keep patient_id `var'_date_update end_date
     * Drop updates after the end of follow-up 
@@ -95,6 +98,7 @@ foreach var in covid_vacc_first liver_transplant_fu {
     * drop start==stop but should not drop any in real data 
     drop if start==stop 
     count if stop<start
+    codebook patient_id
     save ./output/tv_`var', replace
     restore
 }
@@ -126,6 +130,7 @@ count if start==stop
 * drop start==stop but should not drop any in real data 
 drop if start==stop 
 count if stop<start
+codebook patient_id
 save ./output/tv_severe_disease, replace
 restore
 
@@ -165,6 +170,7 @@ replace age_tv = age+1 if newv==1 & number==1
 replace age_tv = age+2 if newv==1 & number==2
 keep patient_id start stop age_tv 
 drop if start==stop
+codebook patient_id
 save ./output/tv_age, replace 
 
 * COVID waves 
@@ -210,6 +216,7 @@ replace stop = date("31/12/2022", "DMY") if newv==1 & number==3
 replace stop = end_date if end_date<stop & wave==4
 keep patient_id start stop wave
 drop if start==stop 
+codebook patient_id
 save ./output/tv_waves, replace
 
 * Outcomes 
@@ -242,8 +249,9 @@ count if died_ons_covid_flag_any ==1 & end_date<died_date_onsA
 replace died_ons_covid_flag_any=0 if end_date<died_date_onsA
 keep patient_id start stop died_ons_covid_flag_any
 rename died_ons_covid_flag_any died_covid_any_flag
-save ./output/tv_outcome_died_any, replace 
-tab died_covid_any_flag
+save ./output/tv_outcome_died_covid_any, replace 
+tab died_covid_any_flag, m
+codebook patient_id
 restore 
 
 * Hospitalisation - any position
@@ -256,6 +264,7 @@ replace hosp_any_flag=0 if end_date<hosp_covid_anyA
 keep patient_id start stop hosp_any_flag
 save ./output/tv_outcome_hosp_any, replace 
 tab hosp_any_flag, m
+codebook patient_id
 restore 
 
 * Composite 
@@ -267,45 +276,62 @@ count if hosp_died_composite==1 & end_date<hosp_died_dateA
 replace hosp_died_composite=0 if end_date<hosp_died_dateA
 keep patient_id start stop hosp_died_composite
 rename hosp_died_composite composite_any_flag
-save ./output/tv_outcome_composite, replace 
-tab composite_any_flag
+save ./output/tv_outcome_composite_any, replace 
+tab composite_any_flag, m
+codebook patient_id
 restore 
 
 * Merge files together for each outcome
 * Composite  
 use ./output/tv_severe_disease, clear 
 tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
-tvc_merge start stop using ./output/tv_liver_transplant_fu, id(patient_id)
+tvc_merge start stop using ./output/tv_liver_trans, id(patient_id)
 tvc_merge start stop using ./output/time_varying_udca_120, id(patient_id)
 tvc_merge start stop using ./output/tv_age, id(patient_id)
 tvc_merge start stop using ./output/tv_waves, id(patient_id)
-tvc_merge start stop using ./output/tv_outcome_composite, id(patient_id) failure(hosp_died_composite)
-save ./output/tv_vars_composite, replace 
-* Check number of outcomes after merge 
-tab composite_any_flag
+tvc_merge start stop using ./output/tv_outcome_composite_any, id(patient_id) failure(composite_any_flag)
+* Dummy drug data includes people not in cohort, so drop these - should not be any in real data 
+drop if age_tv==.
+codebook patient_id
+* Check number of outcomes after merge  - there will be missings for rows after event
+tab composite_any_flag, m
+missings report
+save ./output/tv_vars_composite_any, replace 
 
 * COVID death - any position
 use ./output/tv_severe_disease, clear 
 tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
-tvc_merge start stop using ./output/tv_liver_transplant_fu, id(patient_id)
+tvc_merge start stop using ./output/tv_liver_trans, id(patient_id)
 tvc_merge start stop using ./output/time_varying_udca_120, id(patient_id)
 tvc_merge start stop using ./output/tv_age, id(patient_id)
 tvc_merge start stop using ./output/tv_waves, id(patient_id)
-tvc_merge start stop using ./output/tv_outcome_died_any, id(patient_id) failure(died_ons_covid_flag_any)
-save ./output/tv_vars_died_any, replace 
-tab died_covid_any_flag
+tvc_merge start stop using ./output/tv_outcome_died_covid_any, id(patient_id) failure(died_covid_any_flag)
+* Dummy drug data includes people not in cohort, so drop these - should not be any in real data 
+drop if age_tv==.
+codebook patient_id
+* Check number of outcomes after merge 
+tab died_covid_any_flag, m
+missings report
+save ./output/tv_vars_died_covid_any, replace 
 
 * COVID hospitalisation - any position
 use ./output/tv_severe_disease, clear 
 tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
-tvc_merge start stop using ./output/tv_liver_transplant_fu, id(patient_id)
+tvc_merge start stop using ./output/tv_liver_trans, id(patient_id)
 tvc_merge start stop using ./output/time_varying_udca_120, id(patient_id)
 tvc_merge start stop using ./output/tv_age, id(patient_id)
 tvc_merge start stop using ./output/tv_waves, id(patient_id)
 tvc_merge start stop using ./output/tv_outcome_hosp_any, id(patient_id) failure(hosp_any_flag)
-save ./output/tv_vars_hosp_any, replace 
 * Check number of outcomes after merge 
 tab hosp_any_flag, m
+* Dummy drug data includes people not in cohort, so drop these - should not be any in real data 
+drop if age_tv==.
+codebook patient_id
+* Check number of outcomes after merge - there will be missings for rows after event
+tab hosp_any_flag, m 
+missings report
+save ./output/tv_vars_hosp_any, replace 
+
 /* Format file with static covariates: sex, region, covid high risk conditions, 
 ethnicity, imd, bmi, smoking. */
 
@@ -352,9 +378,9 @@ gen solid_organ_transplant_bin = solid_organ_transplant_nhsd_new!=""
 gen any_high_risk_condition = max(learning_disability_nhsd_snomed, cancer_opensafely_snomed_new, haematological_disease_nhsd, ///
 ckd_stage_5_nhsd, imid_nhsd, immunosupression_nhsd_new, hiv_aids_nhsd, solid_organ_transplant_bin, rare_neuro_nhsd)
 
-keep patient_id age male stp any_high_risk_condition ethnicity imd bmi_cat smoking 
+keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smoking 
 
-foreach var in died_any hosp_any composite {
+foreach var in died_covid_any hosp_any composite_any {
     preserve 
     merge 1:m patient_id using ./output/tv_vars_`var' 
     drop _merge 

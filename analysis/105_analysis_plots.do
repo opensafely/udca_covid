@@ -2,7 +2,7 @@
 DO FILE NAME:			105_analysis.do.do
 DATE: 					07/07/2023
 AUTHOR:					R Costello 
-DESCRIPTION OF FILE:	Produce cumulative incidence plots and Cox PH models
+DESCRIPTION OF FILE:	Produce cumulative incidence plots
 ==============================================================================*/
 adopath + ./analysis/ado 
 cap mkdir ./output/graphs
@@ -11,14 +11,17 @@ cap mkdir ./output/graphs
 cap log using ./logs/analysis.log, replace
 * plot for each outcome 
 * Initially just try composite outcome
-foreach outcome in /*died_covid_any hosp_any*/ composite_any {
+foreach outcome in died_covid_any hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
+    describe
     gen index_date = date("01/03/2020", "DMY")
     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) origin(index_date)
 
     * Add cumulative incidence plots 
-    *stpm2 udca age_tv male any_high_risk_condition ethnicity imd bmi_cat smoking severe_disease covid_vacc_first liver_transplant_fu waves, ///
-     tvc(udca severe_disease covid_vacc_first liver_transplant_fu) dftvc(1) df(3) scale(hazard) eform stratify(stp)
+    * Not stratifying by stp as cannot tvc and stratify 
+          
+    stpm2 udca age_tv male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, ///
+     tvc(udca severe_disease covid_vacc_first liver_trans) dftvc(1) df(3) scale(hazard) eform
 
     stpm2 udca age_tv male, tvc(udca) dftvc(1) df(3) scale(hazard) eform
     summ _t
@@ -57,4 +60,5 @@ foreach outcome in /*died_covid_any hosp_any*/ composite_any {
 
     * Close window 
     graph close
+
 }
