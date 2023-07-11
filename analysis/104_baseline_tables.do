@@ -109,10 +109,12 @@ forvalues i=0/1 {
     destring _columna_`i', gen(n`i') ignore(",") force
     destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
     gen rounded_n`i' = round(n`i', 5)
+    tostring percent`i', gen(percent_`i')
     tostring rounded_n`i', gen(n`i'_rounded)
     replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
+    replace percent_`i' = "redacted" if (rounded_n`i'<=5)
 }
-keep factor level n0_rounded percent0 n1_rounded percent1
+keep factor level n0_rounded percent_0 n1_rounded percent_1
 export delimited using ./output/tables/baseline_table_udca_rounded.csv
 restore 
 

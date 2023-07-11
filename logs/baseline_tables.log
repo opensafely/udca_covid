@@ -501,9 +501,11 @@ file ./output/tables/baseline_table_udca.csv saved
   2.     destring _columna_`i', gen(n`i') ignore(",") force
   3.     destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
   4.     gen rounded_n`i' = round(n`i', 5)
-  5.     tostring rounded_n`i', gen(n`i'_rounded)
-  6.     replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
-  7. }
+  5.     tostring percent`i', gen(percent_`i')
+  6.     tostring rounded_n`i', gen(n`i'_rounded)
+  7.     replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
+  8.     replace percent_`i' = "redacted" if (rounded_n`i'<=5)
+  9. }
 _columna_0: contains nonnumeric characters not specified in ignore(); n0 genera
 > ted as int
 (2 missing values generated)
@@ -511,7 +513,9 @@ _columnb_0: contains nonnumeric characters not specified in ignore()
 _columnb_0: characters space % ( ) removed; percent0 generated as double
 (2 missing values generated)
 (2 missing values generated)
+percent_0 generated as str4
 n0_rounded generated as str3
+(0 real changes made)
 (0 real changes made)
 _columna_1: contains nonnumeric characters not specified in ignore(); n1 genera
 > ted as int
@@ -520,11 +524,14 @@ _columnb_1: contains nonnumeric characters not specified in ignore()
 _columnb_1: characters space % ( ) removed; percent1 generated as double
 (2 missing values generated)
 (2 missing values generated)
+percent_1 generated as str4
 n1_rounded generated as str3
 variable n1_rounded was str3 now str8
 (1 real change made)
+variable percent_1 was str4 now str8
+(1 real change made)
 
-. keep factor level n0_rounded percent0 n1_rounded percent1
+. keep factor level n0_rounded percent_0 n1_rounded percent_1
 
 . export delimited using ./output/tables/baseline_table_udca_rounded.csv
 file ./output/tables/baseline_table_udca_rounded.csv saved
@@ -761,7 +768,7 @@ file ./output/tables/baseline_outcomes_rounded.csv saved
 . 
 end of do-file
 
-. . file open output using "/tmp/104_baseline_tables.do.Qltn.out", write text r
+. . file open output using "/tmp/104_baseline_tables.do.z3sI.out", write text r
 > eplace
 
 . . file write output "success" 
