@@ -84,5 +84,6 @@ actions:
     outputs:
       moderately_sensitive:
         log: logs/analysis_models.log
-        
+        tables: output/tables/cox*
+        graphs: output/graphs/schoenplot*
         

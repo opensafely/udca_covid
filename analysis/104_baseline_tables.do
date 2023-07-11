@@ -59,7 +59,7 @@ foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fo
 }
 
 egen vacc_any = rowmax(covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth)
-egen total_vaccs = rowmax(covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth)
+egen total_vaccs = rowtotal(covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth)
 tab total_vaccs 
 
 gen severe_disease_fu = severe_disease_fu_date!=""
@@ -77,7 +77,7 @@ destring _columna_1, gen(n) ignore(",") force
 destring _columnb_1, gen(percent) ignore("-" "%" "(" ")")  force
 gen rounded_n = round(n, 5)
 tostring rounded_n, gen(n_rounded)
-replace n_rounded = "redacted" if (n_rounded=="5" | n_rounded=="4" | n_rounded=="3" | n_rounded=="2" | n_rounded=="1" | n_rounded=="0")
+replace n_rounded = "redacted" if (rounded_n<=5)
 keep factor level n_rounded percent
 export delimited using ./output/tables/baseline_table_rounded.csv
 restore 
@@ -93,7 +93,7 @@ destring _columna_1, gen(n) ignore(",") force
 destring _columnb_1, gen(percent) ignore("-" "%" "(" ")")  force
 gen rounded_n = round(n, 5)
 tostring rounded_n, gen(n_rounded)
-replace n_rounded = "redacted" if (n_rounded=="5" | n_rounded=="4" | n_rounded=="3" | n_rounded=="2" | n_rounded=="1" | n_rounded=="0")
+replace n_rounded = "redacted" if (rounded_n<=5)
 keep factor level n_rounded percent
 export delimited using ./output/tables/high_risk_rounded.csv
 restore 
@@ -110,7 +110,7 @@ forvalues i=0/1 {
     destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
     gen rounded_n`i' = round(n`i', 5)
     tostring rounded_n`i', gen(n`i'_rounded)
-    replace n`i'_rounded = "redacted" if (n`i'_rounded=="5" | n`i'_rounded=="4" | n`i'_rounded=="3" | n`i'_rounded=="2" | n`i'_rounded=="1" | n`i'_rounded=="0")
+    replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
 }
 keep factor level n0_rounded percent0 n1_rounded percent1
 export delimited using ./output/tables/baseline_table_udca_rounded.csv

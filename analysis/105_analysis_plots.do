@@ -20,8 +20,8 @@ foreach outcome in died_covid_any hosp_any composite_any {
     * Add cumulative incidence plots 
     * Not stratifying by stp as cannot tvc and stratify 
           
-    stpm2 udca age_tv male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, ///
-     tvc(udca severe_disease covid_vacc_first liver_trans) dftvc(1) df(3) scale(hazard) eform
+    *stpm2 udca age_tv male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, ///
+    * tvc(udca severe_disease covid_vacc_first liver_trans) dftvc(1) df(3) scale(hazard) eform
 
     stpm2 udca age_tv male, tvc(udca) dftvc(1) df(3) scale(hazard) eform
     summ _t
