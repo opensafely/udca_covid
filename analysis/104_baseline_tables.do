@@ -41,6 +41,15 @@ replace bmi_cat = 0 if bmi_cat==.
 label define bmi 0 "Missing" 1 "Underweight" 2 "Healthy range" 3 "Overweight" 4 "Obese" 5 "Morbidly obese"
 label values bmi_cat bmi
 
+* Smoking status
+gen smoking = 0 if smoking_status=="N"
+replace smoking = 1 if smoking_status=="S"
+replace smoking = 2 if smoking_status=="E"
+replace smoking = 3 if smoking==.
+
+label define smok 1 "Current smoker" 2 "Ex-smoker" 0 "Never smoked" 3 "Unknown"
+label values smoking smok
+
 replace oral_steroid_drugs_nhsd=. if oral_steroid_drug_nhsd_3m_count < 2 & oral_steroid_drug_nhsd_12m_count < 4
 gen imid_nhsd=max(oral_steroid_drugs_nhsd, immunosuppresant_drugs_nhsd)
 gen rare_neuro_nhsd = max(multiple_sclerosis_nhsd, motor_neurone_disease_nhsd, myasthenia_gravis_nhsd, huntingtons_disease_nhsd)
@@ -49,8 +58,12 @@ gen any_high_risk_condition = max(learning_disability_nhsd_snomed, cancer_opensa
 ckd_stage_5_nhsd, imid_nhsd, immunosupression_nhsd_new, hiv_aids_nhsd, solid_organ_transplant_bin, rare_neuro_nhsd)
 
 foreach var in udca gc budesonide fenofibrate {
+    sum `var'_count_bl, d
+    sum `var'_count_fu, d 
     gen `var'_any = (`var'_count_fu>=1 & `var'_count_fu!=.)
     gen `var'_bl = (`var'_count_bl>=1 & `var'_count_bl!=.)
+    tab `var'_any, m 
+    tab `var'_bl, m
 }
 
 * Generate variable with number of vaccinations 
@@ -97,8 +110,6 @@ replace n_rounded = "redacted" if (rounded_n<=5)
 keep factor level n_rounded percent
 export delimited using ./output/tables/high_risk_rounded.csv
 restore 
-
-
 
 * Characteristics by exposure status at baseline 
 preserve 

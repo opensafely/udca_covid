@@ -15,6 +15,7 @@ study = StudyDefinition(
         (age >=18 AND age <= 110) AND
         (NOT died) AND
         (sex = 'M' OR sex = 'F') AND
+        (imd != 0) AND
         (has_pbc=1 OR has_psc=1) AND
         (NOT liver_transplant_bl)
         """,
