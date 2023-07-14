@@ -76,7 +76,7 @@ actions:
     outputs:
       moderately_sensitive:
         log: logs/analysis.log
-        chars: output/graphs/adjcurve*.svg
+        chars: output/graphs/adjcurv*.svg
 
   analysis_models:
     run: stata-mp:latest analysis/106_analysis_models.do
