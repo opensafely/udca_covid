@@ -23,8 +23,11 @@ describe
 *missings report, minimum(12400)
 missings dropvars udca_*, force
 
-* Format dates 187
-forvalues i=1/187 {
+* Format dates
+* First count number of variables for loop
+describe 
+local var = r(k)-1
+forvalues i=1/`var' {
     gen udcaA`i' = date(udca_`i', "YMD")
     format udcaA`i' %dD/N/CY
     drop udca_`i'

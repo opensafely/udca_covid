@@ -416,12 +416,512 @@ Checking missings in udca_1 udca_2 udca_3 udca_4 udca_5 udca_6 udca_7 udca_8
 note: no variables qualify
 
 . 
-. * Format dates 187
-. forvalues i=1/187 {
+. * Format dates
+. * First count number of variables for loop
+. describe 
+
+Contains data
+  obs:         1,000                          
+ vars:           336                          
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+udca_1          str10   %10s                  
+udca_2          str10   %10s                  
+udca_3          str10   %10s                  
+udca_4          str10   %10s                  
+udca_5          str10   %10s                  
+udca_6          str10   %10s                  
+udca_7          str10   %10s                  
+udca_8          str10   %10s                  
+udca_9          str10   %10s                  
+udca_10         str10   %10s                  
+udca_11         str10   %10s                  
+udca_12         str10   %10s                  
+udca_13         str10   %10s                  
+udca_14         str10   %10s                  
+udca_15         str10   %10s                  
+udca_16         str10   %10s                  
+udca_17         str10   %10s                  
+udca_18         str10   %10s                  
+udca_19         str10   %10s                  
+udca_20         str10   %10s                  
+udca_21         str10   %10s                  
+udca_22         str10   %10s                  
+udca_23         str10   %10s                  
+udca_24         str10   %10s                  
+udca_25         str10   %10s                  
+udca_26         str10   %10s                  
+udca_27         str10   %10s                  
+udca_28         str10   %10s                  
+udca_29         str10   %10s                  
+udca_30         str10   %10s                  
+udca_31         str10   %10s                  
+udca_32         str10   %10s                  
+udca_33         str10   %10s                  
+udca_34         str10   %10s                  
+udca_35         str10   %10s                  
+udca_36         str10   %10s                  
+udca_37         str10   %10s                  
+udca_38         str10   %10s                  
+udca_39         str10   %10s                  
+udca_40         str10   %10s                  
+udca_41         str10   %10s                  
+udca_42         str10   %10s                  
+udca_43         str10   %10s                  
+udca_44         str10   %10s                  
+udca_45         str10   %10s                  
+udca_46         str10   %10s                  
+udca_47         str10   %10s                  
+udca_48         str10   %10s                  
+udca_49         str10   %10s                  
+udca_50         str10   %10s                  
+udca_51         str10   %10s                  
+udca_52         str10   %10s                  
+udca_53         str10   %10s                  
+udca_54         str10   %10s                  
+udca_55         str10   %10s                  
+udca_56         str10   %10s                  
+udca_57         str10   %10s                  
+udca_58         str10   %10s                  
+udca_59         str10   %10s                  
+udca_60         str10   %10s                  
+udca_61         str10   %10s                  
+udca_62         str10   %10s                  
+udca_63         str10   %10s                  
+udca_64         str10   %10s                  
+udca_65         str10   %10s                  
+udca_66         str10   %10s                  
+udca_67         str10   %10s                  
+udca_68         str10   %10s                  
+udca_69         str10   %10s                  
+udca_70         str10   %10s                  
+udca_71         str10   %10s                  
+udca_72         str10   %10s                  
+udca_73         str10   %10s                  
+udca_74         str10   %10s                  
+udca_75         str10   %10s                  
+udca_76         str10   %10s                  
+udca_77         str10   %10s                  
+udca_78         str10   %10s                  
+udca_79         str10   %10s                  
+udca_80         str10   %10s                  
+udca_81         str10   %10s                  
+udca_82         str10   %10s                  
+udca_83         str10   %10s                  
+udca_84         str10   %10s                  
+udca_85         str10   %10s                  
+udca_86         str10   %10s                  
+udca_87         str10   %10s                  
+udca_88         str10   %10s                  
+udca_89         str10   %10s                  
+udca_90         str10   %10s                  
+udca_91         str10   %10s                  
+udca_92         str10   %10s                  
+udca_93         str10   %10s                  
+udca_94         str10   %10s                  
+udca_95         str10   %10s                  
+udca_96         str10   %10s                  
+udca_97         str10   %10s                  
+udca_98         str10   %10s                  
+udca_99         str10   %10s                  
+udca_100        str10   %10s                  
+udca_101        str10   %10s                  
+udca_102        str10   %10s                  
+udca_103        str10   %10s                  
+udca_104        str10   %10s                  
+udca_105        str10   %10s                  
+udca_106        str10   %10s                  
+udca_107        str10   %10s                  
+udca_108        str10   %10s                  
+udca_109        str10   %10s                  
+udca_110        str10   %10s                  
+udca_111        str10   %10s                  
+udca_112        str10   %10s                  
+udca_113        str10   %10s                  
+udca_114        str10   %10s                  
+udca_115        str10   %10s                  
+udca_116        str10   %10s                  
+udca_117        str10   %10s                  
+udca_118        str10   %10s                  
+udca_119        str10   %10s                  
+udca_120        str10   %10s                  
+udca_121        str10   %10s                  
+udca_122        str10   %10s                  
+udca_123        str10   %10s                  
+udca_124        str10   %10s                  
+udca_125        str10   %10s                  
+udca_126        str10   %10s                  
+udca_127        str10   %10s                  
+udca_128        str10   %10s                  
+udca_129        str10   %10s                  
+udca_130        str10   %10s                  
+udca_131        str10   %10s                  
+udca_132        str10   %10s                  
+udca_133        str10   %10s                  
+udca_134        str10   %10s                  
+udca_135        str10   %10s                  
+udca_136        str10   %10s                  
+udca_137        str10   %10s                  
+udca_138        str10   %10s                  
+udca_139        str10   %10s                  
+udca_140        str10   %10s                  
+udca_141        str10   %10s                  
+udca_142        str10   %10s                  
+udca_143        str10   %10s                  
+udca_144        str10   %10s                  
+udca_145        str10   %10s                  
+udca_146        str10   %10s                  
+udca_147        str10   %10s                  
+udca_148        str10   %10s                  
+udca_149        str10   %10s                  
+udca_150        str10   %10s                  
+udca_151        str10   %10s                  
+udca_152        str10   %10s                  
+udca_153        str10   %10s                  
+udca_154        str10   %10s                  
+udca_155        str10   %10s                  
+udca_156        str10   %10s                  
+udca_157        str10   %10s                  
+udca_158        str10   %10s                  
+udca_159        str10   %10s                  
+udca_160        str10   %10s                  
+udca_161        str10   %10s                  
+udca_162        str10   %10s                  
+udca_163        str10   %10s                  
+udca_164        str10   %10s                  
+udca_165        str10   %10s                  
+udca_166        str10   %10s                  
+udca_167        str10   %10s                  
+udca_168        str10   %10s                  
+udca_169        str10   %10s                  
+udca_170        str10   %10s                  
+udca_171        str10   %10s                  
+udca_172        str10   %10s                  
+udca_173        str10   %10s                  
+udca_174        str10   %10s                  
+udca_175        str10   %10s                  
+udca_176        str10   %10s                  
+udca_177        str10   %10s                  
+udca_178        str10   %10s                  
+udca_179        str10   %10s                  
+udca_180        str10   %10s                  
+udca_181        str10   %10s                  
+udca_182        str10   %10s                  
+udca_183        str10   %10s                  
+udca_184        str10   %10s                  
+udca_185        str10   %10s                  
+udca_186        str10   %10s                  
+udca_187        str10   %10s                  
+udca_188        str10   %10s                  
+udca_189        str10   %10s                  
+udca_190        str10   %10s                  
+udca_191        str10   %10s                  
+udca_192        str10   %10s                  
+udca_193        str10   %10s                  
+udca_194        str10   %10s                  
+udca_195        str10   %10s                  
+udca_196        str10   %10s                  
+udca_197        str10   %10s                  
+udca_198        str10   %10s                  
+udca_199        str10   %10s                  
+udca_200        str10   %10s                  
+udca_201        str10   %10s                  
+udca_202        str10   %10s                  
+udca_203        str10   %10s                  
+udca_204        str10   %10s                  
+udca_205        str10   %10s                  
+udca_206        str10   %10s                  
+udca_207        str10   %10s                  
+udca_208        str10   %10s                  
+udca_209        str10   %10s                  
+udca_210        str10   %10s                  
+udca_211        str10   %10s                  
+udca_212        str10   %10s                  
+udca_213        str10   %10s                  
+udca_214        str10   %10s                  
+udca_215        str10   %10s                  
+udca_216        str10   %10s                  
+udca_217        str10   %10s                  
+udca_218        str10   %10s                  
+udca_219        str10   %10s                  
+udca_220        str10   %10s                  
+udca_221        str10   %10s                  
+udca_222        str10   %10s                  
+udca_223        str10   %10s                  
+udca_224        str10   %10s                  
+udca_225        str10   %10s                  
+udca_226        str10   %10s                  
+udca_227        str10   %10s                  
+udca_228        str10   %10s                  
+udca_229        str10   %10s                  
+udca_230        str10   %10s                  
+udca_231        str10   %10s                  
+udca_232        str10   %10s                  
+udca_233        str10   %10s                  
+udca_234        str10   %10s                  
+udca_235        str10   %10s                  
+udca_236        str10   %10s                  
+udca_237        str10   %10s                  
+udca_238        str10   %10s                  
+udca_239        str10   %10s                  
+udca_240        str10   %10s                  
+udca_241        str10   %10s                  
+udca_242        str10   %10s                  
+udca_243        str10   %10s                  
+udca_244        str10   %10s                  
+udca_245        str10   %10s                  
+udca_246        str10   %10s                  
+udca_247        str10   %10s                  
+udca_248        str10   %10s                  
+udca_249        str10   %10s                  
+udca_250        str10   %10s                  
+udca_251        str10   %10s                  
+udca_252        str10   %10s                  
+udca_253        str10   %10s                  
+udca_254        str10   %10s                  
+udca_255        str10   %10s                  
+udca_256        str10   %10s                  
+udca_257        str10   %10s                  
+udca_258        str10   %10s                  
+udca_259        str10   %10s                  
+udca_260        str10   %10s                  
+udca_261        str10   %10s                  
+udca_262        str10   %10s                  
+udca_263        str10   %10s                  
+udca_264        str10   %10s                  
+udca_265        str10   %10s                  
+udca_266        str10   %10s                  
+udca_267        str10   %10s                  
+udca_268        str10   %10s                  
+udca_269        str10   %10s                  
+udca_270        str10   %10s                  
+udca_271        str10   %10s                  
+udca_272        str10   %10s                  
+udca_273        str10   %10s                  
+udca_274        str10   %10s                  
+udca_275        str10   %10s                  
+udca_276        str10   %10s                  
+udca_277        str10   %10s                  
+udca_278        str10   %10s                  
+udca_279        str10   %10s                  
+udca_280        str10   %10s                  
+udca_281        str10   %10s                  
+udca_282        str10   %10s                  
+udca_283        str10   %10s                  
+udca_284        str10   %10s                  
+udca_285        str10   %10s                  
+udca_286        str10   %10s                  
+udca_287        str10   %10s                  
+udca_288        str10   %10s                  
+udca_289        str10   %10s                  
+udca_290        str10   %10s                  
+udca_291        str10   %10s                  
+udca_292        str10   %10s                  
+udca_293        str10   %10s                  
+udca_294        str10   %10s                  
+udca_295        str10   %10s                  
+udca_296        str10   %10s                  
+udca_297        str10   %10s                  
+udca_298        str10   %10s                  
+udca_299        str10   %10s                  
+udca_300        str10   %10s                  
+udca_301        str10   %10s                  
+udca_302        str10   %10s                  
+udca_303        str10   %10s                  
+udca_304        str10   %10s                  
+udca_305        str10   %10s                  
+udca_306        str10   %10s                  
+udca_307        str10   %10s                  
+udca_308        str10   %10s                  
+udca_309        str10   %10s                  
+udca_310        str10   %10s                  
+udca_311        str10   %10s                  
+udca_312        str10   %10s                  
+udca_313        str10   %10s                  
+udca_314        str10   %10s                  
+udca_315        str10   %10s                  
+udca_316        str10   %10s                  
+udca_317        str10   %10s                  
+udca_318        str10   %10s                  
+udca_319        str10   %10s                  
+udca_320        str10   %10s                  
+udca_321        str10   %10s                  
+udca_322        str10   %10s                  
+udca_323        str10   %10s                  
+udca_324        str10   %10s                  
+udca_325        str10   %10s                  
+udca_326        str10   %10s                  
+udca_327        str10   %10s                  
+udca_328        str10   %10s                  
+udca_329        str10   %10s                  
+udca_330        str10   %10s                  
+udca_331        str10   %10s                  
+udca_332        str10   %10s                  
+udca_333        str10   %10s                  
+udca_334        str10   %10s                  
+udca_335        str10   %10s                  
+patient_id      int     %8.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. local var = r(k)-1
+
+. forvalues i=1/`var' {
   2.     gen udcaA`i' = date(udca_`i', "YMD")
   3.     format udcaA`i' %dD/N/CY
   4.     drop udca_`i'
   5. }
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
+(500 missing values generated)
 (500 missing values generated)
 (500 missing values generated)
 (500 missing values generated)
@@ -621,21 +1121,29 @@ note: no variables qualify
 > 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 1
 > 41 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 16
 > 0 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179
->  180 181 182 183 184 185 186 187)
+>  180 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198 
+> 199 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 2
+> 18 219 220 221 222 223 224 225 226 227 228 229 230 231 232 233 234 235 236 23
+> 7 238 239 240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255 256
+>  257 258 259 260 261 262 263 264 265 266 267 268 269 270 271 272 273 274 275 
+> 276 277 278 279 280 281 282 283 284 285 286 287 288 289 290 291 292 293 294 2
+> 95 296 297 298 299 300 301 302 303 304 305 306 307 308 309 310 311 312 313 31
+> 4 315 316 317 318 319 320 321 322 323 324 325 326 327 328 329 330 331 332 333
+>  334 335)
 
 Data                               wide   ->   long
 -----------------------------------------------------------------------------
-Number of obs.                     1000   ->  187000
-Number of variables                 336   ->     151
-j variable (187 values)                   ->   presc_number
+Number of obs.                     1000   ->  335000
+Number of variables                 336   ->       3
+j variable (335 values)                   ->   presc_number
 xij variables:
-             udcaA1 udcaA2 ... udcaA187   ->   udcaA
+             udcaA1 udcaA2 ... udcaA335   ->   udcaA
 -----------------------------------------------------------------------------
 
 . 
 . * Drop rows where there is no prescription
 . drop if udcaA==.
-(93,500 observations deleted)
+(167,500 observations deleted)
 
 . 
 . * Check that prescriptions are in order
@@ -645,10 +1153,10 @@ xij variables:
 
  order_flag |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     47,284       50.57       50.57
-          1 |     46,216       49.43      100.00
+          0 |     84,321       50.34       50.34
+          1 |     83,179       49.66      100.00
 ------------+-----------------------------------
-      Total |     93,500      100.00
+      Total |    167,500      100.00
 
 . * Create flag if any out of order prescriptions in the data - should only be 
 > in dummy data 
@@ -659,9 +1167,9 @@ xij variables:
 out_of_orde |
           r |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |     93,500      100.00      100.00
+          1 |    167,500      100.00      100.00
 ------------+-----------------------------------
-      Total |     93,500      100.00
+      Total |    167,500      100.00
 
 . 
 . * Sort if out of order - should only apply to dummy data 
@@ -677,9 +1185,9 @@ out_of_orde |
 
  order_flag |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     93,500      100.00      100.00
+          0 |    167,500      100.00      100.00
 ------------+-----------------------------------
-      Total |     93,500      100.00
+      Total |    167,500      100.00
 
 . 
 . * Identify prescriptions with the same date 
@@ -689,14 +1197,14 @@ out_of_orde |
 
   dup_presc |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |     90,036       96.30       96.30
-          1 |      3,464        3.70      100.00
+          0 |    156,609       93.50       93.50
+          1 |     10,891        6.50      100.00
 ------------+-----------------------------------
-      Total |     93,500      100.00
+      Total |    167,500      100.00
 
 . * Drop them 
 . drop if dup_presc 
-(3,464 observations deleted)
+(10,891 observations deleted)
 
 . 
 . drop order_flag out_of_order dup_presc presc_number
@@ -712,17 +1220,17 @@ out_of_orde |
                        total_no_presc
 -------------------------------------------------------------
       Percentiles      Smallest
- 1%           75             67
- 5%           80             67
-10%           82             67       Obs              90,036
-25%           86             67       Sum of Wgt.      90,036
+ 1%          138            133
+ 5%          143            133
+10%          146            133       Obs             156,609
+25%          151            133       Sum of Wgt.     156,609
 
-50%           91                      Mean           90.54789
-                        Largest       Std. Dev.      6.770721
-75%           95            110
-90%           99            110       Variance       45.84267
-95%          102            110       Skewness      -.0008981
-99%          105            110       Kurtosis       2.900629
+50%          157                      Mean           157.0876
+                        Largest       Std. Dev.      8.653623
+75%          163            182
+90%          168            182       Variance        74.8852
+95%          171            182       Skewness       .0231336
+99%          177            182       Kurtosis       2.705801
 
 . 
 . * Determine length of time from previous prescription 
@@ -736,15 +1244,15 @@ out_of_orde |
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            2              1       Obs              89,036
-25%            4              1       Sum of Wgt.      89,036
+10%            1              1       Obs             155,609
+25%            3              1       Sum of Wgt.     155,609
 
-50%            9                      Mean           13.46579
-                        Largest       Std. Dev.      12.88678
-75%           18            135
-90%           30            144       Variance        166.069
-95%           39            147       Skewness       1.984845
-99%           60            158       Kurtosis       8.959846
+50%            6                      Mean           7.783329
+                        Largest       Std. Dev.      7.248778
+75%           11             77
+90%           17             78       Variance       52.54478
+95%           22             78       Skewness       2.004132
+99%           34             78       Kurtosis       9.013314
 
 . gen year = year(udcaA)
 
@@ -758,15 +1266,15 @@ out_of_orde |
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            2              1       Obs              21,332
-25%            4              1       Sum of Wgt.      21,332
+10%            1              1       Obs              37,837
+25%            3              1       Sum of Wgt.      37,837
 
-50%            9                      Mean           13.03511
-                        Largest       Std. Dev.      12.52227
-75%           18            111
-90%           29            117       Variance       156.8072
-95%           38            118       Skewness       2.061926
-99%           58            147       Kurtosis       9.640123
+50%            5                      Mean           7.672067
+                        Largest       Std. Dev.      7.113552
+75%           10             68
+90%           17             69       Variance       50.60263
+95%           22             72       Skewness       1.997937
+99%           33             72       Kurtosis       8.985269
 
 -------------------------------------------------------------------------------
 -> year = 2021
@@ -776,15 +1284,15 @@ out_of_orde |
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            2              1       Obs              26,864
-25%            4              1       Sum of Wgt.      26,864
+10%            1              1       Obs              46,512
+25%            3              1       Sum of Wgt.      46,512
 
-50%           10                      Mean            13.6339
-                        Largest       Std. Dev.      12.96642
-75%           19            125
-90%           31            130       Variance       168.1281
-95%           39            135       Skewness       1.943033
-99%           59            144       Kurtosis       8.789158
+50%            6                      Mean           7.857671
+                        Largest       Std. Dev.      7.335857
+75%           11             71
+90%           17             72       Variance       53.81479
+95%           23             75       Skewness       1.995738
+99%           34             78       Kurtosis       8.904177
 
 -------------------------------------------------------------------------------
 -> year = 2022
@@ -794,15 +1302,15 @@ out_of_orde |
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            2              1       Obs              26,906
-25%            4              1       Sum of Wgt.      26,906
+10%            1              1       Obs              46,873
+25%            3              1       Sum of Wgt.      46,873
 
-50%           10                      Mean            13.5301
-                        Largest       Std. Dev.      12.93551
-75%           19            114
-90%           30            117       Variance       167.3274
-95%           39            118       Skewness       1.938921
-99%           60            122       Kurtosis       8.374796
+50%            6                      Mean           7.781025
+                        Largest       Std. Dev.      7.252523
+75%           11             66
+90%           17             66       Variance       52.59909
+95%           22             77       Skewness       1.997238
+99%           34             78       Kurtosis       8.880027
 
 -------------------------------------------------------------------------------
 -> year = 2023
@@ -812,21 +1320,21 @@ out_of_orde |
       Percentiles      Smallest
  1%            1              1
  5%            1              1
-10%            2              1       Obs              13,934
-25%            4              1       Sum of Wgt.      13,934
+10%            1              1       Obs              24,387
+25%            3              1       Sum of Wgt.      24,387
 
-50%           10                      Mean           13.67683
-                        Largest       Std. Dev.      13.17169
-75%           19            111
-90%           31            115       Variance       173.4934
-95%           40            117       Skewness       2.034782
-99%           61            158       Kurtosis       9.408966
+50%            6                      Mean           7.818592
+                        Largest       Std. Dev.      7.280587
+75%           11             66
+90%           17             69       Variance       53.00695
+95%           22             72       Skewness       2.037731
+99%           34             78       Kurtosis       9.480491
 
 
 . 
 . * Drop records in 2023 as this is after end of study
 . drop if year==2023
-(13,934 observations deleted)
+(24,387 observations deleted)
 
 . forvalues i = 60(30)180 {
   2.     preserve
@@ -977,122 +1485,120 @@ out_of_orde |
 
 Duplicates in terms of all variables
 
-(74,424 observations deleted)
+(131,186 observations deleted)
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,000       59.59       59.59
-          2 |        678       40.41      100.00
+          1 |      1,000       96.53       96.53
+          2 |         36        3.47      100.00
 ------------+-----------------------------------
-      Total |      1,678      100.00
-(678 observations created)
+      Total |      1,036      100.00
+(36 observations created)
 
            |      new_record
  to_expand |         0          1 |     Total
 -----------+----------------------+----------
          1 |     1,000          0 |     1,000 
-         2 |       678        678 |     1,356 
+         2 |        36         36 |        72 
 -----------+----------------------+----------
-     Total |     1,678        678 |     2,356 
-(678 real changes made)
-(678 real changes made)
-(678 real changes made)
+     Total |     1,036         36 |     1,072 
+(36 real changes made)
+(36 real changes made)
+(36 real changes made)
   0
   0
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         3,014
-        from master                     2,118  (_merge==1)
+    not matched                         1,860
+        from master                       964  (_merge==1)
         from using                        896  (_merge==2)
 
-    matched                               238  (_merge==3)
+    matched                               108  (_merge==3)
     -----------------------------------------
 
                  _merge |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
-        master only (1) |      2,118       65.13       65.13
-         using only (2) |        896       27.55       92.68
-            matched (3) |        238        7.32      100.00
+        master only (1) |        964       48.98       48.98
+         using only (2) |        896       45.53       94.51
+            matched (3) |        108        5.49      100.00
 ------------------------+-----------------------------------
-                  Total |      3,252      100.00
+                  Total |      1,968      100.00
 (896 real changes made)
 (896 real changes made)
 (896 real changes made)
 (896 real changes made)
-(2,692 missing values generated)
-(2,684 missing values generated)
+(1,464 missing values generated)
+(1,466 missing values generated)
 (0 real changes made)
 
 start_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      2,252       69.25       69.25
-          2 |      1,000       30.75      100.00
+          1 |        968       49.19       49.19
+          2 |      1,000       50.81      100.00
 ------------+-----------------------------------
-      Total |      3,252      100.00
+      Total |      1,968      100.00
 (1,000 observations created)
 
 start_afte |      new_record
          r |         0          1 |     Total
 -----------+----------------------+----------
-         1 |     2,252          0 |     2,252 
+         1 |       968          0 |       968 
          2 |     1,000      1,000 |     2,000 
 -----------+----------------------+----------
-     Total |     3,252      1,000 |     4,252 
+     Total |     1,968      1,000 |     2,968 
 (1,000 real changes made)
 (1,000 real changes made)
 (1,000 real changes made)
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,599       61.12       61.12
-          1 |      1,653       38.88      100.00
+          0 |      1,357       45.72       45.72
+          1 |      1,611       54.28      100.00
 ------------+-----------------------------------
-      Total |      4,252      100.00
+      Total |      2,968      100.00
 
  end_before |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      4,195       98.66       98.66
-          1 |         57        1.34      100.00
+          0 |      2,963       99.83       99.83
+          1 |          5        0.17      100.00
 ------------+-----------------------------------
-      Total |      4,252      100.00
-(57 observations deleted)
+      Total |      2,968      100.00
+(5 observations deleted)
 
            |       end_after
       last |         0          1 |     Total
 -----------+----------------------+----------
-         0 |     2,299          0 |     2,299 
-         1 |       300      1,596 |     1,896 
+         0 |     1,067          0 |     1,067 
+         1 |       290      1,606 |     1,896 
 -----------+----------------------+----------
-     Total |     2,599      1,596 |     4,195 
-(1,596 real changes made)
+     Total |     1,357      1,606 |     2,963 
+(1,606 real changes made)
 
  stop_prior |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      4,185       99.76       99.76
-          2 |         10        0.24      100.00
+          1 |      2,963      100.00      100.00
 ------------+-----------------------------------
-      Total |      4,195      100.00
-(10 observations created)
+      Total |      2,963      100.00
+(0 observations created)
 
-           |      new_record
-stop_prior |         0          1 |     Total
------------+----------------------+----------
-         1 |     4,185          0 |     4,185 
-         2 |        10         10 |        20 
------------+----------------------+----------
-     Total |     4,195         10 |     4,205 
-(10 real changes made)
-(10 real changes made)
-(10 real changes made)
+           | new_record
+stop_prior |         0 |     Total
+-----------+-----------+----------
+         1 |     2,963 |     2,963 
+-----------+-----------+----------
+     Total |     2,963 |     2,963 
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
   0
 
 total_time_ |
     unequal |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      4,205      100.00      100.00
+          0 |      2,963      100.00      100.00
 ------------+-----------------------------------
-      Total |      4,205      100.00
+      Total |      2,963      100.00
 file ./output/time_varying_udca_all_vars_60.dta saved
 file ./output/time_varying_udca_60.dta saved
   0
@@ -1101,109 +1607,107 @@ file ./output/time_varying_udca_60.dta saved
 
 Duplicates in terms of all variables
 
-(75,029 observations deleted)
+(131,222 observations deleted)
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,000       93.20       93.20
-          2 |         73        6.80      100.00
+          1 |      1,000      100.00      100.00
 ------------+-----------------------------------
-      Total |      1,073      100.00
-(73 observations created)
+      Total |      1,000      100.00
+(0 observations created)
 
-           |      new_record
- to_expand |         0          1 |     Total
------------+----------------------+----------
-         1 |     1,000          0 |     1,000 
-         2 |        73         73 |       146 
------------+----------------------+----------
-     Total |     1,073         73 |     1,146 
-(73 real changes made)
-(73 real changes made)
-(73 real changes made)
+           | new_record
+ to_expand |         0 |     Total
+-----------+-----------+----------
+         1 |     1,000 |     1,000 
+-----------+-----------+----------
+     Total |     1,000 |     1,000 
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
   0
   0
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         1,928
-        from master                     1,032  (_merge==1)
+    not matched                         1,792
+        from master                       896  (_merge==1)
         from using                        896  (_merge==2)
 
-    matched                               114  (_merge==3)
+    matched                               104  (_merge==3)
     -----------------------------------------
 
                  _merge |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
-        master only (1) |      1,032       50.54       50.54
-         using only (2) |        896       43.88       94.42
-            matched (3) |        114        5.58      100.00
+        master only (1) |        896       47.26       47.26
+         using only (2) |        896       47.26       94.51
+            matched (3) |        104        5.49      100.00
 ------------------------+-----------------------------------
-                  Total |      2,042      100.00
+                  Total |      1,896      100.00
 (896 real changes made)
 (896 real changes made)
 (896 real changes made)
 (896 real changes made)
-(1,540 missing values generated)
-(1,536 missing values generated)
+(1,396 missing values generated)
+(1,396 missing values generated)
 (0 real changes made)
 
 start_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,042       51.03       51.03
-          2 |      1,000       48.97      100.00
+          1 |        896       47.26       47.26
+          2 |      1,000       52.74      100.00
 ------------+-----------------------------------
-      Total |      2,042      100.00
+      Total |      1,896      100.00
 (1,000 observations created)
 
 start_afte |      new_record
          r |         0          1 |     Total
 -----------+----------------------+----------
-         1 |     1,042          0 |     1,042 
+         1 |       896          0 |       896 
          2 |     1,000      1,000 |     2,000 
 -----------+----------------------+----------
-     Total |     2,042      1,000 |     3,042 
+     Total |     1,896      1,000 |     2,896 
 (1,000 real changes made)
 (1,000 real changes made)
 (1,000 real changes made)
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,431       47.04       47.04
-          1 |      1,611       52.96      100.00
+          0 |      1,289       44.51       44.51
+          1 |      1,607       55.49      100.00
 ------------+-----------------------------------
-      Total |      3,042      100.00
+      Total |      2,896      100.00
 
  end_before |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      3,037       99.84       99.84
-          1 |          5        0.16      100.00
+          0 |      2,895       99.97       99.97
+          1 |          1        0.03      100.00
 ------------+-----------------------------------
-      Total |      3,042      100.00
-(5 observations deleted)
+      Total |      2,896      100.00
+(1 observation deleted)
 
            |       end_after
       last |         0          1 |     Total
 -----------+----------------------+----------
-         0 |     1,141          0 |     1,141 
+         0 |       999          0 |       999 
          1 |       290      1,606 |     1,896 
 -----------+----------------------+----------
-     Total |     1,431      1,606 |     3,037 
+     Total |     1,289      1,606 |     2,895 
 (1,606 real changes made)
 
  stop_prior |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      3,037      100.00      100.00
+          1 |      2,895      100.00      100.00
 ------------+-----------------------------------
-      Total |      3,037      100.00
+      Total |      2,895      100.00
 (0 observations created)
 
            | new_record
 stop_prior |         0 |     Total
 -----------+-----------+----------
-         1 |     3,037 |     3,037 
+         1 |     2,895 |     2,895 
 -----------+-----------+----------
-     Total |     3,037 |     3,037 
+     Total |     2,895 |     2,895 
 (0 real changes made)
 (0 real changes made)
 (0 real changes made)
@@ -1212,9 +1716,9 @@ stop_prior |         0 |     Total
 total_time_ |
     unequal |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      3,037      100.00      100.00
+          0 |      2,895      100.00      100.00
 ------------+-----------------------------------
-      Total |      3,037      100.00
+      Total |      2,895      100.00
 file ./output/time_varying_udca_all_vars_90.dta saved
 file ./output/time_varying_udca_90.dta saved
   0
@@ -1223,33 +1727,31 @@ file ./output/time_varying_udca_90.dta saved
 
 Duplicates in terms of all variables
 
-(75,095 observations deleted)
+(131,222 observations deleted)
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      1,000       99.30       99.30
-          2 |          7        0.70      100.00
+          1 |      1,000      100.00      100.00
 ------------+-----------------------------------
-      Total |      1,007      100.00
-(7 observations created)
+      Total |      1,000      100.00
+(0 observations created)
 
-           |      new_record
- to_expand |         0          1 |     Total
------------+----------------------+----------
-         1 |     1,000          0 |     1,000 
-         2 |         7          7 |        14 
------------+----------------------+----------
-     Total |     1,007          7 |     1,014 
-(7 real changes made)
-(7 real changes made)
-(7 real changes made)
+           | new_record
+ to_expand |         0 |     Total
+-----------+-----------+----------
+         1 |     1,000 |     1,000 
+-----------+-----------+----------
+     Total |     1,000 |     1,000 
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
   0
   0
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         1,806
-        from master                       910  (_merge==1)
+    not matched                         1,792
+        from master                       896  (_merge==1)
         from using                        896  (_merge==2)
 
     matched                               104  (_merge==3)
@@ -1257,75 +1759,75 @@ Duplicates in terms of all variables
 
                  _merge |      Freq.     Percent        Cum.
 ------------------------+-----------------------------------
-        master only (1) |        910       47.64       47.64
-         using only (2) |        896       46.91       94.55
-            matched (3) |        104        5.45      100.00
+        master only (1) |        896       47.26       47.26
+         using only (2) |        896       47.26       94.51
+            matched (3) |        104        5.49      100.00
 ------------------------+-----------------------------------
-                  Total |      1,910      100.00
+                  Total |      1,896      100.00
 (896 real changes made)
 (896 real changes made)
 (896 real changes made)
 (896 real changes made)
-(1,410 missing values generated)
-(1,410 missing values generated)
+(1,396 missing values generated)
+(1,396 missing values generated)
 (0 real changes made)
 
 start_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |        910       47.64       47.64
-          2 |      1,000       52.36      100.00
+          1 |        896       47.26       47.26
+          2 |      1,000       52.74      100.00
 ------------+-----------------------------------
-      Total |      1,910      100.00
+      Total |      1,896      100.00
 (1,000 observations created)
 
 start_afte |      new_record
          r |         0          1 |     Total
 -----------+----------------------+----------
-         1 |       910          0 |       910 
+         1 |       896          0 |       896 
          2 |     1,000      1,000 |     2,000 
 -----------+----------------------+----------
-     Total |     1,910      1,000 |     2,910 
+     Total |     1,896      1,000 |     2,896 
 (1,000 real changes made)
 (1,000 real changes made)
 (1,000 real changes made)
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,303       44.78       44.78
-          1 |      1,607       55.22      100.00
+          0 |      1,289       44.51       44.51
+          1 |      1,607       55.49      100.00
 ------------+-----------------------------------
-      Total |      2,910      100.00
+      Total |      2,896      100.00
 
  end_before |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,909       99.97       99.97
+          0 |      2,895       99.97       99.97
           1 |          1        0.03      100.00
 ------------+-----------------------------------
-      Total |      2,910      100.00
+      Total |      2,896      100.00
 (1 observation deleted)
 
            |       end_after
       last |         0          1 |     Total
 -----------+----------------------+----------
-         0 |     1,013          0 |     1,013 
+         0 |       999          0 |       999 
          1 |       290      1,606 |     1,896 
 -----------+----------------------+----------
-     Total |     1,303      1,606 |     2,909 
+     Total |     1,289      1,606 |     2,895 
 (1,606 real changes made)
 
  stop_prior |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      2,909      100.00      100.00
+          1 |      2,895      100.00      100.00
 ------------+-----------------------------------
-      Total |      2,909      100.00
+      Total |      2,895      100.00
 (0 observations created)
 
            | new_record
 stop_prior |         0 |     Total
 -----------+-----------+----------
-         1 |     2,909 |     2,909 
+         1 |     2,895 |     2,895 
 -----------+-----------+----------
-     Total |     2,909 |     2,909 
+     Total |     2,895 |     2,895 
 (0 real changes made)
 (0 real changes made)
 (0 real changes made)
@@ -1334,9 +1836,9 @@ stop_prior |         0 |     Total
 total_time_ |
     unequal |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,909      100.00      100.00
+          0 |      2,895      100.00      100.00
 ------------+-----------------------------------
-      Total |      2,909      100.00
+      Total |      2,895      100.00
 file ./output/time_varying_udca_all_vars_120.dta saved
 file ./output/time_varying_udca_120.dta saved
   0
@@ -1345,7 +1847,7 @@ file ./output/time_varying_udca_120.dta saved
 
 Duplicates in terms of all variables
 
-(75,102 observations deleted)
+(131,222 observations deleted)
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
@@ -1465,7 +1967,7 @@ file ./output/time_varying_udca_150.dta saved
 
 Duplicates in terms of all variables
 
-(75,102 observations deleted)
+(131,222 observations deleted)
 
   to_expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
@@ -1592,7 +2094,7 @@ file ./output/time_varying_udca_180.dta saved
 . 
 end of do-file
 
-. . file open output using "/tmp/101_drug_prep.do.XMll.out", write text replace
+. . file open output using "/tmp/101_drug_prep.do.fx3W.out", write text replace
 
 . . file write output "success" 
 
