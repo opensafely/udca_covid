@@ -31,6 +31,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
         estimates save "./output/tempdata/crude_`outcome'", replace 
         eststo model1
         parmest, label eform format(estimate p lb ub) saving("./output/tempdata/surv_crude_`outcome'", replace) idstr("crude_`outcome'") 
+        estat phtest, detail
         * Plot schoenfeld residuals 
         estat phtest, plot(udca) ///
                     graphregion(fcolor(white)) ///
@@ -50,6 +51,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
         estimates save "./output/tempdata/adj_model_`outcome'", replace 
         eststo model2
         parmest, label eform format(estimate p lb ub) saving("./output/tempdata/surv_adj_`outcome'", replace) idstr("adj_`outcome'") 
+        estat phtest, detail
         * Plot Schoenfeld residuals 
         estat phtest, plot(udca) ///
                     graphregion(fcolor(white)) ///

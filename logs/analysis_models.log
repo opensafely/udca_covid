@@ -1,4 +1,6 @@
 
+. 
+. * Open file to write results to 
 . file open tablecontent using ./output/tables/cox_models.txt, write text repla
 > ce
 (note: file ./output/tables/cox_models.txt not found)
@@ -9,7 +11,8 @@
 > ("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci") _tab ("f_adj_hr") _tab ("f
 > _adj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
 
-. * Cox models and Schoenfeld residual plots 
+. 
+. * Cox models and Schoenfeld residual plots for each outcome
 . foreach outcome in died_covid_any hosp_any composite_any {
   2.     use ./output/an_dataset_`outcome', clear 
   3.     * Open file to write results
@@ -25,7 +28,9 @@
  10.         eststo model1
  11.         parmest, label eform format(estimate p lb ub) saving("./output/tem
 > pdata/surv_crude_`outcome'", replace) idstr("crude_`outcome'") 
- 12.         estat phtest, plot(udca) ///
+ 12.         estat phtest, detail
+ 13.         * Plot schoenfeld residuals 
+.         estat phtest, plot(udca) ///
 >                     graphregion(fcolor(white)) ///
 >                     ylabel(, nogrid labsize(small)) ///
 >                     xlabel(, labsize(small)) ///
@@ -38,14 +43,16 @@
 >                     title ("`outcome'", position(11) size(medsmall)) ///
 >                     name(uni_plot_`outcome') ///
 >                     note("")
- 13.         * Cox model - fully adjusted
+ 14.         * Cox model - fully adjusted
 .         stcox udca age_tv male any_high_risk_condition i.ethnicity i.imd bmi_
 > cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, strata(stp)
- 14.         estimates save "./output/tempdata/adj_model_`outcome'", replace 
- 15.         eststo model2
- 16.         parmest, label eform format(estimate p lb ub) saving("./output/tem
+ 15.         estimates save "./output/tempdata/adj_model_`outcome'", replace 
+ 16.         eststo model2
+ 17.         parmest, label eform format(estimate p lb ub) saving("./output/tem
 > pdata/surv_adj_`outcome'", replace) idstr("adj_`outcome'") 
- 17.         estat phtest, plot(udca) ///
+ 18.         estat phtest, detail
+ 19.         * Plot Schoenfeld residuals 
+.         estat phtest, plot(udca) ///
 >                     graphregion(fcolor(white)) ///
 >                     ylabel(, nogrid labsize(small)) ///
 >                     xlabel(, labsize(small)) ///
@@ -59,70 +66,77 @@
 >  ///
 >                     name(adj_plot_`outcome') ///
 >                     note("")
- 18.         graph combine uni_plot_`outcome' adj_plot_`outcome'
- 19.         graph export ./output/graphs/schoenplot_`outcome'.svg, as(svg) rep
+ 20.         graph combine uni_plot_`outcome' adj_plot_`outcome'
+ 21.         graph export ./output/graphs/schoenplot_`outcome'.svg, as(svg) rep
 > lace 
- 20.         bys patient_id (start): gen number = _n==_N 
- 21.         tab number 
- 22.         safecount if udca==0 & number==1
- 23.         local denominator = r(N)
- 24.         safecount if udca == 0 & `outcome'_flag == 1
- 25.         local event = r(N)
- 26.         di "no udca events = " `event'
- 27.         bysort udca: egen total_follow_up = total(_t) if number==1
- 28.         su total_follow_up if udca==0 & number==1
- 29.         local person_mth = r(mean)/30
- 30.         di `person_mth'
- 31.         local rate = 100000*(`event'/`person_mth')
- 32.         di `rate'
- 33.         if `event'>10 & `event'!=. {
- 34.             file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (
+ 22.         * flag single row for each person
+.         bys patient_id (start): gen number = _n==_N 
+ 23.         tab number 
+ 24.         * Count number unexposed at any time 
+.         bys patient_id : egen unexposed_ever = min(udca) 
+ 25.         tab unexposed_ever 
+ 26.         safecount if unexposed_ever==1 & number==1
+ 27.         local denominator = r(N)
+ 28.         safecount if udca == 0 & `outcome'_flag == 1
+ 29.         local event = r(N)
+ 30.         di "no udca events = " `event'
+ 31.         bysort udca: egen total_follow_up = total(_t) if number==1
+ 32.         su total_follow_up if udca==0 & number==1
+ 33.         local person_mth = r(mean)/30
+ 34.         di `person_mth'
+ 35.         local rate = 100000*(`event'/`person_mth')
+ 36.         di `rate'
+ 37.         if `event'>10 & `event'!=. {
+ 38.             file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (
 > `denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') 
 > _tab
- 35.             file write tablecontent ("1.00") _tab _tab ("1.00")  _n
- 36.             }
- 37.         else {
- 38.             file write tablecontent ("`outcome'") _tab ("No UDCA") _tab ("
+ 39.             file write tablecontent ("1.00") _tab _tab ("1.00")  _n
+ 40.             }
+ 41.         else {
+ 42.             file write tablecontent ("`outcome'") _tab ("No UDCA") _tab ("
 > redact") _n
- 39.             continue
- 40.         }
- 41.         qui safecount if udca==1 & number==1
- 42.         local denominator = r(N)
- 43.         qui safecount if udca == 1 & `outcome'_flag == 1
- 44.         local event = r(N)
- 45.         di "udca events = " `event'
- 46.         qui su total_follow_up if udca==1 & number==1
- 47.         local person_mth = r(mean)/30
- 48.         local rate = 100000*(`event'/`person_mth')
- 49.         if `event'>10 & `event'!=. {
- 50.             file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`den
+ 43.             continue
+ 44.         }
+ 45.         * Count number exposed at any time 
+.         bys patient_id : egen exposed_ever = max(udca) 
+ 46.         tab exposed_ever 
+ 47.         qui safecount if exposed_ever==1 & number==1
+ 48.         local denominator = r(N)
+ 49.         qui safecount if udca == 1 & `outcome'_flag == 1
+ 50.         local event = r(N)
+ 51.         di "udca events = " `event'
+ 52.         qui su total_follow_up if udca==1 & number==1
+ 53.         local person_mth = r(mean)/30
+ 54.         local rate = 100000*(`event'/`person_mth')
+ 55.         if `event'>10 & `event'!=. {
+ 56.             file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`den
 > ominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
- 51.             cap estimates use "./output/tempdata/crude_`outcome'" 
- 52.             cap lincom udca, eform
- 53.             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f 
+ 57.             cap estimates use "./output/tempdata/crude_`outcome'" 
+ 58.             cap lincom udca, eform
+ 59.             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f 
 > (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _ta
 > b 
- 54.             cap estimates clear
- 55.             cap estimates use "./output/tempdata/adj_model_`outcome'" 
- 56.             cap lincom udca, eform
- 57.             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f 
+ 60.             cap estimates clear
+ 61.             cap estimates use "./output/tempdata/adj_model_`outcome'" 
+ 62.             cap lincom udca, eform
+ 63.             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f 
 > (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _ta
 > b _n 
- 58.             cap estimates clear
- 59.         }
- 60.         else {
- 61.             file write tablecontent  ("`outcome'") _tab ("UDCA") _tab ("re
+ 64.             cap estimates clear
+ 65.         }
+ 66.         else {
+ 67.             file write tablecontent  ("`outcome'") _tab ("UDCA") _tab ("re
 > dact") _n
- 62.             continue
- 63.         }
- 64.     
+ 68.             continue
+ 69.         }
+ 70.     
 . drop total_follow_up
- 65.     }
- 66. else { 
- 67.     file write tablecontent ("`outcome'") _tab ("redact") _n
- 68.     continue
- 69. }
- 70. }
+ 71.     }
+ 72. else { 
+ 73.     file write tablecontent ("`outcome'") _tab ("redact") _n
+ 74.     continue
+ 75. }
+ 76. }
 
 Contains data from ./output/an_dataset_died_covid_any.dta
   obs:         4,967                          
@@ -201,6 +215,17 @@ Log likelihood  =   -360.50281                  Prob > chi2      =      0.2838
                                                              Stratified by stp
 file ./output/tempdata/crude_died_covid_any.ster saved
 file ./output/tempdata/surv_crude_died_covid_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.08357         0.54        1         0.4632
+      ------------+---------------------------------------------------
+      global test |                      0.54        1         0.4632
+      ----------------------------------------------------------------
 
          failure _d:  died_covid_any_flag
    analysis time _t:  (stop-origin)
@@ -300,6 +325,44 @@ covid_vacc~t |   .5746414    .201715    -1.58   0.115     .2888029    1.143384
 file ./output/tempdata/adj_model_died_covid_any.ster saved
 (note: file ./output/tempdata/surv_adj_died_covid_any.dta not found)
 file ./output/tempdata/surv_adj_died_covid_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.06040         0.31        1         0.5781
+      age_tv      |      0.00756         0.00        1         0.9449
+      male        |     -0.07680         0.46        1         0.4959
+      o.any_high~n|            .            .        1             .
+      1b.ethnicity|            .            .        1             .
+      2.ethnicity |     -0.18601         2.57        1         0.1086
+      3.ethnicity |     -0.06192         0.32        1         0.5722
+      4.ethnicity |     -0.07890         0.48        1         0.4882
+      5.ethnicity |     -0.18603         2.87        1         0.0901
+      6.ethnicity |      0.05412         0.23        1         0.6321
+      1b.imd      |            .            .        1             .
+      2.imd       |     -0.14095         1.51        1         0.2192
+      3.imd       |     -0.06641         0.36        1         0.5459
+      4.imd       |     -0.08821         0.62        1         0.4319
+      5.imd       |      0.02611         0.05        1         0.8180
+      6.imd       |     -0.15019         1.83        1         0.1762
+      bmi_cat     |      0.13491         1.37        1         0.2410
+      0b.smoking  |            .            .        1             .
+      1.smoking   |     -0.12349         1.23        1         0.2673
+      2.smoking   |      0.00476         0.00        1         0.9669
+      3.smoking   |     -0.07167         0.41        1         0.5200
+      severe_dis~e|      0.03673         0.10        1         0.7528
+      covid_vacc~t|      0.21934         2.35        1         0.1255
+      liver_trans |     -0.04162         0.00        1         1.0000
+      1b.wave     |            .            .        1             .
+      2.wave      |            .            .        1             .
+      3.wave      |      0.00958            .        1             .
+      4.wave      |            .            .        1             .
+      ------------+---------------------------------------------------
+      global test |                     16.14       20         0.7076
+      ----------------------------------------------------------------
 (note: file ./output/graphs/schoenplot_died_covid_any.svg not found)
 (file ./output/graphs/schoenplot_died_covid_any.svg written in SVG format)
 
@@ -309,7 +372,14 @@ file ./output/tempdata/surv_adj_died_covid_any.dta saved
           1 |      1,000       20.13      100.00
 ------------+-----------------------------------
       Total |      4,967      100.00
-  897
+
+unexposed_e |
+        ver |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,967      100.00      100.00
+------------+-----------------------------------
+      Total |      4,967      100.00
+  0
   139
 no udca events = 139
 (3967 missing values generated)
@@ -319,6 +389,14 @@ no udca events = 139
 total_foll~p |        897      584131           0     584131     584131
 19471.033
 713.88096
+
+exposed_eve |
+          r |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,364       87.86       87.86
+          1 |        603       12.14      100.00
+------------+-----------------------------------
+      Total |      4,967      100.00
 udca events = 14
 
 Contains data from ./output/an_dataset_hosp_any.dta
@@ -400,6 +478,17 @@ Log likelihood  =   -145.42346                  Prob > chi2      =      0.4287
 file ./output/tempdata/crude_hosp_any.ster saved
 (note: file ./output/tempdata/surv_crude_hosp_any.dta not found)
 file ./output/tempdata/surv_crude_hosp_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.04342         0.06        1         0.8083
+      ------------+---------------------------------------------------
+      global test |                      0.06        1         0.8083
+      ----------------------------------------------------------------
 
          failure _d:  hosp_any_flag
    analysis time _t:  (stop-origin)
@@ -497,6 +586,44 @@ covid_vacc~t |     .91594   .4653868    -0.17   0.863     .3383558    2.479479
 file ./output/tempdata/adj_model_hosp_any.ster saved
 (note: file ./output/tempdata/surv_adj_hosp_any.dta not found)
 file ./output/tempdata/surv_adj_hosp_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.09790         0.33        1         0.5685
+      age_tv      |     -0.04339         0.06        1         0.8003
+      male        |      0.34119         3.65        1         0.0561
+      o.any_high~n|            .            .        1             .
+      1b.ethnicity|            .            .        1             .
+      2.ethnicity |     -0.07018         0.15        1         0.7012
+      3.ethnicity |      0.25263         1.98        1         0.1590
+      4.ethnicity |      0.19993         1.35        1         0.2460
+      5.ethnicity |      0.18820         1.07        1         0.3012
+      6.ethnicity |      0.24496         1.82        1         0.1770
+      1b.imd      |            .            .        1             .
+      2.imd       |     -0.19327         1.20        1         0.2734
+      3.imd       |     -0.17999         0.98        1         0.3213
+      4.imd       |     -0.29727         2.87        1         0.0904
+      5.imd       |     -0.30922         2.99        1         0.0838
+      6.imd       |     -0.21217         0.00        1         1.0000
+      bmi_cat     |      0.09278         0.31        1         0.5775
+      0b.smoking  |            .            .        1             .
+      1.smoking   |      0.09851         0.28        1         0.5996
+      2.smoking   |     -0.01847         0.01        1         0.9212
+      3.smoking   |      0.03759         0.04        1         0.8346
+      severe_dis~e|     -0.19288         1.20        1         0.2732
+      covid_vacc~t|      0.07881         0.16        1         0.6886
+      liver_trans |     -0.47110         0.00        1         1.0000
+      1b.wave     |            .            .        1             .
+      2.wave      |            .            .        1             .
+      3.wave      |            .            .        1             .
+      4.wave      |            .            .        1             .
+      ------------+---------------------------------------------------
+      global test |                     18.11       20         0.5800
+      ----------------------------------------------------------------
 (note: file ./output/graphs/schoenplot_hosp_any.svg not found)
 (file ./output/graphs/schoenplot_hosp_any.svg written in SVG format)
 
@@ -506,7 +633,14 @@ file ./output/tempdata/surv_adj_hosp_any.dta saved
           1 |      1,000       19.90      100.00
 ------------+-----------------------------------
       Total |      5,025      100.00
-  897
+
+unexposed_e |
+        ver |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      5,025      100.00      100.00
+------------+-----------------------------------
+      Total |      5,025      100.00
+  0
   53
 no udca events = 53
 (4025 missing values generated)
@@ -516,6 +650,14 @@ no udca events = 53
 total_foll~p |        897      541499           0     541499     541499
 18049.967
 293.62935
+
+exposed_eve |
+          r |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,417       87.90       87.90
+          1 |        608       12.10      100.00
+------------+-----------------------------------
+      Total |      5,025      100.00
 udca events = .
 
 Contains data from ./output/an_dataset_composite_any.dta
@@ -596,6 +738,17 @@ Log likelihood  =   -517.07334                  Prob > chi2      =      0.9421
 file ./output/tempdata/crude_composite_any.ster saved
 (note: file ./output/tempdata/surv_crude_composite_any.dta not found)
 file ./output/tempdata/surv_crude_composite_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.08078         0.72        1         0.3955
+      ------------+---------------------------------------------------
+      global test |                      0.72        1         0.3955
+      ----------------------------------------------------------------
 
          failure _d:  composite_any_flag
    analysis time _t:  (stop-origin)
@@ -699,6 +852,44 @@ covid_vacc~t |   .6354923   .1846499    -1.56   0.119       .35957    1.123148
 file ./output/tempdata/adj_model_composite_any.ster saved
 (note: file ./output/tempdata/surv_adj_composite_any.dta not found)
 file ./output/tempdata/surv_adj_composite_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.07695         0.71        1         0.3991
+      age_tv      |      0.01217         0.02        1         0.8947
+      male        |      0.00345         0.00        1         0.9707
+      o.any_high~n|            .            .        1             .
+      1b.ethnicity|            .            .        1             .
+      2.ethnicity |     -0.13515         1.90        1         0.1684
+      3.ethnicity |      0.02665         0.08        1         0.7739
+      4.ethnicity |      0.03801         0.16        1         0.6854
+      5.ethnicity |     -0.03938         0.18        1         0.6703
+      6.ethnicity |      0.08641         0.83        1         0.3623
+      1b.imd      |            .            .        1             .
+      2.imd       |     -0.03885         0.17        1         0.6815
+      3.imd       |      0.00723         0.01        1         0.9376
+      4.imd       |     -0.05721         0.38        1         0.5389
+      5.imd       |     -0.01575         0.03        1         0.8682
+      6.imd       |     -0.09455         1.06        1         0.3023
+      bmi_cat     |      0.08094         0.74        1         0.3894
+      0b.smoking  |            .            .        1             .
+      1.smoking   |     -0.05736         0.38        1         0.5377
+      2.smoking   |     -0.03031         0.10        1         0.7506
+      3.smoking   |     -0.04667         0.25        1         0.6152
+      severe_dis~e|     -0.03202         0.11        1         0.7387
+      covid_vacc~t|      0.15756         2.03        1         0.1544
+      liver_trans |     -0.18972         0.00        1         1.0000
+      1b.wave     |            .            .        1             .
+      2.wave      |            .            .        1             .
+      3.wave      |     -0.05775            .        1             .
+      4.wave      |     -0.07430            .        1             .
+      ------------+---------------------------------------------------
+      global test |                     11.09       20         0.9438
+      ----------------------------------------------------------------
 (note: file ./output/graphs/schoenplot_composite_any.svg not found)
 (file ./output/graphs/schoenplot_composite_any.svg written in SVG format)
 
@@ -708,7 +899,14 @@ file ./output/tempdata/surv_adj_composite_any.dta saved
           1 |      1,000       19.90      100.00
 ------------+-----------------------------------
       Total |      5,025      100.00
-  897
+
+unexposed_e |
+        ver |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      5,025      100.00      100.00
+------------+-----------------------------------
+      Total |      5,025      100.00
+  0
   192
 no udca events = 192
 (4025 missing values generated)
@@ -718,6 +916,14 @@ no udca events = 192
 total_foll~p |        897      541499           0     541499     541499
 18049.967
 1063.7139
+
+exposed_eve |
+          r |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,417       87.90       87.90
+          1 |        608       12.10      100.00
+------------+-----------------------------------
+      Total |      5,025      100.00
 udca events = 21
 
 . 
@@ -726,7 +932,7 @@ udca events = 21
 . 
 end of do-file
 
-. . file open output using "/tmp/106_analysis_models.do.jOfh.out", write text r
+. . file open output using "/tmp/106_analysis_models.do.W68z.out", write text r
 > eplace
 
 . . file write output "success" 
