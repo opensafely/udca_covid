@@ -1,7 +1,7 @@
 
+. 
 . * plot for each outcome 
-. * Initially just try composite outcome
-. foreach outcome in died_covid_any hosp_any composite_any {
+. foreach outcome in hosp_any composite_any {
   2.     use ./output/an_dataset_`outcome', clear 
   3.     describe
   4.     gen index_date = date("01/03/2020", "DMY")
@@ -9,33 +9,38 @@
 > in(index_date)
   6. 
 .     * Add cumulative incidence plots 
-.     * Not stratifying by stp as cannot tvc and stratify 
-.           
-.     stpm2 udca age_tv male any_high_risk_condition i.ethnicity i.imd bmi_cat 
-> i.smoking severe_disease covid_vacc_first liver_trans i.wave, ///
->      tvc(udca severe_disease covid_vacc_first liver_trans) dftvc(1) df(3) sca
-> le(hazard) eform
-  7. 
+.     * Not stratifying by stp as cannot use tvc and stratify 
+.     * Fully adjusted model - currently not running     
+.     *stpm2 udca male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smok
+> ing severe_disease covid_vacc_first liver_trans i.wave, ///
+>     * tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) d
+> f(3) scale(hazard) eform
+.     
+.     * Age and sex adjusted model 
+.     * Setting df (degrees of freedom for restricted cubic splines) as 3 as th
+> is is default 
+.     * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = li
+> near effect of log time 
 .     stpm2 udca age_tv male, tvc(udca) dftvc(1) df(3) scale(hazard) eform
-  8.     summ _t
-  9.     local tmax=r(max)
- 10.     local tmaxplus1=r(max)+1
- 11. 
+  7.     summ _t
+  8.     local tmax=r(max)
+  9.     local tmaxplus1=r(max)+1
+ 10. 
 .     range days 0 `tmax' `tmaxplus1'
- 12.     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci
+ 11.     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci
 >  contrast(difference) fail
- 13. 
+ 12. 
 .     gen date = d(1/3/2020)+ days
- 14.     format date %tddd_Month
- 15. 
+ 13.     format date %tddd_Month
+ 14. 
 .     for var _at1 _at2 _at1_lci _at1_uci _at2_lci _at2_uci _contrast2_1 _contr
 > ast2_1_lci _contrast2_1_uci: replace X=100*X
- 16. 
+ 15. 
 .     *cumulative mortality at last day of follow-up
 .     list _at1* if days==`tmax', noobs
- 17.     list _at2* if days==`tmax', noobs
- 18.     list _contrast* if days==`tmax', noobs
- 19. 
+ 16.     list _at2* if days==`tmax', noobs
+ 17.     list _contrast* if days==`tmax', noobs
+ 18. 
 .     *l date days _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days<.
 . 
 .     twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
@@ -49,22 +54,280 @@
 > )             ///
 >                     yscale(range(0, 1))                                      
 >                                                    ///
->                     ylabel(0 (0.1) 1, angle(0) format(%4.1f) labsize(small)) 
+>                     ylabel(0 (1) 10, angle(0) format(%4.1f) labsize(small))  
 >    ///
->                     xlabel(0 (20) 160, labsize(small))                       
->                                    ///                     
->                     ytitle("Cumulative mortality (%)", size(medsmall)) ///
+>                     xlabel(0 (200) 1035, labsize(small))                     
+>                                            ///                     
+>                     ytitle("Cumulative outcomes (%)", size(medsmall)) ///
 >                     xtitle("Days since 1 Mar 2020", size(medsmall))          
 >            ///
 >                     graphregion(fcolor(white)) saving(adjcurv_`outcome', repl
 > ace)
+ 19. 
+.     graph export "./output/graphs/adjcurv_`outcome'.svg", as(svg) replace
  20. 
-.     graph export ./output/graphs/adjcurv_`outcome'.svg", as(svg) replace
- 21. 
 .     * Close window 
 .     graph close
- 22. 
+ 21. 
 . }
+
+Contains data from ./output/an_dataset_hosp_any.dta
+  obs:         5,025                          
+ vars:            17                          10 Jul 2023 12:26
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+stp             str4    %9s                   
+imd             byte    %8.0g                 
+ethnicity       byte    %8.0g      eth5       
+patient_id      int     %8.0g                 
+male            float   %9.0g                 
+bmi_cat         float   %14.0g     bmi        
+smoking         float   %9.0g                 
+any_high_risk~n float   %9.0g                 
+start           float   %9.0g                 
+stop            float   %9.0g                 
+hosp_any_flag   float   %9.0g                 
+wave            float   %9.0g                 
+age_tv          float   %9.0g                 
+udca            float   %9.0g                 
+liver_trans     float   %9.0g                 
+covid_vacc_fi~t float   %9.0g                 
+severe_disease  float   %9.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+
+                id:  patient_id
+     failure event:  hosp_any_flag != 0 & hosp_any_flag < .
+obs. time interval:  (stop[_n-1], stop]
+ enter on or after:  time index_date
+ exit on or before:  failure
+    t for analysis:  (time-origin)
+            origin:  time index_date
+
+------------------------------------------------------------------------------
+      5,025  total observations
+        191  observations begin on or after (first) failure
+------------------------------------------------------------------------------
+      4,834  observations remaining, representing
+      1,000  subjects
+         58  failures in single-failure-per-subject data
+    630,402  total analysis time at risk and under observation
+                                                at risk from t =         0
+                                     earliest observed entry t =         0
+                                          last observed exit t =     1,035
+note: delayed entry models are being fitted
+
+Iteration 0:   log likelihood = -260.93906  
+Iteration 1:   log likelihood = -260.47879  
+Iteration 2:   log likelihood = -260.45934  
+Iteration 3:   log likelihood =  -260.4593  
+Iteration 4:   log likelihood =  -260.4593  
+
+Log likelihood =  -260.4593                     Number of obs     =      4,787
+
+------------------------------------------------------------------------------
+             |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+xb           |
+        udca |   .9038299   .5718449    -0.16   0.873     .2615407    3.123447
+      age_tv |   1.003829   .0054428     0.70   0.481     .9932176    1.014553
+        male |   1.160931   .3062126     0.57   0.572     .6922925    1.946809
+       _rcs1 |   2.673873   .4396464     5.98   0.000     1.937241    3.690608
+       _rcs2 |   .9668735   .1393619    -0.23   0.815     .7289207    1.282505
+       _rcs3 |   1.036179   .0511513     0.72   0.472     .9406211    1.141444
+  _rcs_udca1 |   .8897444   .3981621    -0.26   0.794     .3701273    2.138845
+       _cons |   .0257005    .008477   -11.10   0.000     .0134643     .049057
+------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation.
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+          _t |      4,834    475.0871    262.1648          1       1035
+(3,989 missing values generated)
+(3,989 missing values generated)
+
+->  replace _at1=100*_at1
+(1,035 real changes made)
+
+->  replace _at2=100*_at2
+(1,035 real changes made)
+
+->  replace _at1_lci=100*_at1_lci
+(1,035 real changes made)
+
+->  replace _at1_uci=100*_at1_uci
+(1,035 real changes made)
+
+->  replace _at2_lci=100*_at2_lci
+(1,035 real changes made)
+
+->  replace _at2_uci=100*_at2_uci
+(1,035 real changes made)
+
+->  replace _contrast2_1=100*_contrast2_1
+(1,035 real changes made)
+
+->  replace _contrast2_1_lci=100*_contrast2_1_lci
+(1,035 real changes made)
+
+->  replace _contrast2_1_uci=100*_contrast2_1_uci
+(1,035 real changes made)
+
+  +-----------------------------------+
+  |      _at1    _at1_lci    _at1_uci |
+  |-----------------------------------|
+  | 9.5604273   7.3557238   12.425938 |
+  +-----------------------------------+
+
+  +----------------------------------+
+  |      _at2   _at2_lci    _at2_uci |
+  |----------------------------------|
+  | 7.6192362     3.3071   17.553978 |
+  +----------------------------------+
+
+  +-------------------------------------+
+  | _contras~1   _contr~lci   _cont~uci |
+  |-------------------------------------|
+  | -1.9411912   -8.7521138   4.8697315 |
+  +-------------------------------------+
+(note:  named style med not found in class gsize, default attributes used)
+(note: file adjcurv_hosp_any.gph not found)
+(file adjcurv_hosp_any.gph saved)
+(note: file ./output/graphs/adjcurv_hosp_any.svg not found)
+(file ./output/graphs/adjcurv_hosp_any.svg written in SVG format)
+
+Contains data from ./output/an_dataset_composite_any.dta
+  obs:         5,025                          
+ vars:            17                          10 Jul 2023 12:26
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+stp             str4    %9s                   
+imd             byte    %8.0g                 
+ethnicity       byte    %8.0g      eth5       
+patient_id      int     %8.0g                 
+male            float   %9.0g                 
+bmi_cat         float   %14.0g     bmi        
+smoking         float   %9.0g                 
+any_high_risk~n float   %9.0g                 
+start           float   %9.0g                 
+stop            float   %9.0g                 
+composite_any~g float   %9.0g                 
+wave            float   %9.0g                 
+age_tv          float   %9.0g                 
+udca            float   %9.0g                 
+liver_trans     float   %9.0g                 
+covid_vacc_fi~t float   %9.0g                 
+severe_disease  float   %9.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+
+                id:  patient_id
+     failure event:  composite_any_flag != 0 & composite_any_flag < .
+obs. time interval:  (stop[_n-1], stop]
+ enter on or after:  time index_date
+ exit on or before:  failure
+    t for analysis:  (time-origin)
+            origin:  time index_date
+
+------------------------------------------------------------------------------
+      5,025  total observations
+        191  observations begin on or after (first) failure
+------------------------------------------------------------------------------
+      4,834  observations remaining, representing
+      1,000  subjects
+        213  failures in single-failure-per-subject data
+    630,402  total analysis time at risk and under observation
+                                                at risk from t =         0
+                                     earliest observed entry t =         0
+                                          last observed exit t =     1,035
+note: delayed entry models are being fitted
+
+Iteration 0:   log likelihood = -691.87844  
+Iteration 1:   log likelihood = -690.96057  
+Iteration 2:   log likelihood = -690.93885  
+Iteration 3:   log likelihood = -690.93884  
+
+Log likelihood = -690.93884                     Number of obs     =      4,787
+
+------------------------------------------------------------------------------
+             |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+xb           |
+        udca |   1.102433   .3353628     0.32   0.749      .607316    2.001197
+      age_tv |   .9994623   .0028535    -0.19   0.851     .9938852    1.005071
+        male |   1.075875   .1489863     0.53   0.597     .8201399    1.411352
+       _rcs1 |   2.488129   .1937885    11.70   0.000      2.13588    2.898471
+       _rcs2 |   .9981497   .0702575    -0.03   0.979     .8695239    1.145803
+       _rcs3 |   .9877927   .0242323    -0.50   0.617     .9414219    1.036448
+  _rcs_udca1 |   .8198069   .1614359    -1.01   0.313     .5573057    1.205951
+       _cons |   .1191406   .0198811   -12.75   0.000      .085905    .1652345
+------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation.
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+          _t |      4,834    475.0871    262.1648          1       1035
+(3,989 missing values generated)
+(3,989 missing values generated)
+
+->  replace _at1=100*_at1
+(1,035 real changes made)
+
+->  replace _at2=100*_at2
+(1,035 real changes made)
+
+->  replace _at1_lci=100*_at1_lci
+(1,035 real changes made)
+
+->  replace _at1_uci=100*_at1_uci
+(1,035 real changes made)
+
+->  replace _at2_lci=100*_at2_lci
+(1,035 real changes made)
+
+->  replace _at2_uci=100*_at2_uci
+(1,035 real changes made)
+
+->  replace _contrast2_1=100*_contrast2_1
+(1,035 real changes made)
+
+->  replace _contrast2_1_lci=100*_contrast2_1_lci
+(1,035 real changes made)
+
+->  replace _contrast2_1_uci=100*_contrast2_1_uci
+(1,035 real changes made)
+
+  +----------------------------------+
+  |      _at1   _at1_lci    _at1_uci |
+  |----------------------------------|
+  | 30.435424   26.94826   34.373835 |
+  +----------------------------------+
+
+  +----------------------------------+
+  |     _at2    _at2_lci    _at2_uci |
+  |----------------------------------|
+  | 27.18522   18.850104   39.205947 |
+  +----------------------------------+
+
+  +-------------------------------------+
+  | _contras~1   _contr~lci   _cont~uci |
+  |-------------------------------------|
+  | -3.2502035   -13.819202   7.3187953 |
+  +-------------------------------------+
+(note:  named style med not found in class gsize, default attributes used)
+(note: file adjcurv_composite_any.gph not found)
+(file adjcurv_composite_any.gph saved)
+(note: file ./output/graphs/adjcurv_composite_any.svg not found)
+(file ./output/graphs/adjcurv_composite_any.svg written in SVG format)
+
+. 
+. use ./output/an_dataset_died_covid_any, clear 
+
+.     describe
 
 Contains data from ./output/an_dataset_died_covid_any.dta
   obs:         4,967                          
@@ -93,6 +356,11 @@ severe_disease  float   %9.0g
 -------------------------------------------------------------------------------
 Sorted by: 
 
+.     gen index_date = date("01/03/2020", "DMY")
+
+.     stset stop, fail(died_covid_any_flag) id(patient_id) enter(index_date) or
+> igin(index_date)
+
                 id:  patient_id
      failure event:  died_covid_any_flag != 0 & died_covid_any_flag < .
 obs. time interval:  (stop[_n-1], stop]
@@ -112,17 +380,174 @@ obs. time interval:  (stop[_n-1], stop]
                                                 at risk from t =         0
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
+
+. 
+.     * Add cumulative incidence plots 
+.     * Not stratifying by stp as cannot use tvc and stratify 
+.     * Fully adjusted model - currently not running     
+.     *stpm2 udca male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smok
+> ing severe_disease covid_vacc_first liver_trans i.wave, ///
+>     * tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) d
+> f(3) scale(hazard) eform
+.     
+.     * Age and sex adjusted model 
+.     * Setting df (degrees of freedom for restricted cubic splines) as 3 as th
+> is is default 
+.     * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = li
+> near effect of log time 
+.     stpm2 udca age_tv male, tvc(udca) dftvc(1) df(3) scale(hazard) eform
 note: delayed entry models are being fitted
-note: any_high_risk_condition omitted because of collinearity
 
-initial values not feasible
-r(1400);
+Iteration 0:   log likelihood = -538.82304  
+Iteration 1:   log likelihood = -537.94987  
+Iteration 2:   log likelihood =  -537.9313  
+Iteration 3:   log likelihood = -537.93129  
 
+Log likelihood = -537.93129                     Number of obs     =      4,920
+
+------------------------------------------------------------------------------
+             |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+xb           |
+        udca |   .9832079    .378563    -0.04   0.965     .4622837    2.091136
+      age_tv |   .9976626   .0033763    -0.69   0.489      .991067    1.004302
+        male |   1.132161   .1857622     0.76   0.449      .820815    1.561605
+       _rcs1 |   2.505857   .2377767     9.68   0.000     2.080593    3.018043
+       _rcs2 |   1.011304   .0880154     0.13   0.897     .8527077    1.199397
+       _rcs3 |   .9653805   .0284996    -1.19   0.233     .9111075    1.022886
+  _rcs_udca1 |   .8265812   .2130558    -0.74   0.460      .498751    1.369895
+       _cons |   .0856099   .0168727   -12.47   0.000     .0581785    .1259754
+------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation.
+
+.     summ _t
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+          _t |      4,967    480.8474    262.6467          1       1035
+
+.     local tmax=r(max)
+
+.     local tmaxplus1=r(max)+1
+
+. 
+.     range days 0 `tmax' `tmaxplus1'
+(3,931 missing values generated)
+
+.     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci co
+> ntrast(difference) fail
+
+. 
+.     gen date = d(1/3/2020)+ days
+(3,931 missing values generated)
+
+.     format date %tddd_Month
+
+. 
+.     for var _at1 _at2 _at1_lci _at1_uci _at2_lci _at2_uci _contrast2_1 _contr
+> ast2_1_lci _contrast2_1_uci: replace X=100*X
+
+->  replace _at1=100*_at1
+(1,035 real changes made)
+
+->  replace _at2=100*_at2
+(1,035 real changes made)
+
+->  replace _at1_lci=100*_at1_lci
+(1,035 real changes made)
+
+->  replace _at1_uci=100*_at1_uci
+(1,035 real changes made)
+
+->  replace _at2_lci=100*_at2_lci
+(1,035 real changes made)
+
+->  replace _at2_uci=100*_at2_uci
+(1,035 real changes made)
+
+->  replace _contrast2_1=100*_contrast2_1
+(1,035 real changes made)
+
+->  replace _contrast2_1_lci=100*_contrast2_1_lci
+(1,035 real changes made)
+
+->  replace _contrast2_1_uci=100*_contrast2_1_uci
+(1,035 real changes made)
+
+. 
+.     *cumulative mortality at last day of follow-up
+.     list _at1* if days==`tmax', noobs
+
+  +-----------------------------------+
+  |      _at1    _at1_lci    _at1_uci |
+  |-----------------------------------|
+  | 22.841188   19.551923   26.683815 |
+  +-----------------------------------+
+
+.     list _at2* if days==`tmax', noobs
+
+  +-----------------------------------+
+  |      _at2    _at2_lci    _at2_uci |
+  |-----------------------------------|
+  | 18.485604   11.247461   30.381751 |
+  +-----------------------------------+
+
+.     list _contrast* if days==`tmax', noobs
+
+  +-------------------------------------+
+  | _contras~1   _contr~lci   _cont~uci |
+  |-------------------------------------|
+  | -4.3555847   -14.164523   5.4533533 |
+  +-------------------------------------+
+
+. 
+.     *l date days _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days<.
+. 
+.     twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
+>                     (rarea _at2_lci _at2_uci days if _at2_uci<1, color(blue%2
+> 5)) ///
+>                     (line _at1 days, sort lcolor(red)) ///
+>                     (line _at2 days, sort lcolor(blue) lpattern(dash)) ///
+>                     , legend(order(1 "No UDCA" 2 "UDCA") ring(0) cols(1) pos(
+> 11) region(lwidth(none))) ///
+>                     title("Time to `outcome'", justification(left) size(med) 
+> )             ///
+>                     yscale(range(0, 1))                                      
+>                                                    ///
+>                     ylabel(0 (0.2) 2, angle(0) format(%4.1f) labsize(small)) 
+>    ///
+>                     xlabel(0 (200) 1035, labsize(small))                     
+>                                            ///                     
+>                     ytitle("Cumulative mortality (%)", size(medsmall)) ///
+>                     xtitle("Days since 1 Mar 2020", size(medsmall))          
+>            ///
+>                     graphregion(fcolor(white)) saving(adjcurv_`outcome', repl
+> ace)
+(note:  named style med not found in class gsize, default attributes used)
+(note: file adjcurv_.gph not found)
+(file adjcurv_.gph saved)
+
+. 
+.     graph export "./output/graphs/adjcurv_died_covid_any.svg", as(svg) replac
+> e
+(note: file ./output/graphs/adjcurv_died_covid_any.svg not found)
+(file ./output/graphs/adjcurv_died_covid_any.svg written in SVG format)
+
+. 
+.     * Close window 
+.     graph close
+
+. 
 end of do-file
-r(1400);
 
+. . file open output using "/tmp/105_analysis_plots.do.5hlt.out", write text re
+> place
+
+. . file write output "success" 
+
+. . file close output
+
+. 
 end of do-file
-
-r(1400);
 
 
