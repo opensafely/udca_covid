@@ -29,7 +29,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
         sts graph, by(udca) title("`outcome'") graphregion(fcolor(white))
         graph export ./output/graphs/km_`outcome'.svg, as(svg) replace
         * Cox model - crude
-        stcox udca, strata(stp)
+        stcox udca, strata(stp) vce(robust)
         estimates save "./output/tempdata/crude_`outcome'", replace 
         eststo model1
         parmest, label eform format(estimate p lb ub) saving("./output/tempdata/surv_crude_`outcome'", replace) idstr("crude_`outcome'") 
@@ -49,7 +49,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
                     name(uni_plot_`outcome') ///
                     note("")
         * Cox model - fully adjusted
-        stcox udca age_tv male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, strata(stp)
+        stcox udca age_tv male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, strata(stp) vce(robust)
         estimates save "./output/tempdata/adj_model_`outcome'", replace 
         eststo model2
         parmest, label eform format(estimate p lb ub) saving("./output/tempdata/surv_adj_`outcome'", replace) idstr("adj_`outcome'") 
