@@ -59,7 +59,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
                     xtitle("Days since 1 Mar 2020", size(medsmall))      		///
                     graphregion(fcolor(white)) saving(adjcurv_`outcome', replace)
 
-    graph export ./output/graphs/adjcurv_`outcome'.svg", as(svg) replace
+    graph export "./output/graphs/adjcurv_`outcome'.svg", as(svg) replace
 
     * Close window 
     graph close
