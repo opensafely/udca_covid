@@ -1,7 +1,7 @@
 /*==============================================================================
 DO FILE NAME:			105_analysis_models.do.do
 DATE: 					07/07/2023
-AUTHOR:					R Costello 
+AUTHOR:					Ruth Costello 
 DESCRIPTION OF FILE:	Produce cox models
 ==============================================================================*/
 adopath + ./analysis/ado 
@@ -11,10 +11,13 @@ cap mkdir ./output/tempdata
 
 * Open a log file
 cap log using ./logs/analysis_models.log, replace
+
+* Open file to write results to 
 file open tablecontent using ./output/tables/cox_models.txt, write text replace
 file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator") _tab ("events") _tab ("total_person_wks") _tab ("Rate") _tab ("unadj_hr") _tab ///
 ("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci") _tab ("f_adj_hr") _tab ("f_adj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
-* Cox models and Schoenfeld residual plots 
+
+* Cox models and Schoenfeld residual plots for each outcome
 foreach outcome in died_covid_any hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
     * Open file to write results
@@ -28,6 +31,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
         estimates save "./output/tempdata/crude_`outcome'", replace 
         eststo model1
         parmest, label eform format(estimate p lb ub) saving("./output/tempdata/surv_crude_`outcome'", replace) idstr("crude_`outcome'") 
+        * Plot schoenfeld residuals 
         estat phtest, plot(udca) ///
                     graphregion(fcolor(white)) ///
                     ylabel(, nogrid labsize(small)) ///
@@ -46,6 +50,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
         estimates save "./output/tempdata/adj_model_`outcome'", replace 
         eststo model2
         parmest, label eform format(estimate p lb ub) saving("./output/tempdata/surv_adj_`outcome'", replace) idstr("adj_`outcome'") 
+        * Plot Schoenfeld residuals 
         estat phtest, plot(udca) ///
                     graphregion(fcolor(white)) ///
                     ylabel(, nogrid labsize(small)) ///
@@ -61,9 +66,13 @@ foreach outcome in died_covid_any hosp_any composite_any {
                     note("")
         graph combine uni_plot_`outcome' adj_plot_`outcome'
         graph export ./output/graphs/schoenplot_`outcome'.svg, as(svg) replace 
+        * flag single row for each person
         bys patient_id (start): gen number = _n==_N 
         tab number 
-        safecount if udca==0 & number==1
+        * Count number unexposed at any time 
+        bys patient_id : egen unexposed_ever = min(udca) 
+        tab unexposed_ever 
+        safecount if unexposed_ever==1 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1
         local event = r(N)
@@ -82,7 +91,10 @@ foreach outcome in died_covid_any hosp_any composite_any {
             file write tablecontent ("`outcome'") _tab ("No UDCA") _tab ("redact") _n
             continue
         }
-        qui safecount if udca==1 & number==1
+        * Count number exposed at any time 
+        bys patient_id : egen exposed_ever = max(udca) 
+        tab exposed_ever 
+        qui safecount if exposed_ever==1 & number==1
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1
         local event = r(N)

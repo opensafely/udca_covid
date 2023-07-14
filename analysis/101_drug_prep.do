@@ -20,6 +20,7 @@ import delimited using ./output/input_additional.csv, clear
 
 describe 
 
+*Some records identified in study_definition_additional 
 *missings report, minimum(12400)
 missings dropvars udca_*, force
 
@@ -75,9 +76,9 @@ bys year: sum time_previous, d
 
 * Drop records in 2023 as this is after end of study
 drop if year==2023
+* Loop through assuming end date is 60 up to 180 days after prescription generated
 forvalues i = 60(30)180 {
     preserve
-    * Assume end date is 60 to 180 days after prescription generated
     gen stop_date = udcaA + `i'
     format stop_date %dD/N/CY 
 
@@ -98,7 +99,7 @@ forvalues i = 60(30)180 {
     keep patient_id start stop udca total_no_presc
     duplicates drop 
 
-    * Add in rows where there are gaps in prescriptions 
+    * Add in rows where there are gaps between prescriptions 
     bys patient_id (start): gen to_expand = 1 + (stop < start[_n+1])*(start[_n+1]~=.)
     tab to_expand 
     expand to_expand 
@@ -119,12 +120,12 @@ forvalues i = 60(30)180 {
     sort patient_id start
     count if stop[_n-1]>start & patient_id==patient_id[_n-1]
 
-    * Update to match follow-up time
+    * Update rows to match follow-up time
     * merge variables from original study definition 
     merge m:1 patient_id using `tempfile', keepusing(dereg_date died_date_ons udca_count_bl) 
     tab _merge
 
-    * Update variables for people without prescriptions 
+    * Update variables for people without any prescriptions 
     replace start = date("01/03/2020", "DMY") if _merge==2
     replace udca = 0 if _merge==2
     replace stop = date("31/12/2022", "DMY") if _merge==2
@@ -197,10 +198,14 @@ forvalues i = 60(30)180 {
     replace stop = end_date if new_record==1
     drop new_record stop_prior
 
+    di "number where start after stop date"
     count if start > stop 
-
+    di "Number where start equals stop"
+    count if start==stop 
+    drop if start==stop 
     * Check that time covered by prescriptions equals total follow-up
     gen time = stop - start 
+    sum time, d  
     bys patient_id: egen total_time = total(time)
 
     gen total_time_unequal = total_time!=total_fu

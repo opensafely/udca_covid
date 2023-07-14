@@ -1,7 +1,7 @@
 /*==============================================================================
 DO FILE NAME:			105_analysis.do.do
 DATE: 					07/07/2023
-AUTHOR:					R Costello 
+AUTHOR:					Ruth Costello (adapted from Christopher Rentsch)
 DESCRIPTION OF FILE:	Produce cumulative incidence plots
 ==============================================================================*/
 adopath + ./analysis/ado 
@@ -9,8 +9,8 @@ cap mkdir ./output/graphs
 
 * Open a log file
 cap log using ./logs/analysis.log, replace
+
 * plot for each outcome 
-* Initially just try composite outcome
 foreach outcome in died_covid_any hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
     describe
@@ -18,11 +18,14 @@ foreach outcome in died_covid_any hosp_any composite_any {
     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) origin(index_date)
 
     * Add cumulative incidence plots 
-    * Not stratifying by stp as cannot tvc and stratify 
-          
-    *stpm2 udca age_tv male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, ///
-    * tvc(udca severe_disease covid_vacc_first liver_trans) dftvc(1) df(3) scale(hazard) eform
-
+    * Not stratifying by stp as cannot use tvc and stratify 
+    * Fully adjusted model - currently not running     
+    *stpm2 udca male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, ///
+    * tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(3) scale(hazard) eform
+    
+    * Age and sex adjusted model 
+    * Setting df (degrees of freedom for restricted cubic splines) as 3 as this is default 
+    * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = linear effect of log time 
     stpm2 udca age_tv male, tvc(udca) dftvc(1) df(3) scale(hazard) eform
     summ _t
     local tmax=r(max)

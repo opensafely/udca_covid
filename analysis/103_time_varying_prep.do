@@ -15,7 +15,10 @@ import delimited using ./output/input_pbc.csv
 describe
 save `tempfile' 
 
-* Use time-varying exposure file and add in rows for the 6 monthly covariate assessment times 
+/* Time-varying covariates are assessed 6-monthly and at time of exposure switching.
+As disease severity, covid vaccination and liver transplant will only switch once need to identify
+nearest date after date identified in study definition */ 
+* Note: currently just doing 120 day file as this is the primary exposure definition 
 use ./output/time_varying_udca_120, clear 
 codebook patient_id
 merge m:1 patient_id using `tempfile', keepusing(severe_disease_fu_date severe_disease_bl covid_vacc_first_date liver_transplant_fu_date dereg_date died_date_ons)
@@ -23,6 +26,7 @@ merge m:1 patient_id using `tempfile', keepusing(severe_disease_fu_date severe_d
 keep if _merge==3
 * Only using start date as this is when udca exposure or 6 monthly check occurs
 drop stop
+* Add in rows with each of the 6 monthly assessment dates 
 gen expand=1
 bys patient_id (start): replace expand=6 if _n==_N 
 expand expand, generate(newv)
@@ -33,6 +37,8 @@ replace start = date("01/09/2021", "DMY") if newv==1 & number==3
 replace start = date("01/03/2022", "DMY") if newv==1 & number==4
 replace start = date("01/09/2022", "DMY") if newv==1 & number==5
 
+* This gives a file where start dates are either exposure switching or 6-montly assessment dates 
+* These will be used to determine the closest date to time-varying covariate dates identified in study definition 
 sort patient_id start 
 drop newv
 
@@ -53,7 +59,8 @@ foreach var in covid_vacc_first_date severe_disease_fu_date liver_transplant_fu_
     gen `var'A = date(`var', "YMD")
     format `var'A %dD/N/CY 
     drop `var'
-    * time between date of record and change in covariate
+    * time between date of record and change in covariate - positive values are those where record starts after 
+    * covariate change date 
     gen time_`var' = start - `var'A
     * Set time variable for records prior to change as missing
     replace time_`var'=. if time_`var'<0
@@ -95,7 +102,7 @@ foreach var in covid_vacc_first liver_trans {
     keep patient_id `var' start stop
     * Check data 
     count if start==stop 
-    * drop start==stop but should not drop any in real data 
+    * drop where start is same as stop - should not drop any in real data 
     drop if start==stop 
     count if stop<start
     codebook patient_id
@@ -103,7 +110,7 @@ foreach var in covid_vacc_first liver_trans {
     restore
 }
 
-* Same for liver disease severity, but variable can start at 1 so remains as this for whole of follow-up 
+* Same for liver disease severity, but variable can start at 1 and remain for whole of follow-up 
 preserve
 keep patient_id severe_disease_fu_date_update end_date severe_disease_bl
 * Drop updates after the end of follow-up 
@@ -127,7 +134,7 @@ save ./output/tv_severe_disease_check, replace
 keep patient_id severe_disease start stop
 * Check data 
 count if start==stop
-* drop start==stop but should not drop any in real data 
+* drop if start is same as stop - should not drop any in real data 
 drop if start==stop 
 count if stop<start
 codebook patient_id
@@ -143,6 +150,7 @@ drop dereg_date
 gen died_dateA = date(died_date_ons, "YMD")
 format %dD/N/CY died_dateA
 drop died_date_ons
+* Determine end of follow-up then add rows to update age for each year of follow-up
 gen end_study = date("31/12/2022", "DMY")
 egen end_date = rowmin(dereg_dateA end_study died_dateA)
 keep patient_id age end_date
@@ -182,6 +190,7 @@ drop dereg_date
 gen died_date_onsA = date(died_date_ons, "YMD")
 format %dD/N/CY died_date_onsA
 drop died_date_ons
+* Determine end of follow-up then add rows to update waves 
 gen end_study = date("31/12/2022", "DMY")
 egen end_date = rowmin(dereg_dateA end_study died_date_onsA)
 gen expand = 1 if end_date <= date("31/08/2020", "DMY")
@@ -219,7 +228,7 @@ drop if start==stop
 codebook patient_id
 save ./output/tv_waves, replace
 
-* Outcomes 
+* Create files for outcomes
 use `tempfile', clear
 * Determine end of follow-up date
 gen dereg_dateA = date(dereg_date, "YMD")
@@ -239,8 +248,9 @@ gen hosp_died_composite = (died_ons_covid_flag_any==1 | hosp_any_flag==1)
 egen hosp_died_dateA = rowmin(died_date_onsA hosp_covid_anyA)
 
 * Make file for each outcome: covid death, hospitalisation and composite 
-* Files contain patient ID, start = start study, stop = either end date for patient or date of outcome and flag for outcome 
-* COVID death - any position
+* Files contain patient ID, start = start study, stop = either end date for patient or date of outcome 
+* and flag for outcome 
+* COVID death - covid code in any position
 preserve 
 keep patient_id end_date died_ons_covid_flag_any died_date_onsA
 gen start = date("01/03/2020", "DMY")
@@ -254,7 +264,7 @@ tab died_covid_any_flag, m
 codebook patient_id
 restore 
 
-* Hospitalisation - any position
+* Hospitalisation - covid code in any position
 preserve 
 keep patient_id end_date hosp_any_flag hosp_covid_anyA
 gen start = date("01/03/2020", "DMY")
@@ -298,7 +308,7 @@ tab composite_any_flag, m
 missings report
 save ./output/tv_vars_composite_any, replace 
 
-* COVID death - any position
+* COVID death - covid code in any position
 use ./output/tv_severe_disease, clear 
 tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
 tvc_merge start stop using ./output/tv_liver_trans, id(patient_id)
@@ -314,7 +324,7 @@ tab died_covid_any_flag, m
 missings report
 save ./output/tv_vars_died_covid_any, replace 
 
-* COVID hospitalisation - any position
+* COVID hospitalisation - covid code in any position
 use ./output/tv_severe_disease, clear 
 tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
 tvc_merge start stop using ./output/tv_liver_trans, id(patient_id)
@@ -338,6 +348,7 @@ ethnicity, imd, bmi, smoking. */
 ** Need to decide on second line therapies 
 use `tempfile', clear
 describe 
+* Format variables 
 * Sex
 gen male = 1 if sex == "M"
 replace male = 0 if sex == "F"
@@ -353,7 +364,7 @@ label define eth5 			1 "White"  					///
 
 label values ethnicity eth5
 safetab ethnicity, m
-* IMD
+* IMD - should not be missing (i.e. 0) in real data
 replace imd=6 if imd==0
 
 * BMI categories
@@ -369,6 +380,8 @@ gen smoking = 0 if smoking_status=="N"
 replace smoking = 1 if smoking_status=="S"
 replace smoking = 2 if smoking_status=="E"
 replace smoking = 3 if smoking==.
+label define smok 1 "Current smoker" 2 "Ex-smoker" 0 "Never smoked" 3 "Unknown"
+label values smoking smok
 
 * High risk covid conditions
 replace oral_steroid_drugs_nhsd=. if oral_steroid_drug_nhsd_3m_count < 2 & oral_steroid_drug_nhsd_12m_count < 4

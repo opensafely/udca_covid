@@ -15,7 +15,7 @@ import delimited using ./output/input_pbc.csv
 save `tempfile' 
 
 file open tablecontent using ./output/tables/udca_descriptives.txt, write text replace
-
+* Loop through each dataset with different lengths of days of prescriptions
 forvalues i=60(30)180 {
     use ./output/time_varying_udca_all_vars_`i', clear 
     drop last 
