@@ -99,5 +99,6 @@ actions:
       moderately_sensitive:
         log: logs/analysis_models.log
         tables: output/tables/cox*
-        graphs: output/graphs/schoenplot*
+        graphs: output/graphs/schoenplot*.svg
+        km_plots: output/graphs/km*.svg
         

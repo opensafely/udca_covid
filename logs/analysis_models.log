@@ -22,14 +22,16 @@
 > in(index_date)
   6.     count if `outcome'_flag==1
   7.     if r(N) > 10 {
-  8.         * Cox model - crude
+  8.         sts graph, by(udca) title("`outcome'") graphregion(fcolor(white))
+  9.         graph export ./output/graphs/km_`outcome'.svg, as(svg) replace
+ 10.         * Cox model - crude
 .         stcox udca, strata(stp)
-  9.         estimates save "./output/tempdata/crude_`outcome'", replace 
- 10.         eststo model1
- 11.         parmest, label eform format(estimate p lb ub) saving("./output/tem
+ 11.         estimates save "./output/tempdata/crude_`outcome'", replace 
+ 12.         eststo model1
+ 13.         parmest, label eform format(estimate p lb ub) saving("./output/tem
 > pdata/surv_crude_`outcome'", replace) idstr("crude_`outcome'") 
- 12.         estat phtest, detail
- 13.         * Plot schoenfeld residuals 
+ 14.         estat phtest, detail
+ 15.         * Plot schoenfeld residuals 
 .         estat phtest, plot(udca) ///
 >                     graphregion(fcolor(white)) ///
 >                     ylabel(, nogrid labsize(small)) ///
@@ -43,15 +45,15 @@
 >                     title ("`outcome'", position(11) size(medsmall)) ///
 >                     name(uni_plot_`outcome') ///
 >                     note("")
- 14.         * Cox model - fully adjusted
+ 16.         * Cox model - fully adjusted
 .         stcox udca age_tv male any_high_risk_condition i.ethnicity i.imd bmi_
 > cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, strata(stp)
- 15.         estimates save "./output/tempdata/adj_model_`outcome'", replace 
- 16.         eststo model2
- 17.         parmest, label eform format(estimate p lb ub) saving("./output/tem
+ 17.         estimates save "./output/tempdata/adj_model_`outcome'", replace 
+ 18.         eststo model2
+ 19.         parmest, label eform format(estimate p lb ub) saving("./output/tem
 > pdata/surv_adj_`outcome'", replace) idstr("adj_`outcome'") 
- 18.         estat phtest, detail
- 19.         * Plot Schoenfeld residuals 
+ 20.         estat phtest, detail
+ 21.         * Plot Schoenfeld residuals 
 .         estat phtest, plot(udca) ///
 >                     graphregion(fcolor(white)) ///
 >                     ylabel(, nogrid labsize(small)) ///
@@ -66,77 +68,77 @@
 >  ///
 >                     name(adj_plot_`outcome') ///
 >                     note("")
- 20.         graph combine uni_plot_`outcome' adj_plot_`outcome'
- 21.         graph export ./output/graphs/schoenplot_`outcome'.svg, as(svg) rep
+ 22.         graph combine uni_plot_`outcome' adj_plot_`outcome'
+ 23.         graph export ./output/graphs/schoenplot_`outcome'.svg, as(svg) rep
 > lace 
- 22.         * flag single row for each person
+ 24.         * flag single row for each person
 .         bys patient_id (start): gen number = _n==_N 
- 23.         tab number 
- 24.         * Count number unexposed at any time 
+ 25.         tab number 
+ 26.         * Count number unexposed at any time 
 .         bys patient_id : egen unexposed_ever = min(udca) 
- 25.         tab unexposed_ever 
- 26.         safecount if unexposed_ever==1 & number==1
- 27.         local denominator = r(N)
- 28.         safecount if udca == 0 & `outcome'_flag == 1
- 29.         local event = r(N)
- 30.         di "no udca events = " `event'
- 31.         bysort udca: egen total_follow_up = total(_t) if number==1
- 32.         su total_follow_up if udca==0 & number==1
- 33.         local person_mth = r(mean)/30
- 34.         di `person_mth'
- 35.         local rate = 100000*(`event'/`person_mth')
- 36.         di `rate'
- 37.         if `event'>10 & `event'!=. {
- 38.             file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (
+ 27.         tab unexposed_ever if number==1
+ 28.         safecount if unexposed_ever==1 & number==1
+ 29.         local denominator = r(N)
+ 30.         safecount if udca == 0 & `outcome'_flag == 1
+ 31.         local event = r(N)
+ 32.         di "no udca events = " `event'
+ 33.         bysort udca: egen total_follow_up = total(_t) if number==1
+ 34.         su total_follow_up if udca==0 & number==1
+ 35.         local person_mth = r(mean)/30
+ 36.         di `person_mth'
+ 37.         local rate = 100000*(`event'/`person_mth')
+ 38.         di `rate'
+ 39.         if `event'>10 & `event'!=. {
+ 40.             file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (
 > `denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') 
 > _tab
- 39.             file write tablecontent ("1.00") _tab _tab ("1.00")  _n
- 40.             }
- 41.         else {
- 42.             file write tablecontent ("`outcome'") _tab ("No UDCA") _tab ("
+ 41.             file write tablecontent ("1.00") _tab _tab ("1.00")  _n
+ 42.             }
+ 43.         else {
+ 44.             file write tablecontent ("`outcome'") _tab ("No UDCA") _tab ("
 > redact") _n
- 43.             continue
- 44.         }
- 45.         * Count number exposed at any time 
+ 45.             continue
+ 46.         }
+ 47.         * Count number exposed at any time 
 .         bys patient_id : egen exposed_ever = max(udca) 
- 46.         tab exposed_ever 
- 47.         qui safecount if exposed_ever==1 & number==1
- 48.         local denominator = r(N)
- 49.         qui safecount if udca == 1 & `outcome'_flag == 1
- 50.         local event = r(N)
- 51.         di "udca events = " `event'
- 52.         qui su total_follow_up if udca==1 & number==1
- 53.         local person_mth = r(mean)/30
- 54.         local rate = 100000*(`event'/`person_mth')
- 55.         if `event'>10 & `event'!=. {
- 56.             file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`den
+ 48.         tab exposed_ever if number==1
+ 49.         qui safecount if exposed_ever==1 & number==1
+ 50.         local denominator = r(N)
+ 51.         qui safecount if udca == 1 & `outcome'_flag == 1
+ 52.         local event = r(N)
+ 53.         di "udca events = " `event'
+ 54.         qui su total_follow_up if udca==1 & number==1
+ 55.         local person_mth = r(mean)/30
+ 56.         local rate = 100000*(`event'/`person_mth')
+ 57.         if `event'>10 & `event'!=. {
+ 58.             file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`den
 > ominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
- 57.             cap estimates use "./output/tempdata/crude_`outcome'" 
- 58.             cap lincom udca, eform
- 59.             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f 
+ 59.             cap estimates use "./output/tempdata/crude_`outcome'" 
+ 60.             cap lincom udca, eform
+ 61.             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f 
 > (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _ta
 > b 
- 60.             cap estimates clear
- 61.             cap estimates use "./output/tempdata/adj_model_`outcome'" 
- 62.             cap lincom udca, eform
- 63.             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f 
+ 62.             cap estimates clear
+ 63.             cap estimates use "./output/tempdata/adj_model_`outcome'" 
+ 64.             cap lincom udca, eform
+ 65.             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f 
 > (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _ta
 > b _n 
- 64.             cap estimates clear
- 65.         }
- 66.         else {
- 67.             file write tablecontent  ("`outcome'") _tab ("UDCA") _tab ("re
+ 66.             cap estimates clear
+ 67.         }
+ 68.         else {
+ 69.             file write tablecontent  ("`outcome'") _tab ("UDCA") _tab ("re
 > dact") _n
- 68.             continue
- 69.         }
- 70.     
+ 70.             continue
+ 71.         }
+ 72.     
 . drop total_follow_up
- 71.     }
- 72. else { 
- 73.     file write tablecontent ("`outcome'") _tab ("redact") _n
- 74.     continue
- 75. }
- 76. }
+ 73.     }
+ 74. else { 
+ 75.     file write tablecontent ("`outcome'") _tab ("redact") _n
+ 76.     continue
+ 77. }
+ 78. }
 
 Contains data from ./output/an_dataset_died_covid_any.dta
   obs:         4,967                          
@@ -185,6 +187,14 @@ obs. time interval:  (stop[_n-1], stop]
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
   153
+
+         failure _d:  died_covid_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+(note: file ./output/graphs/km_died_covid_any.svg not found)
+(file ./output/graphs/km_died_covid_any.svg written in SVG format)
 
          failure _d:  died_covid_any_flag
    analysis time _t:  (stop-origin)
@@ -376,9 +386,9 @@ file ./output/tempdata/surv_adj_died_covid_any.dta saved
 unexposed_e |
         ver |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      4,967      100.00      100.00
+          0 |      1,000      100.00      100.00
 ------------+-----------------------------------
-      Total |      4,967      100.00
+      Total |      1,000      100.00
   0
   139
 no udca events = 139
@@ -393,10 +403,10 @@ total_foll~p |        897      584131           0     584131     584131
 exposed_eve |
           r |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      4,364       87.86       87.86
-          1 |        603       12.14      100.00
+          0 |        897       89.70       89.70
+          1 |        103       10.30      100.00
 ------------+-----------------------------------
-      Total |      4,967      100.00
+      Total |      1,000      100.00
 udca events = 14
 
 Contains data from ./output/an_dataset_hosp_any.dta
@@ -446,6 +456,14 @@ obs. time interval:  (stop[_n-1], stop]
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
   58
+
+         failure _d:  hosp_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+(note: file ./output/graphs/km_hosp_any.svg not found)
+(file ./output/graphs/km_hosp_any.svg written in SVG format)
 
          failure _d:  hosp_any_flag
    analysis time _t:  (stop-origin)
@@ -637,9 +655,9 @@ file ./output/tempdata/surv_adj_hosp_any.dta saved
 unexposed_e |
         ver |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      5,025      100.00      100.00
+          0 |      1,000      100.00      100.00
 ------------+-----------------------------------
-      Total |      5,025      100.00
+      Total |      1,000      100.00
   0
   53
 no udca events = 53
@@ -654,10 +672,10 @@ total_foll~p |        897      541499           0     541499     541499
 exposed_eve |
           r |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      4,417       87.90       87.90
-          1 |        608       12.10      100.00
+          0 |        897       89.70       89.70
+          1 |        103       10.30      100.00
 ------------+-----------------------------------
-      Total |      5,025      100.00
+      Total |      1,000      100.00
 udca events = .
 
 Contains data from ./output/an_dataset_composite_any.dta
@@ -707,6 +725,14 @@ obs. time interval:  (stop[_n-1], stop]
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
   213
+
+         failure _d:  composite_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+(note: file ./output/graphs/km_composite_any.svg not found)
+(file ./output/graphs/km_composite_any.svg written in SVG format)
 
          failure _d:  composite_any_flag
    analysis time _t:  (stop-origin)
@@ -903,9 +929,9 @@ file ./output/tempdata/surv_adj_composite_any.dta saved
 unexposed_e |
         ver |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      5,025      100.00      100.00
+          0 |      1,000      100.00      100.00
 ------------+-----------------------------------
-      Total |      5,025      100.00
+      Total |      1,000      100.00
   0
   192
 no udca events = 192
@@ -920,10 +946,10 @@ total_foll~p |        897      541499           0     541499     541499
 exposed_eve |
           r |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      4,417       87.90       87.90
-          1 |        608       12.10      100.00
+          0 |        897       89.70       89.70
+          1 |        103       10.30      100.00
 ------------+-----------------------------------
-      Total |      5,025      100.00
+      Total |      1,000      100.00
 udca events = 21
 
 . 
@@ -932,7 +958,7 @@ udca events = 21
 . 
 end of do-file
 
-. . file open output using "/tmp/106_analysis_models.do.W68z.out", write text r
+. . file open output using "/tmp/106_analysis_models.do.c6Nh.out", write text r
 > eplace
 
 . . file write output "success" 
