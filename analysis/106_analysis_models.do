@@ -26,7 +26,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) origin(index_date)
     count if `outcome'_flag==1
     if r(N) > 10 {
-        sts graph, by(udca) title("`outcome'") graphregion(fcolor(white))
+        sts graph, by(udca) title("`outcome'") graphregion(fcolor(white)) ylabel(.75(.1)1)
         graph export ./output/graphs/km_`outcome'.svg, as(svg) replace
         * Cox model - crude
         stcox udca, strata(stp) vce(robust)

@@ -22,7 +22,8 @@
 > in(index_date)
   6.     count if `outcome'_flag==1
   7.     if r(N) > 10 {
-  8.         sts graph, by(udca) title("`outcome'") graphregion(fcolor(white))
+  8.         sts graph, by(udca) title("`outcome'") graphregion(fcolor(white)) 
+> ylabel(.75(.1)1)
   9.         graph export ./output/graphs/km_`outcome'.svg, as(svg) replace
  10.         * Cox model - crude
 .         stcox udca, strata(stp) vce(robust)
@@ -983,7 +984,7 @@ udca events = 21
 . 
 end of do-file
 
-. . file open output using "/tmp/106_analysis_models.do.ObYZ.out", write text r
+. . file open output using "/tmp/106_analysis_models.do.P1uj.out", write text r
 > eplace
 
 . . file write output "success" 
