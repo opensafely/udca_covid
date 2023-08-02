@@ -47,7 +47,7 @@ foreach outcome in hosp_any composite_any {
     *l date days _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days<.
 
     twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
-                    (rarea _at2_lci _at2_uci days if _at2_uci<1, color(blue%25)) ///
+                    (rarea _at2_lci _at2_uci days, color(blue%25)) ///
                     (line _at1 days, sort lcolor(red)) ///
                     (line _at2 days, sort lcolor(blue) lpattern(dash)) ///
                     , legend(order(1 "No UDCA" 2 "UDCA") ring(0) cols(1) pos(11) region(lwidth(none))) ///

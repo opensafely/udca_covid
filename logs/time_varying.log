@@ -136,8 +136,13 @@ Sorted by:
 file /tmp/St00015.000001 saved
 
 . 
-. * Use time-varying exposure file and add in rows for the 6 monthly covariate 
-> assessment times 
+. /* Time-varying covariates are assessed 6-monthly and at time of exposure swi
+> tching.
+> As disease severity, covid vaccination and liver transplant will only switch 
+> once need to identify
+> nearest date after date identified in study definition */ 
+. * Note: currently just doing 120 day file as this is the primary exposure def
+> inition 
 . use ./output/time_varying_udca_120, clear 
 
 . codebook patient_id
@@ -149,13 +154,13 @@ patient_id                                                          (unlabeled)
                   type:  numeric (int)
 
                  range:  [0,9995]                     units:  1
-         unique values:  1,896                    missing .:  0/2,909
+         unique values:  1,896                    missing .:  0/2,895
 
-                  mean:   4979.99
-              std. dev:   2881.99
+                  mean:   4979.64
+              std. dev:   2881.38
 
            percentiles:        10%       25%       50%       75%       90%
-                              1025      2509      4978      7477      8957
+                              1028      2509      4977      7487      8952
 
 . merge m:1 patient_id using `tempfile', keepusing(severe_disease_fu_date sever
 > e_disease_bl covid_vacc_first_date liver_transplant_fu_date dereg_date died_d
@@ -163,8 +168,8 @@ patient_id                                                          (unlabeled)
 
     Result                           # of obs.
     -----------------------------------------
-    not matched                         1,806
-        from master                     1,806  (_merge==1)
+    not matched                         1,792
+        from master                     1,792  (_merge==1)
         from using                          0  (_merge==2)
 
     matched                             1,103  (_merge==3)
@@ -172,12 +177,13 @@ patient_id                                                          (unlabeled)
 
 . * Should only be required for dummy data 
 . keep if _merge==3
-(1,806 observations deleted)
+(1,792 observations deleted)
 
 . * Only using start date as this is when udca exposure or 6 monthly check occu
 > rs
 . drop stop
 
+. * Add in rows with each of the 6 monthly assessment dates 
 . gen expand=1
 
 . bys patient_id (start): replace expand=6 if _n==_N 
@@ -204,6 +210,10 @@ patient_id                                                          (unlabeled)
 (1,000 real changes made)
 
 . 
+. * This gives a file where start dates are either exposure switching or 6-mont
+> ly assessment dates 
+. * These will be used to determine the closest date to time-varying covariate 
+> dates identified in study definition 
 . sort patient_id start 
 
 . drop newv
@@ -238,7 +248,9 @@ patient_id                                                          (unlabeled)
   2.     gen `var'A = date(`var', "YMD")
   3.     format `var'A %dD/N/CY 
   4.     drop `var'
-  5.     * time between date of record and change in covariate
+  5.     * time between date of record and change in covariate - positive value
+> s are those where record starts after 
+.     * covariate change date 
 .     gen time_`var' = start - `var'A
   6.     * Set time variable for records prior to change as missing
 .     replace time_`var'=. if time_`var'<0
@@ -340,7 +352,7 @@ patient_id                                                          (unlabeled)
  15.     keep patient_id `var' start stop
  16.     * Check data 
 .     count if start==stop 
- 17.     * drop start==stop but should not drop any in real data 
+ 17.     * drop where start is same as stop - should not drop any in real data 
 .     drop if start==stop 
  18.     count if stop<start
  19.     codebook patient_id
@@ -421,8 +433,8 @@ patient_id                                                          (unlabeled)
 file ./output/tv_liver_trans.dta saved
 
 . 
-. * Same for liver disease severity, but variable can start at 1 so remains as 
-> this for whole of follow-up 
+. * Same for liver disease severity, but variable can start at 1 and remain for
+>  whole of follow-up 
 . preserve
 
 . keep patient_id severe_disease_fu_date_update end_date severe_disease_bl
@@ -493,7 +505,7 @@ file ./output/tv_severe_disease_check.dta saved
 . count if start==stop
   10
 
-. * drop start==stop but should not drop any in real data 
+. * drop if start is same as stop - should not drop any in real data 
 . drop if start==stop 
 (10 observations deleted)
 
@@ -542,6 +554,8 @@ file ./output/tv_severe_disease.dta saved
 
 . drop died_date_ons
 
+. * Determine end of follow-up then add rows to update age for each year of fol
+> low-up
 . gen end_study = date("31/12/2022", "DMY")
 
 . egen end_date = rowmin(dereg_dateA end_study died_dateA)
@@ -675,6 +689,7 @@ file ./output/tv_age.dta saved
 
 . drop died_date_ons
 
+. * Determine end of follow-up then add rows to update waves 
 . gen end_study = date("31/12/2022", "DMY")
 
 . egen end_date = rowmin(dereg_dateA end_study died_date_onsA)
@@ -805,7 +820,7 @@ patient_id                                                          (unlabeled)
 file ./output/tv_waves.dta saved
 
 . 
-. * Outcomes 
+. * Create files for outcomes
 . use `tempfile', clear
 
 . * Determine end of follow-up date
@@ -843,8 +858,9 @@ file ./output/tv_waves.dta saved
 . 
 . * Make file for each outcome: covid death, hospitalisation and composite 
 . * Files contain patient ID, start = start study, stop = either end date for p
-> atient or date of outcome and flag for outcome 
-. * COVID death - any position
+> atient or date of outcome 
+. * and flag for outcome 
+. * COVID death - covid code in any position
 . preserve 
 
 . keep patient_id end_date died_ons_covid_flag_any died_date_onsA
@@ -897,7 +913,7 @@ patient_id                                                          (unlabeled)
 . restore 
 
 . 
-. * Hospitalisation - any position
+. * Hospitalisation - covid code in any position
 . preserve 
 
 . keep patient_id end_date hosp_any_flag hosp_covid_anyA
@@ -1021,7 +1037,7 @@ patient_id                                                          (unlabeled)
 . * Dummy drug data includes people not in cohort, so drop these - should not b
 > e any in real data 
 . drop if age_tv==.
-(1,806 observations deleted)
+(1,792 observations deleted)
 
 . codebook patient_id
 
@@ -1069,7 +1085,7 @@ Checking missings in all variables:
 file ./output/tv_vars_composite_any.dta saved
 
 . 
-. * COVID death - any position
+. * COVID death - covid code in any position
 . use ./output/tv_severe_disease, clear 
 
 . tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
@@ -1088,7 +1104,7 @@ file ./output/tv_vars_composite_any.dta saved
 . * Dummy drug data includes people not in cohort, so drop these - should not b
 > e any in real data 
 . drop if age_tv==.
-(1,806 observations deleted)
+(1,792 observations deleted)
 
 . codebook patient_id
 
@@ -1128,7 +1144,7 @@ Checking missings in all variables:
 file ./output/tv_vars_died_covid_any.dta saved
 
 . 
-. * COVID hospitalisation - any position
+. * COVID hospitalisation - covid code in any position
 . use ./output/tv_severe_disease, clear 
 
 . tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
@@ -1150,16 +1166,16 @@ file ./output/tv_vars_died_covid_any.dta saved
 hosp_any_fl |
          ag |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      4,776       69.92       69.92
-          1 |         58        0.85       70.77
-          . |      1,997       29.23      100.00
+          0 |      4,776       70.06       70.06
+          1 |         58        0.85       70.91
+          . |      1,983       29.09      100.00
 ------------+-----------------------------------
-      Total |      6,831      100.00
+      Total |      6,817      100.00
 
 . * Dummy drug data includes people not in cohort, so drop these - should not b
 > e any in real data 
 . drop if age_tv==.
-(1,806 observations deleted)
+(1,792 observations deleted)
 
 . codebook patient_id
 
@@ -1218,7 +1234,7 @@ file ./output/tv_vars_hosp_any.dta saved
 
 Contains data from /tmp/St00015.000001
   obs:         1,000                          
- vars:           106                          10 Jul 2023 12:26
+ vars:           106                          2 Aug 2023 13:37
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -1340,6 +1356,7 @@ patient_id      int     %8.0g
 -------------------------------------------------------------------------------
 Sorted by: 
 
+. * Format variables 
 . * Sex
 . gen male = 1 if sex == "M"
 (498 missing values generated)
@@ -1378,7 +1395,7 @@ Sorted by:
 ------------+-----------------------------------
       Total |      1,000      100.00
 
-. * IMD
+. * IMD - should not be missing (i.e. 0) in real data
 . replace imd=6 if imd==0
 (54 real changes made)
 
@@ -1454,6 +1471,11 @@ Sorted by:
 . replace smoking = 3 if smoking==.
 (547 real changes made)
 
+. label define smok 1 "Current smoker" 2 "Ex-smoker" 0 "Never smoked" 3 "Unknow
+> n"
+
+. label values smoking smok
+
 . 
 . * High risk covid conditions
 . replace oral_steroid_drugs_nhsd=. if oral_steroid_drug_nhsd_3m_count < 2 & or
@@ -1514,5 +1536,5 @@ file ./output/an_dataset_composite_any.dta saved
       name:  <unnamed>
        log:  /workspace/logs/time_varying.log
   log type:  text
- closed on:  10 Jul 2023, 12:26:54
+ closed on:   2 Aug 2023, 13:37:55
 -------------------------------------------------------------------------------
