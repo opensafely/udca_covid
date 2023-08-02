@@ -105,6 +105,9 @@ has_follow_ |
 . keep if (sex=="F" | sex=="M")
 (3 observations deleted)
 
+. safecount 
+  34
+
 . file write table ("`r(N)'") _n ("IMD missing") _tab 
 
 . safetab imd 
@@ -151,7 +154,7 @@ has_follow_ |
 
 ** COUNT <=5 **
 
-. file write table ("`r(N)'") _n ("Population available") _tab
+. file write table ("`r(N)'") 
 
 . 
 . file close table 
@@ -159,7 +162,7 @@ has_follow_ |
 . 
 end of do-file
 
-. . file open output using "/tmp/100_flowchart.do.Fb1f.out", write text replace
+. . file open output using "/tmp/100_flowchart.do.WU3i.out", write text replace
 
 . . file write output "success" 
 

@@ -40,6 +40,7 @@ safecount
 file write table ("`r(N)'") _n ("Missing/ineligible sex") _tab 
 safetab sex, m
 keep if (sex=="F" | sex=="M")
+safecount 
 file write table ("`r(N)'") _n ("IMD missing") _tab 
 safetab imd 
 drop if imd==0
@@ -53,6 +54,6 @@ file write table ("`r(N)'") _n ("Liver transplant prior to index") _tab
 safetab liver_transplant_bl, m
 drop if liver_transplant_bl
 safecount
-file write table ("`r(N)'") _n ("Population available") _tab
+file write table ("`r(N)'") 
 
 file close table 
