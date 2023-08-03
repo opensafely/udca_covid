@@ -118,7 +118,7 @@ use ./output/an_dataset_died_covid_any, clear
     * Close window 
     graph close
 
-    * plot for each outcome - fully adjusted
+    /* plot for each outcome - fully adjusted - doesn't converge
 foreach outcome in hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
     describe
@@ -130,8 +130,8 @@ foreach outcome in hosp_any composite_any {
     * Fully adjusted model (though not including wave as not right in main model)
     * Setting df (degrees of freedom for restricted cubic splines) as 3 as this is default 
     * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = linear effect of log time
-    stpm2 udca male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease covid_vacc_first liver_trans, ///
-     tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(3) scale(hazard) eform
+    stpm2 udca male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease /*covid_vacc_first*/ liver_trans, ///
+     tvc(udca severe_disease /*covid_vacc_first*/ liver_trans age_tv) dftvc(1) df(3) scale(hazard) eform
    
     summ _t
     local tmax=r(max)
@@ -221,3 +221,4 @@ use ./output/an_dataset_died_covid_any, clear
 
     * Close window 
     graph close
+    */
