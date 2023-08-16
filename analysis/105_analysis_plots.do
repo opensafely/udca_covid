@@ -10,7 +10,7 @@ cap mkdir ./output/graphs
 * Open a log file
 cap log using ./logs/analysis.log, replace
 
-/* plot for each outcome - age and sex adjusted only
+* plot for each outcome - age and sex adjusted only
 foreach outcome in hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
     describe
@@ -114,8 +114,8 @@ use ./output/an_dataset_died_covid_any, clear
 
     * Close window 
     graph close
-*/
-    * plot for each outcome - fully adjusted - doesn't converge
+
+  /  * plot for each outcome - fully adjusted - doesn't converge
 foreach outcome in hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
     describe
@@ -169,7 +169,7 @@ foreach outcome in hosp_any composite_any {
 
 }
 
-/*use ./output/an_dataset_died_covid_any, clear 
+use ./output/an_dataset_died_covid_any, clear 
     describe
     gen index_date = date("01/03/2020", "DMY")
     stset stop, fail(died_covid_any_flag) id(patient_id) enter(index_date) origin(index_date)
