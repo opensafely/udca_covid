@@ -10,7 +10,7 @@ cap mkdir ./output/graphs
 * Open a log file
 cap log using ./logs/analysis.log, replace
 
-* plot for each outcome - age and sex adjusted only
+/* plot for each outcome - age and sex adjusted only
 foreach outcome in hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
     describe
@@ -18,10 +18,7 @@ foreach outcome in hosp_any composite_any {
     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) origin(index_date)
 
     * Add cumulative incidence plots 
-    * Not stratifying by stp as cannot use tvc and stratify 
-    * Fully adjusted model - currently not running     
-    *stpm2 udca male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, ///
-    * tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(3) scale(hazard) eform
+    * Not stratifying by stp as cannot use tvc and stratify  
     
     * Age and sex adjusted model 
     * Setting df (degrees of freedom for restricted cubic splines) as 3 as this is default 
@@ -74,13 +71,13 @@ use ./output/an_dataset_died_covid_any, clear
     * Add cumulative incidence plots 
     * Not stratifying by stp as cannot use tvc and stratify 
     * Fully adjusted model - currently not running     
-    *stpm2 udca male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, ///
-    * tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(3) scale(hazard) eform
+    stpm2 udca male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease /*covid_vacc_first*/ liver_trans i.wave, ///
+     tvc(udca severe_disease /*covid_vacc_first*/ liver_trans age_tv) dftvc(1) df(3) scale(hazard) eform
     
     * Age and sex adjusted model 
     * Setting df (degrees of freedom for restricted cubic splines) as 3 as this is default 
     * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = linear effect of log time 
-    stpm2 udca age_tv male, tvc(udca) dftvc(1) df(3) scale(hazard) eform
+    *stpm2 udca age_tv male, tvc(udca) dftvc(1) df(3) scale(hazard) eform
     summ _t
     local tmax=r(max)
     local tmaxplus1=r(max)+1
@@ -105,7 +102,7 @@ use ./output/an_dataset_died_covid_any, clear
                     (line _at1 days, sort lcolor(red)) ///
                     (line _at2 days, sort lcolor(blue) lpattern(dash)) ///
                     , legend(order(1 "No UDCA" 2 "UDCA") ring(0) cols(1) pos(11) region(lwidth(none))) ///
-                    title("Time to `outcome'", justification(left) size(med) )  	   ///
+                    title("Time to COVID-19 death", justification(left) size(med) )  	   ///
                     yscale(range(0, 1)) 											///
                     ylabel(0 (0.2) 2, angle(0) format(%4.1f) labsize(small))	///
                     xlabel(0 (200) 1035, labsize(small))				   				///			
@@ -117,8 +114,8 @@ use ./output/an_dataset_died_covid_any, clear
 
     * Close window 
     graph close
-
-    /* plot for each outcome - fully adjusted - doesn't converge
+*/
+    * plot for each outcome - fully adjusted - doesn't converge
 foreach outcome in hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
     describe
@@ -163,7 +160,7 @@ foreach outcome in hosp_any composite_any {
                     xlabel(0 (200) 1035, labsize(small))				   				///			
                     ytitle("Cumulative outcomes (%)", size(medsmall)) ///
                     xtitle("Days since 1 Mar 2020", size(medsmall))      		///
-                    graphregion(fcolor(white)) saving(adjcurv_`outcome', replace)
+                    graphregion(fcolor(white)) saving(_adjcurv_`outcome', replace)
 
     graph export "./output/graphs/adjcurv_f_`outcome'.svg", as(svg) replace
 
@@ -172,7 +169,7 @@ foreach outcome in hosp_any composite_any {
 
 }
 
-use ./output/an_dataset_died_covid_any, clear 
+/*use ./output/an_dataset_died_covid_any, clear 
     describe
     gen index_date = date("01/03/2020", "DMY")
     stset stop, fail(died_covid_any_flag) id(patient_id) enter(index_date) origin(index_date)
