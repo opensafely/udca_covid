@@ -6,9 +6,14 @@ DESCRIPTION OF FILE:	Produce cumulative incidence plots
 ==============================================================================*/
 adopath + ./analysis/ado 
 cap mkdir ./output/graphs
+cap mkdir ./output/tables
 
 * Open a log file
 cap log using ./logs/analysis.log, replace
+* Open file to write results to 
+file open tablecontent using ./output/tables/cum_incidence.txt, write text replace
+file write tablecontent ("Outcome") _tab ("Exposure") _tab ("Cumulative incidence") _tab ("95% confidence interval") _n
+
 
 * plot for each outcome - age and sex adjusted only
 foreach outcome in hosp_any composite_any {
@@ -36,11 +41,24 @@ foreach outcome in hosp_any composite_any {
 
     for var _at1 _at2 _at1_lci _at1_uci _at2_lci _at2_uci _contrast2_1 _contrast2_1_lci _contrast2_1_uci: replace X=100*X
 
-    *cumulative mortality at last day of follow-up
-    list _at1* if days==`tmax', noobs
-    list _at2* if days==`tmax', noobs
-    list _contrast* if days==`tmax', noobs
-
+    *cumulative mortality at last day of follow-up - write to file 
+    file write tablecontent ("`outcome'") _tab ("No UDCA") _tab  
+    * cumulative outcome - no UDCA 
+    sum _at1 if days==`tmax'
+    file write tablecontent (r(mean)) _tab 
+    sum _at1_lci if days==`tmax'
+    file write tablecontent (r(mean)) _tab 
+    sum _at1_uci if days==`tmax'
+    file write tablecontent (r(mean)) _tab _n 
+    * cumulative outcome - UDCA 
+    file write tablecontent ("`outcome'") _tab ("UDCA") _tab  
+    sum _at2 if days==`tmax'
+    file write tablecontent (r(mean)) _tab 
+    sum _at2_lci if days==`tmax'
+    file write tablecontent (r(mean)) _tab 
+    sum _at2_uci if days==`tmax'
+    file write tablecontent (r(mean)) _tab _n 
+    
     *l date days _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days<.
 
     twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
@@ -87,10 +105,23 @@ use ./output/an_dataset_died_covid_any, clear
 
     for var _at1 _at2 _at1_lci _at1_uci _at2_lci _at2_uci _contrast2_1 _contrast2_1_lci _contrast2_1_uci: replace X=100*X
 
-    *cumulative mortality at last day of follow-up
-    list _at1* if days==`tmax', noobs
-    list _at2* if days==`tmax', noobs
-    list _contrast* if days==`tmax', noobs
+    *cumulative mortality at last day of follow-up - write to file 
+    file write tablecontent ("Death") _tab ("No UDCA") _tab  
+    * cumulative outcome - no UDCA 
+    sum _at1 if days==`tmax'
+    file write tablecontent (r(mean)) _tab 
+    sum _at1_lci if days==`tmax'
+    file write tablecontent (r(mean)) _tab 
+    sum _at1_uci if days==`tmax'
+    file write tablecontent (r(mean)) _tab _n 
+    * cumulative outcome - UDCA 
+    file write tablecontent ("Death") _tab ("UDCA") _tab  
+    sum _at2 if days==`tmax'
+    file write tablecontent (r(mean)) _tab 
+    sum _at2_lci if days==`tmax'
+    file write tablecontent (r(mean)) _tab 
+    sum _at2_uci if days==`tmax'
+    file write tablecontent (r(mean)) _tab _n 
 
     *l date days _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days<.
 
@@ -111,6 +142,7 @@ use ./output/an_dataset_died_covid_any, clear
 
     * Close window 
     graph close
+    
 
   /* plot for each outcome - fully adjusted - doesn't converge
 foreach outcome in hosp_any composite_any {
@@ -216,3 +248,5 @@ use ./output/an_dataset_died_covid_any, clear
     * Close window 
     graph close
     */
+
+    file close tablecontent
