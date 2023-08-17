@@ -12,7 +12,7 @@ cap log using ./logs/flowchart.log, replace
 import delimited using ./output/input_flowchart.csv, clear
  *  has_follow_up 
  * (NOT died) AND
- * (age >=18 AND age <= 110) AND
+ * (age >=18 AND age <= 115) AND
  * (sex = 'M' OR sex = 'F') AND
  * (imd != 0) AND
  * (has_pbc=1 OR has_psc=1) AND
@@ -35,7 +35,7 @@ keep if died!=1
 safecount
 file write table ("`r(N)'") _n ("Age ineligible") _tab  
 sum age
-keep if (age>=18 & age<=110)
+keep if (age>=18 & age<=115)
 safecount
 file write table ("`r(N)'") _n ("Missing/ineligible sex") _tab 
 safetab sex, m

@@ -13,7 +13,7 @@ study = StudyDefinition(
     index_date="2020-03-01",
     population=patients.all(),
         #  has_follow_up 
-        # (age >=18 AND age <= 110) AND
+        # (age >=18 AND age <= 115) AND
         # (NOT died) AND
         # (sex = 'M' OR sex = 'F') AND
         # (imd != 0) AND
