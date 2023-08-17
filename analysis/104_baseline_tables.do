@@ -113,7 +113,7 @@ restore
 
 * Characteristics by exposure status at baseline 
 preserve 
-table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_disease_bl cat \ smoking cat \ bmi_cat cat \ has_pbc bin) by(udca_bl) clear
+table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_disease_bl cat \ smoking cat \ bmi_cat cat \ has_pbc bin \ any_high_risk_condition cat) by(udca_bl) clear
 export delimited using ./output/tables/baseline_table_udca.csv, replace
 * Rounding numbers in table to nearest 5
 forvalues i=0/1 {   

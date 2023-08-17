@@ -15,7 +15,7 @@ cap log using ./logs/analysis_models.log, replace
 * Open file to write results to 
 file open tablecontent using ./output/tables/cox_models.txt, write text replace
 file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator") _tab ("events") _tab ("total_person_wks") _tab ("Rate") _tab ("unadj_hr") _tab ///
-("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci") _tab ("f_adj_hr") _tab ("f_adj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
+("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci")  _tab ("p_adj_hr") _tab ("p_adj_ci") _tab ("p_adj_lci") _tab ("p_adj_uci") _tab ("f_adj_hr") _tab ("f_adj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
 
 * Cox models and Schoenfeld residual plots for each outcome
 foreach outcome in died_covid_any hosp_any composite_any {
@@ -48,10 +48,16 @@ foreach outcome in died_covid_any hosp_any composite_any {
                     title ("`outcome'", position(11) size(medsmall)) ///
                     name(uni_plot_`outcome') ///
                     note("")
+        * Cox model - age and sex adjusted
+        stcox udca age_tv male, strata(stp) vce(robust)
+        estimates save "./output/tempdata/p_adj_model_`outcome'", replace 
+        eststo model2
+        parmest, label eform format(estimate p lb ub) saving("./output/tempdata/p_surv_adj_`outcome'", replace) idstr("adj_`outcome'") 
+        estat phtest, detail
         * Cox model - fully adjusted
         stcox udca age_tv male any_high_risk_condition i.ethnicity i.imd i.bmi_cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, strata(stp) vce(robust)
         estimates save "./output/tempdata/adj_model_`outcome'", replace 
-        eststo model2
+        eststo model3
         parmest, label eform format(estimate p lb ub) saving("./output/tempdata/surv_adj_`outcome'", replace) idstr("adj_`outcome'") 
         estat phtest, detail
         * Plot Schoenfeld residuals 
@@ -109,6 +115,10 @@ foreach outcome in died_covid_any hosp_any composite_any {
         if `event'>10 & `event'!=. {
             file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             cap estimates use "./output/tempdata/crude_`outcome'" 
+            cap lincom udca, eform
+            file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _tab 
+            cap estimates clear
+            cap estimates use "./output/tempdata/p_adj_model_`outcome'" 
             cap lincom udca, eform
             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _tab 
             cap estimates clear
