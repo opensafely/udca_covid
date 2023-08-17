@@ -140,6 +140,12 @@ forvalues i = 60(30)180 {
     drop died_date_ons
     gen end_study = date("31/12/2022", "DMY")
     egen end_date = rowmin(dereg_dateA end_study died_dateA)
+    * Create flag indicating reason for end of follow-up 
+    gen end_date_flag = (end_date==dereg_dateA)
+    replace end_date_flag = 2 if end_date==died_dateA
+    replace end_date_flag = 3 if end_date==end_study
+    tab end_date_flag, m 
+
     * Count number of days of follow-up 
     gen total_fu = end_date - date("01/03/2020", "DMY")
 
@@ -169,6 +175,7 @@ forvalues i = 60(30)180 {
     gen end_before = (start > end_date) 
 
     tab end_after
+    tab end_after end_date_flag
     tab end_before 
 
     * Drop whole rows that are after end_date 
