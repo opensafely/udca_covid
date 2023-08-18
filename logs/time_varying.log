@@ -401,6 +401,9 @@ patient_id                                                          (unlabeled)
            percentiles:        10%       25%       50%       75%       90%
                             1049.5    2535.5      5007    7445.5      8918
 
+. count
+  1,000
+
 . * Create file for each covariate to merge onto udca exposure file 
 . * First covid vaccination and liver transplant as all people will begin at ze
 > ro 
@@ -1034,7 +1037,7 @@ patient_id                                                          (unlabeled)
 . * Hospitalisation - covid code in any position
 . preserve 
 
-. keep patient_id end_date hosp_any_flag hosp_covid_anyA
+. keep patient_id end_date hosp_any_flag hosp_covid_anyA end_date_flag
 
 . gen start = date("01/03/2020", "DMY")
 
@@ -1042,6 +1045,17 @@ patient_id                                                          (unlabeled)
 
 . count if hosp_any_flag ==1 & end_date<hosp_covid_anyA
   54
+
+. tab end_date_flag if hosp_any_flag ==1 & end_date<hosp_covid_anyA
+
+end_date_fl |
+         ag |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |         24       44.44       44.44
+          2 |         23       42.59       87.04
+          3 |          7       12.96      100.00
+------------+-----------------------------------
+      Total |         54      100.00
 
 . replace hosp_any_flag=0 if end_date<hosp_covid_anyA
 (54 real changes made)
@@ -1377,7 +1391,7 @@ file ./output/tv_vars_hosp_any.dta saved
 
 Contains data from /tmp/St00015.000001
   obs:         1,000                          
- vars:           106                          18 Aug 2023 15:25
+ vars:           106                          18 Aug 2023 15:52
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -1705,5 +1719,5 @@ file ./output/an_dataset_composite_any.dta saved
       name:  <unnamed>
        log:  /workspace/logs/time_varying.log
   log type:  text
- closed on:  18 Aug 2023, 15:25:42
+ closed on:  18 Aug 2023, 15:52:53
 -------------------------------------------------------------------------------
