@@ -304,6 +304,9 @@ keep patient_id start stop hosp_any_flag
 save ./output/tv_outcome_hosp_any, replace 
 tab hosp_any_flag, m
 codebook patient_id
+count
+bys patient_id: egen total_hosp = total(hosp_any_flag)
+tab total_hosp
 restore 
 
 * Composite 
@@ -361,6 +364,8 @@ tvc_merge start stop using ./output/tv_age, id(patient_id)
 tvc_merge start stop using ./output/tv_outcome_hosp_any, id(patient_id) failure(hosp_any_flag)
 * Check number of outcomes after merge 
 tab hosp_any_flag, m
+bys patient_id: egen total_hosp = total(hosp_any_flag)
+tab total_hosp
 * Dummy drug data includes people not in cohort, so drop these - should not be any in real data 
 drop if age_tv==.
 codebook patient_id
