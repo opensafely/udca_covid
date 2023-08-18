@@ -199,7 +199,7 @@ study = StudyDefinition(
       bl_liver_transplant_snomed=patients.with_these_clinical_events(
         liver_transplant_snomed_codes,
         returning = "binary_flag",
-        on_or_before = "index_date"
+        on_or_before = "index_date",
       ),
       bl_liver_transplant_opcs=patients.admitted_to_hospital(
         on_or_before = "index_date",

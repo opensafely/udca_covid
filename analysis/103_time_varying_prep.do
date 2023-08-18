@@ -64,12 +64,17 @@ foreach var in covid_vacc_first_date severe_disease_fu_date liver_transplant_fu_
     gen time_`var' = start - `var'A
     * Set time variable for records prior to change as missing
     replace time_`var'=. if time_`var'<0
+    * Check if any are on index date (1st March) potentially severe disease - not others
+    count if time_`var'==0
+    count if `var'A==date("01/03/2020", "DMY")
     * Find earliest start date after covariate update
     bys patient_id (time_`var'): gen `var'_update = start[1] if `var'A!=.
     format `var'_update %dD/N/CY 
     count if `var'_update < `var'A
 }
 * For severe disease only update variable if no severe disease at baseline 
+count if severe_disease_fu_date_update==date("01/03/2020", "DMY") & severe_disease_bl!=1 
+tab severe_disease_bl
 replace severe_disease_fu_date_update = . if severe_disease_bl==1
 
 * Keep only change dates to create time-varying dataset
@@ -85,7 +90,8 @@ foreach var in covid_vacc_first liver_trans {
     preserve
     keep patient_id `var'_date_update end_date
     * Drop updates after the end of follow-up 
-    replace `var'_date = . if `var'_date>end_date 
+    count if `var'_date>=end_date 
+    replace `var'_date = . if `var'_date>=end_date 
     * Flag if variable is updated
     gen `var'=(`var'_date_update!=.)
     * Create extra row if variable is updated 
@@ -114,7 +120,7 @@ foreach var in covid_vacc_first liver_trans {
 preserve
 keep patient_id severe_disease_fu_date_update end_date severe_disease_bl
 * Drop updates after the end of follow-up 
-replace severe_disease_fu_date_update=. if severe_disease_fu_date_update>end_date 
+replace severe_disease_fu_date_update=. if severe_disease_fu_date_update>=end_date 
 * Flag if variable is updated
 gen severe_disease=(severe_disease_fu_date_update!=.)
 tab severe_disease 
@@ -123,11 +129,14 @@ replace severe_disease = 0 if severe_disease_bl==1
 gen expand = severe_disease + 1
 tab expand
 expand expand, gen(newv)
+tab newv
 * Update variables so row for when zero and row for when updated - if not updated whole time will be zero 
 gen start = date("01/03/2020", "DMY") if newv==0
 replace start = severe_disease_fu_date_update if newv==1
-gen stop = severe_disease_fu_date_update if newv==0
-replace stop = end_date if stop==.
+gen stop = severe_disease_fu_date_update if newv==0 & severe_disease==1
+count if stop!=.
+replace stop = end_date if stop==. 
+count if stop==.
 replace severe_disease=0 if newv==0 & severe_disease_bl==0
 replace severe_disease=1 if newv==0 & severe_disease_bl==1
 save ./output/tv_severe_disease_check, replace
@@ -239,7 +248,13 @@ format %dD/N/CY died_date_onsA
 drop died_date_ons
 gen end_study = date("31/12/2022", "DMY")
 egen end_date = rowmin(dereg_dateA end_study died_date_onsA)
+* Create flag indicating reason for end of follow-up 
+gen end_date_flag = (end_date==dereg_dateA)
+replace end_date_flag = 2 if end_date==died_date_onsA
+replace end_date_flag = 3 if end_date==end_study
 gen hosp_covid_anyA = date(hosp_covid_any, "YMD")
+gen yr_hosp = year(hosp_covid_anyA)
+tab yr_hosp
 * Flag hospitalised with covid 
 gen hosp_any_flag = hosp_covid_anyA!=.
 
@@ -298,7 +313,6 @@ tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
 tvc_merge start stop using ./output/tv_liver_trans, id(patient_id)
 tvc_merge start stop using ./output/time_varying_udca_120, id(patient_id)
 tvc_merge start stop using ./output/tv_age, id(patient_id)
-tvc_merge start stop using ./output/tv_waves, id(patient_id)
 tvc_merge start stop using ./output/tv_outcome_composite_any, id(patient_id) failure(composite_any_flag)
 * Dummy drug data includes people not in cohort, so drop these - should not be any in real data 
 drop if age_tv==.
@@ -306,6 +320,7 @@ codebook patient_id
 * Check number of outcomes after merge  - there will be missings for rows after event
 tab composite_any_flag, m
 missings report
+drop if composite_any_flag==.
 save ./output/tv_vars_composite_any, replace 
 
 * COVID death - covid code in any position
@@ -314,7 +329,6 @@ tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
 tvc_merge start stop using ./output/tv_liver_trans, id(patient_id)
 tvc_merge start stop using ./output/time_varying_udca_120, id(patient_id)
 tvc_merge start stop using ./output/tv_age, id(patient_id)
-tvc_merge start stop using ./output/tv_waves, id(patient_id)
 tvc_merge start stop using ./output/tv_outcome_died_covid_any, id(patient_id) failure(died_covid_any_flag)
 * Dummy drug data includes people not in cohort, so drop these - should not be any in real data 
 drop if age_tv==.
@@ -330,7 +344,6 @@ tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
 tvc_merge start stop using ./output/tv_liver_trans, id(patient_id)
 tvc_merge start stop using ./output/time_varying_udca_120, id(patient_id)
 tvc_merge start stop using ./output/tv_age, id(patient_id)
-tvc_merge start stop using ./output/tv_waves, id(patient_id)
 tvc_merge start stop using ./output/tv_outcome_hosp_any, id(patient_id) failure(hosp_any_flag)
 * Check number of outcomes after merge 
 tab hosp_any_flag, m
@@ -340,6 +353,7 @@ codebook patient_id
 * Check number of outcomes after merge - there will be missings for rows after event
 tab hosp_any_flag, m 
 missings report
+drop if hosp_any_flag==.
 save ./output/tv_vars_hosp_any, replace 
 
 /* Format file with static covariates: sex, region, covid high risk conditions, 
@@ -364,6 +378,12 @@ label define eth5 			1 "White"  					///
 
 label values ethnicity eth5
 safetab ethnicity, m
+* Create White vs non-White ethnicity variable
+gen eth_bin = (ethnicity!=1)
+tab eth_bin ethnicity, m 
+label define eth2 0 "White" 1 "Non-White"
+label values eth_bin eth2 
+
 * IMD - should not be missing (i.e. 0) in real data
 replace imd=6 if imd==0
 

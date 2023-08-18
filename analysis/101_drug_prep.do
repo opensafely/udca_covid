@@ -144,8 +144,7 @@ forvalues i = 60(30)180 {
     gen end_date_flag = (end_date==dereg_dateA)
     replace end_date_flag = 2 if end_date==died_dateA
     replace end_date_flag = 3 if end_date==end_study
-    tab end_date_flag, m 
-
+    
     * Count number of days of follow-up 
     gen total_fu = end_date - date("01/03/2020", "DMY")
 
@@ -170,6 +169,7 @@ forvalues i = 60(30)180 {
     replace start = date("01/03/2020", "DMY") if new_record==1
     drop new_record start_after
 
+    tab end_date_flag if start==date("01/03/2020", "DMY"), m 
     * Identify rows that end after study end date for person 
     gen end_after = (stop > end_date )
     gen end_before = (start > end_date) 
@@ -184,7 +184,7 @@ forvalues i = 60(30)180 {
     * Check years of stop dates 
     gen yr_stop = year(stop)
     tab yr_stop end_after 
-    
+
     * Check those flagged as ending after are last row only 
     bys patient_id (start): gen last = _n==_N
     tab last end_after 

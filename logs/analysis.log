@@ -88,8 +88,8 @@
 . }
 
 Contains data from ./output/an_dataset_hosp_any.dta
-  obs:         5,025                          
- vars:            17                          2 Aug 2023 13:37
+  obs:         4,845                          
+ vars:            17                          18 Aug 2023 09:40
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -123,45 +123,45 @@ obs. time interval:  (stop[_n-1], stop]
             origin:  time index_date
 
 ------------------------------------------------------------------------------
-      5,025  total observations
-        191  observations begin on or after (first) failure
+      4,845  total observations
+          0  exclusions
 ------------------------------------------------------------------------------
-      4,834  observations remaining, representing
+      4,845  observations remaining, representing
       1,000  subjects
-         58  failures in single-failure-per-subject data
-    630,402  total analysis time at risk and under observation
+         46  failures in single-failure-per-subject data
+    626,377  total analysis time at risk and under observation
                                                 at risk from t =         0
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
 note: delayed entry models are being fitted
 
-Iteration 0:   log likelihood = -260.92644  
-Iteration 1:   log likelihood = -260.47969  
-Iteration 2:   log likelihood = -260.46424  
-Iteration 3:   log likelihood = -260.46423  
+Iteration 0:   log likelihood = -215.29789  
+Iteration 1:   log likelihood = -214.82175  
+Iteration 2:   log likelihood = -214.80095  
+Iteration 3:   log likelihood = -214.80094  
 
-Log likelihood = -260.46423                     Number of obs     =      4,787
+Log likelihood = -214.80094                     Number of obs     =      4,780
 
 ------------------------------------------------------------------------------
              |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
 xb           |
-        udca |   .8700971   .5382514    -0.22   0.822     .2588245    2.925028
-      age_tv |   1.003825    .005443     0.70   0.481     .9932131     1.01455
-        male |    1.16093   .3062135     0.57   0.572     .6922901    1.946811
-       _rcs1 |   2.795568   .5201564     5.53   0.000     1.941295    4.025766
-       _rcs2 |   .9649753   .1492559    -0.23   0.818     .7126201    1.306695
-       _rcs3 |   1.035715   .0511783     0.71   0.478     .9401112     1.14104
-  _rcs_udca1 |   .9128483   .4180297    -0.20   0.842     .3720484    2.239741
-       _cons |   .0254839   .0084154   -11.11   0.000     .0133407    .0486803
+        udca |   1.296121   .7230198     0.46   0.642      .434327    3.867892
+      age_tv |   1.003491   .0063339     0.55   0.581     .9911534    1.015983
+        male |   .6606557    .201309    -1.36   0.174      .363584    1.200454
+       _rcs1 |   3.030818   .6964119     4.83   0.000      1.93185    4.754953
+       _rcs2 |    1.16839   .2371442     0.77   0.443     .7849149    1.739216
+       _rcs3 |   .9861867    .055481    -0.25   0.805     .8832266    1.101149
+  _rcs_udca1 |   .7320853   .2496957    -0.91   0.361     .3751789    1.428516
+       _cons |   .0263826   .0093237   -10.29   0.000     .0131977    .0527395
 ------------------------------------------------------------------------------
 Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-          _t |      4,834    474.9357    262.4227          1       1035
-(3,989 missing values generated)
-(3,989 missing values generated)
+          _t |      4,845    473.3583    260.4877          1       1035
+(3,809 missing values generated)
+(3,809 missing values generated)
 
 ->  replace _at1=100*_at1
 (1,035 real changes made)
@@ -192,27 +192,27 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        _at1 |          1    9.562266           .   9.562266   9.562266
+        _at1 |          1    7.307821           .   7.307821   7.307821
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at1_lci |          1    7.357717           .   7.357717   7.357717
+    _at1_lci |          1     5.33401           .    5.33401    5.33401
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at1_uci |          1    12.42735           .   12.42735   12.42735
+    _at1_uci |          1    10.01203           .   10.01203   10.01203
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        _at2 |          1    7.592577           .   7.592577   7.592577
+        _at2 |          1    6.619538           .   6.619538   6.619538
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at2_lci |          1    3.280482           .   3.280482   3.280482
+    _at2_lci |          1    2.775402           .   2.775402   2.775402
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at2_uci |          1     17.5728           .    17.5728    17.5728
+    _at2_uci |          1    15.78808           .   15.78808   15.78808
 (note:  named style med not found in class gsize, default attributes used)
 (note: file adjcurv_hosp_any.gph not found)
 (file adjcurv_hosp_any.gph saved)
@@ -220,8 +220,8 @@ Note: Estimates are transformed only in the first equation.
 (file ./output/graphs/adjcurv_hosp_any.svg written in SVG format)
 
 Contains data from ./output/an_dataset_composite_any.dta
-  obs:         5,025                          
- vars:            17                          2 Aug 2023 13:37
+  obs:         4,845                          
+ vars:            17                          18 Aug 2023 09:40
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -255,45 +255,45 @@ obs. time interval:  (stop[_n-1], stop]
             origin:  time index_date
 
 ------------------------------------------------------------------------------
-      5,025  total observations
-        191  observations begin on or after (first) failure
+      4,845  total observations
+          0  exclusions
 ------------------------------------------------------------------------------
-      4,834  observations remaining, representing
+      4,845  observations remaining, representing
       1,000  subjects
-        213  failures in single-failure-per-subject data
-    630,402  total analysis time at risk and under observation
+        221  failures in single-failure-per-subject data
+    626,377  total analysis time at risk and under observation
                                                 at risk from t =         0
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
 note: delayed entry models are being fitted
 
-Iteration 0:   log likelihood =  -691.8367  
-Iteration 1:   log likelihood = -691.08505  
-Iteration 2:   log likelihood = -691.07007  
-Iteration 3:   log likelihood = -691.07007  
+Iteration 0:   log likelihood = -687.77557  
+Iteration 1:   log likelihood = -686.30233  
+Iteration 2:   log likelihood = -686.28838  
+Iteration 3:   log likelihood = -686.28838  
 
-Log likelihood = -691.07007                     Number of obs     =      4,787
+Log likelihood = -686.28838                     Number of obs     =      4,780
 
 ------------------------------------------------------------------------------
              |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
 xb           |
-        udca |   1.043831   .3069233     0.15   0.884     .5866061    1.857435
-      age_tv |   .9994608   .0028536    -0.19   0.850     .9938835    1.005069
-        male |   1.075714   .1489692     0.53   0.598     .8200094    1.411155
-       _rcs1 |   2.610264   .2327822    10.76   0.000     2.191668     3.10881
-       _rcs2 |      .9999   .0764838    -0.00   0.999     .8606904    1.161626
-       _rcs3 |    .988144   .0242961    -0.49   0.628     .9416537     1.03693
-  _rcs_udca1 |    .846115   .1697623    -0.83   0.405     .5710137    1.253754
-       _cons |   .1181708   .0197437   -12.78   0.000     .0851713     .163956
+        udca |    1.15778   .3606526     0.47   0.638     .6287441    2.131957
+      age_tv |   1.000265   .0029056     0.09   0.927     .9945861    1.005976
+        male |   1.028339   .1395577     0.21   0.837     .7881672    1.341697
+       _rcs1 |   2.682506   .2291217    11.55   0.000     2.269012    3.171354
+       _rcs2 |   .9659945   .0664639    -0.50   0.615     .8441292    1.105453
+       _rcs3 |    .993079   .0222932    -0.31   0.757     .9503325    1.037748
+  _rcs_udca1 |   .7159609   .1469888    -1.63   0.104     .4787791     1.07064
+       _cons |   .1148538    .018839   -13.19   0.000     .0832773    .1584034
 ------------------------------------------------------------------------------
 Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-          _t |      4,834    474.9357    262.4227          1       1035
-(3,989 missing values generated)
-(3,989 missing values generated)
+          _t |      4,845    473.3583    260.4877          1       1035
+(3,809 missing values generated)
+(3,809 missing values generated)
 
 ->  replace _at1=100*_at1
 (1,035 real changes made)
@@ -324,27 +324,27 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        _at1 |          1    30.43242           .   30.43242   30.43242
+        _at1 |          1    32.69182           .   32.69182   32.69182
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at1_lci |          1    26.94705           .   26.94705   26.94705
+    _at1_lci |          1    28.95564           .   28.95564   28.95564
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at1_uci |          1    34.36858           .   34.36858   34.36858
+    _at1_uci |          1    36.91007           .   36.91007   36.91007
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        _at2 |          1    26.95343           .   26.95343   26.95343
+        _at2 |          1    26.72478           .   26.72478   26.72478
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at2_lci |          1    18.62616           .   18.62616   18.62616
+    _at2_lci |          1     18.4499           .    18.4499    18.4499
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at2_uci |          1    39.00361           .   39.00361   39.00361
+    _at2_uci |          1    38.71099           .   38.71099   38.71099
 (note:  named style med not found in class gsize, default attributes used)
 (note: file adjcurv_composite_any.gph not found)
 (file adjcurv_composite_any.gph saved)
@@ -357,8 +357,8 @@ Note: Estimates are transformed only in the first equation.
 .     describe
 
 Contains data from ./output/an_dataset_died_covid_any.dta
-  obs:         4,967                          
- vars:            17                          2 Aug 2023 13:37
+  obs:         4,970                          
+ vars:            17                          18 Aug 2023 09:40
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -397,13 +397,13 @@ obs. time interval:  (stop[_n-1], stop]
             origin:  time index_date
 
 ------------------------------------------------------------------------------
-      4,967  total observations
+      4,970  total observations
           0  exclusions
 ------------------------------------------------------------------------------
-      4,967  observations remaining, representing
+      4,970  observations remaining, representing
       1,000  subjects
-        153  failures in single-failure-per-subject data
-    651,528  total analysis time at risk and under observation
+        165  failures in single-failure-per-subject data
+    646,349  total analysis time at risk and under observation
                                                 at risk from t =         0
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
@@ -420,25 +420,26 @@ obs. time interval:  (stop[_n-1], stop]
 .     stpm2 udca age_tv male, tvc(udca) dftvc(1) df(3) scale(hazard) eform
 note: delayed entry models are being fitted
 
-Iteration 0:   log likelihood = -538.77123  
-Iteration 1:   log likelihood = -538.01114  
-Iteration 2:   log likelihood =  -537.9937  
-Iteration 3:   log likelihood =  -537.9937  
+Iteration 0:   log likelihood = -550.85433  
+Iteration 1:   log likelihood = -547.38567  
+Iteration 2:   log likelihood = -547.27354  
+Iteration 3:   log likelihood = -547.27332  
+Iteration 4:   log likelihood = -547.27332  
 
-Log likelihood =  -537.9937                     Number of obs     =      4,920
+Log likelihood = -547.27332                     Number of obs     =      4,905
 
 ------------------------------------------------------------------------------
              |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
 xb           |
-        udca |   .9286011   .3441626    -0.20   0.842     .4491101    1.920019
-      age_tv |    .997661   .0033765    -0.69   0.489     .9910651    1.004301
-        male |     1.1321   .1857586     0.76   0.450     .8207611    1.561538
-       _rcs1 |   2.637842   .2880293     8.88   0.000     2.129635    3.267327
-       _rcs2 |   1.014539   .0959701     0.15   0.879     .8428487    1.221203
-       _rcs3 |   .9659817   .0285332    -1.17   0.241     .9116457    1.023556
-  _rcs_udca1 |   .8566527   .2231476    -0.59   0.553      .514135    1.427357
-       _cons |   .0848797   .0167509   -12.50   0.000     .0576528    .1249646
+        udca |   1.229536   .4386406     0.58   0.562     .6110443    2.474058
+      age_tv |   1.000762   .0033375     0.23   0.819     .9942422    1.007325
+        male |   1.109574   .1742342     0.66   0.508     .8156311     1.50945
+       _rcs1 |   2.893762   .3333865     9.22   0.000     2.308856    3.626841
+       _rcs2 |   .9876515   .0920756    -0.13   0.894      .822714    1.185655
+       _rcs3 |   .9804574   .0263521    -0.73   0.463      .930145    1.033491
+  _rcs_udca1 |   .6727572   .1592186    -1.67   0.094     .4230659    1.069815
+       _cons |   .0740927   .0143775   -13.41   0.000     .0506527    .1083799
 ------------------------------------------------------------------------------
 Note: Estimates are transformed only in the first equation.
 
@@ -446,7 +447,7 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-          _t |      4,967       480.7    262.9005          1       1035
+          _t |      4,970     479.328    261.7109          1       1035
 
 .     local tmax=r(max)
 
@@ -454,14 +455,14 @@ Note: Estimates are transformed only in the first equation.
 
 . 
 .     range days 0 `tmax' `tmaxplus1'
-(3,931 missing values generated)
+(3,934 missing values generated)
 
 .     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci co
 > ntrast(difference) fail
 
 . 
 .     gen date = d(1/3/2020)+ days
-(3,931 missing values generated)
+(3,934 missing values generated)
 
 .     format date %tddd_Month
 
@@ -505,7 +506,7 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        _at1 |          1    22.83737           .   22.83737   22.83737
+        _at1 |          1    25.45883           .   25.45883   25.45883
 
 .     file write tablecontent (r(mean)) _tab 
 
@@ -513,7 +514,7 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at1_lci |          1     19.5502           .    19.5502    19.5502
+    _at1_lci |          1     21.9766           .    21.9766    21.9766
 
 .     file write tablecontent (r(mean)) _tab 
 
@@ -521,18 +522,18 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at1_uci |          1    26.67725           .   26.67725   26.67725
+    _at1_uci |          1    29.49283           .   29.49283   29.49283
 
 .     file write tablecontent (r(mean)) _tab _n 
 
 .     * cumulative outcome - UDCA 
-.     file write tablecontent ("`outcome'") _tab ("UDCA") _tab  
+.     file write tablecontent ("Death") _tab ("UDCA") _tab  
 
 .     sum _at2 if days==`tmax'
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        _at2 |          1     18.3427           .    18.3427    18.3427
+        _at2 |          1    20.44946           .   20.44946   20.44946
 
 .     file write tablecontent (r(mean)) _tab 
 
@@ -540,7 +541,7 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at2_lci |          1    11.11371           .   11.11371   11.11371
+    _at2_lci |          1    13.13053           .   13.13053   13.13053
 
 .     file write tablecontent (r(mean)) _tab 
 
@@ -548,7 +549,7 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at2_uci |          1    30.27385           .   30.27385   30.27385
+    _at2_uci |          1    31.84793           .   31.84793   31.84793
 
 .     file write tablecontent (r(mean)) _tab _n 
 
@@ -730,7 +731,7 @@ Note: Estimates are transformed only in the first equation.
 . 
 end of do-file
 
-. . file open output using "/tmp/105_analysis_plots.do.O9pU.out", write text re
+. . file open output using "/tmp/105_analysis_plots.do.d5xh.out", write text re
 > place
 
 . . file write output "success" 
