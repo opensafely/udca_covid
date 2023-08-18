@@ -74,7 +74,9 @@ foreach var in covid_vacc_first_date severe_disease_fu_date liver_transplant_fu_
     count if `var'A==date("01/03/2020", "DMY")
     * Find earliest start date after covariate update
     * Note: there are some changes that occur after the last available 6 month assessment or exposure change
-    bys patient_id (time_`var'): gen `var'_update = start[1] if `var'A!=. & time_`var'!=.
+    bys patient_id (time_`var'): gen `var'_updateN = start[1] if `var'A!=. & time_`var'!=.
+    * Spread to all rows for patient 
+    bys patient_id: egen `var'_update = max(`var'_updateN)
     format `var'_update %dD/N/CY 
     di "Number where new variable is prior to original variable (should be 0)"
     count if `var'_update < `var'A
@@ -97,6 +99,7 @@ keep patient_id covid_vacc_first_date_update severe_disease_fu_date_update liver
 codebook patient_id
 duplicates drop 
 codebook patient_id
+count
 * Create file for each covariate to merge onto udca exposure file 
 * First covid vaccination and liver transplant as all people will begin at zero 
 rename liver_transplant_fu_date_update liver_trans_date_update
