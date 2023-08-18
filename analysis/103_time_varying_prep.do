@@ -52,8 +52,11 @@ drop died_date_ons
 gen end_study = date("31/12/2022", "DMY")
 egen end_date = rowmin(dereg_dateA end_study died_dateA)
 
-* Determine number of days between each covariate and dates of UDCA change or 6 monthly check date 
+* Take out assessments after end_date 
+drop if start>end_date
 
+* Determine number of days between each covariate and dates of UDCA change or 6 monthly check date 
+bys patient_id (start): egen last_assess = max(start)
 * Format dates  and identify date nearest after covariate updates 
 foreach var in covid_vacc_first_date severe_disease_fu_date liver_transplant_fu_date {
     gen `var'A = date(`var', "YMD")
@@ -65,12 +68,23 @@ foreach var in covid_vacc_first_date severe_disease_fu_date liver_transplant_fu_
     * Set time variable for records prior to change as missing
     replace time_`var'=. if time_`var'<0
     * Check if any are on index date (1st March) potentially severe disease - not others
+    di "Number where time-varying update same as assessment date"
     count if time_`var'==0
+    di "Number where time-varying update is 1st March 2020"
     count if `var'A==date("01/03/2020", "DMY")
     * Find earliest start date after covariate update
-    bys patient_id (time_`var'): gen `var'_update = start[1] if `var'A!=.
+    * Note: there are some changes that occur after the last available 6 month assessment or exposure change
+    bys patient_id (time_`var'): gen `var'_update = start[1] if `var'A!=. & time_`var'!=.
     format `var'_update %dD/N/CY 
+    di "Number where new variable is prior to original variable (should be 0)"
     count if `var'_update < `var'A
+    di "Number where time varying update is after last assessment date"
+    count if `var'A > last_assess & `var'A!=.  & last_assess==start
+    di "Number of time-varying changes originally" 
+    * Using last_assess==start to count patients rather than rows
+    count if `var'A!=. & last_assess==start 
+    di "Number of dates for time-varying update"
+    count if `var'_update!=. & last_assess==start & `var'A!=.
 }
 * For severe disease only update variable if no severe disease at baseline 
 count if severe_disease_fu_date_update==date("01/03/2020", "DMY") & severe_disease_bl!=1 
