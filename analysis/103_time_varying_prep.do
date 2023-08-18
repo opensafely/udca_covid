@@ -302,6 +302,7 @@ keep patient_id end_date hosp_any_flag hosp_covid_anyA
 gen start = date("01/03/2020", "DMY")
 egen stop = rowmin(hosp_covid_anyA end_date)
 count if hosp_any_flag ==1 & end_date<hosp_covid_anyA
+tab end_date_flag if hosp_any_flag ==1 & end_date<hosp_covid_anyA
 replace hosp_any_flag=0 if end_date<hosp_covid_anyA
 keep patient_id start stop hosp_any_flag
 save ./output/tv_outcome_hosp_any, replace 
