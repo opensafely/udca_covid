@@ -56,7 +56,7 @@ gen order_flag = (udcaA<udcaA[_n-1] & patient_id==patient_id[_n-1])
 tab order_flag
 
 * Identify prescriptions with the same date 
-bys patient_id: gen dup_presc = (udcaA==udcaA[_n-1])
+bys patient_id (udcaA): gen dup_presc = (udcaA==udcaA[_n-1])
 tab dup_presc 
 * Drop them 
 drop if dup_presc 
@@ -181,6 +181,10 @@ forvalues i = 60(30)180 {
     * Drop whole rows that are after end_date 
     drop if end_before 
 
+    * Check years of stop dates 
+    gen yr_stop = year(stop)
+    tab yr_stop end_after 
+    
     * Check those flagged as ending after are last row only 
     bys patient_id (start): gen last = _n==_N
     tab last end_after 
