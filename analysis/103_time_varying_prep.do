@@ -417,6 +417,7 @@ bys bmi_cat: sum bmi
 replace bmi_cat = 2 if bmi_cat==. 
 label define bmi 1 "Underweight" 2 "Healthy range" 3 "Overweight" 4 "Obese" 5 "Morbidly obese"
 label values bmi_cat bmi
+tab bmi_cat 
 
 * Smoking status - assume missings are non-smokers 
 gen smoking = 0 if smoking_status=="N"
@@ -425,6 +426,7 @@ replace smoking = 2 if smoking_status=="E"
 replace smoking = 1 if smoking==.
 label define smok 1 "Current smoker" 2 "Ex-smoker" 0 "Never smoked" 
 label values smoking smok
+tab smoking 
 
 * High risk covid conditions
 replace oral_steroid_drugs_nhsd=. if oral_steroid_drug_nhsd_3m_count < 2 & oral_steroid_drug_nhsd_12m_count < 4

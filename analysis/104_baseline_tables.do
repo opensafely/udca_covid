@@ -168,6 +168,9 @@ egen hosp_died_dateA = rowmin(died_date_onsA hosp_covid_anyA)
 
 tab udca_bl died_ons_covid_flag_any
 tab udca_bl hosp_any_flag
+* check number of outcomess per ethnicity group 
+tab ethnicity died_ons_covid_flag_any
+tab ethnicity hosp_any_flag
 
 * Outcomes by baseline exposure stataus
 table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \ hosp_died bin) clear

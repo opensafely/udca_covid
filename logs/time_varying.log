@@ -1391,7 +1391,7 @@ file ./output/tv_vars_hosp_any.dta saved
 
 Contains data from /tmp/St00015.000001
   obs:         1,000                          
- vars:           106                          21 Aug 2023 08:13
+ vars:           106                          21 Aug 2023 10:48
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -1641,6 +1641,19 @@ Sorted by:
 
 . label values bmi_cat bmi
 
+. tab bmi_cat 
+
+       bmi_cat |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+             0 |        199       19.90       19.90
+   Underweight |        125       12.50       32.40
+ Healthy range |        189       18.90       51.30
+    Overweight |        188       18.80       70.10
+         Obese |        260       26.00       96.10
+Morbidly obese |         39        3.90      100.00
+---------------+-----------------------------------
+         Total |      1,000      100.00
+
 . 
 . * Smoking status - assume missings are non-smokers 
 . gen smoking = 0 if smoking_status=="N"
@@ -1658,6 +1671,16 @@ Sorted by:
 . label define smok 1 "Current smoker" 2 "Ex-smoker" 0 "Never smoked" 
 
 . label values smoking smok
+
+. tab smoking 
+
+       smoking |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+  Never smoked |         97        9.70        9.70
+Current smoker |        775       77.50       87.20
+     Ex-smoker |        128       12.80      100.00
+---------------+-----------------------------------
+         Total |      1,000      100.00
 
 . 
 . * High risk covid conditions
@@ -1719,5 +1742,5 @@ file ./output/an_dataset_composite_any.dta saved
       name:  <unnamed>
        log:  /workspace/logs/time_varying.log
   log type:  text
- closed on:  21 Aug 2023, 08:14:15
+ closed on:  21 Aug 2023, 10:48:40
 -------------------------------------------------------------------------------
