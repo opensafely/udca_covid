@@ -161,7 +161,7 @@ foreach outcome in hosp_any composite_any {
     tab bmi_cat, gen(bmi_cat)
     tab smoking, gen(smoking)
     stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
-    bmi_cat4 bmi_cat5 bmi_cat6 smoking1 smoking2 smoking3 severe_disease covid_vacc_first liver_trans, ///
+    bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_first liver_trans, ///
      tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(1) scale(hazard) eform
    
     summ _t
@@ -214,7 +214,7 @@ use ./output/an_dataset_died_covid_any, clear
     * Setting df (degrees of freedom for restricted cubic splines) as 3 as this is default 
     * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = linear effect of log time
     stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
-    bmi_cat4 bmi_cat5 bmi_cat6 smoking1 smoking2 smoking3 severe_disease covid_vacc_first liver_trans, ///
+    bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_first liver_trans, ///
      tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(1) scale(hazard) eform
     
     summ _t
