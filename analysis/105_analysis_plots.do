@@ -144,7 +144,7 @@ use ./output/an_dataset_died_covid_any, clear
     graph close
     
 
-  /* plot for each outcome - fully adjusted - doesn't converge
+* plot for each outcome - fully adjusted 
 foreach outcome in hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
     describe
@@ -156,8 +156,8 @@ foreach outcome in hosp_any composite_any {
     * Fully adjusted model (though not including wave as not right in main model)
     * Setting df (degrees of freedom for restricted cubic splines) as 3 as this is default 
     * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = linear effect of log time
-    stpm2 udca male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease /*covid_vacc_first*/ liver_trans, ///
-     tvc(udca severe_disease /*covid_vacc_first*/ liver_trans age_tv) dftvc(1) df(3) scale(hazard) eform
+    stpm2 udca male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease covid_vacc_first liver_trans, ///
+     tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(2) scale(hazard) eform
    
     summ _t
     local tmax=r(max)
@@ -189,7 +189,7 @@ foreach outcome in hosp_any composite_any {
                     xlabel(0 (200) 1035, labsize(small))				   				///			
                     ytitle("Cumulative outcomes (%)", size(medsmall)) ///
                     xtitle("Days since 1 Mar 2020", size(medsmall))      		///
-                    graphregion(fcolor(white)) saving(_adjcurv_`outcome', replace)
+                    graphregion(fcolor(white)) saving(adjcurv_f_`outcome', replace)
 
     graph export "./output/graphs/adjcurv_f_`outcome'.svg", as(svg) replace
 
@@ -209,7 +209,7 @@ use ./output/an_dataset_died_covid_any, clear
     * Setting df (degrees of freedom for restricted cubic splines) as 3 as this is default 
     * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = linear effect of log time
     stpm2 udca male any_high_risk_condition i.ethnicity i.imd bmi_cat i.smoking severe_disease covid_vacc_first liver_trans, ///
-     tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(3) scale(hazard) eform
+     tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(2) scale(hazard) eform
     
     summ _t
     local tmax=r(max)

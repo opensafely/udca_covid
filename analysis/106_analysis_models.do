@@ -55,7 +55,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
         parmest, label eform format(estimate p lb ub) saving("./output/tempdata/p_surv_adj_`outcome'", replace) idstr("adj_`outcome'") 
         estat phtest, detail
         * Cox model - fully adjusted
-        stcox udca age_tv male any_high_risk_condition i.ethnicity i.imd i.bmi_cat i.smoking severe_disease covid_vacc_first liver_trans i.wave, strata(stp) vce(robust)
+        stcox udca age_tv male any_high_risk_condition i.ethnicity i.imd i.bmi_cat i.smoking severe_disease covid_vacc_first liver_trans, strata(stp) vce(robust)
         estimates save "./output/tempdata/adj_model_`outcome'", replace 
         eststo model3
         parmest, label eform format(estimate p lb ub) saving("./output/tempdata/surv_adj_`outcome'", replace) idstr("adj_`outcome'") 
