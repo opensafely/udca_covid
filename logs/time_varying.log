@@ -1391,7 +1391,7 @@ file ./output/tv_vars_hosp_any.dta saved
 
 Contains data from /tmp/St00015.000001
   obs:         1,000                          
- vars:           106                          18 Aug 2023 15:52
+ vars:           106                          21 Aug 2023 08:13
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -1679,7 +1679,7 @@ Sorted by:
 
 . 
 . keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smokin
-> g 
+> g eth_bin
 
 . 
 . foreach var in died_covid_any hosp_any composite_any {
@@ -1719,5 +1719,5 @@ file ./output/an_dataset_composite_any.dta saved
       name:  <unnamed>
        log:  /workspace/logs/time_varying.log
   log type:  text
- closed on:  18 Aug 2023, 15:52:53
+ closed on:  21 Aug 2023, 08:14:15
 -------------------------------------------------------------------------------

@@ -434,7 +434,7 @@ gen solid_organ_transplant_bin = solid_organ_transplant_nhsd_new!=""
 gen any_high_risk_condition = max(learning_disability_nhsd_snomed, cancer_opensafely_snomed_new, haematological_disease_nhsd, ///
 ckd_stage_5_nhsd, imid_nhsd, immunosupression_nhsd_new, hiv_aids_nhsd, solid_organ_transplant_bin, rare_neuro_nhsd)
 
-keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smoking 
+keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smoking eth_bin
 
 foreach var in died_covid_any hosp_any composite_any {
     preserve 
