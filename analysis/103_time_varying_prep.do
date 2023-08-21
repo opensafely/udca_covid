@@ -412,6 +412,7 @@ replace imd=6 if imd==0
 
 * BMI categories
 * assume BMI's less than 10 are incorrect and set to missing 
+sum bmi, d 
 replace bmi = . if bmi<10
 egen bmi_cat = cut(bmi), at(0, 1, 18.5, 24.9, 29.9, 39.9, 100) icodes
 bys bmi_cat: sum bmi
