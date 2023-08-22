@@ -184,32 +184,39 @@
 .     tab imd, gen(imd) 
   7.     tab bmi_cat, gen(bmi_cat)
   8.     tab smoking, gen(smoking)
-  9.     stpm2 udca male c.age_tv any_high_risk_condition eth_bin imd1 imd2 imd
-> 3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
+  9.     * Check all binary 
+.     foreach vars in udca male any_high_risk_condition eth_bin imd1 imd2 imd3 
+> imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
+>     bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_fi
+> rst liver_trans {
+ 10.         tab `vars', m nolabel
+ 11.     } 
+ 12.     stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 
+> imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
 >     bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_fi
 > rst liver_trans, ///
 >      tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df
 > (1) scale(hazard) eform
- 10.    
+ 13.    
 .     summ _t
- 11.     local tmax=r(max)
- 12.     local tmaxplus1=r(max)+1
- 13. 
+ 14.     local tmax=r(max)
+ 15.     local tmaxplus1=r(max)+1
+ 16. 
 .     range days 0 `tmax' `tmaxplus1'
- 14.     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci
+ 17.     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci
 >  contrast(difference) fail
- 15. 
+ 18. 
 .     gen date = d(1/3/2020)+ days
- 16.     format date %tddd_Month
- 17. 
+ 19.     format date %tddd_Month
+ 20. 
 .     for var _at1 _at2 _at1_lci _at1_uci _at2_lci _at2_uci _contrast2_1 _contr
 > ast2_1_lci _contrast2_1_uci: replace X=100*X
- 18. 
+ 21. 
 .     *cumulative mortality at last day of follow-up
 .     list _at1* if days==`tmax', noobs
- 19.     list _at2* if days==`tmax', noobs
- 20.     list _contrast* if days==`tmax', noobs
- 21. 
+ 22.     list _at2* if days==`tmax', noobs
+ 23.     list _contrast* if days==`tmax', noobs
+ 24. 
 .     *l date days _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days<.
 . 
 .     twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
@@ -231,12 +238,12 @@
 >            ///
 >                     graphregion(fcolor(white)) saving(adjcurv_f_`outcome', re
 > place)
- 22. 
+ 25. 
 .     graph export "./output/graphs/adjcurv_f_`outcome'.svg", as(svg) replace
- 23. 
+ 26. 
 .     * Close window 
 .     graph close
- 24. 
+ 27. 
 . }
 
 Contains data from ./output/an_dataset_hosp_any.dta
@@ -315,6 +322,165 @@ Current smoker |      2,103       73.28       82.93
      Ex-smoker |        490       17.07      100.00
 ---------------+-----------------------------------
          Total |      2,870      100.00
+
+       udca |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,582       89.97       89.97
+          1 |        288       10.03      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+       male |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,398       48.71       48.71
+          1 |      1,441       50.21       98.92
+          . |         31        1.08      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+any_high_ri |
+sk_conditio |
+          n |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      2,870      100.00      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+    eth_bin |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        407       14.18       14.18
+          1 |      2,463       85.82      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+      imd== |
+     1.0000 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,265       78.92       78.92
+          1 |        605       21.08      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+      imd== |
+     2.0000 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,305       80.31       80.31
+          1 |        565       19.69      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+      imd== |
+     3.0000 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,365       82.40       82.40
+          1 |        505       17.60      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+      imd== |
+     4.0000 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,296       80.00       80.00
+          1 |        574       20.00      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+      imd== |
+     5.0000 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,415       84.15       84.15
+          1 |        455       15.85      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+bmi_cat==Un |
+  derweight |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,671       93.07       93.07
+          1 |        199        6.93      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+bmi_cat==He |
+althy range |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,735       60.45       60.45
+          1 |      1,135       39.55      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+bmi_cat==Ov |
+   erweight |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,305       80.31       80.31
+          1 |        565       19.69      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+bmi_cat==Ob |
+        ese |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,085       72.65       72.65
+          1 |        785       27.35      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+bmi_cat==Mo |
+     rbidly |
+      obese |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,684       93.52       93.52
+          1 |        186        6.48      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+smoking==Ne |
+ ver smoked |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,593       90.35       90.35
+          1 |        277        9.65      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+smoking==Cu |
+      rrent |
+     smoker |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        767       26.72       26.72
+          1 |      2,103       73.28      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+smoking==Ex |
+    -smoker |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,380       82.93       82.93
+          1 |        490       17.07      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+severe_dise |
+        ase |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,130       39.37       39.37
+          1 |      1,740       60.63      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+covid_vacc_ |
+      first |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,335       81.36       81.36
+          1 |        535       18.64      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+liver_trans |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,846       99.16       99.16
+          1 |         24        0.84      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
 note: delayed entry models are being fitted
 note: any_high_risk_condition omitted because of collinearity
 note: bmi_cat5 omitted because of collinearity
