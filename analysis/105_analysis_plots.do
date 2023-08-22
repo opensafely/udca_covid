@@ -15,7 +15,7 @@ file open tablecontent using ./output/tables/cum_incidence.txt, write text repla
 file write tablecontent ("Outcome") _tab ("Exposure") _tab ("Cumulative incidence") _tab ("95% confidence interval") _n
 
 
-* plot for each outcome - age and sex adjusted only
+/* plot for each outcome - age and sex adjusted only
 foreach outcome in hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
     describe
@@ -142,7 +142,7 @@ use ./output/an_dataset_died_covid_any, clear
 
     * Close window 
     graph close
-    
+    */
 
 * plot for each outcome - fully adjusted 
 foreach outcome in hosp_any composite_any {
@@ -160,7 +160,7 @@ foreach outcome in hosp_any composite_any {
     tab imd, gen(imd) 
     tab bmi_cat, gen(bmi_cat)
     tab smoking, gen(smoking)
-    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
+    stpm2 udca male c.age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
     bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_first liver_trans, ///
      tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(1) scale(hazard) eform
    
