@@ -161,8 +161,8 @@
  88. }
 
 Contains data from ./output/an_dataset_died_covid_any.dta
-  obs:         2,948                          
- vars:            17                          21 Aug 2023 10:48
+  obs:         2,946                          
+ vars:            17                          22 Aug 2023 12:37
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -196,17 +196,17 @@ obs. time interval:  (stop[_n-1], stop]
             origin:  time index_date
 
 ------------------------------------------------------------------------------
-      2,948  total observations
+      2,946  total observations
           0  exclusions
 ------------------------------------------------------------------------------
-      2,948  observations remaining, representing
+      2,946  observations remaining, representing
       1,000  subjects
-        165  failures in single-failure-per-subject data
-    646,349  total analysis time at risk and under observation
+        153  failures in single-failure-per-subject data
+    651,528  total analysis time at risk and under observation
                                                 at risk from t =         0
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
-  165
+  153
 
          failure _d:  died_covid_any_flag
    analysis time _t:  (stop-origin)
@@ -222,31 +222,30 @@ obs. time interval:  (stop[_n-1], stop]
   enter on or after:  time index_date
                  id:  patient_id
 
-Iteration 0:   log pseudolikelihood = -353.62365
-Iteration 1:   log pseudolikelihood = -353.56934
-Iteration 2:   log pseudolikelihood = -353.56924
+Iteration 0:   log pseudolikelihood = -361.07731
+Iteration 1:   log pseudolikelihood = -360.49144
+Iteration 2:   log pseudolikelihood = -360.47191
+Iteration 3:   log pseudolikelihood = -360.47187
 Refining estimates:
-Iteration 0:   log pseudolikelihood = -353.56924
+Iteration 0:   log pseudolikelihood = -360.47187
 
-Stratified Cox regr. -- Breslow method for ties
+Stratified Cox regr. -- no ties
 
-No. of subjects      =        1,000             Number of obs    =       1,440
-No. of failures      =          165
-Time at risk         =       646349
-                                                Wald chi2(1)     =        0.12
-Log pseudolikelihood =   -353.56924             Prob > chi2      =      0.7321
+No. of subjects      =        1,000             Number of obs    =       1,446
+No. of failures      =          153
+Time at risk         =       651528
+                                                Wald chi2(1)     =        1.01
+Log pseudolikelihood =   -360.47187             Prob > chi2      =      0.3138
 
                            (Std. Err. adjusted for 500 clusters in patient_id)
 ------------------------------------------------------------------------------
              |               Robust
           _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-        udca |   1.120508   .3723737     0.34   0.732     .5841693    2.149271
+        udca |   .5926041   .3078428    -1.01   0.314     .2140854    1.640372
 ------------------------------------------------------------------------------
                                                              Stratified by stp
-(note: file ./output/tempdata/crude_died_covid_any.ster not found)
 file ./output/tempdata/crude_died_covid_any.ster saved
-(note: file ./output/tempdata/surv_crude_died_covid_any.dta not found)
 file ./output/tempdata/surv_crude_died_covid_any.dta saved
 
       Test of proportional-hazards assumption
@@ -255,9 +254,9 @@ file ./output/tempdata/surv_crude_died_covid_any.dta saved
       ----------------------------------------------------------------
                   |       rho            chi2       df       Prob>chi2
       ------------+---------------------------------------------------
-      udca        |      0.02486         0.04        1         0.8351
+      udca        |     -0.07993         0.50        1         0.4803
       ------------+---------------------------------------------------
-      global test |                      0.04        1         0.8351
+      global test |                      0.50        1         0.4803
       ----------------------------------------------------------------
 
 note: robust variance-covariance matrix used.
@@ -268,28 +267,29 @@ note: robust variance-covariance matrix used.
   enter on or after:  time index_date
                  id:  patient_id
 
-Iteration 0:   log pseudolikelihood = -352.80617
-Iteration 1:   log pseudolikelihood = -352.74564
-Iteration 2:   log pseudolikelihood = -352.74558
+Iteration 0:   log pseudolikelihood = -360.18634
+Iteration 1:   log pseudolikelihood = -357.81299
+Iteration 2:   log pseudolikelihood =  -357.7883
+Iteration 3:   log pseudolikelihood = -357.78825
 Refining estimates:
-Iteration 0:   log pseudolikelihood = -352.74558
+Iteration 0:   log pseudolikelihood = -357.78825
 
-Stratified Cox regr. -- Breslow method for ties
+Stratified Cox regr. -- no ties
 
-No. of subjects      =          985             Number of obs    =       1,426
-No. of failures      =          163
-Time at risk         =       637856
-                                                Wald chi2(3)     =        0.12
-Log pseudolikelihood =   -352.74558             Prob > chi2      =      0.9896
+No. of subjects      =          990             Number of obs    =       1,428
+No. of failures      =          150
+Time at risk         =       645699
+                                                Wald chi2(3)     =        4.81
+Log pseudolikelihood =   -357.78825             Prob > chi2      =      0.1865
 
-                           (Std. Err. adjusted for 495 clusters in patient_id)
+                           (Std. Err. adjusted for 496 clusters in patient_id)
 ------------------------------------------------------------------------------
              |               Robust
           _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-        udca |   1.104672   .3708586     0.30   0.767     .5720965    2.133031
-      age_tv |   1.000059   .0054345     0.01   0.991     .9894636    1.010767
-        male |   1.044501   .2398358     0.19   0.850     .6659749    1.638173
+        udca |   .5468036   .2932763    -1.13   0.260     .1911139    1.564482
+      age_tv |   .9937111   .0049572    -1.26   0.206     .9840425    1.003475
+        male |   1.388781   .3225009     1.41   0.157     .8809857    2.189267
 ------------------------------------------------------------------------------
                                                              Stratified by stp
 (note: file ./output/tempdata/p_adj_model_died_covid_any.ster not found)
@@ -303,11 +303,11 @@ file ./output/tempdata/p_surv_adj_died_covid_any.dta saved
       ----------------------------------------------------------------
                   |       rho            chi2       df       Prob>chi2
       ------------+---------------------------------------------------
-      udca        |     -0.00152         0.00        1         0.9882
-      age_tv      |     -0.09865         1.15        1         0.2826
-      male        |      0.09128         0.65        1         0.4203
+      udca        |     -0.07347         0.47        1         0.4914
+      age_tv      |     -0.03624         0.12        1         0.7281
+      male        |     -0.03869         0.13        1         0.7211
       ------------+---------------------------------------------------
-      global test |                      1.85        3         0.6049
+      global test |                      0.76        3         0.8589
       ----------------------------------------------------------------
 
 note: robust variance-covariance matrix used.
@@ -319,60 +319,86 @@ note: robust variance-covariance matrix used.
                  id:  patient_id
 
 note: any_high_risk_condition omitted because of collinearity
-Iteration 0:   log pseudolikelihood = -352.80617
-Iteration 1:   log pseudolikelihood = -341.37421
-Iteration 2:   log pseudolikelihood = -337.26229
-Iteration 3:   log pseudolikelihood = -337.10285
-Iteration 4:   log pseudolikelihood = -337.10215
+Iteration 0:   log pseudolikelihood = -360.18634
+Iteration 1:   log pseudolikelihood = -345.85906
+Iteration 2:   log pseudolikelihood = -345.04059
+Iteration 3:   log pseudolikelihood = -344.97376
+Iteration 4:   log pseudolikelihood = -344.95222
+Iteration 5:   log pseudolikelihood = -344.94431
+Iteration 6:   log pseudolikelihood =  -344.9414
+Iteration 7:   log pseudolikelihood = -344.94033
+Iteration 8:   log pseudolikelihood = -344.93993
+Iteration 9:   log pseudolikelihood = -344.93979
+Iteration 10:  log pseudolikelihood = -344.93974
+Iteration 11:  log pseudolikelihood = -344.93972
+Iteration 12:  log pseudolikelihood = -344.93971
+Iteration 13:  log pseudolikelihood = -344.93971
+Iteration 14:  log pseudolikelihood =  -344.9397
+Iteration 15:  log pseudolikelihood =  -344.9397
+Iteration 16:  log pseudolikelihood =  -344.9397
+Iteration 17:  log pseudolikelihood =  -344.9397
+Iteration 18:  log pseudolikelihood =  -344.9397
+Iteration 19:  log pseudolikelihood =  -344.9397
+Iteration 20:  log pseudolikelihood =  -344.9397
+Iteration 21:  log pseudolikelihood =  -344.9397
+Iteration 22:  log pseudolikelihood =  -344.9397
+Iteration 23:  log pseudolikelihood =  -344.9397
+Iteration 24:  log pseudolikelihood =  -344.9397
+Iteration 25:  log pseudolikelihood =  -344.9397
+Iteration 26:  log pseudolikelihood =  -344.9397
+Iteration 27:  log pseudolikelihood =  -344.9397
+Iteration 28:  log pseudolikelihood =  -344.9397
+Iteration 29:  log pseudolikelihood =  -344.9397
+Iteration 30:  log pseudolikelihood =  -344.9397
 Refining estimates:
-Iteration 0:   log pseudolikelihood = -337.10215
+Iteration 0:   log pseudolikelihood =  -344.9397
+Iteration 1:   log pseudolikelihood =  -344.9397
 
-Stratified Cox regr. -- Breslow method for ties
+Stratified Cox regr. -- no ties
 
-No. of subjects      =          985             Number of obs    =       1,426
-No. of failures      =          163
-Time at risk         =       637856
-                                                Wald chi2(23)    =       28.76
-Log pseudolikelihood =   -337.10215             Prob > chi2      =      0.1884
+No. of subjects      =          990             Number of obs    =       1,428
+No. of failures      =          150
+Time at risk         =       645699
+                                                Wald chi2(22)    =     2394.77
+Log pseudolikelihood =    -344.9397             Prob > chi2      =      0.0000
 
-                           (Std. Err. adjusted for 495 clusters in patient_id)
+                           (Std. Err. adjusted for 496 clusters in patient_id)
 ------------------------------------------------------------------------------
              |               Robust
           _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-        udca |   1.524045   .5432028     1.18   0.237     .7578984    3.064676
-      age_tv |   1.001358   .0060163     0.23   0.821     .9896351    1.013219
-        male |   1.049671   .2529732     0.20   0.841     .6545029    1.683429
+        udca |   .5570536   .3006849    -1.08   0.278     .1933916    1.604561
+      age_tv |   .9936457   .0050879    -1.24   0.213     .9837234    1.003668
+        male |   1.513806   .3742027     1.68   0.093     .9325216    2.457432
 any_high_r~n |          1  (omitted)
              |
    ethnicity |
-      Mixed  |   2.726904    1.39281     1.96   0.050     1.002086    7.420526
-      Asian  |   3.123632   1.535626     2.32   0.021      1.19178     8.18698
-      Black  |   2.858887   1.414673     2.12   0.034     1.083911    7.540499
-      Other  |    2.43219   1.280554     1.69   0.091      .866638    6.825857
-    Unknown  |    1.70618   1.309235     0.70   0.486       .37919    7.677025
+      Mixed  |   .9601576   .3756018    -0.10   0.917     .4460289    2.066912
+      Asian  |   .9861726   .3891296    -0.04   0.972     .4550728      2.1371
+      Black  |   1.007816      .4113     0.02   0.985     .4528949     2.24267
+      Other  |   .8725619   .3463365    -0.34   0.731     .4008096    1.899566
+    Unknown  |   1.410919   .6613258     0.73   0.463     .5630241    3.535714
              |
          imd |
-          2  |    .318017   .1464486    -2.49   0.013     .1289637    .7842117
-          3  |   .8568431   .3283885    -0.40   0.687     .4042732    1.816049
-          4  |   .8821626   .3404671    -0.32   0.745     .4140291    1.879604
-          5  |   1.048967   .3538307     0.14   0.887     .5415522    2.031812
-          6  |   .3548794   .4100079    -0.90   0.370      .036868    3.415951
+          2  |   1.561672   .5687628     1.22   0.221     .7648589    3.188588
+          3  |   1.956848   .7507089     1.75   0.080     .9225907    4.150543
+          4  |   1.145407   .4475939     0.35   0.728     .5325172    2.463691
+          5  |   .8876388   .3727992    -0.28   0.777      .389709    2.021772
+          6  |   1.028408   .7256111     0.04   0.968     .2579795    4.099638
              |
      bmi_cat |
-          0  |   .8249258   .2998224    -0.53   0.596     .4046155     1.68185
-Underweight  |   .7585707   .3294332    -0.64   0.525     .3238433    1.776876
- Overweight  |   .9315903   .3636564    -0.18   0.856     .4334602    2.002169
-      Obese  |   .6743229    .249652    -1.06   0.287     .3263855    1.393173
-Morbidly ..  |   3.354054   1.789593     2.27   0.023     1.178696     9.54417
+Underweight  |   1.274979   .6195551     0.50   0.617     .4918986    3.304688
+ Overweight  |   1.700119   .5159461     1.75   0.080     .9379067    3.081761
+      Obese  |   1.217692   .3745013     0.64   0.522     .6664239    2.224972
+Morbidly ..  |    .482346   .3790887    -0.93   0.354     .1033657     2.25082
              |
      smoking |
-Current s..  |   1.601722   .8017673     0.94   0.347     .6004883    4.272377
-  Ex-smoker  |   1.129455   .6548992     0.21   0.834     .3625024     3.51906
+Current s..  |   2.475796   1.326633     1.69   0.091     .8661763    7.076582
+  Ex-smoker  |   .6733958    .473404    -0.56   0.574     .1697724    2.670999
              |
-severe_dis~e |   .9507937   .2510665    -0.19   0.848     .5666542    1.595345
-covid_vacc~t |   1.524766   .5443631     1.18   0.237     .7573768    3.069688
- liver_trans |   1.505774   1.651241     0.37   0.709     .1755203    12.91791
+severe_dis~e |   .7438356   .1763925    -1.25   0.212     .4673302    1.183941
+covid_vacc~t |   1.093621   .3785767     0.26   0.796     .5548914    2.155389
+ liver_trans |   3.97e-14   2.70e-14   -45.39   0.000     1.05e-14    1.50e-13
 ------------------------------------------------------------------------------
                                                              Stratified by stp
 (note: file ./output/tempdata/adj_model_died_covid_any.ster not found)
@@ -386,36 +412,35 @@ file ./output/tempdata/surv_adj_died_covid_any.dta saved
       ----------------------------------------------------------------
                   |       rho            chi2       df       Prob>chi2
       ------------+---------------------------------------------------
-      udca        |      0.04141         0.20        1         0.6579
-      age_tv      |     -0.11575         3.14        1         0.0766
-      male        |      0.08291         1.18        1         0.2779
+      udca        |     -0.05266         0.34        1         0.5594
+      age_tv      |      0.01039         0.01        1         0.9081
+      male        |     -0.06719         0.76        1         0.3819
       o.any_high~n|            .            .        1             .
       1b.ethnicity|            .            .        1             .
-      2.ethnicity |     -0.03531         0.19        1         0.6654
-      3.ethnicity |     -0.02387         0.06        1         0.8012
-      4.ethnicity |      0.05551         0.43        1         0.5097
-      5.ethnicity |      0.02529         0.10        1         0.7550
-      6.ethnicity |      0.12351         1.30        1         0.2535
+      2.ethnicity |     -0.12373         2.32        1         0.1279
+      3.ethnicity |     -0.05186         0.43        1         0.5111
+      4.ethnicity |     -0.07195         0.59        1         0.4441
+      5.ethnicity |     -0.13362         2.24        1         0.1347
+      6.ethnicity |      0.06590         0.57        1         0.4498
       1b.imd      |            .            .        1             .
-      2.imd       |     -0.15267         3.16        1         0.0753
-      3.imd       |     -0.08422         1.18        1         0.2774
-      4.imd       |     -0.03305         0.15        1         0.7008
-      5.imd       |      0.06610         0.57        1         0.4511
-      6.imd       |     -0.12342         3.25        1         0.0713
-      0.bmi_cat   |     -0.10335         1.24        1         0.2646
-      1.bmi_cat   |     -0.01712         0.03        1         0.8683
+      2.imd       |     -0.19160         3.72        1         0.0537
+      3.imd       |     -0.10847         1.46        1         0.2269
+      4.imd       |     -0.06305         0.50        1         0.4811
+      5.imd       |      0.00285         0.00        1         0.9766
+      6.imd       |     -0.14786         3.02        1         0.0823
+      1.bmi_cat   |     -0.10840         1.35        1         0.2444
       2b.bmi_cat  |            .            .        1             .
-      3.bmi_cat   |     -0.08812         1.14        1         0.2855
-      4.bmi_cat   |     -0.13296         2.00        1         0.1570
-      5.bmi_cat   |     -0.08288         0.95        1         0.3296
+      3.bmi_cat   |      0.08776         0.95        1         0.3299
+      4.bmi_cat   |      0.03357         0.14        1         0.7100
+      5.bmi_cat   |      0.07032         0.81        1         0.3692
       0b.smoking  |            .            .        1             .
-      1.smoking   |      0.00129         0.00        1         0.9849
-      2.smoking   |      0.00569         0.01        1         0.9411
-      severe_dis~e|      0.02919         0.11        1         0.7359
-      covid_vacc~t|     -0.05094         0.41        1         0.5214
-      liver_trans |     -0.00025         0.00        1         0.9977
+      1.smoking   |     -0.04358         0.28        1         0.5960
+      2.smoking   |      0.02071         0.05        1         0.8174
+      severe_dis~e|      0.02330         0.06        1         0.8019
+      covid_vacc~t|      0.03770         0.12        1         0.7287
+      liver_trans |      0.00038         0.00        1         0.9989
       ------------+---------------------------------------------------
-      global test |                     18.91       23         0.7062
+      global test |                     16.25       22         0.8034
       ----------------------------------------------------------------
 
 note: robust variance-covariance matrix used.
@@ -429,65 +454,92 @@ note: robust variance-covariance matrix used.
                  id:  patient_id
 
 note: any_high_risk_condition omitted because of collinearity
-Iteration 0:   log pseudolikelihood = -352.80617
-Iteration 1:   log pseudolikelihood = -341.66728
-Iteration 2:   log pseudolikelihood = -337.75772
-Iteration 3:   log pseudolikelihood = -337.59471
-Iteration 4:   log pseudolikelihood = -337.59398
+Iteration 0:   log pseudolikelihood = -360.18634
+Iteration 1:   log pseudolikelihood = -346.29288
+Iteration 2:   log pseudolikelihood = -345.54063
+Iteration 3:   log pseudolikelihood =  -345.4725
+Iteration 4:   log pseudolikelihood = -345.45076
+Iteration 5:   log pseudolikelihood = -345.44277
+Iteration 6:   log pseudolikelihood = -345.43983
+Iteration 7:   log pseudolikelihood = -345.43875
+Iteration 8:   log pseudolikelihood = -345.43836
+Iteration 9:   log pseudolikelihood = -345.43821
+Iteration 10:  log pseudolikelihood = -345.43816
+Iteration 11:  log pseudolikelihood = -345.43814
+Iteration 12:  log pseudolikelihood = -345.43813
+Iteration 13:  log pseudolikelihood = -345.43813
+Iteration 14:  log pseudolikelihood = -345.43813
+Iteration 15:  log pseudolikelihood = -345.43813
+Iteration 16:  log pseudolikelihood = -345.43813
+Iteration 17:  log pseudolikelihood = -345.43813
+Iteration 18:  log pseudolikelihood = -345.43813
+Iteration 19:  log pseudolikelihood = -345.43813
+Iteration 20:  log pseudolikelihood = -345.43813
+Iteration 21:  log pseudolikelihood = -345.43813
+Iteration 22:  log pseudolikelihood = -345.43813
+Iteration 23:  log pseudolikelihood = -345.43813
+Iteration 24:  log pseudolikelihood = -345.43813
+Iteration 25:  log pseudolikelihood = -345.43813
+Iteration 26:  log pseudolikelihood = -345.43813
+Iteration 27:  log pseudolikelihood = -345.43813
+Iteration 28:  log pseudolikelihood = -345.43813
+Iteration 29:  log pseudolikelihood = -345.43813
+Iteration 30:  log pseudolikelihood = -345.43813
 Refining estimates:
-Iteration 0:   log pseudolikelihood = -337.59398
+Iteration 0:   log pseudolikelihood = -345.43813
+Iteration 1:   log pseudolikelihood = -345.43813
+Iteration 2:   log pseudolikelihood = -345.43813
 
-Stratified Cox regr. -- Breslow method for ties
+Stratified Cox regr. -- no ties
 
-No. of subjects      =          985             Number of obs    =       1,426
-No. of failures      =          163
-Time at risk         =       637856
-                                                Wald chi2(19)    =       27.85
-Log pseudolikelihood =   -337.59398             Prob > chi2      =      0.0863
+No. of subjects      =          990             Number of obs    =       1,428
+No. of failures      =          150
+Time at risk         =       645699
+                                                Wald chi2(18)    =     2524.61
+Log pseudolikelihood =   -345.43813             Prob > chi2      =      0.0000
 
-                           (Std. Err. adjusted for 495 clusters in patient_id)
+                           (Std. Err. adjusted for 496 clusters in patient_id)
 ------------------------------------------------------------------------------
              |               Robust
           _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-        udca |   1.541059   .5346713     1.25   0.213     .7807182    3.041894
-      age_tv |   1.002076   .0058795     0.35   0.724     .9906183    1.013666
-        male |   1.037537   .2502364     0.15   0.879     .6467079    1.664558
+        udca |   .5435847   .2913994    -1.14   0.255     .1900919    1.554429
+      age_tv |   .9933686   .0048522    -1.36   0.173     .9839038    1.002924
+        male |   1.496595   .3672233     1.64   0.100      .925215    2.420838
 any_high_r~n |          1  (omitted)
              |
      eth_bin |
-  Non-White  |   2.766453   1.247958     2.26   0.024     1.142728    6.697362
+  Non-White  |   .9918501    .311199    -0.03   0.979     .5362612    1.834491
              |
          imd |
-          2  |   .3183435   .1467986    -2.48   0.013     .1289375    .7859826
-          3  |   .8472423    .318519    -0.44   0.659     .4055087    1.770171
-          4  |   .8855668   .3328022    -0.32   0.746     .4239688    1.849732
-          5  |   1.072667   .3600605     0.21   0.834     .5555762    2.071031
-          6  |   .3719383   .4225496    -0.87   0.384     .0401275     3.44746
+          2  |   1.567955   .5781882     1.22   0.223      .761115    3.230106
+          3  |   1.997219   .7591064     1.82   0.069     .9481988    4.206799
+          4  |   1.160101   .4505348     0.38   0.702     .5419065    2.483516
+          5  |   .8959741   .3802886    -0.26   0.796     .3899511    2.058641
+          6  |    1.05361   .7357773     0.07   0.940     .2680727     4.14102
              |
      bmi_cat |
-          0  |   .8260179   .2931011    -0.54   0.590     .4120523    1.655871
-Underweight  |   .7531966    .326213    -0.65   0.513     .3222915    1.760223
- Overweight  |   .9114028   .3524481    -0.24   0.810     .4271128    1.944814
-      Obese  |   .6561853    .240365    -1.15   0.250     .3200558    1.345325
-Morbidly ..  |   3.658907   1.833429     2.59   0.010     1.370332    9.769605
+Underweight  |   1.269721   .6050405     0.50   0.616     .4989974    3.230861
+ Overweight  |   1.723217   .5236238     1.79   0.073     .9499275    3.126005
+      Obese  |   1.224375   .3781233     0.66   0.512     .6684027    2.242801
+Morbidly ..  |   .4663456   .3608731    -0.99   0.324     .1023342    2.125175
              |
      smoking |
-Current s..  |    1.52038   .7372484     0.86   0.388     .5877537    3.932863
-  Ex-smoker  |   1.097814    .624227     0.16   0.870     .3601867    3.346029
+Current s..  |   2.541316   1.356587     1.75   0.081     .8926398    7.235041
+  Ex-smoker  |   .6892154   .4892455    -0.52   0.600      .171444    2.770688
              |
-severe_dis~e |   .9386064   .2457031    -0.24   0.809     .5619022    1.567856
-covid_vacc~t |   1.540842   .5532329     1.20   0.229     .7623206    3.114429
- liver_trans |   1.615301   1.706223     0.45   0.650     .2037698    12.80464
+severe_dis~e |   .7582816   .1798753    -1.17   0.243     .4763359    1.207113
+covid_vacc~t |   1.077186    .372805     0.21   0.830     .5466346    2.122679
+ liver_trans |   1.37e-14   9.23e-15   -47.36   0.000     3.65e-15    5.13e-14
 ------------------------------------------------------------------------------
                                                              Stratified by stp
 
      number |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,948       66.08       66.08
-          1 |      1,000       33.92      100.00
+          0 |      1,946       66.06       66.06
+          1 |      1,000       33.94      100.00
 ------------+-----------------------------------
-      Total |      2,948      100.00
+      Total |      2,946      100.00
 
 unexposed_e |
         ver |      Freq.     Percent        Cum.
@@ -496,28 +548,28 @@ unexposed_e |
 ------------+-----------------------------------
       Total |      1,000      100.00
   0
-  149
-no udca events = 149
-(1948 missing values generated)
+  139
+no udca events = 139
+(1946 missing values generated)
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-total_foll~p |        890      572726           0     572726     572726
-19090.867
-780.47792
+total_foll~p |        897      584131           0     584131     584131
+19471.033
+713.88096
 
 exposed_eve |
           r |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        890       89.00       89.00
-          1 |        110       11.00      100.00
+          0 |        897       89.70       89.70
+          1 |        103       10.30      100.00
 ------------+-----------------------------------
       Total |      1,000      100.00
-udca events = 16
+udca events = 14
 
 Contains data from ./output/an_dataset_hosp_any.dta
-  obs:         2,886                          
- vars:            18                          21 Aug 2023 10:48
+  obs:         2,870                          
+ vars:            18                          22 Aug 2023 12:37
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -552,17 +604,17 @@ obs. time interval:  (stop[_n-1], stop]
             origin:  time index_date
 
 ------------------------------------------------------------------------------
-      2,886  total observations
+      2,870  total observations
           0  exclusions
 ------------------------------------------------------------------------------
-      2,886  observations remaining, representing
+      2,870  observations remaining, representing
       1,000  subjects
-         46  failures in single-failure-per-subject data
-    626,377  total analysis time at risk and under observation
+         58  failures in single-failure-per-subject data
+    630,402  total analysis time at risk and under observation
                                                 at risk from t =         0
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
-  46
+  58
 
          failure _d:  hosp_any_flag
    analysis time _t:  (stop-origin)
@@ -578,27 +630,27 @@ obs. time interval:  (stop[_n-1], stop]
   enter on or after:  time index_date
                  id:  patient_id
 
-Iteration 0:   log pseudolikelihood = -103.22523
-Iteration 1:   log pseudolikelihood = -103.14407
-Iteration 2:   log pseudolikelihood = -103.14311
-Iteration 3:   log pseudolikelihood = -103.14311
+Iteration 0:   log pseudolikelihood = -145.73668
+Iteration 1:   log pseudolikelihood = -145.44108
+Iteration 2:   log pseudolikelihood = -145.42683
+Iteration 3:   log pseudolikelihood = -145.42682
 Refining estimates:
-Iteration 0:   log pseudolikelihood = -103.14311
+Iteration 0:   log pseudolikelihood = -145.42682
 
-Stratified Cox regr. -- no ties
+Stratified Cox regr. -- Breslow method for ties
 
 No. of subjects      =        1,000             Number of obs    =       1,407
-No. of failures      =           46
-Time at risk         =       626377
-                                                Wald chi2(1)     =        0.18
-Log pseudolikelihood =   -103.14311             Prob > chi2      =      0.6736
+No. of failures      =           58
+Time at risk         =       630402
+                                                Wald chi2(1)     =        0.67
+Log pseudolikelihood =   -145.42682             Prob > chi2      =      0.4119
 
                            (Std. Err. adjusted for 500 clusters in patient_id)
 ------------------------------------------------------------------------------
              |               Robust
           _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-        udca |   1.298476   .8051821     0.42   0.674     .3851289    4.377862
+        udca |   1.562364   .8495755     0.82   0.412     .5381699    4.535706
 ------------------------------------------------------------------------------
                                                              Stratified by stp
 (note: file ./output/tempdata/crude_hosp_any.ster not found)
@@ -612,9 +664,9 @@ file ./output/tempdata/surv_crude_hosp_any.dta saved
       ----------------------------------------------------------------
                   |       rho            chi2       df       Prob>chi2
       ------------+---------------------------------------------------
-      udca        |      0.10693         0.23        1         0.6294
+      udca        |     -0.04197         0.06        1         0.8121
       ------------+---------------------------------------------------
-      global test |                      0.23        1         0.6294
+      global test |                      0.06        1         0.8121
       ----------------------------------------------------------------
 
 note: robust variance-covariance matrix used.
@@ -625,29 +677,29 @@ note: robust variance-covariance matrix used.
   enter on or after:  time index_date
                  id:  patient_id
 
-Iteration 0:   log pseudolikelihood = -102.98963
-Iteration 1:   log pseudolikelihood = -101.71382
-Iteration 2:   log pseudolikelihood = -101.71282
-Iteration 3:   log pseudolikelihood = -101.71282
+Iteration 0:   log pseudolikelihood = -145.40832
+Iteration 1:   log pseudolikelihood =  -145.0496
+Iteration 2:   log pseudolikelihood = -145.03693
+Iteration 3:   log pseudolikelihood = -145.03692
 Refining estimates:
-Iteration 0:   log pseudolikelihood = -101.71282
+Iteration 0:   log pseudolikelihood = -145.03692
 
-Stratified Cox regr. -- no ties
+Stratified Cox regr. -- Breslow method for ties
 
-No. of subjects      =          985             Number of obs    =       1,393
-No. of failures      =           45
-Time at risk         =       617986
-                                                Wald chi2(3)     =        3.00
-Log pseudolikelihood =   -101.71282             Prob > chi2      =      0.3920
+No. of subjects      =          990             Number of obs    =       1,389
+No. of failures      =           58
+Time at risk         =       624573
+                                                Wald chi2(3)     =        0.83
+Log pseudolikelihood =   -145.03692             Prob > chi2      =      0.8412
 
-                           (Std. Err. adjusted for 495 clusters in patient_id)
+                           (Std. Err. adjusted for 496 clusters in patient_id)
 ------------------------------------------------------------------------------
              |               Robust
           _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-        udca |   1.308819   .8512142     0.41   0.679     .3658347    4.682459
-      age_tv |   .9929399   .0090622    -0.78   0.438     .9753361    1.010861
-        male |   .5532687   .2574321    -1.27   0.203     .2222685    1.377191
+        udca |   1.514911   .8377779     0.75   0.453     .5124534    4.478367
+      age_tv |   1.002619   .0083434     0.31   0.753     .9863987    1.019106
+        male |   1.067692    .387478     0.18   0.857     .5242458    2.174488
 ------------------------------------------------------------------------------
                                                              Stratified by stp
 (note: file ./output/tempdata/p_adj_model_hosp_any.ster not found)
@@ -661,11 +713,11 @@ file ./output/tempdata/p_surv_adj_hosp_any.dta saved
       ----------------------------------------------------------------
                   |       rho            chi2       df       Prob>chi2
       ------------+---------------------------------------------------
-      udca        |      0.03151         0.04        1         0.8414
-      age_tv      |     -0.07294         0.15        1         0.7027
-      male        |     -0.01855         0.01        1         0.9110
+      udca        |     -0.07731         0.21        1         0.6490
+      age_tv      |     -0.03667         0.07        1         0.7974
+      male        |      0.30204         2.64        1         0.1042
       ------------+---------------------------------------------------
-      global test |                      0.31        3         0.9584
+      global test |                      2.78        3         0.4273
       ----------------------------------------------------------------
 
 note: robust variance-covariance matrix used.
@@ -677,95 +729,95 @@ note: robust variance-covariance matrix used.
                  id:  patient_id
 
 note: any_high_risk_condition omitted because of collinearity
-Iteration 0:   log pseudolikelihood = -102.98963
-Iteration 1:   log pseudolikelihood = -90.867875
-Iteration 2:   log pseudolikelihood = -89.351051
-Iteration 3:   log pseudolikelihood = -89.222207
-Iteration 4:   log pseudolikelihood = -89.188724
-Iteration 5:   log pseudolikelihood = -89.176507
-Iteration 6:   log pseudolikelihood = -89.172018
-Iteration 7:   log pseudolikelihood = -89.170367
-Iteration 8:   log pseudolikelihood =  -89.16976
-Iteration 9:   log pseudolikelihood = -89.169536
-Iteration 10:  log pseudolikelihood = -89.169454
-Iteration 11:  log pseudolikelihood = -89.169424
-Iteration 12:  log pseudolikelihood = -89.169413
-Iteration 13:  log pseudolikelihood = -89.169409
-Iteration 14:  log pseudolikelihood = -89.169407
-Iteration 15:  log pseudolikelihood = -89.169407
-Iteration 16:  log pseudolikelihood = -89.169406
-Iteration 17:  log pseudolikelihood = -89.169406
-Iteration 18:  log pseudolikelihood = -89.169406
-Iteration 19:  log pseudolikelihood = -89.169406
-Iteration 20:  log pseudolikelihood = -89.169406
-Iteration 21:  log pseudolikelihood = -89.169406
-Iteration 22:  log pseudolikelihood = -89.169406
-Iteration 23:  log pseudolikelihood = -89.169406
-Iteration 24:  log pseudolikelihood = -89.169406
-Iteration 25:  log pseudolikelihood = -89.169406
-Iteration 26:  log pseudolikelihood = -89.169406
-Iteration 27:  log pseudolikelihood = -89.169406
-Iteration 28:  log pseudolikelihood = -89.169406
-Iteration 29:  log pseudolikelihood = -89.169406
-Iteration 30:  log pseudolikelihood = -89.169406
-Iteration 31:  log pseudolikelihood = -89.169406
-Iteration 32:  log pseudolikelihood = -89.169406
-Iteration 33:  log pseudolikelihood = -89.169406
+Iteration 0:   log pseudolikelihood = -145.40832
+Iteration 1:   log pseudolikelihood = -130.19678
+Iteration 2:   log pseudolikelihood = -128.44623
+Iteration 3:   log pseudolikelihood = -128.19537
+Iteration 4:   log pseudolikelihood = -128.13446
+Iteration 5:   log pseudolikelihood = -128.11246
+Iteration 6:   log pseudolikelihood = -128.10437
+Iteration 7:   log pseudolikelihood =  -128.1014
+Iteration 8:   log pseudolikelihood =  -128.1003
+Iteration 9:   log pseudolikelihood =  -128.0999
+Iteration 10:  log pseudolikelihood = -128.09975
+Iteration 11:  log pseudolikelihood =  -128.0997
+Iteration 12:  log pseudolikelihood = -128.09968
+Iteration 13:  log pseudolikelihood = -128.09967
+Iteration 14:  log pseudolikelihood = -128.09967
+Iteration 15:  log pseudolikelihood = -128.09967
+Iteration 16:  log pseudolikelihood = -128.09967
+Iteration 17:  log pseudolikelihood = -128.09967
+Iteration 18:  log pseudolikelihood = -128.09967
+Iteration 19:  log pseudolikelihood = -128.09967
+Iteration 20:  log pseudolikelihood = -128.09967
+Iteration 21:  log pseudolikelihood = -128.09967
+Iteration 22:  log pseudolikelihood = -128.09967
+Iteration 23:  log pseudolikelihood = -128.09967
+Iteration 24:  log pseudolikelihood = -128.09967
+Iteration 25:  log pseudolikelihood = -128.09967
+Iteration 26:  log pseudolikelihood = -128.09967
+Iteration 27:  log pseudolikelihood = -128.09967
+Iteration 28:  log pseudolikelihood = -128.09967
+Iteration 29:  log pseudolikelihood = -128.09967
+Iteration 30:  log pseudolikelihood = -128.09967
+Iteration 31:  log pseudolikelihood = -128.09967
+Iteration 32:  log pseudolikelihood = -128.09967
+Iteration 33:  log pseudolikelihood = -128.09967
+Iteration 34:  log pseudolikelihood = -128.09967
+Iteration 35:  log pseudolikelihood = -128.09967
+Iteration 36:  log pseudolikelihood = -128.09967
+Iteration 37:  log pseudolikelihood = -128.09967
+Iteration 38:  log pseudolikelihood = -128.09967
+Iteration 39:  log pseudolikelihood = -128.09967
 Refining estimates:
-Iteration 0:   log pseudolikelihood = -89.169406
-Iteration 1:   log pseudolikelihood = -89.169406
-Iteration 2:   log pseudolikelihood = -89.169406
-Iteration 3:   log pseudolikelihood = -89.169406
-Iteration 4:   log pseudolikelihood = -89.169406
-Iteration 5:   log pseudolikelihood = -89.169406
-Iteration 6:   log pseudolikelihood = -89.169406
+Iteration 0:   log pseudolikelihood = -128.09967
+Iteration 1:   log pseudolikelihood = -128.09967
 
-Stratified Cox regr. -- no ties
+Stratified Cox regr. -- Breslow method for ties
 
-No. of subjects      =          985             Number of obs    =       1,393
-No. of failures      =           45
-Time at risk         =       617986
-                                                Wald chi2(23)    =    16373.91
-Log pseudolikelihood =   -89.169406             Prob > chi2      =      0.0000
+No. of subjects      =          990             Number of obs    =       1,389
+No. of failures      =           58
+Time at risk         =       624573
+                                                Wald chi2(22)    =    11335.74
+Log pseudolikelihood =   -128.09967             Prob > chi2      =      0.0000
 
-                           (Std. Err. adjusted for 495 clusters in patient_id)
+                           (Std. Err. adjusted for 496 clusters in patient_id)
 ------------------------------------------------------------------------------
              |               Robust
           _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-        udca |    1.33027   .9144817     0.42   0.678     .3457714    5.117883
-      age_tv |   .9878207   .0100841    -1.20   0.230     .9682525    1.007784
-        male |   .6587797   .3106329    -0.89   0.376     .2614418    1.659989
+        udca |   1.575104   .8103661     0.88   0.377     .5746185    4.317566
+      age_tv |   1.006111   .0081741     0.75   0.453     .9902173    1.022261
+        male |   1.042929   .3982855     0.11   0.912     .4933873    2.204556
 any_high_r~n |          1  (omitted)
              |
    ethnicity |
-      Mixed  |   1.391307   1.165768     0.39   0.693     .2692811    7.188526
-      Asian  |   1.303892   1.008932     0.34   0.732     .2861506    5.941394
-      Black  |   1.210728   .8634449     0.27   0.789     .2992277    4.898815
-      Other  |   .7543309   .5854582    -0.36   0.716     .1647857    3.453061
-    Unknown  |   6.47e-18   5.15e-18   -49.73   0.000     1.36e-18    3.08e-17
+      Mixed  |   1.483586   .9061183     0.65   0.518      .448158    4.911277
+      Asian  |   1.159393   .7606437     0.23   0.822     .3204665    4.194489
+      Black  |   1.284572   .8922451     0.36   0.718     .3292504    5.011765
+      Other  |   1.026006   .6497246     0.04   0.968     .2965661    3.549592
+    Unknown  |   .7056598    .775223    -0.32   0.751     .0819376    6.077255
              |
          imd |
-          2  |   1.073384   .8187565     0.09   0.926     .2406995    4.786688
-          3  |   2.298298   1.660527     1.15   0.249     .5577127    9.471136
-          4  |   1.553301   1.202417     0.57   0.569     .3406721    7.082304
-          5  |   .3304063   .3928837    -0.93   0.352     .0321285    3.397862
-          6  |   4.678435   4.630137     1.56   0.119      .672491    32.54728
+          2  |    8.66383    9.34336     2.00   0.045     1.046517    71.72553
+          3  |   9.776369   10.12303     2.20   0.028     1.284675    74.39814
+          4  |    8.78241   9.424168     2.02   0.043     1.072043    71.94741
+          5  |   8.110226   8.799694     1.93   0.054     .9670944     68.0138
+          6  |   2.31e-17   2.50e-17   -35.25   0.000     2.74e-18    1.94e-16
              |
      bmi_cat |
-          0  |   .2616262   .3304549    -1.06   0.288     .0220062    3.110405
-Underweight  |   .9562905   .9013634    -0.05   0.962     .1507576    6.065971
- Overweight  |   1.928855   1.732617     0.73   0.465     .3316634    11.21764
-      Obese  |   3.245677   2.399377     1.59   0.111     .7621699    13.82161
-Morbidly ..  |   9.82e-18   8.46e-18   -45.49   0.000     1.82e-18    5.31e-17
+Underweight  |   .3910875    .397788    -0.92   0.356     .0532708    2.871171
+ Overweight  |   .1525805   .1616164    -1.77   0.076     .0191377    1.216492
+      Obese  |   1.590132   .6710453     1.10   0.272     .6953777     3.63618
+Morbidly ..  |   .4900554   .4949777    -0.71   0.480     .0676852    3.548106
              |
      smoking |
-Current s..  |   3.442398   3.241543     1.31   0.189      .543657    21.79703
-  Ex-smoker  |   6.203171   6.661558     1.70   0.089     .7559833    50.89971
+Current s..  |   3.210472   3.280939     1.14   0.254     .4331957    23.79324
+  Ex-smoker  |   2.948613   3.105246     1.03   0.305     .3742826    23.22929
              |
-severe_dis~e |   .7906609   .3686278    -0.50   0.614     .3170565    1.971713
-covid_vacc~t |   .3411884   .3295288    -1.11   0.266     .0513903    2.265204
- liver_trans |   5.80e-18   4.71e-18   -48.85   0.000     1.18e-18    2.85e-17
+severe_dis~e |   .3800302   .1568513    -2.34   0.019     .1692383    .8533707
+covid_vacc~t |   1.309458   .6434835     0.55   0.583     .4998051    3.430696
+ liver_trans |   6.07e-18   5.70e-18   -42.20   0.000     9.62e-19    3.82e-17
 ------------------------------------------------------------------------------
                                                              Stratified by stp
 (note: file ./output/tempdata/adj_model_hosp_any.ster not found)
@@ -779,36 +831,35 @@ file ./output/tempdata/surv_adj_hosp_any.dta saved
       ----------------------------------------------------------------
                   |       rho            chi2       df       Prob>chi2
       ------------+---------------------------------------------------
-      udca        |     -0.15073         1.85        1         0.1741
-      age_tv      |     -0.09306         0.36        1         0.5480
-      male        |     -0.09186         0.82        1         0.3638
+      udca        |     -0.14036         1.13        1         0.2879
+      age_tv      |     -0.11359         1.36        1         0.2428
+      male        |      0.22881         4.51        1         0.0336
       o.any_high~n|            .            .        1             .
       1b.ethnicity|            .            .        1             .
-      2.ethnicity |     -0.09653         0.77        1         0.3807
-      3.ethnicity |      0.03051         0.05        1         0.8240
-      4.ethnicity |      0.18829         3.17        1         0.0751
-      5.ethnicity |      0.09378         0.53        1         0.4650
-      6.ethnicity |      0.07745         0.30        1         0.5838
+      2.ethnicity |     -0.20178         2.08        1         0.1495
+      3.ethnicity |      0.18650         1.66        1         0.1976
+      4.ethnicity |      0.18840         2.50        1         0.1137
+      5.ethnicity |      0.20991         1.84        1         0.1750
+      6.ethnicity |      0.17478         1.53        1         0.2155
       1b.imd      |            .            .        1             .
-      2.imd       |      0.22857         2.03        1         0.1547
-      3.imd       |      0.20195         2.16        1         0.1420
-      4.imd       |      0.07906         0.23        1         0.6288
-      5.imd       |      0.02171         0.02        1         0.8803
-      6.imd       |      0.13687         1.12        1         0.2907
-      0.bmi_cat   |      0.46074        13.72        1         0.0002
-      1.bmi_cat   |      0.16030         2.09        1         0.1483
+      2.imd       |     -0.19755         2.03        1         0.1542
+      3.imd       |     -0.30408         4.79        1         0.0286
+      4.imd       |     -0.39708        10.44        1         0.0012
+      5.imd       |     -0.39002         9.49        1         0.0021
+      6.imd       |     -0.31215         4.41        1         0.0357
+      1.bmi_cat   |      0.13144         1.56        1         0.2118
       2b.bmi_cat  |            .            .        1             .
-      3.bmi_cat   |      0.26817         6.01        1         0.0142
-      4.bmi_cat   |      0.31282         8.65        1         0.0033
-      5.bmi_cat   |      0.34258         6.79        1         0.0091
+      3.bmi_cat   |      0.31876        10.48        1         0.0012
+      4.bmi_cat   |      0.32761         8.54        1         0.0035
+      5.bmi_cat   |      0.32506         5.22        1         0.0223
       0b.smoking  |            .            .        1             .
-      1.smoking   |     -0.13034         0.61        1         0.4339
-      2.smoking   |     -0.12311         0.85        1         0.3559
-      severe_dis~e|      0.22062         4.19        1         0.0407
-      covid_vacc~t|     -0.05045         0.06        1         0.8073
-      liver_trans |     -0.30186         1.51        1         0.2195
+      1.smoking   |      0.18452         2.08        1         0.1492
+      2.smoking   |      0.06391         0.20        1         0.6524
+      severe_dis~e|     -0.09325         0.76        1         0.3840
+      covid_vacc~t|      0.19067         1.76        1         0.1842
+      liver_trans |     -0.26272         1.68        1         0.1953
       ------------+---------------------------------------------------
-      global test |                     22.89       23         0.4674
+      global test |                     36.27       22         0.0284
       ----------------------------------------------------------------
 
 note: robust variance-covariance matrix used.
@@ -822,94 +873,95 @@ note: robust variance-covariance matrix used.
                  id:  patient_id
 
 note: any_high_risk_condition omitted because of collinearity
-Iteration 0:   log pseudolikelihood = -102.98963
-Iteration 1:   log pseudolikelihood = -92.004482
-Iteration 2:   log pseudolikelihood = -90.678695
-Iteration 3:   log pseudolikelihood = -90.595249
-Iteration 4:   log pseudolikelihood = -90.578783
-Iteration 5:   log pseudolikelihood =   -90.5728
-Iteration 6:   log pseudolikelihood =   -90.5706
-Iteration 7:   log pseudolikelihood = -90.569791
-Iteration 8:   log pseudolikelihood = -90.569493
-Iteration 9:   log pseudolikelihood = -90.569383
-Iteration 10:  log pseudolikelihood = -90.569343
-Iteration 11:  log pseudolikelihood = -90.569328
-Iteration 12:  log pseudolikelihood = -90.569323
-Iteration 13:  log pseudolikelihood = -90.569321
-Iteration 14:  log pseudolikelihood =  -90.56932
-Iteration 15:  log pseudolikelihood =  -90.56932
-Iteration 16:  log pseudolikelihood =  -90.56932
-Iteration 17:  log pseudolikelihood =  -90.56932
-Iteration 18:  log pseudolikelihood =  -90.56932
-Iteration 19:  log pseudolikelihood =  -90.56932
-Iteration 20:  log pseudolikelihood =  -90.56932
-Iteration 21:  log pseudolikelihood =  -90.56932
-Iteration 22:  log pseudolikelihood =  -90.56932
-Iteration 23:  log pseudolikelihood =  -90.56932
-Iteration 24:  log pseudolikelihood =  -90.56932
-Iteration 25:  log pseudolikelihood =  -90.56932
-Iteration 26:  log pseudolikelihood =  -90.56932
-Iteration 27:  log pseudolikelihood =  -90.56932
-Iteration 28:  log pseudolikelihood =  -90.56932
-Iteration 29:  log pseudolikelihood =  -90.56932
-Iteration 30:  log pseudolikelihood =  -90.56932
-Iteration 31:  log pseudolikelihood =  -90.56932
+Iteration 0:   log pseudolikelihood = -145.40832
+Iteration 1:   log pseudolikelihood = -130.57075
+Iteration 2:   log pseudolikelihood = -128.84516
+Iteration 3:   log pseudolikelihood = -128.59149
+Iteration 4:   log pseudolikelihood = -128.52988
+Iteration 5:   log pseudolikelihood = -128.50763
+Iteration 6:   log pseudolikelihood = -128.49945
+Iteration 7:   log pseudolikelihood = -128.49644
+Iteration 8:   log pseudolikelihood = -128.49534
+Iteration 9:   log pseudolikelihood = -128.49493
+Iteration 10:  log pseudolikelihood = -128.49478
+Iteration 11:  log pseudolikelihood = -128.49472
+Iteration 12:  log pseudolikelihood =  -128.4947
+Iteration 13:  log pseudolikelihood =  -128.4947
+Iteration 14:  log pseudolikelihood = -128.49469
+Iteration 15:  log pseudolikelihood = -128.49469
+Iteration 16:  log pseudolikelihood = -128.49469
+Iteration 17:  log pseudolikelihood = -128.49469
+Iteration 18:  log pseudolikelihood = -128.49469
+Iteration 19:  log pseudolikelihood = -128.49469
+Iteration 20:  log pseudolikelihood = -128.49469
+Iteration 21:  log pseudolikelihood = -128.49469
+Iteration 22:  log pseudolikelihood = -128.49469
+Iteration 23:  log pseudolikelihood = -128.49469
+Iteration 24:  log pseudolikelihood = -128.49469
+Iteration 25:  log pseudolikelihood = -128.49469
+Iteration 26:  log pseudolikelihood = -128.49469
+Iteration 27:  log pseudolikelihood = -128.49469
+Iteration 28:  log pseudolikelihood = -128.49469
+Iteration 29:  log pseudolikelihood = -128.49469
+Iteration 30:  log pseudolikelihood = -128.49469
+Iteration 31:  log pseudolikelihood = -128.49469
+Iteration 32:  log pseudolikelihood = -128.49469
+Iteration 33:  log pseudolikelihood = -128.49469
+Iteration 34:  log pseudolikelihood = -128.49469
 Refining estimates:
-Iteration 0:   log pseudolikelihood =  -90.56932
-Iteration 1:   log pseudolikelihood =  -90.56932
-Iteration 2:   log pseudolikelihood =  -90.56932
+Iteration 0:   log pseudolikelihood = -128.49469
+Iteration 1:   log pseudolikelihood = -128.49469
 
-Stratified Cox regr. -- no ties
+Stratified Cox regr. -- Breslow method for ties
 
-No. of subjects      =          985             Number of obs    =       1,393
-No. of failures      =           45
-Time at risk         =       617986
-                                                Wald chi2(19)    =     8951.44
-Log pseudolikelihood =    -90.56932             Prob > chi2      =      0.0000
+No. of subjects      =          990             Number of obs    =       1,389
+No. of failures      =           58
+Time at risk         =       624573
+                                                Wald chi2(18)    =     8670.66
+Log pseudolikelihood =   -128.49469             Prob > chi2      =      0.0000
 
-                           (Std. Err. adjusted for 495 clusters in patient_id)
+                           (Std. Err. adjusted for 496 clusters in patient_id)
 ------------------------------------------------------------------------------
              |               Robust
           _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-        udca |   1.346385   .8972131     0.45   0.655     .3647036    4.970484
-      age_tv |   .9893498   .0095322    -1.11   0.266     .9708423     1.00821
-        male |    .662526   .3106603    -0.88   0.380     .2642847    1.660863
+        udca |   1.639281   .8382939     0.97   0.334     .6016821    4.466219
+      age_tv |   1.006379    .008133     0.79   0.431     .9905645    1.022446
+        male |   1.082497    .387454     0.22   0.825     .5367347    2.183202
 any_high_r~n |          1  (omitted)
              |
      eth_bin |
-  Non-White  |   1.077389   .6666864     0.12   0.904     .3203693    3.623218
+  Non-White  |   1.189067   .6343103     0.32   0.745     .4179565    3.382841
              |
          imd |
-          2  |    1.16371   .8835103     0.20   0.842     .2627828    5.153388
-          3  |   2.147852   1.610227     1.02   0.308     .4941577    9.335618
-          4  |   1.642471   1.307275     0.62   0.533     .3451512    7.816023
-          5  |   .3384765   .3970956    -0.92   0.356     .0339556    3.374003
-          6  |   4.899497   4.795749     1.62   0.104     .7194063    33.36788
+          2  |   8.998013   9.603591     2.06   0.040     1.110857     72.8845
+          3  |   9.864338   10.27545     2.20   0.028     1.280534    75.98797
+          4  |   8.841951   9.559116     2.02   0.044     1.062444    73.58512
+          5  |   8.196995    8.94756     1.93   0.054     .9649662    69.63014
+          6  |   3.63e-15   3.97e-15   -30.39   0.000     4.25e-16    3.10e-14
              |
      bmi_cat |
-          0  |   .2806301    .328228    -1.09   0.277     .0283504     2.77785
-Underweight  |   1.081935   .9680118     0.09   0.930     .1873388    6.248485
- Overweight  |   1.840916   1.555807     0.72   0.470     .3512859    9.647328
-      Obese  |   3.312727   2.369282     1.67   0.094     .8154572    13.45768
-Morbidly ..  |   4.70e-15   3.51e-15   -44.21   0.000     1.09e-15    2.03e-14
+Underweight  |    .377978   .3754187    -0.98   0.327     .0539546    2.647918
+ Overweight  |   .1544885   .1649718    -1.75   0.080     .0190517    1.252733
+      Obese  |   1.597527    .659263     1.14   0.256     .7115028    3.586903
+Morbidly ..  |   .5136875   .5104862    -0.67   0.503     .0732491    3.602432
              |
      smoking |
-Current s..  |   3.066967   2.898343     1.19   0.236     .4811797    19.54838
-  Ex-smoker  |   6.188397   6.567029     1.72   0.086     .7732082    49.52903
+Current s..  |   3.167112    3.19826     1.14   0.254     .4376131    22.92115
+  Ex-smoker  |   3.098284   3.267667     1.07   0.284     .3920888    24.48263
              |
-severe_dis~e |   .7707793   .3662267    -0.55   0.584     .3037328    1.955998
-covid_vacc~t |   .3853671   .3770813    -0.97   0.330     .0566207    2.622856
- liver_trans |   2.70e-15   2.13e-15   -42.61   0.000     5.78e-16    1.27e-14
+severe_dis~e |   .3778024    .147803    -2.49   0.013     .1754929    .8133357
+covid_vacc~t |   1.325359   .6425634     0.58   0.561     .5124506    3.427795
+ liver_trans |   8.90e-16   8.52e-16   -36.20   0.000     1.36e-16    5.81e-15
 ------------------------------------------------------------------------------
                                                              Stratified by stp
 
      number |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,886       65.35       65.35
-          1 |      1,000       34.65      100.00
+          0 |      1,870       65.16       65.16
+          1 |      1,000       34.84      100.00
 ------------+-----------------------------------
-      Total |      2,886      100.00
+      Total |      2,870      100.00
 
 unexposed_e |
         ver |      Freq.     Percent        Cum.
@@ -918,28 +970,28 @@ unexposed_e |
 ------------+-----------------------------------
       Total |      1,000      100.00
   0
-  40
-no udca events = 40
-(1886 missing values generated)
+  53
+no udca events = 53
+(1870 missing values generated)
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-total_foll~p |        890      555852           0     555852     555852
-18528.4
-215.8848
+total_foll~p |        897      564967           0     564967     564967
+18832.233
+281.43237
 
 exposed_eve |
           r |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        890       89.00       89.00
-          1 |        110       11.00      100.00
+          0 |        897       89.70       89.70
+          1 |        103       10.30      100.00
 ------------+-----------------------------------
       Total |      1,000      100.00
-udca events = 6
+udca events = .
 
 Contains data from ./output/an_dataset_composite_any.dta
-  obs:         2,886                          
- vars:            17                          21 Aug 2023 10:48
+  obs:         2,870                          
+ vars:            17                          22 Aug 2023 12:37
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -973,17 +1025,17 @@ obs. time interval:  (stop[_n-1], stop]
             origin:  time index_date
 
 ------------------------------------------------------------------------------
-      2,886  total observations
+      2,870  total observations
           0  exclusions
 ------------------------------------------------------------------------------
-      2,886  observations remaining, representing
+      2,870  observations remaining, representing
       1,000  subjects
-        221  failures in single-failure-per-subject data
-    626,377  total analysis time at risk and under observation
+        213  failures in single-failure-per-subject data
+    630,402  total analysis time at risk and under observation
                                                 at risk from t =         0
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
-  221
+  213
 
          failure _d:  composite_any_flag
    analysis time _t:  (stop-origin)
@@ -999,26 +1051,26 @@ obs. time interval:  (stop[_n-1], stop]
   enter on or after:  time index_date
                  id:  patient_id
 
-Iteration 0:   log pseudolikelihood = -489.89576
-Iteration 1:   log pseudolikelihood = -489.85364
-Iteration 2:   log pseudolikelihood = -489.85359
+Iteration 0:   log pseudolikelihood = -517.07597
+Iteration 1:   log pseudolikelihood = -517.07095
+Iteration 2:   log pseudolikelihood = -517.07095
 Refining estimates:
-Iteration 0:   log pseudolikelihood = -489.85359
+Iteration 0:   log pseudolikelihood = -517.07095
 
 Stratified Cox regr. -- Breslow method for ties
 
 No. of subjects      =        1,000             Number of obs    =       1,407
-No. of failures      =          221
-Time at risk         =       626377
-                                                Wald chi2(1)     =        0.09
-Log pseudolikelihood =   -489.85359             Prob > chi2      =      0.7627
+No. of failures      =          213
+Time at risk         =       630402
+                                                Wald chi2(1)     =        0.01
+Log pseudolikelihood =   -517.07095             Prob > chi2      =      0.9220
 
                            (Std. Err. adjusted for 500 clusters in patient_id)
 ------------------------------------------------------------------------------
              |               Robust
           _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-        udca |     1.0911   .3150643     0.30   0.763      .619545     1.92157
+        udca |   .9658616   .3424469    -0.10   0.922     .4820818    1.935125
 ------------------------------------------------------------------------------
                                                              Stratified by stp
 (note: file ./output/tempdata/crude_composite_any.ster not found)
@@ -1032,9 +1084,9 @@ file ./output/tempdata/surv_crude_composite_any.dta saved
       ----------------------------------------------------------------
                   |       rho            chi2       df       Prob>chi2
       ------------+---------------------------------------------------
-      udca        |      0.04596         0.20        1         0.6518
+      udca        |     -0.07714         0.68        1         0.4101
       ------------+---------------------------------------------------
-      global test |                      0.20        1         0.6518
+      global test |                      0.68        1         0.4101
       ----------------------------------------------------------------
 
 note: robust variance-covariance matrix used.
@@ -1045,28 +1097,28 @@ note: robust variance-covariance matrix used.
   enter on or after:  time index_date
                  id:  patient_id
 
-Iteration 0:   log pseudolikelihood =   -488.764
-Iteration 1:   log pseudolikelihood = -488.55584
-Iteration 2:   log pseudolikelihood =  -488.5558
+Iteration 0:   log pseudolikelihood = -515.73019
+Iteration 1:   log pseudolikelihood =  -515.1278
+Iteration 2:   log pseudolikelihood = -515.12775
 Refining estimates:
-Iteration 0:   log pseudolikelihood =  -488.5558
+Iteration 0:   log pseudolikelihood = -515.12775
 
 Stratified Cox regr. -- Breslow method for ties
 
-No. of subjects      =          985             Number of obs    =       1,393
-No. of failures      =          218
-Time at risk         =       617986
-                                                Wald chi2(3)     =        0.47
-Log pseudolikelihood =    -488.5558             Prob > chi2      =      0.9260
+No. of subjects      =          990             Number of obs    =       1,389
+No. of failures      =          210
+Time at risk         =       624573
+                                                Wald chi2(3)     =        1.32
+Log pseudolikelihood =   -515.12775             Prob > chi2      =      0.7240
 
-                           (Std. Err. adjusted for 495 clusters in patient_id)
+                           (Std. Err. adjusted for 496 clusters in patient_id)
 ------------------------------------------------------------------------------
              |               Robust
           _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-        udca |   1.059556   .3165922     0.19   0.846     .5899118    1.903094
-      age_tv |   .9974334   .0046537    -0.55   0.582     .9883539    1.006596
-        male |   1.017092   .1996147     0.09   0.931     .6923141    1.494229
+        udca |   .9337635   .3373063    -0.19   0.850     .4599967    1.895479
+      age_tv |   .9962969   .0041848    -0.88   0.377     .9881285    1.004533
+        male |   1.125766   .2166077     0.62   0.538     .7720918    1.641448
 ------------------------------------------------------------------------------
                                                              Stratified by stp
 (note: file ./output/tempdata/p_adj_model_composite_any.ster not found)
@@ -1080,11 +1132,11 @@ file ./output/tempdata/p_surv_adj_composite_any.dta saved
       ----------------------------------------------------------------
                   |       rho            chi2       df       Prob>chi2
       ------------+---------------------------------------------------
-      udca        |      0.00352         0.00        1         0.9674
-      age_tv      |     -0.06521         0.72        1         0.3951
-      male        |      0.09971         1.02        1         0.3136
+      udca        |     -0.07637         0.71        1         0.3978
+      age_tv      |     -0.00294         0.00        1         0.9723
+      male        |      0.01527         0.03        1         0.8693
       ------------+---------------------------------------------------
-      global test |                      1.85        3         0.6048
+      global test |                      0.72        3         0.8676
       ----------------------------------------------------------------
 
 note: robust variance-covariance matrix used.
@@ -1096,60 +1148,99 @@ note: robust variance-covariance matrix used.
                  id:  patient_id
 
 note: any_high_risk_condition omitted because of collinearity
-Iteration 0:   log pseudolikelihood =   -488.764
-Iteration 1:   log pseudolikelihood = -479.60508
-Iteration 2:   log pseudolikelihood = -478.97226
-Iteration 3:   log pseudolikelihood = -478.96401
-Iteration 4:   log pseudolikelihood = -478.96401
+Iteration 0:   log pseudolikelihood = -515.73019
+Iteration 1:   log pseudolikelihood = -497.57328
+Iteration 2:   log pseudolikelihood = -496.69909
+Iteration 3:   log pseudolikelihood = -496.59111
+Iteration 4:   log pseudolikelihood =  -496.5531
+Iteration 5:   log pseudolikelihood = -496.53914
+Iteration 6:   log pseudolikelihood = -496.53401
+Iteration 7:   log pseudolikelihood = -496.53212
+Iteration 8:   log pseudolikelihood = -496.53143
+Iteration 9:   log pseudolikelihood = -496.53117
+Iteration 10:  log pseudolikelihood = -496.53108
+Iteration 11:  log pseudolikelihood = -496.53104
+Iteration 12:  log pseudolikelihood = -496.53103
+Iteration 13:  log pseudolikelihood = -496.53102
+Iteration 14:  log pseudolikelihood = -496.53102
+Iteration 15:  log pseudolikelihood = -496.53102
+Iteration 16:  log pseudolikelihood = -496.53102
+Iteration 17:  log pseudolikelihood = -496.53102
+Iteration 18:  log pseudolikelihood = -496.53102
+Iteration 19:  log pseudolikelihood = -496.53102
+Iteration 20:  log pseudolikelihood = -496.53102
+Iteration 21:  log pseudolikelihood = -496.53102
+Iteration 22:  log pseudolikelihood = -496.53102
+Iteration 23:  log pseudolikelihood = -496.53102
+Iteration 24:  log pseudolikelihood = -496.53102
+Iteration 25:  log pseudolikelihood = -496.53102
+Iteration 26:  log pseudolikelihood = -496.53102
+Iteration 27:  log pseudolikelihood = -496.53102
+Iteration 28:  log pseudolikelihood = -496.53102
+Iteration 29:  log pseudolikelihood = -496.53102
+Iteration 30:  log pseudolikelihood = -496.53102
+Iteration 31:  log pseudolikelihood = -496.53102
+Iteration 32:  log pseudolikelihood = -496.53102
+Iteration 33:  log pseudolikelihood = -496.53102
+Iteration 34:  log pseudolikelihood = -496.53102
+Iteration 35:  log pseudolikelihood = -496.53102
+Iteration 36:  log pseudolikelihood = -496.53102
+Iteration 37:  log pseudolikelihood = -496.53102
+Iteration 38:  log pseudolikelihood = -496.53102
+Iteration 39:  log pseudolikelihood = -496.53102
+Iteration 40:  log pseudolikelihood = -496.53102
+Iteration 41:  log pseudolikelihood = -496.53102
+Iteration 42:  log pseudolikelihood = -496.53102
+Iteration 43:  log pseudolikelihood = -496.53102
+Iteration 44:  log pseudolikelihood = -496.53102
 Refining estimates:
-Iteration 0:   log pseudolikelihood = -478.96401
+Iteration 0:   log pseudolikelihood = -496.53102
 
 Stratified Cox regr. -- Breslow method for ties
 
-No. of subjects      =          985             Number of obs    =       1,393
-No. of failures      =          218
-Time at risk         =       617986
-                                                Wald chi2(23)    =       19.56
-Log pseudolikelihood =   -478.96401             Prob > chi2      =      0.6685
+No. of subjects      =          990             Number of obs    =       1,389
+No. of failures      =          210
+Time at risk         =       624573
+                                                Wald chi2(21)    =       36.04
+Log pseudolikelihood =   -496.53102             Prob > chi2      =      0.0216
 
-                           (Std. Err. adjusted for 495 clusters in patient_id)
+                           (Std. Err. adjusted for 496 clusters in patient_id)
 ------------------------------------------------------------------------------
              |               Robust
           _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-        udca |    1.24457    .397042     0.69   0.493     .6659923    2.325783
-      age_tv |   .9983946   .0049052    -0.33   0.744     .9888268    1.008055
-        male |   1.092555   .2285946     0.42   0.672     .7250147    1.646416
+        udca |   .9207453    .338918    -0.22   0.823     .4475277    1.894345
+      age_tv |   .9962975   .0041074    -0.90   0.368     .9882795    1.004381
+        male |   1.188868   .2420624     0.85   0.396      .797669    1.771922
 any_high_r~n |          1  (omitted)
              |
    ethnicity |
-      Mixed  |   2.012081   .7958765     1.77   0.077     .9267305     4.36855
-      Asian  |   1.957867    .755625     1.74   0.082     .9188992    4.171559
-      Black  |   2.290136   .8561177     2.22   0.027     1.100672    4.765017
-      Other  |   1.536506   .6208993     1.06   0.288     .6959296     3.39237
-    Unknown  |   1.158949   .7297603     0.23   0.815     .3373532    3.981475
+      Mixed  |    1.03454   .3277581     0.11   0.915     .5559984    1.924956
+      Asian  |   .9333528    .302235    -0.21   0.831     .4947807    1.760674
+      Black  |   .9864774   .3206739    -0.04   0.967     .5216597    1.865464
+      Other  |   1.009843   .3117424     0.03   0.975     .5514229    1.849367
+    Unknown  |   1.034852   .4543124     0.08   0.938      .437714    2.446616
              |
          imd |
-          2  |   .5161834   .1865649    -1.83   0.067     .2541868    1.048226
-          3  |   1.109388   .3380372     0.34   0.733     .6105441     2.01581
-          4  |   1.062806   .3492039     0.19   0.853     .5581825    2.023632
-          5  |   .9210302   .2877939    -0.26   0.792     .4992284    1.699215
-          6  |   .9773472   .6958283    -0.03   0.974       .24212    3.945181
+          2  |   2.553664   .8680001     2.76   0.006     1.311708    4.971534
+          3  |   2.877401   1.016073     2.99   0.003       1.4402    5.748814
+          4  |   2.051046   .7414925     1.99   0.047     1.009833    4.165826
+          5  |   1.556065   .5894386     1.17   0.243     .7406143    3.269366
+          6  |    1.41052   .8780159     0.55   0.581     .4164147    4.777849
              |
      bmi_cat |
-          0  |   .8562285   .2886361    -0.46   0.645       .44223    1.657796
-Underweight  |   .8741335   .3309634    -0.36   0.722     .4161949    1.835941
- Overweight  |   1.142624   .3893575     0.39   0.696      .585936    2.228212
-      Obese  |   1.278638   .3898961     0.81   0.420     .7033801     2.32437
-Morbidly ..  |   2.630856   1.275084     2.00   0.046     1.017535    6.802126
+Underweight  |   .8469354   .3641153    -0.39   0.699     .3646707    1.966979
+ Overweight  |   1.142675    .296075     0.51   0.607     .6876545    1.898781
+      Obese  |    1.20356   .2900812     0.77   0.442     .7504323    1.930295
+Morbidly ..  |   .4420366   .2648718    -1.36   0.173     .1365877    1.430556
              |
      smoking |
-Current s..  |   1.513591   .5606821     1.12   0.263     .7323127    3.128388
-  Ex-smoker  |   1.378782   .6194446     0.71   0.475       .57158     3.32594
+Current s..  |   2.892791   1.375753     2.23   0.026     1.138945     7.34736
+  Ex-smoker  |   1.293754   .7233153     0.46   0.645     .4324739    3.870291
              |
-severe_dis~e |   .9947051   .2149077    -0.02   0.980     .6513147     1.51914
-covid_vacc~t |   1.205207   .3859147     0.58   0.560     .6434305    2.257468
- liver_trans |   .9388647   1.053486    -0.06   0.955     .1041076    8.466885
+severe_dis~e |   .6041553    .119655    -2.54   0.011     .4097937     .890701
+covid_vacc~t |   1.106474   .3179056     0.35   0.725     .6300555    1.943137
+ liver_trans |   8.57e-20          .        .       .            .           .
 ------------------------------------------------------------------------------
                                                              Stratified by stp
 (note: file ./output/tempdata/adj_model_composite_any.ster not found)
@@ -1163,36 +1254,35 @@ file ./output/tempdata/surv_adj_composite_any.dta saved
       ----------------------------------------------------------------
                   |       rho            chi2       df       Prob>chi2
       ------------+---------------------------------------------------
-      udca        |      0.01120         0.02        1         0.8772
-      age_tv      |     -0.04965         0.59        1         0.4409
-      male        |      0.10324         1.99        1         0.1583
+      udca        |     -0.08449         1.08        1         0.2984
+      age_tv      |      0.00726         0.01        1         0.9297
+      male        |      0.03551         0.21        1         0.6438
       o.any_high~n|            .            .        1             .
       1b.ethnicity|            .            .        1             .
-      2.ethnicity |     -0.01248         0.02        1         0.8750
-      3.ethnicity |     -0.02755         0.10        1         0.7481
-      4.ethnicity |      0.06446         0.71        1         0.3985
-      5.ethnicity |      0.02872         0.14        1         0.7120
-      6.ethnicity |      0.08461         0.79        1         0.3747
+      2.ethnicity |     -0.12566         2.25        1         0.1339
+      3.ethnicity |      0.02352         0.08        1         0.7794
+      4.ethnicity |      0.02310         0.07        1         0.7952
+      5.ethnicity |     -0.01919         0.05        1         0.8262
+      6.ethnicity |      0.09544         1.44        1         0.2297
       1b.imd      |            .            .        1             .
-      2.imd       |     -0.11016         1.84        1         0.1753
-      3.imd       |     -0.02985         0.13        1         0.7140
-      4.imd       |     -0.00235         0.00        1         0.9770
-      5.imd       |      0.10950         1.75        1         0.1853
-      6.imd       |     -0.11129         2.71        1         0.0994
-      0.bmi_cat   |     -0.05138         0.48        1         0.4896
-      1.bmi_cat   |     -0.00962         0.01        1         0.9067
+      2.imd       |     -0.08411         1.02        1         0.3137
+      3.imd       |     -0.04018         0.25        1         0.6155
+      4.imd       |     -0.07436         0.87        1         0.3506
+      5.imd       |     -0.06440         0.61        1         0.4338
+      6.imd       |     -0.10278         1.82        1         0.1779
+      1.bmi_cat   |     -0.04861         0.38        1         0.5383
       2b.bmi_cat  |            .            .        1             .
-      3.bmi_cat   |     -0.06247         0.64        1         0.4241
-      4.bmi_cat   |     -0.06379         0.73        1         0.3918
-      5.bmi_cat   |     -0.00596         0.01        1         0.9404
+      3.bmi_cat   |      0.11518         1.87        1         0.1715
+      4.bmi_cat   |      0.08642         1.02        1         0.3121
+      5.bmi_cat   |      0.09994         1.45        1         0.2286
       0b.smoking  |            .            .        1             .
-      1.smoking   |     -0.05432         0.54        1         0.4624
-      2.smoking   |     -0.07823         1.05        1         0.3046
-      severe_dis~e|      0.06714         0.67        1         0.4123
-      covid_vacc~t|     -0.04387         0.34        1         0.5620
-      liver_trans |      0.03592         0.25        1         0.6149
+      1.smoking   |     -0.01656         0.05        1         0.8246
+      2.smoking   |     -0.02229         0.07        1         0.7849
+      severe_dis~e|     -0.02271         0.07        1         0.7899
+      covid_vacc~t|      0.05318         0.29        1         0.5874
+      liver_trans |            .            .        1             .
       ------------+---------------------------------------------------
-      global test |                     18.24       23         0.7442
+      global test |                     14.05       21         0.8675
       ----------------------------------------------------------------
 
 note: robust variance-covariance matrix used.
@@ -1206,65 +1296,102 @@ note: robust variance-covariance matrix used.
                  id:  patient_id
 
 note: any_high_risk_condition omitted because of collinearity
-Iteration 0:   log pseudolikelihood =   -488.764
-Iteration 1:   log pseudolikelihood = -480.89874
-Iteration 2:   log pseudolikelihood = -480.29011
-Iteration 3:   log pseudolikelihood = -480.28176
-Iteration 4:   log pseudolikelihood = -480.28176
+Iteration 0:   log pseudolikelihood = -515.73019
+Iteration 1:   log pseudolikelihood = -497.64009
+Iteration 2:   log pseudolikelihood = -496.76497
+Iteration 3:   log pseudolikelihood = -496.65639
+Iteration 4:   log pseudolikelihood = -496.61819
+Iteration 5:   log pseudolikelihood = -496.60416
+Iteration 6:   log pseudolikelihood =   -496.599
+Iteration 7:   log pseudolikelihood =  -496.5971
+Iteration 8:   log pseudolikelihood =  -496.5964
+Iteration 9:   log pseudolikelihood = -496.59615
+Iteration 10:  log pseudolikelihood = -496.59605
+Iteration 11:  log pseudolikelihood = -496.59602
+Iteration 12:  log pseudolikelihood = -496.59601
+Iteration 13:  log pseudolikelihood =   -496.596
+Iteration 14:  log pseudolikelihood =   -496.596
+Iteration 15:  log pseudolikelihood =   -496.596
+Iteration 16:  log pseudolikelihood =   -496.596
+Iteration 17:  log pseudolikelihood =   -496.596
+Iteration 18:  log pseudolikelihood =   -496.596
+Iteration 19:  log pseudolikelihood =   -496.596
+Iteration 20:  log pseudolikelihood =   -496.596
+Iteration 21:  log pseudolikelihood =   -496.596
+Iteration 22:  log pseudolikelihood =   -496.596
+Iteration 23:  log pseudolikelihood =   -496.596
+Iteration 24:  log pseudolikelihood =   -496.596
+Iteration 25:  log pseudolikelihood =   -496.596
+Iteration 26:  log pseudolikelihood =   -496.596
+Iteration 27:  log pseudolikelihood =   -496.596
+Iteration 28:  log pseudolikelihood =   -496.596
+Iteration 29:  log pseudolikelihood =   -496.596
+Iteration 30:  log pseudolikelihood =   -496.596
+Iteration 31:  log pseudolikelihood =   -496.596
+Iteration 32:  log pseudolikelihood =   -496.596
+Iteration 33:  log pseudolikelihood =   -496.596
+Iteration 34:  log pseudolikelihood =   -496.596
+Iteration 35:  log pseudolikelihood =   -496.596
+Iteration 36:  log pseudolikelihood =   -496.596
+Iteration 37:  log pseudolikelihood =   -496.596
+Iteration 38:  log pseudolikelihood =   -496.596
+Iteration 39:  log pseudolikelihood =   -496.596
+Iteration 40:  log pseudolikelihood =   -496.596
 Refining estimates:
-Iteration 0:   log pseudolikelihood = -480.28176
+Iteration 0:   log pseudolikelihood =   -496.596
+Iteration 1:   log pseudolikelihood =   -496.596
+Iteration 2:   log pseudolikelihood =   -496.596
 
 Stratified Cox regr. -- Breslow method for ties
 
-No. of subjects      =          985             Number of obs    =       1,393
-No. of failures      =          218
-Time at risk         =       617986
-                                                Wald chi2(19)    =       16.48
-Log pseudolikelihood =   -480.28176             Prob > chi2      =      0.6250
+No. of subjects      =          990             Number of obs    =       1,389
+No. of failures      =          210
+Time at risk         =       624573
+                                                Wald chi2(18)    =     3578.84
+Log pseudolikelihood =     -496.596             Prob > chi2      =      0.0000
 
-                           (Std. Err. adjusted for 495 clusters in patient_id)
+                           (Std. Err. adjusted for 496 clusters in patient_id)
 ------------------------------------------------------------------------------
              |               Robust
           _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
-        udca |   1.300058   .4047644     0.84   0.399      .706231    2.393198
-      age_tv |   .9988857   .0048226    -0.23   0.817     .9894781    1.008383
-        male |    1.08172   .2277651     0.37   0.709     .7159581     1.63434
+        udca |   .9165743   .3321333    -0.24   0.810     .4505293    1.864714
+      age_tv |   .9961822   .0039886    -0.96   0.339     .9883953     1.00403
+        male |   1.189776   .2378752     0.87   0.385     .8040479    1.760549
 any_high_r~n |          1  (omitted)
              |
      eth_bin |
-  Non-White  |   1.923278   .6436754     1.95   0.051     .9980797    3.706116
+  Non-White  |   .9956399   .2465415    -0.02   0.986     .6128114    1.617625
              |
          imd |
-          2  |   .5293225    .190266    -1.77   0.077     .2616703    1.070746
-          3  |   1.114384    .341842     0.35   0.724     .6108365    2.033033
-          4  |   1.097023   .3553785     0.29   0.775      .581394    2.069955
-          5  |   .9340148   .2914555    -0.22   0.827     .5066871    1.721741
-          6  |   1.004152   .6957249     0.01   0.995     .2582535    3.904387
+          2  |   2.567162   .8689726     2.79   0.005     1.322286    4.984035
+          3  |    2.89105   1.008035     3.04   0.002       1.4597    5.725954
+          4  |   2.053137   .7320259     2.02   0.044     1.020775    4.129576
+          5  |   1.562915   .5897631     1.18   0.237     .7459949    3.274422
+          6  |   1.432497   .8777029     0.59   0.557     .4310778    4.760275
              |
      bmi_cat |
-          0  |   .8340179   .2721195    -0.56   0.578     .4399966    1.580889
-Underweight  |   .8669811   .3267464    -0.38   0.705     .4142001    1.814718
- Overweight  |   1.098437   .3660816     0.28   0.778     .5715982    2.110859
-      Obese  |   1.237327   .3722999     0.71   0.479     .6860666    2.231531
-Morbidly ..  |   2.701693   1.272581     2.11   0.035     1.073232    6.801086
+Underweight  |   .8470167   .3616897    -0.39   0.697     .3667882    1.955999
+ Overweight  |    1.13938   .2942982     0.51   0.613      .686762    1.890302
+      Obese  |   1.204753   .2902842     0.77   0.439     .7512794    1.931943
+Morbidly ..  |   .4412429   .2626748    -1.37   0.169     .1373889     1.41711
              |
      smoking |
-Current s..  |   1.477746   .5380679     1.07   0.283     .7238778    3.016714
-  Ex-smoker  |   1.398496   .6212963     0.75   0.450     .5854719    3.340537
+Current s..  |   2.874212   1.346403     2.25   0.024     1.147572     7.19876
+  Ex-smoker  |   1.284926   .7161476     0.45   0.653     .4309875    3.830817
              |
-severe_dis~e |   .9902674   .2131349    -0.05   0.964     .6494544    1.509928
-covid_vacc~t |   1.241577   .3934097     0.68   0.495     .6672053    2.310404
- liver_trans |   1.065179   1.155554     0.06   0.954     .1270577    8.929847
+severe_dis~e |   .6019909   .1184111    -2.58   0.010     .4094108    .8851575
+covid_vacc~t |   1.109459   .3202435     0.36   0.719     .6301056    1.953481
+ liver_trans |   6.47e-19   4.68e-19   -57.88   0.000     1.57e-19    2.67e-18
 ------------------------------------------------------------------------------
                                                              Stratified by stp
 
      number |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,886       65.35       65.35
-          1 |      1,000       34.65      100.00
+          0 |      1,870       65.16       65.16
+          1 |      1,000       34.84      100.00
 ------------+-----------------------------------
-      Total |      2,886      100.00
+      Total |      2,870      100.00
 
 unexposed_e |
         ver |      Freq.     Percent        Cum.
@@ -1273,24 +1400,1433 @@ unexposed_e |
 ------------+-----------------------------------
       Total |      1,000      100.00
   0
-  199
-no udca events = 199
-(1886 missing values generated)
+  192
+no udca events = 192
+(1870 missing values generated)
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-total_foll~p |        890      555852           0     555852     555852
-18528.4
-1074.0269
+total_foll~p |        897      564967           0     564967     564967
+18832.233
+1019.5286
 
 exposed_eve |
           r |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        890       89.00       89.00
-          1 |        110       11.00      100.00
+          0 |        897       89.70       89.70
+          1 |        103       10.30      100.00
 ------------+-----------------------------------
       Total |      1,000      100.00
-udca events = 22
+udca events = 21
+
+. 
+. * sensitivity analysis - 90 day exposure 
+. file write tablecontent _n ("90 day exposure sensitivity analysis") _n 
+
+. file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominat
+> or") _tab ("events") _tab ("total_person_wks") _tab ("Rate") _tab ("unadj_hr"
+> ) _tab ///
+> ("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci")  _tab ("p_adj_hr") _tab ("
+> p_adj_ci") _tab ("p_adj_lci") _tab ("p_adj_uci") _tab ("f_adj_hr") _tab ("f_a
+> dj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
+
+. 
+. * Cox models and Schoenfeld residual plots for each outcome
+. foreach outcome in died_covid_any hosp_any composite_any {
+  2.     use ./output/an_dataset_90_`outcome', clear 
+  3.     * Open file to write results
+.     describe
+  4.     gen index_date = date("01/03/2020", "DMY")
+  5.     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) orig
+> in(index_date)
+  6.     count if `outcome'_flag==1
+  7.     if r(N) > 10 {
+  8.         sts graph, by(udca) title("`outcome'") graphregion(fcolor(white)) 
+> ylabel(.75(.1)1)
+  9.         graph export ./output/graphs/km_`outcome'.svg, as(svg) replace
+ 10.         * Cox model - crude
+.         stcox udca, strata(stp) vce(robust)
+ 11.         estimates save "./output/tempdata/crude_`outcome'", replace 
+ 12.         eststo model4
+ 13.         parmest, label eform format(estimate p lb ub) saving("./output/tem
+> pdata/surv_crude_`outcome'", replace) idstr("crude_`outcome'") 
+ 14.         estat phtest, detail
+ 15.         * Plot schoenfeld residuals 
+.         estat phtest, plot(udca) ///
+>                     graphregion(fcolor(white)) ///
+>                     ylabel(, nogrid labsize(small)) ///
+>                     xlabel(, labsize(small)) ///
+>                     xtitle("Time", size(small)) ///
+>                     ytitle("Scaled Schoenfeld Residuals", size(small)) ///
+>                     msize(small) ///
+>                     mcolor(gs6) ///
+>                     msymbol(circle_hollow) ///
+>                     scheme(s1mono) ///
+>                     title ("`outcome'", position(11) size(medsmall)) ///
+>                     name(uni_plot_90_`outcome') ///
+>                     note("")
+ 16.         * Cox model - age and sex adjusted
+.         stcox udca age_tv male, strata(stp) vce(robust)
+ 17.         estimates save "./output/tempdata/p_adj_model_`outcome'", replace 
+ 18.         eststo model5
+ 19.         parmest, label eform format(estimate p lb ub) saving("./output/tem
+> pdata/p_surv_adj_90_`outcome'", replace) idstr("adj_`outcome'") 
+ 20.         estat phtest, detail
+ 21.         * Cox model - fully adjusted
+.         stcox udca age_tv male any_high_risk_condition i.ethnicity i.imd ib2.
+> bmi_cat i.smoking severe_disease covid_vacc_first liver_trans, strata(stp) vc
+> e(robust)
+ 22.         estimates save "./output/tempdata/adj_model_90_`outcome'", replace
+>  
+ 23.         eststo model6
+ 24.         parmest, label eform format(estimate p lb ub) saving("./output/tem
+> pdata/surv_adj_90_`outcome'", replace) idstr("adj_`outcome'") 
+ 25.         estat phtest, detail
+ 26.         * Plot Schoenfeld residuals 
+.         estat phtest, plot(udca) ///
+>                     graphregion(fcolor(white)) ///
+>                     ylabel(, nogrid labsize(small)) ///
+>                     xlabel(, labsize(small)) ///
+>                     xtitle("Time", size(small)) ///
+>                     ytitle("Scaled Schoenfeld Residuals", size(small)) ///
+>                     msize(small) ///
+>                     mcolor(gs6) ///
+>                     msymbol(circle_hollow) ///
+>                     scheme(s1mono) ///
+>                     title ("Adjusted `outcome'", position(11) size(medsmall))
+>  ///
+>                     name(adj_plot_90_`outcome') ///
+>                     note("")
+ 27.         graph combine uni_plot_90_`outcome' adj_plot_`outcome'
+ 28.         graph export ./output/graphs/schoenplot_90_`outcome'.svg, as(svg) 
+> replace 
+ 29.         * Cox model - fully adjusted with binary ethnicity variable 
+.         stcox udca age_tv male any_high_risk_condition i.eth_bin i.imd ib2.bm
+> i_cat i.smoking severe_disease covid_vacc_first liver_trans, strata(stp) vce(
+> robust)
+ 30.         * flag single row for each person
+.         bys patient_id (start): gen number = _n==_N 
+ 31.         tab number 
+ 32.         * Count number unexposed at any time 
+.         bys patient_id : egen unexposed_ever = min(udca) 
+ 33.         tab unexposed_ever if number==1
+ 34.         safecount if unexposed_ever==1 & number==1
+ 35.         local denominator = r(N)
+ 36.         safecount if udca == 0 & `outcome'_flag == 1
+ 37.         local event = r(N)
+ 38.         di "no udca events = " `event'
+ 39.         bysort udca: egen total_follow_up = total(_t) if number==1
+ 40.         su total_follow_up if udca==0 & number==1
+ 41.         local person_mth = r(mean)/30
+ 42.         di `person_mth'
+ 43.         local rate = 100000*(`event'/`person_mth')
+ 44.         di `rate'
+ 45.         if `event'>10 & `event'!=. {
+ 46.             file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (
+> `denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') 
+> _tab
+ 47.             file write tablecontent ("1.00") _tab _tab ("1.00")  _n
+ 48.             }
+ 49.         else {
+ 50.             file write tablecontent ("`outcome'") _tab ("No UDCA") _tab ("
+> redact") _n
+ 51.             continue
+ 52.         }
+ 53.         * Count number exposed at any time 
+.         bys patient_id : egen exposed_ever = max(udca) 
+ 54.         tab exposed_ever if number==1
+ 55.         qui safecount if exposed_ever==1 & number==1
+ 56.         local denominator = r(N)
+ 57.         qui safecount if udca == 1 & `outcome'_flag == 1
+ 58.         local event = r(N)
+ 59.         di "udca events = " `event'
+ 60.         qui su total_follow_up if udca==1 & number==1
+ 61.         local person_mth = r(mean)/30
+ 62.         local rate = 100000*(`event'/`person_mth')
+ 63.         if `event'>10 & `event'!=. {
+ 64.             file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`den
+> ominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+ 65.             cap estimates use "./output/tempdata/crude_`outcome'" 
+ 66.             cap lincom udca, eform
+ 67.             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f 
+> (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _ta
+> b 
+ 68.             cap estimates clear
+ 69.             cap estimates use "./output/tempdata/p_adj_model_`outcome'" 
+ 70.             cap lincom udca, eform
+ 71.             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f 
+> (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _ta
+> b 
+ 72.             cap estimates clear
+ 73.             cap estimates use "./output/tempdata/adj_model_`outcome'" 
+ 74.             cap lincom udca, eform
+ 75.             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f 
+> (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _ta
+> b _n 
+ 76.             cap estimates clear
+ 77.         }
+ 78.         else {
+ 79.             file write tablecontent  ("`outcome'") _tab ("UDCA") _tab ("re
+> dact") _n
+ 80.             continue
+ 81.         }
+ 82.     
+. drop total_follow_up
+ 83.     }
+ 84. else { 
+ 85.     file write tablecontent ("`outcome'") _tab ("redact") _n
+ 86.     continue
+ 87. }
+ 88. }
+
+Contains data from ./output/an_dataset_90_died_covid_any.dta
+  obs:         2,946                          
+ vars:            17                          22 Aug 2023 12:38
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+stp             str4    %9s                   
+imd             byte    %8.0g                 
+ethnicity       byte    %8.0g      eth5       
+patient_id      int     %8.0g                 
+male            float   %9.0g                 
+eth_bin         float   %9.0g      eth2       
+bmi_cat         float   %14.0g     bmi        
+smoking         float   %14.0g     smok       
+any_high_risk~n float   %9.0g                 
+start           float   %9.0g                 
+stop            float   %9.0g                 
+died_covid_an~g byte    %8.0g                 
+age_tv          float   %9.0g                 
+udca            float   %9.0g                 
+liver_trans     float   %9.0g                 
+covid_vacc_fi~t float   %9.0g                 
+severe_disease  float   %9.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+
+                id:  patient_id
+     failure event:  died_covid_any_flag != 0 & died_covid_any_flag < .
+obs. time interval:  (stop[_n-1], stop]
+ enter on or after:  time index_date
+ exit on or before:  failure
+    t for analysis:  (time-origin)
+            origin:  time index_date
+
+------------------------------------------------------------------------------
+      2,946  total observations
+          0  exclusions
+------------------------------------------------------------------------------
+      2,946  observations remaining, representing
+      1,000  subjects
+        153  failures in single-failure-per-subject data
+    651,528  total analysis time at risk and under observation
+                                                at risk from t =         0
+                                     earliest observed entry t =         0
+                                          last observed exit t =     1,035
+  153
+
+         failure _d:  died_covid_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+(file ./output/graphs/km_died_covid_any.svg written in SVG format)
+
+         failure _d:  died_covid_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+
+Iteration 0:   log pseudolikelihood = -361.07731
+Iteration 1:   log pseudolikelihood = -360.49144
+Iteration 2:   log pseudolikelihood = -360.47191
+Iteration 3:   log pseudolikelihood = -360.47187
+Refining estimates:
+Iteration 0:   log pseudolikelihood = -360.47187
+
+Stratified Cox regr. -- no ties
+
+No. of subjects      =        1,000             Number of obs    =       1,446
+No. of failures      =          153
+Time at risk         =       651528
+                                                Wald chi2(1)     =        1.01
+Log pseudolikelihood =   -360.47187             Prob > chi2      =      0.3138
+
+                           (Std. Err. adjusted for 500 clusters in patient_id)
+------------------------------------------------------------------------------
+             |               Robust
+          _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        udca |   .5926041   .3078428    -1.01   0.314     .2140854    1.640372
+------------------------------------------------------------------------------
+                                                             Stratified by stp
+file ./output/tempdata/crude_died_covid_any.ster saved
+file ./output/tempdata/surv_crude_died_covid_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.07993         0.50        1         0.4803
+      ------------+---------------------------------------------------
+      global test |                      0.50        1         0.4803
+      ----------------------------------------------------------------
+
+note: robust variance-covariance matrix used.
+
+         failure _d:  died_covid_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+
+Iteration 0:   log pseudolikelihood = -360.18634
+Iteration 1:   log pseudolikelihood = -357.81299
+Iteration 2:   log pseudolikelihood =  -357.7883
+Iteration 3:   log pseudolikelihood = -357.78825
+Refining estimates:
+Iteration 0:   log pseudolikelihood = -357.78825
+
+Stratified Cox regr. -- no ties
+
+No. of subjects      =          990             Number of obs    =       1,428
+No. of failures      =          150
+Time at risk         =       645699
+                                                Wald chi2(3)     =        4.81
+Log pseudolikelihood =   -357.78825             Prob > chi2      =      0.1865
+
+                           (Std. Err. adjusted for 496 clusters in patient_id)
+------------------------------------------------------------------------------
+             |               Robust
+          _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        udca |   .5468036   .2932763    -1.13   0.260     .1911139    1.564482
+      age_tv |   .9937111   .0049572    -1.26   0.206     .9840425    1.003475
+        male |   1.388781   .3225009     1.41   0.157     .8809857    2.189267
+------------------------------------------------------------------------------
+                                                             Stratified by stp
+file ./output/tempdata/p_adj_model_died_covid_any.ster saved
+(note: file ./output/tempdata/p_surv_adj_90_died_covid_any.dta not found)
+file ./output/tempdata/p_surv_adj_90_died_covid_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.07347         0.47        1         0.4914
+      age_tv      |     -0.03624         0.12        1         0.7281
+      male        |     -0.03869         0.13        1         0.7211
+      ------------+---------------------------------------------------
+      global test |                      0.76        3         0.8589
+      ----------------------------------------------------------------
+
+note: robust variance-covariance matrix used.
+
+         failure _d:  died_covid_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+
+note: any_high_risk_condition omitted because of collinearity
+Iteration 0:   log pseudolikelihood = -360.18634
+Iteration 1:   log pseudolikelihood = -345.85906
+Iteration 2:   log pseudolikelihood = -345.04059
+Iteration 3:   log pseudolikelihood = -344.97376
+Iteration 4:   log pseudolikelihood = -344.95222
+Iteration 5:   log pseudolikelihood = -344.94431
+Iteration 6:   log pseudolikelihood =  -344.9414
+Iteration 7:   log pseudolikelihood = -344.94033
+Iteration 8:   log pseudolikelihood = -344.93993
+Iteration 9:   log pseudolikelihood = -344.93979
+Iteration 10:  log pseudolikelihood = -344.93974
+Iteration 11:  log pseudolikelihood = -344.93972
+Iteration 12:  log pseudolikelihood = -344.93971
+Iteration 13:  log pseudolikelihood = -344.93971
+Iteration 14:  log pseudolikelihood =  -344.9397
+Iteration 15:  log pseudolikelihood =  -344.9397
+Iteration 16:  log pseudolikelihood =  -344.9397
+Iteration 17:  log pseudolikelihood =  -344.9397
+Iteration 18:  log pseudolikelihood =  -344.9397
+Iteration 19:  log pseudolikelihood =  -344.9397
+Iteration 20:  log pseudolikelihood =  -344.9397
+Iteration 21:  log pseudolikelihood =  -344.9397
+Iteration 22:  log pseudolikelihood =  -344.9397
+Iteration 23:  log pseudolikelihood =  -344.9397
+Iteration 24:  log pseudolikelihood =  -344.9397
+Iteration 25:  log pseudolikelihood =  -344.9397
+Iteration 26:  log pseudolikelihood =  -344.9397
+Iteration 27:  log pseudolikelihood =  -344.9397
+Iteration 28:  log pseudolikelihood =  -344.9397
+Iteration 29:  log pseudolikelihood =  -344.9397
+Iteration 30:  log pseudolikelihood =  -344.9397
+Refining estimates:
+Iteration 0:   log pseudolikelihood =  -344.9397
+Iteration 1:   log pseudolikelihood =  -344.9397
+
+Stratified Cox regr. -- no ties
+
+No. of subjects      =          990             Number of obs    =       1,428
+No. of failures      =          150
+Time at risk         =       645699
+                                                Wald chi2(22)    =     2394.77
+Log pseudolikelihood =    -344.9397             Prob > chi2      =      0.0000
+
+                           (Std. Err. adjusted for 496 clusters in patient_id)
+------------------------------------------------------------------------------
+             |               Robust
+          _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        udca |   .5570536   .3006849    -1.08   0.278     .1933916    1.604561
+      age_tv |   .9936457   .0050879    -1.24   0.213     .9837234    1.003668
+        male |   1.513806   .3742027     1.68   0.093     .9325216    2.457432
+any_high_r~n |          1  (omitted)
+             |
+   ethnicity |
+      Mixed  |   .9601576   .3756018    -0.10   0.917     .4460289    2.066912
+      Asian  |   .9861726   .3891296    -0.04   0.972     .4550728      2.1371
+      Black  |   1.007816      .4113     0.02   0.985     .4528949     2.24267
+      Other  |   .8725619   .3463365    -0.34   0.731     .4008096    1.899566
+    Unknown  |   1.410919   .6613258     0.73   0.463     .5630241    3.535714
+             |
+         imd |
+          2  |   1.561672   .5687628     1.22   0.221     .7648589    3.188588
+          3  |   1.956848   .7507089     1.75   0.080     .9225907    4.150543
+          4  |   1.145407   .4475939     0.35   0.728     .5325172    2.463691
+          5  |   .8876388   .3727992    -0.28   0.777      .389709    2.021772
+          6  |   1.028408   .7256111     0.04   0.968     .2579795    4.099638
+             |
+     bmi_cat |
+Underweight  |   1.274979   .6195551     0.50   0.617     .4918986    3.304688
+ Overweight  |   1.700119   .5159461     1.75   0.080     .9379067    3.081761
+      Obese  |   1.217692   .3745013     0.64   0.522     .6664239    2.224972
+Morbidly ..  |    .482346   .3790887    -0.93   0.354     .1033657     2.25082
+             |
+     smoking |
+Current s..  |   2.475796   1.326633     1.69   0.091     .8661763    7.076582
+  Ex-smoker  |   .6733958    .473404    -0.56   0.574     .1697724    2.670999
+             |
+severe_dis~e |   .7438356   .1763925    -1.25   0.212     .4673302    1.183941
+covid_vacc~t |   1.093621   .3785767     0.26   0.796     .5548914    2.155389
+ liver_trans |   3.97e-14   2.70e-14   -45.39   0.000     1.05e-14    1.50e-13
+------------------------------------------------------------------------------
+                                                             Stratified by stp
+(note: file ./output/tempdata/adj_model_90_died_covid_any.ster not found)
+file ./output/tempdata/adj_model_90_died_covid_any.ster saved
+(note: file ./output/tempdata/surv_adj_90_died_covid_any.dta not found)
+file ./output/tempdata/surv_adj_90_died_covid_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.05266         0.34        1         0.5594
+      age_tv      |      0.01039         0.01        1         0.9081
+      male        |     -0.06719         0.76        1         0.3819
+      o.any_high~n|            .            .        1             .
+      1b.ethnicity|            .            .        1             .
+      2.ethnicity |     -0.12373         2.32        1         0.1279
+      3.ethnicity |     -0.05186         0.43        1         0.5111
+      4.ethnicity |     -0.07195         0.59        1         0.4441
+      5.ethnicity |     -0.13362         2.24        1         0.1347
+      6.ethnicity |      0.06590         0.57        1         0.4498
+      1b.imd      |            .            .        1             .
+      2.imd       |     -0.19160         3.72        1         0.0537
+      3.imd       |     -0.10847         1.46        1         0.2269
+      4.imd       |     -0.06305         0.50        1         0.4811
+      5.imd       |      0.00285         0.00        1         0.9766
+      6.imd       |     -0.14786         3.02        1         0.0823
+      1.bmi_cat   |     -0.10840         1.35        1         0.2444
+      2b.bmi_cat  |            .            .        1             .
+      3.bmi_cat   |      0.08776         0.95        1         0.3299
+      4.bmi_cat   |      0.03357         0.14        1         0.7100
+      5.bmi_cat   |      0.07032         0.81        1         0.3692
+      0b.smoking  |            .            .        1             .
+      1.smoking   |     -0.04358         0.28        1         0.5960
+      2.smoking   |      0.02071         0.05        1         0.8174
+      severe_dis~e|      0.02330         0.06        1         0.8019
+      covid_vacc~t|      0.03770         0.12        1         0.7287
+      liver_trans |      0.00038         0.00        1         0.9989
+      ------------+---------------------------------------------------
+      global test |                     16.25       22         0.8034
+      ----------------------------------------------------------------
+
+note: robust variance-covariance matrix used.
+(note: file ./output/graphs/schoenplot_90_died_covid_any.svg not found)
+(file ./output/graphs/schoenplot_90_died_covid_any.svg written in SVG format)
+
+         failure _d:  died_covid_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+
+note: any_high_risk_condition omitted because of collinearity
+Iteration 0:   log pseudolikelihood = -360.18634
+Iteration 1:   log pseudolikelihood = -346.29288
+Iteration 2:   log pseudolikelihood = -345.54063
+Iteration 3:   log pseudolikelihood =  -345.4725
+Iteration 4:   log pseudolikelihood = -345.45076
+Iteration 5:   log pseudolikelihood = -345.44277
+Iteration 6:   log pseudolikelihood = -345.43983
+Iteration 7:   log pseudolikelihood = -345.43875
+Iteration 8:   log pseudolikelihood = -345.43836
+Iteration 9:   log pseudolikelihood = -345.43821
+Iteration 10:  log pseudolikelihood = -345.43816
+Iteration 11:  log pseudolikelihood = -345.43814
+Iteration 12:  log pseudolikelihood = -345.43813
+Iteration 13:  log pseudolikelihood = -345.43813
+Iteration 14:  log pseudolikelihood = -345.43813
+Iteration 15:  log pseudolikelihood = -345.43813
+Iteration 16:  log pseudolikelihood = -345.43813
+Iteration 17:  log pseudolikelihood = -345.43813
+Iteration 18:  log pseudolikelihood = -345.43813
+Iteration 19:  log pseudolikelihood = -345.43813
+Iteration 20:  log pseudolikelihood = -345.43813
+Iteration 21:  log pseudolikelihood = -345.43813
+Iteration 22:  log pseudolikelihood = -345.43813
+Iteration 23:  log pseudolikelihood = -345.43813
+Iteration 24:  log pseudolikelihood = -345.43813
+Iteration 25:  log pseudolikelihood = -345.43813
+Iteration 26:  log pseudolikelihood = -345.43813
+Iteration 27:  log pseudolikelihood = -345.43813
+Iteration 28:  log pseudolikelihood = -345.43813
+Iteration 29:  log pseudolikelihood = -345.43813
+Iteration 30:  log pseudolikelihood = -345.43813
+Refining estimates:
+Iteration 0:   log pseudolikelihood = -345.43813
+Iteration 1:   log pseudolikelihood = -345.43813
+Iteration 2:   log pseudolikelihood = -345.43813
+
+Stratified Cox regr. -- no ties
+
+No. of subjects      =          990             Number of obs    =       1,428
+No. of failures      =          150
+Time at risk         =       645699
+                                                Wald chi2(18)    =     2524.61
+Log pseudolikelihood =   -345.43813             Prob > chi2      =      0.0000
+
+                           (Std. Err. adjusted for 496 clusters in patient_id)
+------------------------------------------------------------------------------
+             |               Robust
+          _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        udca |   .5435847   .2913994    -1.14   0.255     .1900919    1.554429
+      age_tv |   .9933686   .0048522    -1.36   0.173     .9839038    1.002924
+        male |   1.496595   .3672233     1.64   0.100      .925215    2.420838
+any_high_r~n |          1  (omitted)
+             |
+     eth_bin |
+  Non-White  |   .9918501    .311199    -0.03   0.979     .5362612    1.834491
+             |
+         imd |
+          2  |   1.567955   .5781882     1.22   0.223      .761115    3.230106
+          3  |   1.997219   .7591064     1.82   0.069     .9481988    4.206799
+          4  |   1.160101   .4505348     0.38   0.702     .5419065    2.483516
+          5  |   .8959741   .3802886    -0.26   0.796     .3899511    2.058641
+          6  |    1.05361   .7357773     0.07   0.940     .2680727     4.14102
+             |
+     bmi_cat |
+Underweight  |   1.269721   .6050405     0.50   0.616     .4989974    3.230861
+ Overweight  |   1.723217   .5236238     1.79   0.073     .9499275    3.126005
+      Obese  |   1.224375   .3781233     0.66   0.512     .6684027    2.242801
+Morbidly ..  |   .4663456   .3608731    -0.99   0.324     .1023342    2.125175
+             |
+     smoking |
+Current s..  |   2.541316   1.356587     1.75   0.081     .8926398    7.235041
+  Ex-smoker  |   .6892154   .4892455    -0.52   0.600      .171444    2.770688
+             |
+severe_dis~e |   .7582816   .1798753    -1.17   0.243     .4763359    1.207113
+covid_vacc~t |   1.077186    .372805     0.21   0.830     .5466346    2.122679
+ liver_trans |   1.37e-14   9.23e-15   -47.36   0.000     3.65e-15    5.13e-14
+------------------------------------------------------------------------------
+                                                             Stratified by stp
+
+     number |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,946       66.06       66.06
+          1 |      1,000       33.94      100.00
+------------+-----------------------------------
+      Total |      2,946      100.00
+
+unexposed_e |
+        ver |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,000      100.00      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+  0
+  139
+no udca events = 139
+(1946 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+total_foll~p |        897      584131           0     584131     584131
+19471.033
+713.88096
+
+exposed_eve |
+          r |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        897       89.70       89.70
+          1 |        103       10.30      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+udca events = 14
+
+Contains data from ./output/an_dataset_90_hosp_any.dta
+  obs:         2,870                          
+ vars:            18                          22 Aug 2023 12:38
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+stp             str4    %9s                   
+imd             byte    %8.0g                 
+ethnicity       byte    %8.0g      eth5       
+patient_id      int     %8.0g                 
+male            float   %9.0g                 
+eth_bin         float   %9.0g      eth2       
+bmi_cat         float   %14.0g     bmi        
+smoking         float   %14.0g     smok       
+any_high_risk~n float   %9.0g                 
+start           float   %9.0g                 
+stop            float   %9.0g                 
+hosp_any_flag   float   %9.0g                 
+age_tv          float   %9.0g                 
+udca            float   %9.0g                 
+liver_trans     float   %9.0g                 
+covid_vacc_fi~t float   %9.0g                 
+severe_disease  float   %9.0g                 
+total_hosp      float   %9.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+
+                id:  patient_id
+     failure event:  hosp_any_flag != 0 & hosp_any_flag < .
+obs. time interval:  (stop[_n-1], stop]
+ enter on or after:  time index_date
+ exit on or before:  failure
+    t for analysis:  (time-origin)
+            origin:  time index_date
+
+------------------------------------------------------------------------------
+      2,870  total observations
+          0  exclusions
+------------------------------------------------------------------------------
+      2,870  observations remaining, representing
+      1,000  subjects
+         58  failures in single-failure-per-subject data
+    630,402  total analysis time at risk and under observation
+                                                at risk from t =         0
+                                     earliest observed entry t =         0
+                                          last observed exit t =     1,035
+  58
+
+         failure _d:  hosp_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+(file ./output/graphs/km_hosp_any.svg written in SVG format)
+
+         failure _d:  hosp_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+
+Iteration 0:   log pseudolikelihood = -145.73668
+Iteration 1:   log pseudolikelihood = -145.44108
+Iteration 2:   log pseudolikelihood = -145.42683
+Iteration 3:   log pseudolikelihood = -145.42682
+Refining estimates:
+Iteration 0:   log pseudolikelihood = -145.42682
+
+Stratified Cox regr. -- Breslow method for ties
+
+No. of subjects      =        1,000             Number of obs    =       1,407
+No. of failures      =           58
+Time at risk         =       630402
+                                                Wald chi2(1)     =        0.67
+Log pseudolikelihood =   -145.42682             Prob > chi2      =      0.4119
+
+                           (Std. Err. adjusted for 500 clusters in patient_id)
+------------------------------------------------------------------------------
+             |               Robust
+          _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        udca |   1.562364   .8495755     0.82   0.412     .5381699    4.535706
+------------------------------------------------------------------------------
+                                                             Stratified by stp
+file ./output/tempdata/crude_hosp_any.ster saved
+file ./output/tempdata/surv_crude_hosp_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.04197         0.06        1         0.8121
+      ------------+---------------------------------------------------
+      global test |                      0.06        1         0.8121
+      ----------------------------------------------------------------
+
+note: robust variance-covariance matrix used.
+
+         failure _d:  hosp_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+
+Iteration 0:   log pseudolikelihood = -145.40832
+Iteration 1:   log pseudolikelihood =  -145.0496
+Iteration 2:   log pseudolikelihood = -145.03693
+Iteration 3:   log pseudolikelihood = -145.03692
+Refining estimates:
+Iteration 0:   log pseudolikelihood = -145.03692
+
+Stratified Cox regr. -- Breslow method for ties
+
+No. of subjects      =          990             Number of obs    =       1,389
+No. of failures      =           58
+Time at risk         =       624573
+                                                Wald chi2(3)     =        0.83
+Log pseudolikelihood =   -145.03692             Prob > chi2      =      0.8412
+
+                           (Std. Err. adjusted for 496 clusters in patient_id)
+------------------------------------------------------------------------------
+             |               Robust
+          _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        udca |   1.514911   .8377779     0.75   0.453     .5124534    4.478367
+      age_tv |   1.002619   .0083434     0.31   0.753     .9863987    1.019106
+        male |   1.067692    .387478     0.18   0.857     .5242458    2.174488
+------------------------------------------------------------------------------
+                                                             Stratified by stp
+file ./output/tempdata/p_adj_model_hosp_any.ster saved
+(note: file ./output/tempdata/p_surv_adj_90_hosp_any.dta not found)
+file ./output/tempdata/p_surv_adj_90_hosp_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.07731         0.21        1         0.6490
+      age_tv      |     -0.03667         0.07        1         0.7974
+      male        |      0.30204         2.64        1         0.1042
+      ------------+---------------------------------------------------
+      global test |                      2.78        3         0.4273
+      ----------------------------------------------------------------
+
+note: robust variance-covariance matrix used.
+
+         failure _d:  hosp_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+
+note: any_high_risk_condition omitted because of collinearity
+Iteration 0:   log pseudolikelihood = -145.40832
+Iteration 1:   log pseudolikelihood = -130.19678
+Iteration 2:   log pseudolikelihood = -128.44623
+Iteration 3:   log pseudolikelihood = -128.19537
+Iteration 4:   log pseudolikelihood = -128.13446
+Iteration 5:   log pseudolikelihood = -128.11246
+Iteration 6:   log pseudolikelihood = -128.10437
+Iteration 7:   log pseudolikelihood =  -128.1014
+Iteration 8:   log pseudolikelihood =  -128.1003
+Iteration 9:   log pseudolikelihood =  -128.0999
+Iteration 10:  log pseudolikelihood = -128.09975
+Iteration 11:  log pseudolikelihood =  -128.0997
+Iteration 12:  log pseudolikelihood = -128.09968
+Iteration 13:  log pseudolikelihood = -128.09967
+Iteration 14:  log pseudolikelihood = -128.09967
+Iteration 15:  log pseudolikelihood = -128.09967
+Iteration 16:  log pseudolikelihood = -128.09967
+Iteration 17:  log pseudolikelihood = -128.09967
+Iteration 18:  log pseudolikelihood = -128.09967
+Iteration 19:  log pseudolikelihood = -128.09967
+Iteration 20:  log pseudolikelihood = -128.09967
+Iteration 21:  log pseudolikelihood = -128.09967
+Iteration 22:  log pseudolikelihood = -128.09967
+Iteration 23:  log pseudolikelihood = -128.09967
+Iteration 24:  log pseudolikelihood = -128.09967
+Iteration 25:  log pseudolikelihood = -128.09967
+Iteration 26:  log pseudolikelihood = -128.09967
+Iteration 27:  log pseudolikelihood = -128.09967
+Iteration 28:  log pseudolikelihood = -128.09967
+Iteration 29:  log pseudolikelihood = -128.09967
+Iteration 30:  log pseudolikelihood = -128.09967
+Iteration 31:  log pseudolikelihood = -128.09967
+Iteration 32:  log pseudolikelihood = -128.09967
+Iteration 33:  log pseudolikelihood = -128.09967
+Iteration 34:  log pseudolikelihood = -128.09967
+Iteration 35:  log pseudolikelihood = -128.09967
+Iteration 36:  log pseudolikelihood = -128.09967
+Iteration 37:  log pseudolikelihood = -128.09967
+Iteration 38:  log pseudolikelihood = -128.09967
+Iteration 39:  log pseudolikelihood = -128.09967
+Refining estimates:
+Iteration 0:   log pseudolikelihood = -128.09967
+Iteration 1:   log pseudolikelihood = -128.09967
+
+Stratified Cox regr. -- Breslow method for ties
+
+No. of subjects      =          990             Number of obs    =       1,389
+No. of failures      =           58
+Time at risk         =       624573
+                                                Wald chi2(22)    =    11335.74
+Log pseudolikelihood =   -128.09967             Prob > chi2      =      0.0000
+
+                           (Std. Err. adjusted for 496 clusters in patient_id)
+------------------------------------------------------------------------------
+             |               Robust
+          _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        udca |   1.575104   .8103661     0.88   0.377     .5746185    4.317566
+      age_tv |   1.006111   .0081741     0.75   0.453     .9902173    1.022261
+        male |   1.042929   .3982855     0.11   0.912     .4933873    2.204556
+any_high_r~n |          1  (omitted)
+             |
+   ethnicity |
+      Mixed  |   1.483586   .9061183     0.65   0.518      .448158    4.911277
+      Asian  |   1.159393   .7606437     0.23   0.822     .3204665    4.194489
+      Black  |   1.284572   .8922451     0.36   0.718     .3292504    5.011765
+      Other  |   1.026006   .6497246     0.04   0.968     .2965661    3.549592
+    Unknown  |   .7056598    .775223    -0.32   0.751     .0819376    6.077255
+             |
+         imd |
+          2  |    8.66383    9.34336     2.00   0.045     1.046517    71.72553
+          3  |   9.776369   10.12303     2.20   0.028     1.284675    74.39814
+          4  |    8.78241   9.424168     2.02   0.043     1.072043    71.94741
+          5  |   8.110226   8.799694     1.93   0.054     .9670944     68.0138
+          6  |   2.31e-17   2.50e-17   -35.25   0.000     2.74e-18    1.94e-16
+             |
+     bmi_cat |
+Underweight  |   .3910875    .397788    -0.92   0.356     .0532708    2.871171
+ Overweight  |   .1525805   .1616164    -1.77   0.076     .0191377    1.216492
+      Obese  |   1.590132   .6710453     1.10   0.272     .6953777     3.63618
+Morbidly ..  |   .4900554   .4949777    -0.71   0.480     .0676852    3.548106
+             |
+     smoking |
+Current s..  |   3.210472   3.280939     1.14   0.254     .4331957    23.79324
+  Ex-smoker  |   2.948613   3.105246     1.03   0.305     .3742826    23.22929
+             |
+severe_dis~e |   .3800302   .1568513    -2.34   0.019     .1692383    .8533707
+covid_vacc~t |   1.309458   .6434835     0.55   0.583     .4998051    3.430696
+ liver_trans |   6.07e-18   5.70e-18   -42.20   0.000     9.62e-19    3.82e-17
+------------------------------------------------------------------------------
+                                                             Stratified by stp
+(note: file ./output/tempdata/adj_model_90_hosp_any.ster not found)
+file ./output/tempdata/adj_model_90_hosp_any.ster saved
+(note: file ./output/tempdata/surv_adj_90_hosp_any.dta not found)
+file ./output/tempdata/surv_adj_90_hosp_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.14036         1.13        1         0.2879
+      age_tv      |     -0.11359         1.36        1         0.2428
+      male        |      0.22881         4.51        1         0.0336
+      o.any_high~n|            .            .        1             .
+      1b.ethnicity|            .            .        1             .
+      2.ethnicity |     -0.20178         2.08        1         0.1495
+      3.ethnicity |      0.18650         1.66        1         0.1976
+      4.ethnicity |      0.18840         2.50        1         0.1137
+      5.ethnicity |      0.20991         1.84        1         0.1750
+      6.ethnicity |      0.17478         1.53        1         0.2155
+      1b.imd      |            .            .        1             .
+      2.imd       |     -0.19755         2.03        1         0.1542
+      3.imd       |     -0.30408         4.79        1         0.0286
+      4.imd       |     -0.39708        10.44        1         0.0012
+      5.imd       |     -0.39002         9.49        1         0.0021
+      6.imd       |     -0.31215         4.41        1         0.0357
+      1.bmi_cat   |      0.13144         1.56        1         0.2118
+      2b.bmi_cat  |            .            .        1             .
+      3.bmi_cat   |      0.31876        10.48        1         0.0012
+      4.bmi_cat   |      0.32761         8.54        1         0.0035
+      5.bmi_cat   |      0.32506         5.22        1         0.0223
+      0b.smoking  |            .            .        1             .
+      1.smoking   |      0.18452         2.08        1         0.1492
+      2.smoking   |      0.06391         0.20        1         0.6524
+      severe_dis~e|     -0.09325         0.76        1         0.3840
+      covid_vacc~t|      0.19067         1.76        1         0.1842
+      liver_trans |     -0.26272         1.68        1         0.1953
+      ------------+---------------------------------------------------
+      global test |                     36.27       22         0.0284
+      ----------------------------------------------------------------
+
+note: robust variance-covariance matrix used.
+(note: file ./output/graphs/schoenplot_90_hosp_any.svg not found)
+(file ./output/graphs/schoenplot_90_hosp_any.svg written in SVG format)
+
+         failure _d:  hosp_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+
+note: any_high_risk_condition omitted because of collinearity
+Iteration 0:   log pseudolikelihood = -145.40832
+Iteration 1:   log pseudolikelihood = -130.57075
+Iteration 2:   log pseudolikelihood = -128.84516
+Iteration 3:   log pseudolikelihood = -128.59149
+Iteration 4:   log pseudolikelihood = -128.52988
+Iteration 5:   log pseudolikelihood = -128.50763
+Iteration 6:   log pseudolikelihood = -128.49945
+Iteration 7:   log pseudolikelihood = -128.49644
+Iteration 8:   log pseudolikelihood = -128.49534
+Iteration 9:   log pseudolikelihood = -128.49493
+Iteration 10:  log pseudolikelihood = -128.49478
+Iteration 11:  log pseudolikelihood = -128.49472
+Iteration 12:  log pseudolikelihood =  -128.4947
+Iteration 13:  log pseudolikelihood =  -128.4947
+Iteration 14:  log pseudolikelihood = -128.49469
+Iteration 15:  log pseudolikelihood = -128.49469
+Iteration 16:  log pseudolikelihood = -128.49469
+Iteration 17:  log pseudolikelihood = -128.49469
+Iteration 18:  log pseudolikelihood = -128.49469
+Iteration 19:  log pseudolikelihood = -128.49469
+Iteration 20:  log pseudolikelihood = -128.49469
+Iteration 21:  log pseudolikelihood = -128.49469
+Iteration 22:  log pseudolikelihood = -128.49469
+Iteration 23:  log pseudolikelihood = -128.49469
+Iteration 24:  log pseudolikelihood = -128.49469
+Iteration 25:  log pseudolikelihood = -128.49469
+Iteration 26:  log pseudolikelihood = -128.49469
+Iteration 27:  log pseudolikelihood = -128.49469
+Iteration 28:  log pseudolikelihood = -128.49469
+Iteration 29:  log pseudolikelihood = -128.49469
+Iteration 30:  log pseudolikelihood = -128.49469
+Iteration 31:  log pseudolikelihood = -128.49469
+Iteration 32:  log pseudolikelihood = -128.49469
+Iteration 33:  log pseudolikelihood = -128.49469
+Iteration 34:  log pseudolikelihood = -128.49469
+Refining estimates:
+Iteration 0:   log pseudolikelihood = -128.49469
+Iteration 1:   log pseudolikelihood = -128.49469
+
+Stratified Cox regr. -- Breslow method for ties
+
+No. of subjects      =          990             Number of obs    =       1,389
+No. of failures      =           58
+Time at risk         =       624573
+                                                Wald chi2(18)    =     8670.66
+Log pseudolikelihood =   -128.49469             Prob > chi2      =      0.0000
+
+                           (Std. Err. adjusted for 496 clusters in patient_id)
+------------------------------------------------------------------------------
+             |               Robust
+          _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        udca |   1.639281   .8382939     0.97   0.334     .6016821    4.466219
+      age_tv |   1.006379    .008133     0.79   0.431     .9905645    1.022446
+        male |   1.082497    .387454     0.22   0.825     .5367347    2.183202
+any_high_r~n |          1  (omitted)
+             |
+     eth_bin |
+  Non-White  |   1.189067   .6343103     0.32   0.745     .4179565    3.382841
+             |
+         imd |
+          2  |   8.998013   9.603591     2.06   0.040     1.110857     72.8845
+          3  |   9.864338   10.27545     2.20   0.028     1.280534    75.98797
+          4  |   8.841951   9.559116     2.02   0.044     1.062444    73.58512
+          5  |   8.196995    8.94756     1.93   0.054     .9649662    69.63014
+          6  |   3.63e-15   3.97e-15   -30.39   0.000     4.25e-16    3.10e-14
+             |
+     bmi_cat |
+Underweight  |    .377978   .3754187    -0.98   0.327     .0539546    2.647918
+ Overweight  |   .1544885   .1649718    -1.75   0.080     .0190517    1.252733
+      Obese  |   1.597527    .659263     1.14   0.256     .7115028    3.586903
+Morbidly ..  |   .5136875   .5104862    -0.67   0.503     .0732491    3.602432
+             |
+     smoking |
+Current s..  |   3.167112    3.19826     1.14   0.254     .4376131    22.92115
+  Ex-smoker  |   3.098284   3.267667     1.07   0.284     .3920888    24.48263
+             |
+severe_dis~e |   .3778024    .147803    -2.49   0.013     .1754929    .8133357
+covid_vacc~t |   1.325359   .6425634     0.58   0.561     .5124506    3.427795
+ liver_trans |   8.90e-16   8.52e-16   -36.20   0.000     1.36e-16    5.81e-15
+------------------------------------------------------------------------------
+                                                             Stratified by stp
+
+     number |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,870       65.16       65.16
+          1 |      1,000       34.84      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+unexposed_e |
+        ver |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,000      100.00      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+  0
+  53
+no udca events = 53
+(1870 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+total_foll~p |        897      564967           0     564967     564967
+18832.233
+281.43237
+
+exposed_eve |
+          r |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        897       89.70       89.70
+          1 |        103       10.30      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+udca events = .
+
+Contains data from ./output/an_dataset_90_composite_any.dta
+  obs:         2,870                          
+ vars:            17                          22 Aug 2023 12:38
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+stp             str4    %9s                   
+imd             byte    %8.0g                 
+ethnicity       byte    %8.0g      eth5       
+patient_id      int     %8.0g                 
+male            float   %9.0g                 
+eth_bin         float   %9.0g      eth2       
+bmi_cat         float   %14.0g     bmi        
+smoking         float   %14.0g     smok       
+any_high_risk~n float   %9.0g                 
+start           float   %9.0g                 
+stop            float   %9.0g                 
+composite_any~g float   %9.0g                 
+age_tv          float   %9.0g                 
+udca            float   %9.0g                 
+liver_trans     float   %9.0g                 
+covid_vacc_fi~t float   %9.0g                 
+severe_disease  float   %9.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+
+                id:  patient_id
+     failure event:  composite_any_flag != 0 & composite_any_flag < .
+obs. time interval:  (stop[_n-1], stop]
+ enter on or after:  time index_date
+ exit on or before:  failure
+    t for analysis:  (time-origin)
+            origin:  time index_date
+
+------------------------------------------------------------------------------
+      2,870  total observations
+          0  exclusions
+------------------------------------------------------------------------------
+      2,870  observations remaining, representing
+      1,000  subjects
+        213  failures in single-failure-per-subject data
+    630,402  total analysis time at risk and under observation
+                                                at risk from t =         0
+                                     earliest observed entry t =         0
+                                          last observed exit t =     1,035
+  213
+
+         failure _d:  composite_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+(file ./output/graphs/km_composite_any.svg written in SVG format)
+
+         failure _d:  composite_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+
+Iteration 0:   log pseudolikelihood = -517.07597
+Iteration 1:   log pseudolikelihood = -517.07095
+Iteration 2:   log pseudolikelihood = -517.07095
+Refining estimates:
+Iteration 0:   log pseudolikelihood = -517.07095
+
+Stratified Cox regr. -- Breslow method for ties
+
+No. of subjects      =        1,000             Number of obs    =       1,407
+No. of failures      =          213
+Time at risk         =       630402
+                                                Wald chi2(1)     =        0.01
+Log pseudolikelihood =   -517.07095             Prob > chi2      =      0.9220
+
+                           (Std. Err. adjusted for 500 clusters in patient_id)
+------------------------------------------------------------------------------
+             |               Robust
+          _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        udca |   .9658616   .3424469    -0.10   0.922     .4820818    1.935125
+------------------------------------------------------------------------------
+                                                             Stratified by stp
+file ./output/tempdata/crude_composite_any.ster saved
+file ./output/tempdata/surv_crude_composite_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.07714         0.68        1         0.4101
+      ------------+---------------------------------------------------
+      global test |                      0.68        1         0.4101
+      ----------------------------------------------------------------
+
+note: robust variance-covariance matrix used.
+
+         failure _d:  composite_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+
+Iteration 0:   log pseudolikelihood = -515.73019
+Iteration 1:   log pseudolikelihood =  -515.1278
+Iteration 2:   log pseudolikelihood = -515.12775
+Refining estimates:
+Iteration 0:   log pseudolikelihood = -515.12775
+
+Stratified Cox regr. -- Breslow method for ties
+
+No. of subjects      =          990             Number of obs    =       1,389
+No. of failures      =          210
+Time at risk         =       624573
+                                                Wald chi2(3)     =        1.32
+Log pseudolikelihood =   -515.12775             Prob > chi2      =      0.7240
+
+                           (Std. Err. adjusted for 496 clusters in patient_id)
+------------------------------------------------------------------------------
+             |               Robust
+          _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        udca |   .9337635   .3373063    -0.19   0.850     .4599967    1.895479
+      age_tv |   .9962969   .0041848    -0.88   0.377     .9881285    1.004533
+        male |   1.125766   .2166077     0.62   0.538     .7720918    1.641448
+------------------------------------------------------------------------------
+                                                             Stratified by stp
+file ./output/tempdata/p_adj_model_composite_any.ster saved
+(note: file ./output/tempdata/p_surv_adj_90_composite_any.dta not found)
+file ./output/tempdata/p_surv_adj_90_composite_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.07637         0.71        1         0.3978
+      age_tv      |     -0.00294         0.00        1         0.9723
+      male        |      0.01527         0.03        1         0.8693
+      ------------+---------------------------------------------------
+      global test |                      0.72        3         0.8676
+      ----------------------------------------------------------------
+
+note: robust variance-covariance matrix used.
+
+         failure _d:  composite_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+
+note: any_high_risk_condition omitted because of collinearity
+Iteration 0:   log pseudolikelihood = -515.73019
+Iteration 1:   log pseudolikelihood = -497.57328
+Iteration 2:   log pseudolikelihood = -496.69909
+Iteration 3:   log pseudolikelihood = -496.59111
+Iteration 4:   log pseudolikelihood =  -496.5531
+Iteration 5:   log pseudolikelihood = -496.53914
+Iteration 6:   log pseudolikelihood = -496.53401
+Iteration 7:   log pseudolikelihood = -496.53212
+Iteration 8:   log pseudolikelihood = -496.53143
+Iteration 9:   log pseudolikelihood = -496.53117
+Iteration 10:  log pseudolikelihood = -496.53108
+Iteration 11:  log pseudolikelihood = -496.53104
+Iteration 12:  log pseudolikelihood = -496.53103
+Iteration 13:  log pseudolikelihood = -496.53102
+Iteration 14:  log pseudolikelihood = -496.53102
+Iteration 15:  log pseudolikelihood = -496.53102
+Iteration 16:  log pseudolikelihood = -496.53102
+Iteration 17:  log pseudolikelihood = -496.53102
+Iteration 18:  log pseudolikelihood = -496.53102
+Iteration 19:  log pseudolikelihood = -496.53102
+Iteration 20:  log pseudolikelihood = -496.53102
+Iteration 21:  log pseudolikelihood = -496.53102
+Iteration 22:  log pseudolikelihood = -496.53102
+Iteration 23:  log pseudolikelihood = -496.53102
+Iteration 24:  log pseudolikelihood = -496.53102
+Iteration 25:  log pseudolikelihood = -496.53102
+Iteration 26:  log pseudolikelihood = -496.53102
+Iteration 27:  log pseudolikelihood = -496.53102
+Iteration 28:  log pseudolikelihood = -496.53102
+Iteration 29:  log pseudolikelihood = -496.53102
+Iteration 30:  log pseudolikelihood = -496.53102
+Iteration 31:  log pseudolikelihood = -496.53102
+Iteration 32:  log pseudolikelihood = -496.53102
+Iteration 33:  log pseudolikelihood = -496.53102
+Iteration 34:  log pseudolikelihood = -496.53102
+Iteration 35:  log pseudolikelihood = -496.53102
+Iteration 36:  log pseudolikelihood = -496.53102
+Iteration 37:  log pseudolikelihood = -496.53102
+Iteration 38:  log pseudolikelihood = -496.53102
+Iteration 39:  log pseudolikelihood = -496.53102
+Iteration 40:  log pseudolikelihood = -496.53102
+Iteration 41:  log pseudolikelihood = -496.53102
+Iteration 42:  log pseudolikelihood = -496.53102
+Iteration 43:  log pseudolikelihood = -496.53102
+Iteration 44:  log pseudolikelihood = -496.53102
+Refining estimates:
+Iteration 0:   log pseudolikelihood = -496.53102
+
+Stratified Cox regr. -- Breslow method for ties
+
+No. of subjects      =          990             Number of obs    =       1,389
+No. of failures      =          210
+Time at risk         =       624573
+                                                Wald chi2(21)    =       36.04
+Log pseudolikelihood =   -496.53102             Prob > chi2      =      0.0216
+
+                           (Std. Err. adjusted for 496 clusters in patient_id)
+------------------------------------------------------------------------------
+             |               Robust
+          _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        udca |   .9207453    .338918    -0.22   0.823     .4475277    1.894345
+      age_tv |   .9962975   .0041074    -0.90   0.368     .9882795    1.004381
+        male |   1.188868   .2420624     0.85   0.396      .797669    1.771922
+any_high_r~n |          1  (omitted)
+             |
+   ethnicity |
+      Mixed  |    1.03454   .3277581     0.11   0.915     .5559984    1.924956
+      Asian  |   .9333528    .302235    -0.21   0.831     .4947807    1.760674
+      Black  |   .9864774   .3206739    -0.04   0.967     .5216597    1.865464
+      Other  |   1.009843   .3117424     0.03   0.975     .5514229    1.849367
+    Unknown  |   1.034852   .4543124     0.08   0.938      .437714    2.446616
+             |
+         imd |
+          2  |   2.553664   .8680001     2.76   0.006     1.311708    4.971534
+          3  |   2.877401   1.016073     2.99   0.003       1.4402    5.748814
+          4  |   2.051046   .7414925     1.99   0.047     1.009833    4.165826
+          5  |   1.556065   .5894386     1.17   0.243     .7406143    3.269366
+          6  |    1.41052   .8780159     0.55   0.581     .4164147    4.777849
+             |
+     bmi_cat |
+Underweight  |   .8469354   .3641153    -0.39   0.699     .3646707    1.966979
+ Overweight  |   1.142675    .296075     0.51   0.607     .6876545    1.898781
+      Obese  |    1.20356   .2900812     0.77   0.442     .7504323    1.930295
+Morbidly ..  |   .4420366   .2648718    -1.36   0.173     .1365877    1.430556
+             |
+     smoking |
+Current s..  |   2.892791   1.375753     2.23   0.026     1.138945     7.34736
+  Ex-smoker  |   1.293754   .7233153     0.46   0.645     .4324739    3.870291
+             |
+severe_dis~e |   .6041553    .119655    -2.54   0.011     .4097937     .890701
+covid_vacc~t |   1.106474   .3179056     0.35   0.725     .6300555    1.943137
+ liver_trans |   8.57e-20          .        .       .            .           .
+------------------------------------------------------------------------------
+                                                             Stratified by stp
+(note: file ./output/tempdata/adj_model_90_composite_any.ster not found)
+file ./output/tempdata/adj_model_90_composite_any.ster saved
+(note: file ./output/tempdata/surv_adj_90_composite_any.dta not found)
+file ./output/tempdata/surv_adj_90_composite_any.dta saved
+
+      Test of proportional-hazards assumption
+
+      Time:  Time
+      ----------------------------------------------------------------
+                  |       rho            chi2       df       Prob>chi2
+      ------------+---------------------------------------------------
+      udca        |     -0.08449         1.08        1         0.2984
+      age_tv      |      0.00726         0.01        1         0.9297
+      male        |      0.03551         0.21        1         0.6438
+      o.any_high~n|            .            .        1             .
+      1b.ethnicity|            .            .        1             .
+      2.ethnicity |     -0.12566         2.25        1         0.1339
+      3.ethnicity |      0.02352         0.08        1         0.7794
+      4.ethnicity |      0.02310         0.07        1         0.7952
+      5.ethnicity |     -0.01919         0.05        1         0.8262
+      6.ethnicity |      0.09544         1.44        1         0.2297
+      1b.imd      |            .            .        1             .
+      2.imd       |     -0.08411         1.02        1         0.3137
+      3.imd       |     -0.04018         0.25        1         0.6155
+      4.imd       |     -0.07436         0.87        1         0.3506
+      5.imd       |     -0.06440         0.61        1         0.4338
+      6.imd       |     -0.10278         1.82        1         0.1779
+      1.bmi_cat   |     -0.04861         0.38        1         0.5383
+      2b.bmi_cat  |            .            .        1             .
+      3.bmi_cat   |      0.11518         1.87        1         0.1715
+      4.bmi_cat   |      0.08642         1.02        1         0.3121
+      5.bmi_cat   |      0.09994         1.45        1         0.2286
+      0b.smoking  |            .            .        1             .
+      1.smoking   |     -0.01656         0.05        1         0.8246
+      2.smoking   |     -0.02229         0.07        1         0.7849
+      severe_dis~e|     -0.02271         0.07        1         0.7899
+      covid_vacc~t|      0.05318         0.29        1         0.5874
+      liver_trans |            .            .        1             .
+      ------------+---------------------------------------------------
+      global test |                     14.05       21         0.8675
+      ----------------------------------------------------------------
+
+note: robust variance-covariance matrix used.
+(note: file ./output/graphs/schoenplot_90_composite_any.svg not found)
+(file ./output/graphs/schoenplot_90_composite_any.svg written in SVG format)
+
+         failure _d:  composite_any_flag
+   analysis time _t:  (stop-origin)
+             origin:  time index_date
+  enter on or after:  time index_date
+                 id:  patient_id
+
+note: any_high_risk_condition omitted because of collinearity
+Iteration 0:   log pseudolikelihood = -515.73019
+Iteration 1:   log pseudolikelihood = -497.64009
+Iteration 2:   log pseudolikelihood = -496.76497
+Iteration 3:   log pseudolikelihood = -496.65639
+Iteration 4:   log pseudolikelihood = -496.61819
+Iteration 5:   log pseudolikelihood = -496.60416
+Iteration 6:   log pseudolikelihood =   -496.599
+Iteration 7:   log pseudolikelihood =  -496.5971
+Iteration 8:   log pseudolikelihood =  -496.5964
+Iteration 9:   log pseudolikelihood = -496.59615
+Iteration 10:  log pseudolikelihood = -496.59605
+Iteration 11:  log pseudolikelihood = -496.59602
+Iteration 12:  log pseudolikelihood = -496.59601
+Iteration 13:  log pseudolikelihood =   -496.596
+Iteration 14:  log pseudolikelihood =   -496.596
+Iteration 15:  log pseudolikelihood =   -496.596
+Iteration 16:  log pseudolikelihood =   -496.596
+Iteration 17:  log pseudolikelihood =   -496.596
+Iteration 18:  log pseudolikelihood =   -496.596
+Iteration 19:  log pseudolikelihood =   -496.596
+Iteration 20:  log pseudolikelihood =   -496.596
+Iteration 21:  log pseudolikelihood =   -496.596
+Iteration 22:  log pseudolikelihood =   -496.596
+Iteration 23:  log pseudolikelihood =   -496.596
+Iteration 24:  log pseudolikelihood =   -496.596
+Iteration 25:  log pseudolikelihood =   -496.596
+Iteration 26:  log pseudolikelihood =   -496.596
+Iteration 27:  log pseudolikelihood =   -496.596
+Iteration 28:  log pseudolikelihood =   -496.596
+Iteration 29:  log pseudolikelihood =   -496.596
+Iteration 30:  log pseudolikelihood =   -496.596
+Iteration 31:  log pseudolikelihood =   -496.596
+Iteration 32:  log pseudolikelihood =   -496.596
+Iteration 33:  log pseudolikelihood =   -496.596
+Iteration 34:  log pseudolikelihood =   -496.596
+Iteration 35:  log pseudolikelihood =   -496.596
+Iteration 36:  log pseudolikelihood =   -496.596
+Iteration 37:  log pseudolikelihood =   -496.596
+Iteration 38:  log pseudolikelihood =   -496.596
+Iteration 39:  log pseudolikelihood =   -496.596
+Iteration 40:  log pseudolikelihood =   -496.596
+Refining estimates:
+Iteration 0:   log pseudolikelihood =   -496.596
+Iteration 1:   log pseudolikelihood =   -496.596
+Iteration 2:   log pseudolikelihood =   -496.596
+
+Stratified Cox regr. -- Breslow method for ties
+
+No. of subjects      =          990             Number of obs    =       1,389
+No. of failures      =          210
+Time at risk         =       624573
+                                                Wald chi2(18)    =     3578.84
+Log pseudolikelihood =     -496.596             Prob > chi2      =      0.0000
+
+                           (Std. Err. adjusted for 496 clusters in patient_id)
+------------------------------------------------------------------------------
+             |               Robust
+          _t | Haz. Ratio   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        udca |   .9165743   .3321333    -0.24   0.810     .4505293    1.864714
+      age_tv |   .9961822   .0039886    -0.96   0.339     .9883953     1.00403
+        male |   1.189776   .2378752     0.87   0.385     .8040479    1.760549
+any_high_r~n |          1  (omitted)
+             |
+     eth_bin |
+  Non-White  |   .9956399   .2465415    -0.02   0.986     .6128114    1.617625
+             |
+         imd |
+          2  |   2.567162   .8689726     2.79   0.005     1.322286    4.984035
+          3  |    2.89105   1.008035     3.04   0.002       1.4597    5.725954
+          4  |   2.053137   .7320259     2.02   0.044     1.020775    4.129576
+          5  |   1.562915   .5897631     1.18   0.237     .7459949    3.274422
+          6  |   1.432497   .8777029     0.59   0.557     .4310778    4.760275
+             |
+     bmi_cat |
+Underweight  |   .8470167   .3616897    -0.39   0.697     .3667882    1.955999
+ Overweight  |    1.13938   .2942982     0.51   0.613      .686762    1.890302
+      Obese  |   1.204753   .2902842     0.77   0.439     .7512794    1.931943
+Morbidly ..  |   .4412429   .2626748    -1.37   0.169     .1373889     1.41711
+             |
+     smoking |
+Current s..  |   2.874212   1.346403     2.25   0.024     1.147572     7.19876
+  Ex-smoker  |   1.284926   .7161476     0.45   0.653     .4309875    3.830817
+             |
+severe_dis~e |   .6019909   .1184111    -2.58   0.010     .4094108    .8851575
+covid_vacc~t |   1.109459   .3202435     0.36   0.719     .6301056    1.953481
+ liver_trans |   6.47e-19   4.68e-19   -57.88   0.000     1.57e-19    2.67e-18
+------------------------------------------------------------------------------
+                                                             Stratified by stp
+
+     number |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,870       65.16       65.16
+          1 |      1,000       34.84      100.00
+------------+-----------------------------------
+      Total |      2,870      100.00
+
+unexposed_e |
+        ver |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,000      100.00      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+  0
+  192
+no udca events = 192
+(1870 missing values generated)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+total_foll~p |        897      564967           0     564967     564967
+18832.233
+1019.5286
+
+exposed_eve |
+          r |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        897       89.70       89.70
+          1 |        103       10.30      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+udca events = 21
 
 . 
 . file close tablecontent
@@ -1298,7 +2834,7 @@ udca events = 22
 . 
 end of do-file
 
-. . file open output using "/tmp/106_analysis_models.do.UqaF.out", write text r
+. . file open output using "/tmp/106_analysis_models.do.96iQ.out", write text r
 > eplace
 
 . . file write output "success" 
