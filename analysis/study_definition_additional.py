@@ -42,7 +42,7 @@ study = StudyDefinition(
         "incidence" : 0.5,
     },
     population=patients.which_exist_in_file(COHORT), 
-    index_date="2020-01-01",
+    index_date="2019-11-01",
 
     **consecutive_drugs_x(
         name="udca",
