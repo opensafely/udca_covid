@@ -80,7 +80,7 @@ foreach outcome in hosp_any composite_any {
     graph close
 
 }
-
+*/
 use ./output/an_dataset_died_covid_any, clear 
     describe
     gen index_date = date("01/03/2020", "DMY")
@@ -92,7 +92,7 @@ use ./output/an_dataset_died_covid_any, clear
     * Age and sex adjusted model 
     * Setting df (degrees of freedom for restricted cubic splines) as 3 as this is default 
     * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = linear effect of log time 
-    stpm2 udca age_tv male, tvc(udca) dftvc(1) df(3) scale(hazard) eform
+    stpm2 udca age_tv male, tvc(udca age_tv) dftvc(1) df(3) scale(hazard) eform
     summ _t
     local tmax=r(max)
     local tmaxplus1=r(max)+1
@@ -142,7 +142,7 @@ use ./output/an_dataset_died_covid_any, clear
 
     * Close window 
     graph close
-    */
+    
 
 * plot for each outcome - fully adjusted 
 foreach outcome in hosp_any composite_any {
@@ -164,19 +164,46 @@ foreach outcome in hosp_any composite_any {
     foreach vars in udca male any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
     bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_first liver_trans {
         tab `vars', m nolabel
-    } 
+        } 
     
+    **** testing each additional variable to see why not fitting 
+    * fixed variables 
+    foreach var in any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
+    bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 {
+
+        stpm2 udca male `var', tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    
+        summ _t
+        local tmax=r(max)
+        local tmaxplus1=r(max)+1
+
+        range days 0 `tmax' `tmaxplus1'
+        stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+        }
+
+    * time-varying variables
+    foreach var in severe_disease covid_vacc_first liver_trans {
+    stpm2 udca male `var', ///
+        tvc(udca `var' age_tv) dftvc(1) df(1) scale(hazard) eform
+    
+        summ _t
+        local tmax=r(max)
+        local tmaxplus1=r(max)+1
+
+        range days 0 `tmax' `tmaxplus1'
+        stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+        }   
+    *** fully adjusted model to fit 
     stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
     bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_first liver_trans, ///
      tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(1) scale(hazard) eform
-   
+    
     summ _t
     local tmax=r(max)
     local tmaxplus1=r(max)+1
 
     range days 0 `tmax' `tmaxplus1'
     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
-
     gen date = d(1/3/2020)+ days
     format date %tddd_Month
 
@@ -259,6 +286,6 @@ use ./output/an_dataset_died_covid_any, clear
 
     * Close window 
     graph close
-    */
+    
 
     file close tablecontent
