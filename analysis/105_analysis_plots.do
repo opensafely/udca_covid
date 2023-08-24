@@ -171,32 +171,160 @@ foreach outcome in hosp_any composite_any {
     foreach var in any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
     bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 {
 
-        stpm2 udca male `var' age_tv, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    stpm2 udca male age_tv any_high_risk_condition, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*    
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*    
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*    
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*    
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*    
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*    
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*  
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*    
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 bmi_cat4, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*    
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 bmi_cat4 bmi_cat5, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*    
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 bmi_cat4 bmi_cat5 smoking1, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*    
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 bmi_cat4 bmi_cat5 smoking1 smoking2, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*    
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*    
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease, tvc(udca age_tv severe_disease) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast* 
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_first, tvc(udca age_tv severe_disease covid_vacc_first) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*
+
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_first liver_trans, tvc(udca age_tv severe_disease covid_vacc_first liver_trans) dftvc(1) df(1) scale(hazard) eform
+    summ _t
+    local tmax=r(max)
+    local tmaxplus1=r(max)+1
+    range days 0 `tmax' `tmaxplus1'
+    stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
+    drop days _at* _contrast*    
+
     
-        summ _t
-        local tmax=r(max)
-        local tmaxplus1=r(max)+1
-
-        range days 0 `tmax' `tmaxplus1'
-        stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
-        drop days _at* _contrast*
-        }
-
-    * time-varying variables
-    foreach var in severe_disease covid_vacc_first liver_trans {
-    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
-    bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 `var', ///
-        tvc(udca `var' age_tv) dftvc(1) df(1) scale(hazard) eform
-    
-        summ _t
-        local tmax=r(max)
-        local tmaxplus1=r(max)+1
-
-        range days 0 `tmax' `tmaxplus1'
-        stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
-        drop days _at* _contrast*
-        }   
-    *** fully adjusted model to fit 
+    /*** fully adjusted model to fit 
     stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
     bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_first liver_trans, ///
      tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(1) scale(hazard) eform
