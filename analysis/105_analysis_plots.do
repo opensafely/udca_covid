@@ -80,7 +80,7 @@ foreach outcome in hosp_any composite_any {
     graph close
 
 }
-*/
+
 use ./output/an_dataset_died_covid_any, clear 
     describe
     gen index_date = date("01/03/2020", "DMY")
@@ -142,7 +142,7 @@ use ./output/an_dataset_died_covid_any, clear
 
     * Close window 
     graph close
-    
+*/    
 
 * plot for each outcome - fully adjusted 
 foreach outcome in hosp_any composite_any {
@@ -319,7 +319,7 @@ foreach outcome in hosp_any composite_any {
     range days 0 `tmax' `tmaxplus1'
     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contrast(difference) fail
     drop days _at* _contrast*    
-
+}
     
     /*** fully adjusted model to fit 
     stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
