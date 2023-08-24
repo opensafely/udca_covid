@@ -171,7 +171,7 @@ foreach outcome in hosp_any composite_any {
     foreach var in any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
     bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 {
 
-        stpm2 udca male `var', tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
+        stpm2 udca male `var' age_tv, tvc(udca age_tv) dftvc(1) df(1) scale(hazard) eform
     
         summ _t
         local tmax=r(max)
@@ -184,7 +184,8 @@ foreach outcome in hosp_any composite_any {
 
     * time-varying variables
     foreach var in severe_disease covid_vacc_first liver_trans {
-    stpm2 udca male `var', ///
+    stpm2 udca male age_tv any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
+    bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 `var', ///
         tvc(udca `var' age_tv) dftvc(1) df(1) scale(hazard) eform
     
         summ _t
