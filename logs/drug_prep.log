@@ -1192,7 +1192,7 @@ out_of_orde |
 
 . 
 . * Identify prescriptions with the same date 
-. bys patient_id: gen dup_presc = (udcaA==udcaA[_n-1])
+. bys patient_id (udcaA): gen dup_presc = (udcaA==udcaA[_n-1])
 
 . tab dup_presc 
 
@@ -1410,34 +1410,34 @@ out_of_orde |
 .     gen end_date_flag = (end_date==dereg_dateA)
  43.     replace end_date_flag = 2 if end_date==died_dateA
  44.     replace end_date_flag = 3 if end_date==end_study
- 45.     tab end_date_flag, m 
- 46. 
+ 45.     
 .     * Count number of days of follow-up 
 .     gen total_fu = end_date - date("01/03/2020", "DMY")
- 47. 
+ 46. 
 .     ** Update start and end of follow-up for cohort
 .     * Identify prescriptions that start prior to March 2020
 .     gen start_prior = (start < date("01/03/2020", "DMY"))
- 48.     replace start = date("01/03/2020", "DMY") if start_prior==1
- 49. 
+ 47.     replace start = date("01/03/2020", "DMY") if start_prior==1
+ 48. 
 .     * Identify first prescriptions that start after March 2020
 .     bys patient_id (start): gen start_after = 1 + (start > date("01/03/2020",
 >  "DMY") & _n==1)
- 50.     tab start_after
- 51.     expand start_after
- 52. 
+ 49.     tab start_after
+ 50.     expand start_after
+ 51. 
 .     * Flag new rows
 .     bys patient_id start: gen new_record = (_n==2)
- 53.     tab start_after new_record 
- 54. 
+ 52.     tab start_after new_record 
+ 53. 
 .     * Updating new rows 
 .     sort patient_id start
- 55.     replace udca=0 if new_record==1
- 56.     replace stop = start if new_record==1
- 57.     replace start = date("01/03/2020", "DMY") if new_record==1
- 58.     drop new_record start_after
- 59. 
-.     * Identify rows that end after study end date for person 
+ 54.     replace udca=0 if new_record==1
+ 55.     replace stop = start if new_record==1
+ 56.     replace start = date("01/03/2020", "DMY") if new_record==1
+ 57.     drop new_record start_after
+ 58. 
+.     tab end_date_flag if start==date("01/03/2020", "DMY"), m 
+ 59.     * Identify rows that end after study end date for person 
 .     gen end_after = (stop > end_date )
  60.     gen end_before = (start > end_date) 
  61. 
@@ -1448,50 +1448,54 @@ out_of_orde |
 .     * Drop whole rows that are after end_date 
 .     drop if end_before 
  65. 
+.     * Check years of stop dates 
+.     gen yr_stop = year(stop)
+ 66.     tab yr_stop end_after 
+ 67. 
 .     * Check those flagged as ending after are last row only 
 .     bys patient_id (start): gen last = _n==_N
- 66.     tab last end_after 
- 67.     * Check how many records end after end date - should just be one
+ 68.     tab last end_after 
+ 69.     * Check how many records end after end date - should just be one
 .     bys patient_id: egen tot_end_after = total(end_after)
- 68. 
+ 70. 
 .     replace stop = end_date if end_after==1 & end_before==0
- 69. 
+ 71. 
 .     * Identify prescriptions that end prior to end of follow-up 
 .     bys patient_id (start): gen stop_prior = 1 + (stop < end_date & _n==_N)
- 70.     tab stop_prior
- 71.     expand stop_prior
- 72. 
+ 72.     tab stop_prior
+ 73.     expand stop_prior
+ 74. 
 .     * Flag new rows
 .     bys patient_id start: gen new_record = (_n==2)
- 73.     tab stop_prior new_record 
- 74. 
+ 75.     tab stop_prior new_record 
+ 76. 
 .     * Updating new rows 
 .     sort patient_id start
- 75.     replace udca=0 if new_record==1
- 76.     replace start =  stop if new_record==1
- 77.     replace stop = end_date if new_record==1
- 78.     drop new_record stop_prior
- 79. 
+ 77.     replace udca=0 if new_record==1
+ 78.     replace start =  stop if new_record==1
+ 79.     replace stop = end_date if new_record==1
+ 80.     drop new_record stop_prior
+ 81. 
 .     di "number where start after stop date"
- 80.     count if start > stop 
- 81.     di "Number where start equals stop"
- 82.     count if start==stop 
- 83.     drop if start==stop 
- 84.     * Check that time covered by prescriptions equals total follow-up
+ 82.     count if start > stop 
+ 83.     di "Number where start equals stop"
+ 84.     count if start==stop 
+ 85.     drop if start==stop 
+ 86.     * Check that time covered by prescriptions equals total follow-up
 .     gen time = stop - start 
- 85.     sum time, d  
- 86.     bys patient_id: egen total_time = total(time)
- 87. 
-.     gen total_time_unequal = total_time!=total_fu
- 88.     tab total_time_unequal, m
+ 87.     sum time, d  
+ 88.     bys patient_id: egen total_time = total(time)
  89. 
-.     save ./output/time_varying_udca_all_vars_`i'
- 90.     * Drop unnecessary variables
-.     keep patient_id start stop udca 
+.     gen total_time_unequal = total_time!=total_fu
+ 90.     tab total_time_unequal, m
  91. 
+.     save ./output/time_varying_udca_all_vars_`i'
+ 92.     * Drop unnecessary variables
+.     keep patient_id start stop udca 
+ 93. 
 .     save ./output/time_varying_udca_`i'
- 92.     restore
- 93. }
+ 94.     restore
+ 95. }
   0
 (0 observations deleted)
 (1000 real changes made)
@@ -1545,15 +1549,6 @@ Duplicates in terms of all variables
 (1,466 missing values generated)
 (338 real changes made)
 (1,291 real changes made)
-
-end_date_fl |
-         ag |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          1 |        339       17.23       17.23
-          2 |        338       17.17       34.40
-          3 |      1,291       65.60      100.00
-------------+-----------------------------------
-      Total |      1,968      100.00
 (0 real changes made)
 
 start_after |      Freq.     Percent        Cum.
@@ -1574,6 +1569,15 @@ start_afte |      new_record
 (1,000 real changes made)
 (1,000 real changes made)
 (1,000 real changes made)
+
+end_date_fl |
+         ag |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        337       17.77       17.77
+          2 |        336       17.72       35.50
+          3 |      1,223       64.50      100.00
+------------+-----------------------------------
+      Total |      1,896      100.00
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
@@ -1597,6 +1601,16 @@ start_afte |      new_record
 ------------+-----------------------------------
       Total |      2,968      100.00
 (5 observations deleted)
+
+           |       end_after
+   yr_stop |         0          1 |     Total
+-----------+----------------------+----------
+      2020 |     1,019          1 |     1,020 
+      2021 |        26          0 |        26 
+      2022 |       312        608 |       920 
+      2023 |         0        997 |       997 
+-----------+----------------------+----------
+     Total |     1,357      1,606 |     2,963 
 
            |       end_after
       last |         0          1 |     Total
@@ -1703,15 +1717,6 @@ Duplicates in terms of all variables
 (1,396 missing values generated)
 (336 real changes made)
 (1,223 real changes made)
-
-end_date_fl |
-         ag |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          1 |        337       17.77       17.77
-          2 |        336       17.72       35.50
-          3 |      1,223       64.50      100.00
-------------+-----------------------------------
-      Total |      1,896      100.00
 (0 real changes made)
 
 start_after |      Freq.     Percent        Cum.
@@ -1732,6 +1737,15 @@ start_afte |      new_record
 (1,000 real changes made)
 (1,000 real changes made)
 (1,000 real changes made)
+
+end_date_fl |
+         ag |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        337       17.77       17.77
+          2 |        336       17.72       35.50
+          3 |      1,223       64.50      100.00
+------------+-----------------------------------
+      Total |      1,896      100.00
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
@@ -1755,6 +1769,15 @@ start_afte |      new_record
 ------------+-----------------------------------
       Total |      2,896      100.00
 (1 observation deleted)
+
+           |       end_after
+   yr_stop |         0          1 |     Total
+-----------+----------------------+----------
+      2020 |       999          1 |     1,000 
+      2022 |       290        606 |       896 
+      2023 |         0        999 |       999 
+-----------+----------------------+----------
+     Total |     1,289      1,606 |     2,895 
 
            |       end_after
       last |         0          1 |     Total
@@ -1861,15 +1884,6 @@ Duplicates in terms of all variables
 (1,396 missing values generated)
 (336 real changes made)
 (1,223 real changes made)
-
-end_date_fl |
-         ag |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          1 |        337       17.77       17.77
-          2 |        336       17.72       35.50
-          3 |      1,223       64.50      100.00
-------------+-----------------------------------
-      Total |      1,896      100.00
 (0 real changes made)
 
 start_after |      Freq.     Percent        Cum.
@@ -1890,6 +1904,15 @@ start_afte |      new_record
 (1,000 real changes made)
 (1,000 real changes made)
 (1,000 real changes made)
+
+end_date_fl |
+         ag |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        337       17.77       17.77
+          2 |        336       17.72       35.50
+          3 |      1,223       64.50      100.00
+------------+-----------------------------------
+      Total |      1,896      100.00
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
@@ -1913,6 +1936,15 @@ start_afte |      new_record
 ------------+-----------------------------------
       Total |      2,896      100.00
 (1 observation deleted)
+
+           |       end_after
+   yr_stop |         0          1 |     Total
+-----------+----------------------+----------
+      2020 |       999          1 |     1,000 
+      2022 |       290        606 |       896 
+      2023 |         0        999 |       999 
+-----------+----------------------+----------
+     Total |     1,289      1,606 |     2,895 
 
            |       end_after
       last |         0          1 |     Total
@@ -2019,15 +2051,6 @@ Duplicates in terms of all variables
 (1,396 missing values generated)
 (336 real changes made)
 (1,223 real changes made)
-
-end_date_fl |
-         ag |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          1 |        337       17.77       17.77
-          2 |        336       17.72       35.50
-          3 |      1,223       64.50      100.00
-------------+-----------------------------------
-      Total |      1,896      100.00
 (0 real changes made)
 
 start_after |      Freq.     Percent        Cum.
@@ -2048,6 +2071,15 @@ start_afte |      new_record
 (1,000 real changes made)
 (1,000 real changes made)
 (1,000 real changes made)
+
+end_date_fl |
+         ag |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        337       17.77       17.77
+          2 |        336       17.72       35.50
+          3 |      1,223       64.50      100.00
+------------+-----------------------------------
+      Total |      1,896      100.00
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
@@ -2071,6 +2103,15 @@ start_afte |      new_record
 ------------+-----------------------------------
       Total |      2,896      100.00
 (1 observation deleted)
+
+           |       end_after
+   yr_stop |         0          1 |     Total
+-----------+----------------------+----------
+      2020 |       999          1 |     1,000 
+      2022 |       290        606 |       896 
+      2023 |         0        999 |       999 
+-----------+----------------------+----------
+     Total |     1,289      1,606 |     2,895 
 
            |       end_after
       last |         0          1 |     Total
@@ -2177,15 +2218,6 @@ Duplicates in terms of all variables
 (1,396 missing values generated)
 (336 real changes made)
 (1,223 real changes made)
-
-end_date_fl |
-         ag |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          1 |        337       17.77       17.77
-          2 |        336       17.72       35.50
-          3 |      1,223       64.50      100.00
-------------+-----------------------------------
-      Total |      1,896      100.00
 (0 real changes made)
 
 start_after |      Freq.     Percent        Cum.
@@ -2206,6 +2238,15 @@ start_afte |      new_record
 (1,000 real changes made)
 (1,000 real changes made)
 (1,000 real changes made)
+
+end_date_fl |
+         ag |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        337       17.77       17.77
+          2 |        336       17.72       35.50
+          3 |      1,223       64.50      100.00
+------------+-----------------------------------
+      Total |      1,896      100.00
 
   end_after |      Freq.     Percent        Cum.
 ------------+-----------------------------------
@@ -2229,6 +2270,15 @@ start_afte |      new_record
 ------------+-----------------------------------
       Total |      2,896      100.00
 (1 observation deleted)
+
+           |       end_after
+   yr_stop |         0          1 |     Total
+-----------+----------------------+----------
+      2020 |       999          1 |     1,000 
+      2022 |       290        606 |       896 
+      2023 |         0        999 |       999 
+-----------+----------------------+----------
+     Total |     1,289      1,606 |     2,895 
 
            |       end_after
       last |         0          1 |     Total
@@ -2286,7 +2336,513 @@ file ./output/time_varying_udca_all_vars_180.dta saved
 file ./output/time_varying_udca_180.dta saved
 
 . 
+. * Sensitivity analysis - add on overlapping days to the next unexposed period
+>  up to 120 days. 120 exposure only.
 . 
+. gen stop_date = udcaA + 120
+
+. format stop_date %dD/N/CY 
+
+. 
+. * Drop rows where prescriptions ends prior to March 2020
+. count if stop_date <= date("01March2020", "DMY")
+  0
+
+. drop if stop_date <= date("01March2020", "DMY")
+(0 observations deleted)
+
+. 
+. * Collapse adjacent prescriptions that are continuous prescribing into one pe
+> riod 
+. * Flag if start date is greater than assumed stop date of previous prescripti
+> on 
+. bys patient_id (udcaA): gen spell = udcaA > stop_date[_n-1]
+
+. bys patient_id (udcaA): replace spell = 1 if _n==1
+(1000 real changes made)
+
+. * Flag each row associated with each spell 
+. bys patient_id (udcaA): gen spell_sum = sum(spell) 
+
+. * Start date of spell 
+. bys patient_id spell_sum (udcaA): gen start = udcaA[1] 
+
+. bys patient_id spell_sum (udcaA): gen stop = stop_date[_N] 
+
+. format start stop %dD/N/CY
+
+. * Determine number of overlapping days 
+. bys patient_id (udcaA): gen overlap = stop_date - udcaA[_n+1]
+(1,000 missing values generated)
+
+. * Set to missing if no overlap
+. replace overlap=. if overlap<=0
+(0 real changes made)
+
+. bys patient_id spell_sum: egen total_overlap = total(overlap)
+
+. sum total_overlap, d
+
+                        total_overlap
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%        12649          11939
+ 5%        13134          11939
+10%        13494          11939       Obs             132,222
+25%        14104          11939       Sum of Wgt.     132,222
+
+50%        14723                      Mean           14789.88
+                        Largest       Std. Dev.      1005.614
+75%        15443          17693
+90%        16136          17693       Variance        1011260
+95%        16496          17693       Skewness          .0504
+99%        17215          17693       Kurtosis        2.77193
+
+. * Only want to add up to 120 days so create variable cut to 120 days if over 
+> 120 days overlap
+. gen overlap_add = total_overlap
+
+. replace overlap_add = 120 if total_overlap>120 & total_overlap!=.
+(132,222 real changes made)
+
+. keep patient_id start stop udca total_no_presc overlap_add
+
+. duplicates drop 
+
+Duplicates in terms of all variables
+
+(131,222 observations deleted)
+
+. sum overlap_add, d 
+
+                         overlap_add
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          120            120
+ 5%          120            120
+10%          120            120       Obs               1,000
+25%          120            120       Sum of Wgt.       1,000
+
+50%          120                      Mean                120
+                        Largest       Std. Dev.             0
+75%          120            120
+90%          120            120       Variance              0
+95%          120            120       Skewness              .
+99%          120            120       Kurtosis              .
+
+. 
+. * Add on overlapping days 
+. * Generate new stop date with 120 days added
+. gen new_stop = stop + overlap_add
+
+. * Update stop date with this date if there is an overlap 
+. replace stop = new_stop if overlap_add!=0
+(1,000 real changes made)
+
+. * Identify spells where prescriptions overlap and combine rows
+. bys patient_id (start): gen spell = start > stop[_n-1]
+
+. bys patient_id (start): replace spell = 1 if _n==1
+(1000 real changes made)
+
+. bys patient_id (start): gen spell_sum = sum(spell) 
+
+. sum spell_sum
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   spell_sum |      1,000           1           0          1          1
+
+. * Start date of spell 
+. bys patient_id spell_sum (start): gen start_n = start[1] 
+
+. bys patient_id spell_sum (start): gen stop_n = stop[_N] 
+
+. format start_n stop_n %dD/N/CY
+
+. keep patient_id start_n stop_n udca total_no_presc
+
+. rename start_n start 
+
+. rename stop_n stop
+
+. duplicates drop 
+
+Duplicates in terms of all variables
+
+(0 observations are duplicates)
+
+. 
+. * Add in rows where there are gaps between prescriptions 
+. bys patient_id (start): gen to_expand = 1 + (stop < start[_n+1])*(start[_n+1]
+> ~=.)
+
+. tab to_expand 
+
+  to_expand |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      1,000      100.00      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+. expand to_expand 
+(0 observations created)
+
+. 
+. * Flag new rows
+. bys patient_id start: gen new_record = (_n==2)
+
+. tab to_expand new_record 
+
+           | new_record
+ to_expand |         0 |     Total
+-----------+-----------+----------
+         1 |     1,000 |     1,000 
+-----------+-----------+----------
+     Total |     1,000 |     1,000 
+
+. 
+. * Updating new rows 
+. sort patient_id start
+
+. replace udca=0 if new_record==1
+(0 real changes made)
+
+. replace start = stop if new_record==1
+(0 real changes made)
+
+. bys patient_id (start): replace stop = start[_n+1] if new_record==1
+(0 real changes made)
+
+. drop new_record to_expand
+
+. 
+. * Checks 
+. count if stop<start 
+  0
+
+. sort patient_id start
+
+. count if stop[_n-1]>start & patient_id==patient_id[_n-1]
+  0
+
+. 
+. * Update rows to match follow-up time
+. * merge variables from original study definition 
+. merge m:1 patient_id using `tempfile', keepusing(dereg_date died_date_ons udc
+> a_count_bl) 
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         1,792
+        from master                       896  (_merge==1)
+        from using                        896  (_merge==2)
+
+    matched                               104  (_merge==3)
+    -----------------------------------------
+
+. tab _merge
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |        896       47.26       47.26
+         using only (2) |        896       47.26       94.51
+            matched (3) |        104        5.49      100.00
+------------------------+-----------------------------------
+                  Total |      1,896      100.00
+
+. 
+. * Update variables for people without any prescriptions 
+. replace start = date("01/03/2020", "DMY") if _merge==2
+(896 real changes made)
+
+. replace udca = 0 if _merge==2
+(896 real changes made)
+
+. replace stop = date("31/12/2022", "DMY") if _merge==2
+(896 real changes made)
+
+. replace total_no_presc = 0 if _merge==2
+(896 real changes made)
+
+. 
+. * Determine end of follow-up date
+. gen dereg_dateA = date(dereg_date, "YMD")
+(1,396 missing values generated)
+
+. format %dD/N/CY dereg_dateA
+
+. drop dereg_date
+
+. gen died_dateA = date(died_date_ons, "YMD")
+(1,396 missing values generated)
+
+. format %dD/N/CY died_dateA
+
+. drop died_date_ons
+
+. gen end_study = date("31/12/2022", "DMY")
+
+. egen end_date = rowmin(dereg_dateA end_study died_dateA)
+
+. * Create flag indicating reason for end of follow-up 
+. gen end_date_flag = (end_date==dereg_dateA)
+
+. replace end_date_flag = 2 if end_date==died_dateA
+(336 real changes made)
+
+. replace end_date_flag = 3 if end_date==end_study
+(1,223 real changes made)
+
+. 
+. * Count number of days of follow-up 
+. gen total_fu = end_date - date("01/03/2020", "DMY")
+
+. 
+. ** Update start and end of follow-up for cohort
+. * Identify prescriptions that start prior to March 2020
+. gen start_prior = (start < date("01/03/2020", "DMY"))
+
+. replace start = date("01/03/2020", "DMY") if start_prior==1
+(0 real changes made)
+
+. 
+. * Identify first prescriptions that start after March 2020
+. bys patient_id (start): gen start_after = 1 + (start > date("01/03/2020", "DM
+> Y") & _n==1)
+
+. tab start_after
+
+start_after |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        896       47.26       47.26
+          2 |      1,000       52.74      100.00
+------------+-----------------------------------
+      Total |      1,896      100.00
+
+. expand start_after
+(1,000 observations created)
+
+. 
+. * Flag new rows
+. bys patient_id start: gen new_record = (_n==2)
+
+. tab start_after new_record 
+
+start_afte |      new_record
+         r |         0          1 |     Total
+-----------+----------------------+----------
+         1 |       896          0 |       896 
+         2 |     1,000      1,000 |     2,000 
+-----------+----------------------+----------
+     Total |     1,896      1,000 |     2,896 
+
+. 
+. * Updating new rows 
+. sort patient_id start
+
+. replace udca=0 if new_record==1
+(1,000 real changes made)
+
+. replace stop = start if new_record==1
+(1,000 real changes made)
+
+. replace start = date("01/03/2020", "DMY") if new_record==1
+(1,000 real changes made)
+
+. drop new_record start_after
+
+. 
+. tab end_date_flag if start==date("01/03/2020", "DMY"), m 
+
+end_date_fl |
+         ag |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |        337       17.77       17.77
+          2 |        336       17.72       35.50
+          3 |      1,223       64.50      100.00
+------------+-----------------------------------
+      Total |      1,896      100.00
+
+. * Identify rows that end after study end date for person 
+. gen end_after = (stop > end_date )
+
+. gen end_before = (start > end_date) 
+
+. 
+. tab end_after
+
+  end_after |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,289       44.51       44.51
+          1 |      1,607       55.49      100.00
+------------+-----------------------------------
+      Total |      2,896      100.00
+
+. tab end_after end_date_flag
+
+           |          end_date_flag
+ end_after |         1          2          3 |     Total
+-----------+---------------------------------+----------
+         0 |        33         33      1,223 |     1,289 
+         1 |       338        336        933 |     1,607 
+-----------+---------------------------------+----------
+     Total |       371        369      2,156 |     2,896 
+
+. tab end_before 
+
+ end_before |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,895       99.97       99.97
+          1 |          1        0.03      100.00
+------------+-----------------------------------
+      Total |      2,896      100.00
+
+. 
+. * Drop whole rows that are after end_date 
+. drop if end_before 
+(1 observation deleted)
+
+. 
+. * Check years of stop dates 
+. gen yr_stop = year(stop)
+
+. tab yr_stop end_after 
+
+           |       end_after
+   yr_stop |         0          1 |     Total
+-----------+----------------------+----------
+      2020 |       999          1 |     1,000 
+      2022 |       290        606 |       896 
+      2023 |         0        999 |       999 
+-----------+----------------------+----------
+     Total |     1,289      1,606 |     2,895 
+
+. 
+. * Check those flagged as ending after are last row only 
+. bys patient_id (start): gen last = _n==_N
+
+. tab last end_after 
+
+           |       end_after
+      last |         0          1 |     Total
+-----------+----------------------+----------
+         0 |       999          0 |       999 
+         1 |       290      1,606 |     1,896 
+-----------+----------------------+----------
+     Total |     1,289      1,606 |     2,895 
+
+. * Check how many records end after end date - should just be one
+. bys patient_id: egen tot_end_after = total(end_after)
+
+. 
+. replace stop = end_date if end_after==1 & end_before==0
+(1,606 real changes made)
+
+. 
+. * Identify prescriptions that end prior to end of follow-up 
+. bys patient_id (start): gen stop_prior = 1 + (stop < end_date & _n==_N)
+
+. tab stop_prior
+
+ stop_prior |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      2,895      100.00      100.00
+------------+-----------------------------------
+      Total |      2,895      100.00
+
+. expand stop_prior
+(0 observations created)
+
+. 
+. * Flag new rows
+. bys patient_id start: gen new_record = (_n==2)
+
+. tab stop_prior new_record 
+
+           | new_record
+stop_prior |         0 |     Total
+-----------+-----------+----------
+         1 |     2,895 |     2,895 
+-----------+-----------+----------
+     Total |     2,895 |     2,895 
+
+. 
+. * Updating new rows 
+. sort patient_id start
+
+. replace udca=0 if new_record==1
+(0 real changes made)
+
+. replace start =  stop if new_record==1
+(0 real changes made)
+
+. replace stop = end_date if new_record==1
+(0 real changes made)
+
+. drop new_record stop_prior
+
+. 
+. di "number where start after stop date"
+number where start after stop date
+
+. count if start > stop 
+  0
+
+. di "Number where start equals stop"
+Number where start equals stop
+
+. count if start==stop 
+  0
+
+. drop if start==stop 
+(0 observations deleted)
+
+. * Check that time covered by prescriptions equals total follow-up
+. gen time = stop - start 
+
+. sum time, d  
+
+                            time
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            2              1
+10%            3              1       Obs               2,895
+25%           10              1       Sum of Wgt.       2,895
+
+50%          613                      Mean           545.3845
+                        Largest       Std. Dev.      468.8309
+75%         1030           1035
+90%         1035           1035       Variance       219802.4
+95%         1035           1035       Skewness      -.0937395
+99%         1035           1035       Kurtosis       1.150667
+
+. bys patient_id: egen total_time = total(time)
+
+. 
+. gen total_time_unequal = total_time!=total_fu
+
+. tab total_time_unequal, m
+
+total_time_ |
+    unequal |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,895      100.00      100.00
+------------+-----------------------------------
+      Total |      2,895      100.00
+
+. 
+. save ./output/time_varying_udca_overlap_all_vars_120
+file ./output/time_varying_udca_overlap_all_vars_120.dta saved
+
+. * Drop unnecessary variables
+. keep patient_id start stop udca 
+
+. 
+. save ./output/time_varying_udca_overlap_120
+file ./output/time_varying_udca_overlap_120.dta saved
+
 . 
 . 
 . 
@@ -2297,7 +2853,7 @@ file ./output/time_varying_udca_180.dta saved
 . 
 end of do-file
 
-. . file open output using "/tmp/101_drug_prep.do.iHxF.out", write text replace
+. . file open output using "/tmp/101_drug_prep.do.Ifaa.out", write text replace
 
 . . file write output "success" 
 
