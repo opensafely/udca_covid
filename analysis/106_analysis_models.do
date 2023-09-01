@@ -84,7 +84,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
         * Count number unexposed at any time 
         bys patient_id : egen unexposed_ever = min(udca) 
         tab unexposed_ever if number==1
-        safecount if unexposed_ever==1 & number==1
+        safecount if unexposed_ever==0 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1
         local event = r(N)
@@ -214,7 +214,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
         * Count number unexposed at any time 
         bys patient_id : egen unexposed_ever = min(udca) 
         tab unexposed_ever if number==1
-        safecount if unexposed_ever==1 & number==1
+        safecount if unexposed_ever==0 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1
         local event = r(N)
