@@ -166,17 +166,34 @@ gen hosp_any_flag = hosp_covid_anyA!=.
 
 * Composite outcome 
 gen hosp_died = (died_ons_covid_flag_any==1 | hosp_any_flag==1)
+tab hosp_died
 egen hosp_died_dateA = rowmin(died_date_onsA hosp_covid_anyA)
+* Generate flag of how met composite outcome 
+di "Number where died before hospitalisation date - should be zero"
+count if died_date_onsA<hosp_covid_anyA 
+di "Number where have both hospitalisation and death date" 
+count if died_date_onsA!=. & hosp_covid_anyA!=.
 
-
+gen composite_make_up = hosp_died 
+replace composite_make_up = 2 if died_ons_covid_flag_any==1 & hosp_any_flag==0
+label define comp 0 "No outcome" 1 "Hospitalised" 2 "Died"
+label values composite_make_up comp 
+* Check 
+count if composite_make_up==1 & hosp_covid_anyA==. 
+count if composite_make_up==1 & hosp_died_dateA!=hosp_covid_anyA
+count if composite_make_up==2 & died_date_onsA==. 
+count if composite_make_up==2 & hosp_died_dateA!=died_date_onsA
+tab composite_make_up died_ons_covid_flag_any
+tab composite_make_up hosp_any_flag
 tab udca_bl died_ons_covid_flag_any
 tab udca_bl hosp_any_flag
-* check number of outcomess per ethnicity group 
+
+* check number of outcomes per ethnicity group 
 tab ethnicity died_ons_covid_flag_any
 tab ethnicity hosp_any_flag
 
 * Outcomes by baseline exposure stataus
-table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \ hosp_died bin) clear
+table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \ hosp_died bin \ composite_make_up cat) clear
 export delimited using ./output/tables/baseline_outcomes.csv
 forvalues i=0/1 {   
     destring _columna_`i', gen(n`i') ignore(",") force
