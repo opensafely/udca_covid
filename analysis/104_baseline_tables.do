@@ -170,7 +170,7 @@ tab hosp_died
 egen hosp_died_dateA = rowmin(died_date_onsA hosp_covid_anyA)
 * Generate flag of how met composite outcome 
 di "Number where died before hospitalisation date - should be zero"
-count if died_date_onsA<hosp_covid_anyA 
+count if died_date_onsA<hosp_covid_anyA & hosp_covid_anyA!=.
 di "Number where have both hospitalisation and death date" 
 count if died_date_onsA!=. & hosp_covid_anyA!=.
 
