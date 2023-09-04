@@ -155,6 +155,9 @@ foreach var in died_date_ons hosp_covid_primary hosp_covid_any {
     gen `var'A = date(`var', "YMD")
     format `var'A %dD/N/CY
     drop `var'
+    gen yr_`var' = year(`var'A)
+    tab yr_`var'
+    replace `var'A=. if yr_`var'==2023
 }
 * Flag if died
 gen died_flag = died_date_onsA!=.
@@ -206,9 +209,21 @@ gen hosp_pre = hosp_covid_anyA < date("01Mar2021", "DMY")
 replace hosp_pre = . if hosp_covid_anyA==.
 tab hosp_any_flag hosp_pre 
 
+gen composite_post = hosp_died_dateA >= date("01Mar2021", "DMY")
+replace composite_post = . if hosp_died_dateA==.
+tab hosp_died composite_post 
+
+gen died_post = died_date_onsA >= date("01Mar2021", "DMY")
+replace died_post = . if died_date_onsA==. | died_ons_covid_flag_any==0
+tab died_ons_covid_flag_any died_post 
+
+gen hosp_post = hosp_covid_anyA >= date("01Mar2021", "DMY")
+replace hosp_post = . if hosp_covid_anyA==.
+tab hosp_any_flag hosp_post
+
 * Outcomes by baseline exposure stataus
-table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \ hosp_died bin \ composite_make_up cat \ composite_pre bin ///
-died_pre bin \ hosp_pre bin) clear
+table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \ hosp_died bin \ composite_make_up cat \ composite_pre bin \ ///
+died_pre bin \ hosp_pre bin \ composite_post bin \ died_post bin \ hosp_post bin) clear
 export delimited using ./output/tables/baseline_outcomes.csv
 forvalues i=0/1 {   
     destring _columna_`i', gen(n`i') ignore(",") force

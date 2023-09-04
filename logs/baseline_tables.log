@@ -925,17 +925,56 @@ file ./output/tables/additional_meds_udca_rounded.csv saved
   2.     gen `var'A = date(`var', "YMD")
   3.     format `var'A %dD/N/CY
   4.     drop `var'
-  5. }
+  5.     gen yr_`var' = year(`var'A)
+  6.     tab yr_`var'
+  7.     replace `var'A=. if yr_`var'==2023
+  8. }
 (500 missing values generated)
+(500 missing values generated)
+
+yr_died_dat |
+      e_ons |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       2020 |        118       23.60       23.60
+       2021 |        171       34.20       57.80
+       2022 |        147       29.40       87.20
+       2023 |         64       12.80      100.00
+------------+-----------------------------------
+      Total |        500      100.00
+(64 real changes made, 64 to missing)
 (900 missing values generated)
 (900 missing values generated)
+
+yr_hosp_cov |
+ id_primary |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       2020 |         25       25.00       25.00
+       2021 |         32       32.00       57.00
+       2022 |         24       24.00       81.00
+       2023 |         19       19.00      100.00
+------------+-----------------------------------
+      Total |        100      100.00
+(19 real changes made, 19 to missing)
+(900 missing values generated)
+(900 missing values generated)
+
+yr_hosp_cov |
+     id_any |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       2020 |         25       25.00       25.00
+       2021 |         31       31.00       56.00
+       2022 |         28       28.00       84.00
+       2023 |         16       16.00      100.00
+------------+-----------------------------------
+      Total |        100      100.00
+(16 real changes made, 16 to missing)
 
 . * Flag if died
 . gen died_flag = died_date_onsA!=.
 
 . * Generate date if died of covid
 . gen died_date_onscovid = died_date_onsA if died_ons_covid_flag_any == 1
-(742 missing values generated)
+(778 missing values generated)
 
 . 
 . * Flag hospitalised with covid 
@@ -949,33 +988,33 @@ file ./output/tables/additional_meds_udca_rounded.csv saved
 
   hosp_died |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        447       44.70       44.70
-          1 |        553       55.30      100.00
+          0 |        457       45.70       45.70
+          1 |        543       54.30      100.00
 ------------+-----------------------------------
       Total |      1,000      100.00
 
 . egen hosp_died_dateA = rowmin(died_date_onsA hosp_covid_anyA)
-(452 missing values generated)
+(521 missing values generated)
 
 . * Generate flag of how met composite outcome 
 . di "Number where died before hospitalisation date - should be zero"
 Number where died before hospitalisation date - should be zero
 
 . count if died_date_onsA<hosp_covid_anyA & hosp_covid_anyA!=.
-  28
+  22
 
 . di "Number where have both hospitalisation and death date" 
 Number where have both hospitalisation and death date
 
 . count if died_date_onsA!=. & hosp_covid_anyA!=.
-  52
+  41
 
 . 
 . gen composite_make_up = hosp_died 
 
 . replace composite_make_up = 2 if died_ons_covid_flag_any==1 & hosp_any_flag==
 > 0
-(453 real changes made)
+(459 real changes made)
 
 . label define comp 0 "No outcome" 1 "Hospitalised" 2 "Died"
 
@@ -986,10 +1025,10 @@ Number where have both hospitalisation and death date
   0
 
 . count if composite_make_up==1 & hosp_died_dateA!=hosp_covid_anyA
-  28
+  22
 
 . count if composite_make_up==2 & died_date_onsA==. 
-  217
+  258
 
 . count if composite_make_up==2 & hosp_died_dateA!=died_date_onsA
   0
@@ -1000,9 +1039,9 @@ Number where have both hospitalisation and death date
 composite_ma |          ny
        ke_up |         0          1 |     Total
 -------------+----------------------+----------
-  No outcome |       447          0 |       447 
-Hospitalised |        53         47 |       100 
-        Died |         0        453 |       453 
+  No outcome |       457          0 |       457 
+Hospitalised |        43         41 |        84 
+        Died |         0        459 |       459 
 -------------+----------------------+----------
        Total |       500        500 |     1,000 
 
@@ -1011,11 +1050,11 @@ Hospitalised |        53         47 |       100
 composite_ma |     hosp_any_flag
        ke_up |         0          1 |     Total
 -------------+----------------------+----------
-  No outcome |       447          0 |       447 
-Hospitalised |         0        100 |       100 
-        Died |       453          0 |       453 
+  No outcome |       457          0 |       457 
+Hospitalised |         0         84 |        84 
+        Died |       459          0 |       459 
 -------------+----------------------+----------
-       Total |       900        100 |     1,000 
+       Total |       916         84 |     1,000 
 
 . tab udca_bl died_ons_covid_flag_any
 
@@ -1033,10 +1072,10 @@ Hospitalised |         0        100 |       100
            |     hosp_any_flag
    udca_bl |         0          1 |     Total
 -----------+----------------------+----------
-         0 |       659         76 |       735 
-         1 |       241         24 |       265 
+         0 |       670         65 |       735 
+         1 |       246         19 |       265 
 -----------+----------------------+----------
-     Total |       900        100 |     1,000 
+     Total |       916         84 |     1,000 
 
 . 
 . * check number of outcomes per ethnicity group 
@@ -1060,14 +1099,14 @@ Hospitalised |         0        100 |       100
            |     hosp_any_flag
  ethnicity |         0          1 |     Total
 -----------+----------------------+----------
-     White |       137         15 |       152 
-     Mixed |       175         15 |       190 
-     Asian |       182         17 |       199 
-     Black |       195         23 |       218 
-     Other |       176         24 |       200 
+     White |       138         14 |       152 
+     Mixed |       177         13 |       190 
+     Asian |       188         11 |       199 
+     Black |       201         17 |       218 
+     Other |       177         23 |       200 
    Unknown |        35          6 |        41 
 -----------+----------------------+----------
-     Total |       900        100 |     1,000 
+     Total |       916         84 |     1,000 
 
 . 
 . * Number of outcomes within each time period: pre-vaccination of most populat
@@ -1076,23 +1115,23 @@ Hospitalised |         0        100 |       100
 . gen composite_pre = hosp_died_dateA < date("01Mar2021", "DMY")
 
 . replace composite_pre = . if hosp_died_dateA==.
-(452 real changes made, 452 to missing)
+(521 real changes made, 521 to missing)
 
 . tab hosp_died composite_pre 
 
            |     composite_pre
  hosp_died |         0          1 |     Total
 -----------+----------------------+----------
-         0 |       151         61 |       212 
-         1 |       223        113 |       336 
+         0 |       133         61 |       194 
+         1 |       172        113 |       285 
 -----------+----------------------+----------
-     Total |       374        174 |       548 
+     Total |       305        174 |       479 
 
 . 
 . gen died_pre = died_date_onsA < date("01Mar2021", "DMY")
 
 . replace died_pre = . if died_date_onsA==. | died_ons_covid_flag_any==0
-(742 real changes made, 742 to missing)
+(778 real changes made, 778 to missing)
 
 . tab died_ons_covid_flag_any died_pre 
 
@@ -1100,30 +1139,78 @@ died_ons_c |
 ovid_flag_ |       died_pre
        any |         0          1 |     Total
 -----------+----------------------+----------
-         1 |       179         79 |       258 
+         1 |       143         79 |       222 
 -----------+----------------------+----------
-     Total |       179         79 |       258 
+     Total |       143         79 |       222 
 
 . 
 . gen hosp_pre = hosp_covid_anyA < date("01Mar2021", "DMY")
 
 . replace hosp_pre = . if hosp_covid_anyA==.
-(900 real changes made, 900 to missing)
+(916 real changes made, 916 to missing)
 
 . tab hosp_any_flag hosp_pre 
 
 hosp_any_f |       hosp_pre
        lag |         0          1 |     Total
 -----------+----------------------+----------
-         1 |        71         29 |       100 
+         1 |        55         29 |        84 
 -----------+----------------------+----------
-     Total |        71         29 |       100 
+     Total |        55         29 |        84 
+
+. 
+. gen composite_post = hosp_died_dateA >= date("01Mar2021", "DMY")
+
+. replace composite_post = . if hosp_died_dateA==.
+(521 real changes made, 521 to missing)
+
+. tab hosp_died composite_post 
+
+           |    composite_post
+ hosp_died |         0          1 |     Total
+-----------+----------------------+----------
+         0 |        61        133 |       194 
+         1 |       113        172 |       285 
+-----------+----------------------+----------
+     Total |       174        305 |       479 
+
+. 
+. gen died_post = died_date_onsA >= date("01Mar2021", "DMY")
+
+. replace died_post = . if died_date_onsA==. | died_ons_covid_flag_any==0
+(778 real changes made, 778 to missing)
+
+. tab died_ons_covid_flag_any died_post 
+
+died_ons_c |
+ovid_flag_ |       died_post
+       any |         0          1 |     Total
+-----------+----------------------+----------
+         1 |        79        143 |       222 
+-----------+----------------------+----------
+     Total |        79        143 |       222 
+
+. 
+. gen hosp_post = hosp_covid_anyA >= date("01Mar2021", "DMY")
+
+. replace hosp_post = . if hosp_covid_anyA==.
+(916 real changes made, 916 to missing)
+
+. tab hosp_any_flag hosp_post
+
+hosp_any_f |       hosp_post
+       lag |         0          1 |     Total
+-----------+----------------------+----------
+         1 |        29         55 |        84 
+-----------+----------------------+----------
+     Total |        29         55 |        84 
 
 . 
 . * Outcomes by baseline exposure stataus
 . table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \
->  hosp_died bin \ composite_make_up cat \ composite_pre bin ///
-> died_pre bin \ hosp_pre bin) clear
+>  hosp_died bin \ composite_make_up cat \ composite_pre bin \ ///
+> died_pre bin \ hosp_pre bin \ composite_post bin \ died_post bin \ hosp_post 
+> bin) clear
 
   +-------------------------------------------------+
   | factor                    N_0   N_1   m_0   m_1 |
@@ -1136,9 +1223,17 @@ hosp_any_f |       hosp_pre
   |-------------------------------------------------|
   | composite_make_up         735   265     0     0 |
   |-------------------------------------------------|
-  | composite_pre             394   154   341   111 |
+  | composite_pre             340   139   395   126 |
   |-------------------------------------------------|
-  | hosp_pre                   76    24   659   241 |
+  | died_pre                  155    67   580   198 |
+  |-------------------------------------------------|
+  | hosp_pre                   65    19   670   246 |
+  |-------------------------------------------------|
+  | composite_post            340   139   395   126 |
+  |-------------------------------------------------|
+  | died_post                 155    67   580   198 |
+  |-------------------------------------------------|
+  | hosp_post                  65    19   670   246 |
   +-------------------------------------------------+
    N_ ... #records used below,   m_ ... #records not used
  
@@ -1156,27 +1251,43 @@ hosp_any_f |       hosp_pre
 >   |
   |----------------------------------------------------------------------------
 > --|
-  | hosp_any_flag                            76 (10.3%)    24 ( 9.1%)     0.55 
+  | hosp_any_flag                            65 ( 8.8%)    19 ( 7.2%)     0.40 
 >   |
   |----------------------------------------------------------------------------
 > --|
-  | hosp_died                                409 (55.6%)   144 (54.3%)    0.71 
+  | hosp_died                                402 (54.7%)   141 (53.2%)    0.68 
 >   |
   |----------------------------------------------------------------------------
 > --|
-  | composite_make_up         No outcome     326 (44.4%)   121 (45.7%)    0.82 
+  | composite_make_up         No outcome     333 (45.3%)   124 (46.8%)    0.69 
 >   |
-  |                           Hospitalised   76 (10.3%)    24 ( 9.1%)          
+  |                           Hospitalised   65 ( 8.8%)    19 ( 7.2%)          
 >   |
-  |                           Died           333 (45.3%)   120 (45.3%)         
->   |
-  |----------------------------------------------------------------------------
-> --|
-  | composite_pre                            131 (%)       43 (%)         0.23 
+  |                           Died           337 (45.9%)   122 (46.0%)         
 >   |
   |----------------------------------------------------------------------------
 > --|
-  | hosp_pre                                 23 (30%)      6 (25%)        0.62 
+  | composite_pre                            131 (38.5%)   43 (30.9%)     0.12 
+>   |
+  |----------------------------------------------------------------------------
+> --|
+  | died_pre                                 60 (38.7%)    19 (28.4%)     0.14 
+>   |
+  |----------------------------------------------------------------------------
+> --|
+  | hosp_pre                                 23 (35%)      6 (32%)        0.76 
+>   |
+  |----------------------------------------------------------------------------
+> --|
+  | composite_post                           209 (61.5%)   96 (69.1%)     0.12 
+>   |
+  |----------------------------------------------------------------------------
+> --|
+  | died_post                                95 (61.3%)    48 (71.6%)     0.14 
+>   |
+  |----------------------------------------------------------------------------
+> --|
+  | hosp_post                                42 (65%)      13 (68%)       0.76 
 >   |
   +----------------------------------------------------------------------------
 > --+
@@ -1200,7 +1311,7 @@ _columna_0: contains nonnumeric characters not specified in ignore(); n0 genera
 (2 missing values generated)
 _columnb_0: contains nonnumeric characters not specified in ignore()
 _columnb_0: characters space % ( ) removed; percent0 generated as double
-(3 missing values generated)
+(2 missing values generated)
 (2 missing values generated)
 n0_rounded generated as str3
 percent_0 generated as str4
@@ -1211,7 +1322,7 @@ _columna_1: contains nonnumeric characters not specified in ignore(); n1 genera
 (2 missing values generated)
 _columnb_1: contains nonnumeric characters not specified in ignore()
 _columnb_1: characters space % ( ) removed; percent1 generated as double
-(3 missing values generated)
+(2 missing values generated)
 (2 missing values generated)
 n1_rounded generated as str3
 percent_1 generated as str4
@@ -1229,7 +1340,7 @@ file ./output/tables/baseline_outcomes_rounded.csv saved
 . 
 end of do-file
 
-. . file open output using "/tmp/104_baseline_tables.do.e0jM.out", write text r
+. . file open output using "/tmp/104_baseline_tables.do.nXTV.out", write text r
 > eplace
 
 . . file write output "success" 
