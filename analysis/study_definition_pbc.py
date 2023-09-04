@@ -227,7 +227,7 @@ study = StudyDefinition(
     #Ursodeoxycholic acid 
     udca_count_bl=patients.with_these_medications(
         udca_codes, 
-        between=["2019-11-01", "2020-02-29"],
+        between=["2019-11-02", "2020-03-01"],
         returning="number_of_matches_in_period",
         return_expectations={
             "int": {"distribution": "normal", "mean": 3, "stddev": 2},
