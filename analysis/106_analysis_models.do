@@ -401,7 +401,6 @@ else {
     continue
 }
 
-gen pre_vacc_
 }
 
 file close tablecontent
