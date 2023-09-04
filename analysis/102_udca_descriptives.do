@@ -61,22 +61,22 @@ forvalues i=60(30)180 {
     gen udca_bl = (udca_count_bl>=1 & udca_count_bl!=.) 
     gen yr_start = year(start)
     sum yr_start 
-    gen switch_2020_`i'_i = udca!=udca_bl & yr_start==2020
-    bys patient_id: egen switch_2020_`i' = max(switch_2020_`i'_i)
-    bys patient_id: egen switch_2020_`i'_total = total(switch_2020_`i'_i)
-    gen switch_2020_`i'_start = (switch_2020_`i'==1 & udca_bl==0)
-    gen switch_2020_`i'_stop = (switch_2020_`i'==1 & udca_bl==1)
-    gen switch_2020_`i'_multi = (switch_2020_`i'_total>1 & switch_2020_`i'_total!=.)
+    gen switch_`i'_i = udca!=udca_bl
+    bys patient_id: egen switch_`i' = max(switch_`i'_i)
+    bys patient_id: egen switch_`i'_total = total(switch_`i'_i)
+    gen switch_`i'_start = (switch_`i'==1 & udca_bl==0)
+    gen switch_`i'_stop = (switch_`i'==1 & udca_bl==1)
+    gen switch_`i'_multi = (switch_`i'_total>1 & switch_`i'_total!=.)
     keep if last==1
-    tab switch_2020_`i'  
-    safecount if switch_2020_`i'==1
+    tab switch_`i'  
+    safecount if switch_`i'==1
     file write tablecontent ("switching") _tab ("Number switched") _tab ("Percent switched") _tab ("Switched from unexposed") _tab ("Percent switched unexposed") _tab ("Switched from exposed") _tab ("Percent switched exposed") _n 
-    file write tablecontent ("2020 `i'") _tab %3.1f (r(N)) _tab  
+    file write tablecontent ("`i'") _tab %3.1f (r(N)) _tab  
     local percent = (r(N)/_N)*100
-    safecount if switch_2020_`i'_start==1
+    safecount if switch_`i'_start==1
     file write tablecontent (`percent') _tab  %3.1f (r(N)) _tab 
     local percent_stt = (r(N)/_N)*100
-    safecount if switch_2020_`i'_stop==1
+    safecount if switch_`i'_stop==1
     file write tablecontent (`percent_stt') _tab  %3.1f (r(N)) _tab 
     local percent_stp = (r(N)/_N)*100
     file write tablecontent (`percent_stp') _n _n 
@@ -124,22 +124,22 @@ file write tablecontent ("Number of rows overlap 120") _tab %3.1f (r(N)) _tab %3
 gen udca_bl = (udca_count_bl>=1 & udca_count_bl!=.) 
 gen yr_start = year(start)
 sum yr_start 
-gen switch_2020_o_120_i = udca!=udca_bl & yr_start==2020
-bys patient_id: egen switch_2020_o_120 = max(switch_2020_o_120_i)
-bys patient_id: egen switch_2020_o_120_total = total(switch_2020_o_120_i)
-gen switch_2020_o_120_start = (switch_2020_o_120==1 & udca_bl==0)
-gen switch_2020_o_120_stop = (switch_2020_o_120==1 & udca_bl==1)
-gen switch_2020_o_120_multi = (switch_2020_o_120_total>1 & switch_2020_o_120_total!=.)
+gen switch_o_120_i = udca!=udca_bl
+bys patient_id: egen switch_o_120 = max(switch_o_120_i)
+bys patient_id: egen switch_o_120_total = total(switch_o_120_i)
+gen switch_o_120_start = (switch_o_120==1 & udca_bl==0)
+gen switch_o_120_stop = (switch_o_120==1 & udca_bl==1)
+gen switch_o_120_multi = (switch_o_120_total>1 & switch_o_120_total!=.)
 keep if last==1
-tab switch_2020_o_120  
-safecount if switch_2020_o_120==1
+tab switch_o_120  
+safecount if switch_o_120==1
 file write tablecontent ("switching") _tab ("Number switched") _tab ("Percent switched") _tab ("Switched from unexposed") _tab ("Percent switched unexposed") _tab ("Switched from exposed") _tab ("Percent switched exposed") _n 
-file write tablecontent ("2020 o_120") _tab %3.1f (r(N)) _tab  
+file write tablecontent ("o_120") _tab %3.1f (r(N)) _tab  
 local percent = (r(N)/_N)*100
-safecount if switch_2020_o_120_start==1
+safecount if switch_o_120_start==1
 file write tablecontent (`percent') _tab  %3.1f (r(N)) _tab 
 local percent_stt = (r(N)/_N)*100
-safecount if switch_2020_o_120_stop==1
+safecount if switch_o_120_stop==1
 file write tablecontent (`percent_stt') _tab  %3.1f (r(N)) _tab 
 local percent_stp = (r(N)/_N)*100
 file write tablecontent (`percent_stp') _n _n 
