@@ -192,8 +192,23 @@ tab udca_bl hosp_any_flag
 tab ethnicity died_ons_covid_flag_any
 tab ethnicity hosp_any_flag
 
+* Number of outcomes within each time period: pre-vaccination of most population - prior to 1st March 2021 and after
+
+gen composite_pre = hosp_died_dateA < date("01Mar2021", "DMY")
+replace composite_pre = . if hosp_died_dateA==.
+tab hosp_died composite_pre 
+
+gen died_pre = died_date_onsA < date("01Mar2021", "DMY")
+replace died_pre = . if died_date_onsA==. | died_ons_covid_flag_any==0
+tab died_ons_covid_flag_any died_pre 
+
+gen hosp_pre = hosp_covid_anyA < date("01Mar2021", "DMY")
+replace hosp_pre = . if hosp_covid_anyA==.
+tab hosp_any_flag hosp_pre 
+
 * Outcomes by baseline exposure stataus
-table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \ hosp_died bin \ composite_make_up cat) clear
+table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \ hosp_died bin \ composite_make_up cat \ composite_pre bin ///
+died_pre bin \ hosp_pre bin) clear
 export delimited using ./output/tables/baseline_outcomes.csv
 forvalues i=0/1 {   
     destring _columna_`i', gen(n`i') ignore(",") force
@@ -206,3 +221,4 @@ forvalues i=0/1 {
 }
 keep factor rounded_n0 percent0 rounded_n1 percent1
 export delimited using ./output/tables/baseline_outcomes_rounded.csv
+

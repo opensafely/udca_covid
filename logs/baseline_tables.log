@@ -961,8 +961,8 @@ file ./output/tables/additional_meds_udca_rounded.csv saved
 . di "Number where died before hospitalisation date - should be zero"
 Number where died before hospitalisation date - should be zero
 
-. count if died_date_onsA<hosp_covid_anyA 
-  476
+. count if died_date_onsA<hosp_covid_anyA & hosp_covid_anyA!=.
+  28
 
 . di "Number where have both hospitalisation and death date" 
 Number where have both hospitalisation and death date
@@ -1070,9 +1070,60 @@ Hospitalised |         0        100 |       100
      Total |       900        100 |     1,000 
 
 . 
+. * Number of outcomes within each time period: pre-vaccination of most populat
+> ion - prior to 1st March 2021 and after
+. 
+. gen composite_pre = hosp_died_dateA < date("01Mar2021", "DMY")
+
+. replace composite_pre = . if hosp_died_dateA==.
+(452 real changes made, 452 to missing)
+
+. tab hosp_died composite_pre 
+
+           |     composite_pre
+ hosp_died |         0          1 |     Total
+-----------+----------------------+----------
+         0 |       151         61 |       212 
+         1 |       223        113 |       336 
+-----------+----------------------+----------
+     Total |       374        174 |       548 
+
+. 
+. gen died_pre = died_date_onsA < date("01Mar2021", "DMY")
+
+. replace died_pre = . if died_date_onsA==. | died_ons_covid_flag_any==0
+(742 real changes made, 742 to missing)
+
+. tab died_ons_covid_flag_any died_pre 
+
+died_ons_c |
+ovid_flag_ |       died_pre
+       any |         0          1 |     Total
+-----------+----------------------+----------
+         1 |       179         79 |       258 
+-----------+----------------------+----------
+     Total |       179         79 |       258 
+
+. 
+. gen hosp_pre = hosp_covid_anyA < date("01Mar2021", "DMY")
+
+. replace hosp_pre = . if hosp_covid_anyA==.
+(900 real changes made, 900 to missing)
+
+. tab hosp_any_flag hosp_pre 
+
+hosp_any_f |       hosp_pre
+       lag |         0          1 |     Total
+-----------+----------------------+----------
+         1 |        71         29 |       100 
+-----------+----------------------+----------
+     Total |        71         29 |       100 
+
+. 
 . * Outcomes by baseline exposure stataus
 . table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \
->  hosp_died bin \ composite_make_up cat) clear
+>  hosp_died bin \ composite_make_up cat \ composite_pre bin ///
+> died_pre bin \ hosp_pre bin) clear
 
   +-------------------------------------------------+
   | factor                    N_0   N_1   m_0   m_1 |
@@ -1084,6 +1135,10 @@ Hospitalised |         0        100 |       100
   | hosp_died                 735   265     0     0 |
   |-------------------------------------------------|
   | composite_make_up         735   265     0     0 |
+  |-------------------------------------------------|
+  | composite_pre             394   154   341   111 |
+  |-------------------------------------------------|
+  | hosp_pre                   76    24   659   241 |
   +-------------------------------------------------+
    N_ ... #records used below,   m_ ... #records not used
  
@@ -1115,6 +1170,14 @@ Hospitalised |         0        100 |       100
 >   |
   |                           Died           333 (45.3%)   120 (45.3%)         
 >   |
+  |----------------------------------------------------------------------------
+> --|
+  | composite_pre                            131 (%)       43 (%)         0.23 
+>   |
+  |----------------------------------------------------------------------------
+> --|
+  | hosp_pre                                 23 (30%)      6 (25%)        0.62 
+>   |
   +----------------------------------------------------------------------------
 > --+
 Data are presented as n (%).
@@ -1137,7 +1200,7 @@ _columna_0: contains nonnumeric characters not specified in ignore(); n0 genera
 (2 missing values generated)
 _columnb_0: contains nonnumeric characters not specified in ignore()
 _columnb_0: characters space % ( ) removed; percent0 generated as double
-(2 missing values generated)
+(3 missing values generated)
 (2 missing values generated)
 n0_rounded generated as str3
 percent_0 generated as str4
@@ -1148,12 +1211,14 @@ _columna_1: contains nonnumeric characters not specified in ignore(); n1 genera
 (2 missing values generated)
 _columnb_1: contains nonnumeric characters not specified in ignore()
 _columnb_1: characters space % ( ) removed; percent1 generated as double
-(2 missing values generated)
+(3 missing values generated)
 (2 missing values generated)
 n1_rounded generated as str3
 percent_1 generated as str4
-(0 real changes made)
-(0 real changes made)
+variable n1_rounded was str3 now str8
+(1 real change made)
+variable percent_1 was str4 now str8
+(1 real change made)
 
 . keep factor rounded_n0 percent0 rounded_n1 percent1
 
@@ -1161,9 +1226,10 @@ percent_1 generated as str4
 file ./output/tables/baseline_outcomes_rounded.csv saved
 
 . 
+. 
 end of do-file
 
-. . file open output using "/tmp/104_baseline_tables.do.bgjE.out", write text r
+. . file open output using "/tmp/104_baseline_tables.do.e0jM.out", write text r
 > eplace
 
 . . file write output "success" 

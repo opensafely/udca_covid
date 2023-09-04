@@ -400,6 +400,8 @@ else {
     file write tablecontent ("`outcome'") _tab ("redact") _n
     continue
 }
+
+gen pre_vacc_
 }
 
 file close tablecontent
