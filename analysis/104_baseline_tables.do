@@ -151,7 +151,7 @@ export delimited using ./output/tables/additional_meds_udca_rounded.csv
 restore 
 
 * Checking outcomes 
-foreach var in died_date_ons hosp_covid_primary hosp_covid_any {
+foreach var in died_date_ons hosp_covid_primary hosp_covid_any dereg_date {
     gen `var'A = date(`var', "YMD")
     format `var'A %dD/N/CY
     drop `var'
@@ -159,10 +159,17 @@ foreach var in died_date_ons hosp_covid_primary hosp_covid_any {
     tab yr_`var'
     replace `var'A=. if yr_`var'==2023
 }
+gen end_study = date("31/12/2022", "DMY")
+egen end_date = rowmin(dereg_dateA end_study died_date_onsA)
+replace died_date_onsA=. if end_date<died_date_onsA
+replace died_ons_covid_flag_any=0 if end_date<died_date_onsA & died_ons_covid_flag_any==1
+replace hosp_covid_anyA=. if end_date<hosp_covid_anyA
+
+
 * Flag if died
 gen died_flag = died_date_onsA!=.
 * Generate date if died of covid
-gen died_date_onscovid = died_date_onsA if died_ons_covid_flag_any == 1
+gen died_date_ons_covid = died_date_onsA if died_ons_covid_flag_any == 1
 
 * Flag hospitalised with covid 
 gen hosp_any_flag = hosp_covid_anyA!=.

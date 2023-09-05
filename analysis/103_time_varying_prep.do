@@ -257,27 +257,30 @@ save ./output/tv_waves, replace
 * Create files for outcomes
 use `tempfile', clear
 * Determine end of follow-up date
-gen dereg_dateA = date(dereg_date, "YMD")
-format %dD/N/CY dereg_dateA
-drop dereg_date
-gen died_date_onsA = date(died_date_ons, "YMD")
-format %dD/N/CY died_date_onsA
-drop died_date_ons
+foreach var in died_date_ons hosp_covid_primary hosp_covid_any dereg_date {
+    gen `var'A = date(`var', "YMD")
+    format `var'A %dD/N/CY
+    drop `var'
+    gen yr_`var' = year(`var'A)
+    tab yr_`var'
+    replace `var'A=. if yr_`var'==2023
+}
 gen end_study = date("31/12/2022", "DMY")
 egen end_date = rowmin(dereg_dateA end_study died_date_onsA)
+
 * Create flag indicating reason for end of follow-up 
 gen end_date_flag = (end_date==dereg_dateA)
 replace end_date_flag = 2 if end_date==died_date_onsA
 replace end_date_flag = 3 if end_date==end_study
-gen hosp_covid_anyA = date(hosp_covid_any, "YMD")
-gen yr_hosp = year(hosp_covid_anyA)
-tab yr_hosp
-* Flag hospitalised with covid 
+replace died_date_onsA=. if end_date<died_date_onsA
+replace died_ons_covid_flag_any=0 if end_date<died_date_onsA & died_ons_covid_flag_any==1
+replace hosp_covid_anyA=. if end_date<hosp_covid_anyA
 gen hosp_any_flag = hosp_covid_anyA!=.
 
 * Composite outcome 
 gen hosp_died_composite = (died_ons_covid_flag_any==1 | hosp_any_flag==1)
 egen hosp_died_dateA = rowmin(died_date_onsA hosp_covid_anyA)
+replace hosp_died_dateA=. if hosp_died_composite==0
 
 * Check how composite is made up 
 tab died_ons_covid_flag_any hosp_any_flag
