@@ -216,15 +216,15 @@ gen hosp_pre = hosp_covid_anyA < date("01Mar2021", "DMY")
 replace hosp_pre = . if hosp_covid_anyA==.
 tab hosp_any_flag hosp_pre 
 
-gen composite_post = hosp_died_dateA >= date("01Mar2021", "DMY")
+gen composite_post = hosp_died_dateA >= date("01Mar2021", "DMY") & hosp_died_dateA!=.
 replace composite_post = . if hosp_died_dateA==.
 tab hosp_died composite_post 
 
-gen died_post = died_date_onsA >= date("01Mar2021", "DMY")
+gen died_post = died_date_onsA >= date("01Mar2021", "DMY") & died_date_onsA!=.
 replace died_post = . if died_date_onsA==. | died_ons_covid_flag_any==0
 tab died_ons_covid_flag_any died_post 
 
-gen hosp_post = hosp_covid_anyA >= date("01Mar2021", "DMY")
+gen hosp_post = hosp_covid_anyA >= date("01Mar2021", "DMY") & hosp_covid_anyA!=.
 replace hosp_post = . if hosp_covid_anyA==.
 tab hosp_any_flag hosp_post
 
