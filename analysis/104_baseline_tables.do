@@ -178,6 +178,8 @@ gen hosp_any_flag = hosp_covid_anyA!=.
 gen hosp_died = (died_ons_covid_flag_any==1 | hosp_any_flag==1)
 tab hosp_died
 egen hosp_died_dateA = rowmin(died_date_onsA hosp_covid_anyA)
+replace hosp_died_dateA=. if hosp_died==0
+sum hosp_died_dateA
 * Generate flag of how met composite outcome 
 di "Number where died before hospitalisation date - should be zero"
 count if died_date_onsA<hosp_covid_anyA & hosp_covid_anyA!=.
@@ -205,7 +207,7 @@ tab ethnicity hosp_any_flag
 * Number of outcomes within each time period: pre-vaccination of most population - prior to 1st March 2021 and after
 
 gen composite_pre = hosp_died_dateA < date("01Mar2021", "DMY")
-replace composite_pre = . if hosp_died_dateA==.
+replace composite_pre = . if hosp_died_dateA==. | died_ons_covid_flag_any==0
 tab hosp_died composite_pre 
 
 gen died_pre = died_date_onsA < date("01Mar2021", "DMY")

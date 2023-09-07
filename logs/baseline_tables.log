@@ -1025,6 +1025,15 @@ yr_dereg_da |
 . egen hosp_died_dateA = rowmin(died_date_onsA hosp_covid_anyA)
 (622 missing values generated)
 
+. replace hosp_died_dateA=. if hosp_died==0
+(176 real changes made, 176 to missing)
+
+. sum hosp_died_dateA
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+hosp_died_~A |        202    22414.28    287.1739      21977      23001
+
 . * Generate flag of how met composite outcome 
 . di "Number where died before hospitalisation date - should be zero"
 Number where died before hospitalisation date - should be zero
@@ -1143,18 +1152,17 @@ Hospitalised |         0         58 |        58
 . 
 . gen composite_pre = hosp_died_dateA < date("01Mar2021", "DMY")
 
-. replace composite_pre = . if hosp_died_dateA==.
-(622 real changes made, 622 to missing)
+. replace composite_pre = . if hosp_died_dateA==. | died_ons_covid_flag_any==0
+(847 real changes made, 847 to missing)
 
 . tab hosp_died composite_pre 
 
            |     composite_pre
  hosp_died |         0          1 |     Total
 -----------+----------------------+----------
-         0 |        99         77 |       176 
-         1 |       109         93 |       202 
+         1 |        81         72 |       153 
 -----------+----------------------+----------
-     Total |       208        170 |       378 
+     Total |        81         72 |       153 
 
 . 
 . gen died_pre = died_date_onsA < date("01Mar2021", "DMY")
@@ -1188,23 +1196,24 @@ hosp_any_f |       hosp_pre
      Total |        33         25 |        58 
 
 . 
-. gen composite_post = hosp_died_dateA >= date("01Mar2021", "DMY")
+. gen composite_post = hosp_died_dateA >= date("01Mar2021", "DMY") & hosp_died_
+> dateA!=.
 
 . replace composite_post = . if hosp_died_dateA==.
-(622 real changes made, 622 to missing)
+(798 real changes made, 798 to missing)
 
 . tab hosp_died composite_post 
 
            |    composite_post
  hosp_died |         0          1 |     Total
 -----------+----------------------+----------
-         0 |        77         99 |       176 
          1 |        93        109 |       202 
 -----------+----------------------+----------
-     Total |       170        208 |       378 
+     Total |        93        109 |       202 
 
 . 
-. gen died_post = died_date_onsA >= date("01Mar2021", "DMY")
+. gen died_post = died_date_onsA >= date("01Mar2021", "DMY") & died_date_onsA!=
+> .
 
 . replace died_post = . if died_date_onsA==. | died_ons_covid_flag_any==0
 (847 real changes made, 847 to missing)
@@ -1220,7 +1229,8 @@ ovid_flag_ |       died_post
      Total |        69         84 |       153 
 
 . 
-. gen hosp_post = hosp_covid_anyA >= date("01Mar2021", "DMY")
+. gen hosp_post = hosp_covid_anyA >= date("01Mar2021", "DMY") & hosp_covid_anyA
+> !=.
 
 . replace hosp_post = . if hosp_covid_anyA==.
 (942 real changes made, 942 to missing)
@@ -1252,13 +1262,13 @@ hosp_any_f |       hosp_post
   |-------------------------------------------------|
   | composite_make_up         760   240     0     0 |
   |-------------------------------------------------|
-  | composite_pre             292    86   468   154 |
+  | composite_pre             123    30   637   210 |
   |-------------------------------------------------|
   | died_pre                  123    30   637   210 |
   |-------------------------------------------------|
   | hosp_pre                   46    12   714   228 |
   |-------------------------------------------------|
-  | composite_post            292    86   468   154 |
+  | composite_post            161    41   599   199 |
   |-------------------------------------------------|
   | died_post                 123    30   637   210 |
   |-------------------------------------------------|
@@ -1296,7 +1306,7 @@ hosp_any_f |       hosp_post
 >   |
   |----------------------------------------------------------------------------
 > --|
-  | composite_pre                            125 (42.8%)   45 (52.3%)     0.12 
+  | composite_pre                            57 (46.3%)    15 (50.0%)     0.72 
 >   |
   |----------------------------------------------------------------------------
 > --|
@@ -1308,7 +1318,7 @@ hosp_any_f |       hosp_post
 >   |
   |----------------------------------------------------------------------------
 > --|
-  | composite_post                           167 (57.2%)   41 (47.7%)     0.12 
+  | composite_post                           88 (54.7%)    21 (51.2%)     0.69 
 >   |
   |----------------------------------------------------------------------------
 > --|
@@ -1369,7 +1379,7 @@ file ./output/tables/baseline_outcomes_rounded.csv saved
 . 
 end of do-file
 
-. . file open output using "/tmp/104_baseline_tables.do.mIOb.out", write text r
+. . file open output using "/tmp/104_baseline_tables.do.82Wg.out", write text r
 > eplace
 
 . . file write output "success" 
