@@ -207,7 +207,7 @@ tab ethnicity hosp_any_flag
 * Number of outcomes within each time period: pre-vaccination of most population - prior to 1st March 2021 and after
 
 gen composite_pre = hosp_died_dateA < date("01Mar2021", "DMY")
-replace composite_pre = . if hosp_died_dateA==. | died_ons_covid_flag_any==0
+replace composite_pre = 0 if hosp_died_dateA==. 
 tab hosp_died composite_pre 
 
 gen died_pre = died_date_onsA < date("01Mar2021", "DMY")
@@ -219,7 +219,7 @@ replace hosp_pre = . if hosp_covid_anyA==.
 tab hosp_any_flag hosp_pre 
 
 gen composite_post = hosp_died_dateA >= date("01Mar2021", "DMY") & hosp_died_dateA!=.
-replace composite_post = . if hosp_died_dateA==.
+replace composite_post = 0 if hosp_died_dateA==.
 tab hosp_died composite_post 
 
 gen died_post = died_date_onsA >= date("01Mar2021", "DMY") & died_date_onsA!=.

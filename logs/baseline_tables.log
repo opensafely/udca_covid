@@ -1152,17 +1152,18 @@ Hospitalised |         0         58 |        58
 . 
 . gen composite_pre = hosp_died_dateA < date("01Mar2021", "DMY")
 
-. replace composite_pre = . if hosp_died_dateA==. | died_ons_covid_flag_any==0
-(847 real changes made, 847 to missing)
+. replace composite_pre = 0 if hosp_died_dateA==. 
+(0 real changes made)
 
 . tab hosp_died composite_pre 
 
            |     composite_pre
  hosp_died |         0          1 |     Total
 -----------+----------------------+----------
-         1 |        81         72 |       153 
+         0 |       798          0 |       798 
+         1 |       109         93 |       202 
 -----------+----------------------+----------
-     Total |        81         72 |       153 
+     Total |       907         93 |     1,000 
 
 . 
 . gen died_pre = died_date_onsA < date("01Mar2021", "DMY")
@@ -1199,17 +1200,18 @@ hosp_any_f |       hosp_pre
 . gen composite_post = hosp_died_dateA >= date("01Mar2021", "DMY") & hosp_died_
 > dateA!=.
 
-. replace composite_post = . if hosp_died_dateA==.
-(798 real changes made, 798 to missing)
+. replace composite_post = 0 if hosp_died_dateA==.
+(0 real changes made)
 
 . tab hosp_died composite_post 
 
            |    composite_post
  hosp_died |         0          1 |     Total
 -----------+----------------------+----------
+         0 |       798          0 |       798 
          1 |        93        109 |       202 
 -----------+----------------------+----------
-     Total |        93        109 |       202 
+     Total |       891        109 |     1,000 
 
 . 
 . gen died_post = died_date_onsA >= date("01Mar2021", "DMY") & died_date_onsA!=
@@ -1262,13 +1264,13 @@ hosp_any_f |       hosp_post
   |-------------------------------------------------|
   | composite_make_up         760   240     0     0 |
   |-------------------------------------------------|
-  | composite_pre             123    30   637   210 |
+  | composite_pre             760   240     0     0 |
   |-------------------------------------------------|
   | died_pre                  123    30   637   210 |
   |-------------------------------------------------|
   | hosp_pre                   46    12   714   228 |
   |-------------------------------------------------|
-  | composite_post            161    41   599   199 |
+  | composite_post            760   240     0     0 |
   |-------------------------------------------------|
   | died_post                 123    30   637   210 |
   |-------------------------------------------------|
@@ -1306,7 +1308,7 @@ hosp_any_f |       hosp_post
 >   |
   |----------------------------------------------------------------------------
 > --|
-  | composite_pre                            57 (46.3%)    15 (50.0%)     0.72 
+  | composite_pre                            73 ( 9.6%)    20 ( 8.3%)     0.55 
 >   |
   |----------------------------------------------------------------------------
 > --|
@@ -1318,7 +1320,7 @@ hosp_any_f |       hosp_post
 >   |
   |----------------------------------------------------------------------------
 > --|
-  | composite_post                           88 (54.7%)    21 (51.2%)     0.69 
+  | composite_post                           88 (11.6%)    21 ( 8.8%)     0.22 
 >   |
   |----------------------------------------------------------------------------
 > --|
@@ -1379,7 +1381,7 @@ file ./output/tables/baseline_outcomes_rounded.csv saved
 . 
 end of do-file
 
-. . file open output using "/tmp/104_baseline_tables.do.82Wg.out", write text r
+. . file open output using "/tmp/104_baseline_tables.do.9mqg.out", write text r
 > eplace
 
 . . file write output "success" 
