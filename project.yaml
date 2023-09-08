@@ -5,6 +5,20 @@ expectations:
 
 actions:
 
+  generate_study_population_flowchart:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_flowchart
+    outputs:
+      highly_sensitive:
+        cohort: output/input_flowchart.csv
+
+  flowchart_data:
+    run: stata-mp:latest analysis/100_flowchart.do
+    needs: [generate_study_population_flowchart]
+    outputs:
+      moderately_sensitive:
+        log: logs/flowchart.log
+        table: output/flowchart/values.txt
+
   generate_study_population:
     run: cohortextractor:latest generate_cohort --study-definition study_definition
     outputs:
@@ -50,11 +64,42 @@ actions:
         log: logs/udca_descriptives.log
         summary: output/tables/udca_descriptives.txt
 
+  time_varying_prep:
+    run: stata-mp:latest analysis/103_time_varying_prep.do
+    needs: [generate_study_population_pbc, prep_drug_data]
+    outputs:
+      highly_sensitive:
+        datasets: output/tv*.dta
+        analysis: output/an_*.dta
+      moderately_sensitive:
+        log: logs/time_varying.log
+        
+
   baseline_tables:
-    run: stata-mp:latest analysis/103_baseline_tables.do
+    run: stata-mp:latest analysis/104_baseline_tables.do
     needs: [generate_study_population_pbc]
     outputs:
       moderately_sensitive:
         log: logs/baseline_tables.log
         chars: output/tables/baseline*.csv
         meds: output/tables/additional*.csv
+
+  analysis_plots:
+    run: stata-mp:latest analysis/105_analysis_plots.do
+    needs: [time_varying_prep]
+    outputs:
+      moderately_sensitive:
+        log: logs/analysis.log
+        chars: output/graphs/adjcurv*.svg
+        table: output/tables/cum_incidence.txt
+
+  analysis_models:
+    run: stata-mp:latest analysis/106_analysis_models.do
+    needs: [time_varying_prep]
+    outputs:
+      moderately_sensitive:
+        log: logs/analysis_models.log
+        tables: output/tables/cox*
+        graphs: output/graphs/schoenplot*.svg
+        km_plots: output/graphs/km*.svg
+        

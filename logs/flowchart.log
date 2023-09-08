@@ -1,0 +1,174 @@
+
+. 
+. import delimited using ./output/input_flowchart.csv, clear
+(12 vars, 1,000 obs)
+
+.  *  has_follow_up 
+.  * (NOT died) AND
+.  * (age >=18 AND age <= 110) AND
+.  * (sex = 'M' OR sex = 'F') AND
+.  * (imd != 0) AND
+.  * (has_pbc=1 OR has_psc=1) AND
+.  * (NOT liver_transplant_bl)
+. 
+. * Open file to write values to 
+. file open table using ./output/flowchart/values.txt, write text replace  
+(note: file ./output/flowchart/values.txt not found)
+
+. file write table ("Total start") _tab 
+
+. 
+. describe
+
+Contains data
+  obs:         1,000                          
+ vars:            12                          
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+has_pbc_date    int     %8.0g                 
+has_psc_date    int     %8.0g                 
+has_follow_up   byte    %8.0g                 
+died            byte    %8.0g                 
+age             int     %8.0g                 
+sex             str1    %9s                   
+has_msoa        byte    %8.0g                 
+imd             byte    %8.0g                 
+has_pbc         byte    %8.0g                 
+has_psc         byte    %8.0g                 
+liver_transpl~l byte    %8.0g                 
+patient_id      int     %8.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. 
+. safecount
+  1,000
+
+. file write table ("`r(N)'") _n ("Has follow-up") _tab 
+
+. safetab has_follow_up, m
+14
+
+has_follow_ |
+         up |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        950       95.00       95.00
+          1 |         50        5.00      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+. keep if has_follow_up
+(950 observations deleted)
+
+. safecount
+  50
+
+. file write table ("`r(N)'") _n ("Died") _tab 
+
+. safetab died, m
+5
+
+**TABLE OF died REDACTED DUE TO SMALL N**
+
+
+. keep if died!=1
+(3 observations deleted)
+
+. safecount
+  47
+
+. file write table ("`r(N)'") _n ("Age ineligible") _tab  
+
+. sum age
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |         47    39.08511    24.27544          1         85
+
+. keep if (age>=18 & age<=110)
+(10 observations deleted)
+
+. safecount
+  37
+
+. file write table ("`r(N)'") _n ("Missing/ineligible sex") _tab 
+
+. safetab sex, m
+4
+
+**TABLE OF sex REDACTED DUE TO SMALL N**
+
+
+. keep if (sex=="F" | sex=="M")
+(3 observations deleted)
+
+. safecount 
+  34
+
+. file write table ("`r(N)'") _n ("IMD missing") _tab 
+
+. safetab imd 
+0
+
+**TABLE OF imd REDACTED DUE TO SMALL N**
+
+
+. drop if imd==0
+(2 observations deleted)
+
+. safecount
+  32
+
+. file write table ("`r(N)'") _n ("No PBC or PSC") _tab 
+
+. gen pbc_psc = (has_pbc==1 | has_psc==1)
+
+. safetab pbc_psc, m
+8
+
+**TABLE OF pbc_psc REDACTED DUE TO SMALL N**
+
+
+. keep if pbc_psc
+(30 observations deleted)
+
+. safecount
+
+** COUNT <=5 **
+
+. file write table ("`r(N)'") _n ("Liver transplant prior to index") _tab
+
+. safetab liver_transplant_bl, m
+20
+
+**TABLE OF liver_transplant_bl REDACTED DUE TO SMALL N**
+
+
+. drop if liver_transplant_bl
+(0 observations deleted)
+
+. safecount
+
+** COUNT <=5 **
+
+. file write table ("`r(N)'") 
+
+. 
+. file close table 
+
+. 
+end of do-file
+
+. . file open output using "/tmp/100_flowchart.do.WU3i.out", write text replace
+
+. . file write output "success" 
+
+. . file close output
+
+. 
+end of do-file
+
+

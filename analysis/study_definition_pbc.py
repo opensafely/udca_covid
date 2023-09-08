@@ -12,10 +12,12 @@ study = StudyDefinition(
     population=patients.satisfying(
         """
         has_follow_up AND
-        (age >=18 AND age <= 110) AND
+        (age >=18 AND age <= 115) AND
         (NOT died) AND
         (sex = 'M' OR sex = 'F') AND
-        (has_pbc=1 OR has_psc=1)
+        (imd != 0) AND
+        (has_pbc=1 OR has_psc=1) AND
+        (NOT liver_transplant_bl)
         """,
         has_follow_up=patients.registered_with_one_practice_between(
             "index_date - 6 months", "index_date"
@@ -189,10 +191,43 @@ study = StudyDefinition(
         on_or_before = "index_date - 6 months"
     ),
 
+    liver_transplant_bl=patients.satisfying(
+      """
+      bl_liver_transplant_snomed OR
+      bl_liver_transplant_opcs
+      """,
+      bl_liver_transplant_snomed=patients.with_these_clinical_events(
+        liver_transplant_snomed_codes,
+        returning = "binary_flag",
+        on_or_before = "index_date",
+      ),
+      bl_liver_transplant_opcs=patients.admitted_to_hospital(
+        on_or_before = "index_date",
+        with_these_procedures = liver_transplant_opcs_codes,
+        returning = "binary_flag",
+      ),
+    ),
+
+    fu_liver_transplant_snomed=patients.with_these_clinical_events(
+      liver_transplant_snomed_codes,
+      returning = "date",
+      date_format = "YYYY-MM-DD",
+      on_or_after = "index_date",
+      find_first_match_in_period = "True",
+    ),
+    fu_liver_transplant_opcs=patients.admitted_to_hospital(
+      on_or_after = "index_date",
+      with_these_procedures = liver_transplant_opcs_codes,
+      returning = "date_admitted",
+      date_format = "YYYY-MM-DD",
+      find_first_match_in_period = "True",
+    ),
+    liver_transplant_fu_date=patients.minimum_of("fu_liver_transplant_snomed", "fu_liver_transplant_opcs"),
+
     #Ursodeoxycholic acid 
     udca_count_bl=patients.with_these_medications(
         udca_codes, 
-        between=["2019-09-01", "2020-02-29"],
+        between=["2019-11-02", "2020-03-01"],
         returning="number_of_matches_in_period",
         return_expectations={
             "int": {"distribution": "normal", "mean": 3, "stddev": 2},
@@ -202,7 +237,7 @@ study = StudyDefinition(
 
      udca_last_date=patients.with_these_medications(
         udca_codes, 
-        between=["2019-09-01", "2020-02-29"], 
+        between=["2019-11-01", "2020-02-29"], 
         return_last_date_in_period=True,
         date_format="YYYY-MM-DD",
         return_expectations={
@@ -319,7 +354,7 @@ study = StudyDefinition(
     ),
 
     # COVID vaccination
-    covid_vacc_date=patients.with_tpp_vaccination_record(
+    covid_vacc_first_date=patients.with_tpp_vaccination_record(
         target_disease_matches="SARS-2 CORONAVIRUS",
         on_or_after="2020-12-01",  # check all december to date
         find_first_match_in_period=True,
@@ -333,6 +368,62 @@ study = StudyDefinition(
             "incidence": 0.9,
         },
     ),
+
+     # SECOND DOSE COVID VACCINATION
+    covid_vacc_second_date=patients.with_tpp_vaccination_record(
+        target_disease_matches="SARS-2 CORONAVIRUS",
+        on_or_after="covid_vacc_first_date + 1 day",
+        find_first_match_in_period=True,
+        returning="date",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {
+                "earliest": "2020-12-29",  # first reported second dose administered on the 29/12
+                "latest": "2022-12-31",
+            },
+            "incidence": 0.8,
+        },
+    ),
+    # BOOSTER (3rd) DOSE COVID VACCINATION
+    ## Booster dose scehdule is 6 months from 2nd dose. However, for now, we will use an 8 week interval,
+    ## to ensure that anyone having a third dose within the primary course (immunosuppressed, from 1st Sept)
+    ## are not shown as due/missing a booster dose.
+    ## however those with third doses will also eventually become eligible for booster so this may need to be revisited
+    covid_vacc_third_date=patients.with_tpp_vaccination_record(
+        target_disease_matches="SARS-2 CORONAVIRUS",
+        on_or_after="covid_vacc_second_date + 1 day",
+        find_first_match_in_period=True,
+        returning="date",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+            "date": {
+                "earliest": "2021-09-24",  # first booster dose recorded
+                "latest": "2022-12-31",
+            },
+            "incidence": 0.1,
+        },
+    ),
+
+    # Date of fourth COVID vaccination (booster)
+    # 1st booster for immunosuppressed individuals who recieved a 3-dose primary series or 2nd booster during spring 2022 campaign
+    # recommended at interval of 3 months
+    covid_vacc_fourth_date=patients.with_tpp_vaccination_record(
+        target_disease_matches="SARS-2 CORONAVIRUS",
+        on_or_after=" covid_vacc_third_date + 1 day", # from day after previous dose
+        find_first_match_in_period=True,
+        returning="date",
+        date_format="YYYY-MM-DD"
+    ),
+    
+    # Date of fifth COVID vaccination (extended primary series + two boosters)
+    covid_vacc_fifth_date=patients.with_tpp_vaccination_record(
+        target_disease_matches="SARS-2 CORONAVIRUS",
+        on_or_after="covid_vacc_fourth_date + 1 day", # from day after previous dose
+        find_first_match_in_period=True,
+        returning="date",
+        date_format="YYYY-MM-DD"
+    ),
+
 
     # Disease severity
     # Snomed codelist to be updated - awaiting tech support
