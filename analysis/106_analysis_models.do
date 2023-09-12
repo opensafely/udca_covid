@@ -410,7 +410,7 @@ file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator"
 
 * Cox models and Schoenfeld residual plots for each outcome
 foreach outcome in died_covid_any hosp_any composite_any {
-    use ./output/an_dataset_120_`outcome', clear 
+    use ./output/an_dataset_`outcome', clear 
     * Open file to write results
     describe
     gen index_date = date("01/03/2020", "DMY")
@@ -540,7 +540,7 @@ file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator"
 
 * Cox models and Schoenfeld residual plots for each outcome
 foreach outcome in died_covid_any hosp_any composite_any {
-    use ./output/an_dataset_120_`outcome', clear 
+    use ./output/an_dataset_`outcome', clear 
     * Open file to write results
     describe
     gen index_date = date("01/03/2020", "DMY")
@@ -671,7 +671,7 @@ file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator"
 
 * Cox models and Schoenfeld residual plots for each outcome
 foreach outcome in died_covid_any hosp_any composite_any {
-    use ./output/an_dataset_120_`outcome', clear 
+    use ./output/an_dataset_`outcome', clear 
     * Open file to write results
     describe
     gen index_date = date("01/03/2020", "DMY")
@@ -803,7 +803,7 @@ file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator"
 
 * Cox models and Schoenfeld residual plots for each outcome
 foreach outcome in died_covid_any hosp_any composite_any {
-    use ./output/an_dataset_120_`outcome', clear 
+    use ./output/an_dataset_120_vacc_`outcome', clear 
     * Open file to write results
     describe
     gen index_date = date("01/03/2020", "DMY")
