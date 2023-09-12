@@ -80,7 +80,12 @@ tab total_vaccs
 
 gen severe_disease_fu = severe_disease_fu_date!=""
 
-
+* Time from most recent vaccination on 1st March 2021
+gen date_most_recent_cov_vacA = date(date_most_recent_cov_vac, "YMD")
+gen time_vacc = date("01Mar2021", "DMY") - date_most_recent_cov_vacA
+sum time_vacc, d
+xtile time_vacc_cat = time_vacc, nq(4)
+bys time_vacc_cat: sum time_vacc 
 
 * Create tables 
 * Characteristics whole cohort
@@ -134,7 +139,7 @@ restore
 
 * Additional medications by any exposure
 preserve 
-table1_mc, vars(budesonide_bl bin \ fenofibrate_bl bin \ gc_bl bin \ oca_bl bin \ rituximab_bl bin \ severe_disease_fu bin \ vacc_any bin  \ total_vaccs cat) by(udca_bl) clear
+table1_mc, vars(budesonide_bl bin \ fenofibrate_bl bin \ gc_bl bin \ oca_bl bin \ rituximab_bl bin \ severe_disease_fu bin \ vacc_any bin  \ total_vaccs cat \ time_vacc_cat cat) by(udca_bl) clear
 export delimited using ./output/tables/additional_meds_udca.csv, replace
 * Rounding numbers in table to nearest 5
 forvalues i=0/1 {   
@@ -230,9 +235,17 @@ gen hosp_post = hosp_covid_anyA >= date("01Mar2021", "DMY") & hosp_covid_anyA!=.
 replace hosp_post = . if hosp_covid_anyA==.
 tab hosp_any_flag hosp_post
 
+* Exploring death by liver disease 
+gen died_liver_any = died_ons_liver_flag_any==1 & died_ons_covid_flag_any!=1
+gen died_liver_underlying = died_ons_liver_flag_underlying==1 & died_ons_covid_flag_any!=1
+
+* Check 
+count if died_liver_any==1 & died_ons_covid_flag_any==1
+count if died_liver_underlying==1 & died_ons_covid_flag_any==1
+
 * Outcomes by baseline exposure stataus
 table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \ hosp_died bin \ composite_make_up cat \ composite_pre bin \ ///
-died_pre bin \ hosp_pre bin \ composite_post bin \ died_post bin \ hosp_post bin) clear
+died_pre bin \ hosp_pre bin \ composite_post bin \ died_post bin \ hosp_post bin \ died_liver_any bin \ died_liver_underlying bin) clear
 export delimited using ./output/tables/baseline_outcomes.csv
 forvalues i=0/1 {   
     destring _columna_`i', gen(n`i') ignore(",") force

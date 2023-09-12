@@ -355,3 +355,9 @@ huntingtons_disease_nhsd_icd10_codes = codelist_from_csv(
   system = "icd10",
   column = "code",
 )  
+
+liver_death_codes = codelist_from_csv(
+  "codelists/user-ruthcostello-liver_chapter_plus.csv",
+  system = "icd10",
+  column = "code",
+)

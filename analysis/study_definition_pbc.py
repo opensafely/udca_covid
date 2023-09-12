@@ -424,6 +424,17 @@ study = StudyDefinition(
         date_format="YYYY-MM-DD"
     ),
 
+    # Date of most recent vaccination before 1st March 2021
+    date_most_recent_cov_vac=patients.with_tpp_vaccination_record(
+        target_disease_matches="SARS-2 CORONAVIRUS",
+        on_or_before="2021-02-28",
+        find_last_match_in_period=True,
+        returning="date",
+        date_format="YYYY-MM-DD",
+        return_expectations={
+          "date": {"earliest":  "2020-12-01",  "latest": "2022-12-31"},
+        },
+      ),
 
     # Disease severity
     # Snomed codelist to be updated - awaiting tech support
@@ -894,57 +905,73 @@ study = StudyDefinition(
   ),
   
   huntingtons_disease_nhsd = patients.maximum_of("huntingtons_disease_nhsd_snomed", "huntingtons_disease_nhsd_icd10"),
-    
-    #OUTCOMES
-    hosp_covid_primary=patients.admitted_to_hospital(
-        returning = "date_admitted",
-        with_these_primary_diagnoses = covid_identification,
-        with_patient_classification = ["1"], # ordinary admissions only - exclude day cases and regular attenders
-        # see https://docs.opensafely.org/study-def-variables/#sus for more info
-        # with_admission_method=["21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"], # emergency admissions only to exclude incidental COVID
-        on_or_after="2020-03-01",
-        find_first_match_in_period = True,
-        date_format = "YYYY-MM-DD",
-        return_expectations = {
-        "date": {"earliest": "2020-03-01"},
-        "rate": "uniform",
-        "incidence": 0.1
-        },
-    ),
-    hosp_covid_any=patients.admitted_to_hospital(
-        returning = "date_admitted",
-        with_these_diagnoses = covid_identification,
-        with_patient_classification = ["1"], # ordinary admissions only - exclude day cases and regular attenders
-        # see https://docs.opensafely.org/study-def-variables/#sus for more info
-        # with_admission_method=["21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"], # emergency admissions only to exclude incidental COVID
-        on_or_after="2020-03-01",
-        find_first_match_in_period = True,
-        date_format = "YYYY-MM-DD",
-        return_expectations = {
-        "date": {"earliest": "2020-03-01"},
-        "rate": "uniform",
-        "incidence": 0.1
-        },
-    ),
-    died_ons_covid_flag_any=patients.with_these_codes_on_death_certificate(
-        covid_identification,
+
+  # Flagging if died due to liver disease
+  died_ons_liver_flag_any=patients.with_these_codes_on_death_certificate(
+        liver_death_codes,
         on_or_after="2020-03-01",
         match_only_underlying_cause=False,
         returning="binary_flag",
         return_expectations={"date": {"earliest": "2020-03-01"}},
     ),
-    died_ons_covid_flag_underlying=patients.with_these_codes_on_death_certificate(
-        covid_identification,
+  died_ons_liver_flag_underlying=patients.with_these_codes_on_death_certificate(
+        liver_death_codes,
         on_or_after="2020-03-01",
         match_only_underlying_cause=True,
         returning="binary_flag",
         return_expectations={"date": {"earliest": "2020-03-01"}},
     ),
-    died_date_ons=patients.died_from_any_cause(
-        on_or_after="2020-03-01",
-        returning="date_of_death",
-        date_format="YYYY-MM-DD",
-        return_expectations={"date": {"earliest": "2020-03-01"}},
-    ),
+
+  #OUTCOMES
+  hosp_covid_primary=patients.admitted_to_hospital(
+      returning = "date_admitted",
+      with_these_primary_diagnoses = covid_identification,
+      with_patient_classification = ["1"], # ordinary admissions only - exclude day cases and regular attenders
+      # see https://docs.opensafely.org/study-def-variables/#sus for more info
+      # with_admission_method=["21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"], # emergency admissions only to exclude incidental COVID
+      on_or_after="2020-03-01",
+      find_first_match_in_period = True,
+      date_format = "YYYY-MM-DD",
+      return_expectations = {
+      "date": {"earliest": "2020-03-01"},
+      "rate": "uniform",
+      "incidence": 0.1
+      },
+  ),
+  hosp_covid_any=patients.admitted_to_hospital(
+      returning = "date_admitted",
+      with_these_diagnoses = covid_identification,
+      with_patient_classification = ["1"], # ordinary admissions only - exclude day cases and regular attenders
+      # see https://docs.opensafely.org/study-def-variables/#sus for more info
+      # with_admission_method=["21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"], # emergency admissions only to exclude incidental COVID
+      on_or_after="2020-03-01",
+      find_first_match_in_period = True,
+      date_format = "YYYY-MM-DD",
+      return_expectations = {
+      "date": {"earliest": "2020-03-01"},
+      "rate": "uniform",
+      "incidence": 0.1
+      },
+  ),
+  died_ons_covid_flag_any=patients.with_these_codes_on_death_certificate(
+      covid_identification,
+      on_or_after="2020-03-01",
+      match_only_underlying_cause=False,
+      returning="binary_flag",
+      return_expectations={"date": {"earliest": "2020-03-01"}},
+  ),
+  died_ons_covid_flag_underlying=patients.with_these_codes_on_death_certificate(
+      covid_identification,
+      on_or_after="2020-03-01",
+      match_only_underlying_cause=True,
+      returning="binary_flag",
+      return_expectations={"date": {"earliest": "2020-03-01"}},
+  ),
+  died_date_ons=patients.died_from_any_cause(
+      on_or_after="2020-03-01",
+      returning="date_of_death",
+      date_format="YYYY-MM-DD",
+      return_expectations={"date": {"earliest": "2020-03-01"}},
+  ),
     
 )   

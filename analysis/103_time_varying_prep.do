@@ -451,7 +451,14 @@ gen solid_organ_transplant_bin = solid_organ_transplant_nhsd_new!=""
 gen any_high_risk_condition = max(learning_disability_nhsd_snomed, cancer_opensafely_snomed_new, haematological_disease_nhsd, ///
 ckd_stage_5_nhsd, imid_nhsd, immunosupression_nhsd_new, hiv_aids_nhsd, solid_organ_transplant_bin, rare_neuro_nhsd)
 
-keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smoking eth_bin
+* Time from most recent vaccination on 1st March 2021
+gen date_most_recent_cov_vacA = date(date_most_recent_cov_vac, "YMD")
+gen time_vacc = date("01Mar2021", "DMY") - date_most_recent_cov_vacA
+sum time_vacc, d
+xtile time_vacc_cat = time_vacc, nq(4)
+bys time_vacc_cat: sum time_vacc 
+
+keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smoking eth_bin time_vacc_cat 
 tempfile basefile
 save `basefile'
 foreach var in died_covid_any hosp_any composite_any {
@@ -880,6 +887,209 @@ foreach var in died_covid_any hosp_any composite_any {
     merge 1:m patient_id using ./output/tv_vars_overlap_120_`var' 
     drop _merge 
     save ./output/an_dataset_overlap_120_`var', replace
+    restore
+}
+
+*** vaccination file: sensitivity analysis 
+** Creating file where count of vaccinations updates over time
+use ./output/time_varying_udca_120, clear 
+codebook patient_id
+merge m:1 patient_id using `tempfile', keepusing(covid_vacc* dereg_date died_date_ons)
+* Should only be required for dummy data 
+keep if _merge==3
+* Only using start date as this is when udca exposure or 6 monthly check occurs
+drop stop
+* Add in rows with each of the 6 monthly assessment dates 
+gen expand=1
+bys patient_id (start): replace expand=6 if _n==_N 
+expand expand, generate(newv)
+bys patient_id newv: gen number = _n 
+replace start = date("01/09/2020", "DMY") if newv==1 & number==1
+replace start = date("01/03/2021", "DMY") if newv==1 & number==2
+replace start = date("01/09/2021", "DMY") if newv==1 & number==3
+replace start = date("01/03/2022", "DMY") if newv==1 & number==4
+replace start = date("01/09/2022", "DMY") if newv==1 & number==5
+
+* This gives a file where start dates are either exposure switching or 6-montly assessment dates 
+* These will be used to determine the closest date to time-varying covariate dates identified in study definition 
+sort patient_id start 
+drop newv
+
+* Determine end of follow-up date
+gen dereg_dateA = date(dereg_date, "YMD")
+format %dD/N/CY dereg_dateA
+drop dereg_date
+gen died_dateA = date(died_date_ons, "YMD")
+format %dD/N/CY died_dateA
+drop died_date_ons
+gen end_study = date("31/12/2022", "DMY")
+egen end_date = rowmin(dereg_dateA end_study died_dateA)
+
+* Take out assessments after end_date 
+drop if start>end_date
+
+* Determine number of days between each covariate and dates of UDCA change or 6 monthly check date 
+bys patient_id (start): egen last_assess = max(start)
+* Format dates  and identify date nearest after covariate updates 
+foreach var in covid_vacc_first_date covid_vacc_second_date covid_vacc_third_date covid_vacc_fourth_date covid_vacc_fifth_date {
+    gen `var'A = date(`var', "YMD")
+    format `var'A %dD/N/CY 
+    drop `var'
+    * time between date of record and change in covariate - positive values are those where record starts after 
+    * covariate change date 
+    gen time_`var' = start - `var'A
+    * Set time variable for records prior to change as missing
+    replace time_`var'=. if time_`var'<0
+    * Check if any are on index date (1st March) potentially severe disease - not others
+    di "Number where time-varying update same as assessment date"
+    count if time_`var'==0
+    di "Number where time-varying update is 1st March 2020"
+    count if `var'A==date("01/03/2020", "DMY")
+    * Find earliest start date after covariate update
+    * Note: there are some changes that occur after the last available 6 month assessment or exposure change
+    bys patient_id (time_`var'): gen `var'_updateN = start[1] if `var'A!=. & time_`var'!=.
+    * Spread to all rows for patient 
+    bys patient_id: egen `var'_update = max(`var'_updateN)
+    format `var'_update %dD/N/CY 
+    di "Number where new variable is prior to original variable (should be 0)"
+    count if `var'_update < `var'A
+    di "Number where time varying update is after last assessment date"
+    count if `var'A > last_assess & `var'A!=.  & last_assess==start
+    di "Number of time-varying changes originally" 
+    * Using last_assess==start to count patients rather than rows
+    count if `var'A!=. & last_assess==start 
+    di "Number of dates for time-varying update"
+    count if `var'_update!=. & last_assess==start & `var'A!=.
+}
+
+* Keep only change dates to create time-varying dataset
+keep patient_id covid_vacc_first_date_update covid_vacc_second_date_update covid_vacc_third_date_update covid_vacc_fourth_date_update covid_vacc_fifth_date_update end_date
+* Chercking number of patient_id's 
+codebook patient_id
+duplicates drop 
+codebook patient_id
+count
+* Create dataset where rows are updated when person is vaccinated/re-vaccinated  
+foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth {
+    count if `var'_date_update>=end_date 
+    replace `var'_date_update = . if `var'_date>=end_date 
+    * Create flag for each vaccination date 
+    gen `var'_flag = (`var'_date_update!=.)
+}
+* Check not date where prior vaccination is missing 
+count if covid_vacc_first_flag==0 & covid_vacc_second_flag==1
+count if covid_vacc_second_flag==0 & covid_vacc_third_flag==1
+count if covid_vacc_third_flag==0 & covid_vacc_fourth_flag==1
+count if covid_vacc_fourth_flag==0 & covid_vacc_fifth_flag==1
+
+* Determine total number of vaccinations 
+egen total_vaccs = rowtotal(covid_vacc_first_flag covid_vacc_second_flag covid_vacc_third_flag covid_vacc_fourth_flag covid_vacc_fifth_flag)
+tab total_vaccs
+* Create time varying vaccination count variable 
+gen vacc_count_tv = 0
+* expand row up to total number of vaccinations 
+gen expand = total_vaccs + 1
+tab expand 
+expand expand, gen(newv)
+bys patient_id newv: gen number = _n 
+* Update variables so row for when zero and row for each vaccination - if not updated whole time will be zero 
+gen start = date("01/03/2020", "DMY") if newv==0
+replace start = covid_vacc_first_date_update if newv==1 & number == 1
+gen stop = covid_vacc_first_date_update if newv==0 & covid_vacc_first_date_update!=.
+replace stop = end_date if stop==. & expand==1
+replace stop = covid_vacc_second_date_update if newv==1 & number==1
+replace vacc_count_tv = 1 if newv==1 & number==1
+* Second vaccination 
+replace start = covid_vacc_second_date_update if newv==1 & number == 2
+replace stop = covid_vacc_third_date_update if newv==1 & number==2 & covid_vacc_third_date_update!=.
+replace stop = end_date if newv==1 & number==2 & covid_vacc_third_date_update==.
+replace vacc_count_tv = 2 if newv==1 & number==2
+* Third vaccination 
+replace start = covid_vacc_third_date_update if newv==1 & number == 3
+replace stop = covid_vacc_fourth_date_update if newv==1 & number==3 & covid_vacc_fourth_date_update!=.
+replace stop = end_date if newv==1 & number==3 & covid_vacc_fourth_date_update==.
+replace vacc_count_tv = 3 if newv==1 & number==3
+* Fourth vaccination 
+replace start = covid_vacc_fourth_date_update if newv==1 & number == 4
+replace stop = covid_vacc_fifth_date_update if newv==1 & number==4 & covid_vacc_fifth_date_update!=.
+replace stop = end_date if newv==1 & number==4 & covid_vacc_fifth_date_update==.
+replace vacc_count_tv = 4 if newv==1 & number==4
+* Fifth vaccination 
+replace start = covid_vacc_fifth_date_update if newv==1 & number == 5
+replace stop = end_date if newv==1 & number==5
+replace vacc_count_tv = 5 if newv==1 & number==5
+save ./output/tv_120_total_vaccs_check, replace
+keep patient_id vacc_count_tv start stop
+* Check data 
+count if start==stop 
+* drop where start is same as stop - should not drop any in real data 
+drop if start==stop 
+count if stop<start
+codebook patient_id
+save ./output/tv_120_total_vaccs, replace
+
+
+* Merge files together for each outcome
+* Composite  
+use ./output/tv_severe_disease, clear 
+tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
+tvc_merge start stop using ./output/tv_120_total_vaccs, id(patient_id)
+tvc_merge start stop using ./output/tv_liver_trans, id(patient_id)
+tvc_merge start stop using ./output/time_varying_udca_120, id(patient_id)
+tvc_merge start stop using ./output/tv_age, id(patient_id)
+tvc_merge start stop using ./output/tv_outcome_composite_any, id(patient_id) failure(composite_any_flag)
+* Dummy drug data includes people not in cohort, so drop these - should not be any in real data 
+drop if age_tv==.
+codebook patient_id
+* Check number of outcomes after merge  - there will be missings for rows after event
+tab composite_any_flag, m
+missings report
+drop if composite_any_flag==.
+save ./output/tv_vars_120_vacc_composite_any, replace 
+
+* COVID death - covid code in any position
+use ./output/tv_severe_disease, clear 
+tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
+tvc_merge start stop using ./output/tv_120_total_vaccs, id(patient_id)
+tvc_merge start stop using ./output/tv_liver_trans, id(patient_id)
+tvc_merge start stop using ./output/time_varying_udca_120, id(patient_id)
+tvc_merge start stop using ./output/tv_age, id(patient_id)
+tvc_merge start stop using ./output/tv_outcome_died_covid_any, id(patient_id) failure(died_covid_any_flag)
+* Dummy drug data includes people not in cohort, so drop these - should not be any in real data 
+drop if age_tv==.
+codebook patient_id
+* Check number of outcomes after merge 
+tab died_covid_any_flag, m
+missings report
+save ./output/tv_vars_120_vacc_died_covid_any, replace 
+
+* COVID hospitalisation - covid code in any position
+use ./output/tv_severe_disease, clear 
+tvc_merge start stop using ./output/tv_covid_vacc_first, id(patient_id)
+tvc_merge start stop using ./output/tv_120_total_vaccs, id(patient_id)
+tvc_merge start stop using ./output/tv_liver_trans, id(patient_id)
+tvc_merge start stop using ./output/time_varying_udca_120, id(patient_id)
+tvc_merge start stop using ./output/tv_age, id(patient_id)
+tvc_merge start stop using ./output/tv_outcome_hosp_any, id(patient_id) failure(hosp_any_flag)
+* Check number of outcomes after merge 
+tab hosp_any_flag, m
+bys patient_id: egen total_hosp = total(hosp_any_flag)
+tab total_hosp
+* Dummy drug data includes people not in cohort, so drop these - should not be any in real data 
+drop if age_tv==.
+codebook patient_id
+* Check number of outcomes after merge - there will be missings for rows after event
+tab hosp_any_flag, m 
+missings report
+drop if hosp_any_flag==.
+save ./output/tv_vars_120_vacc_hosp_any, replace 
+
+use `basefile', clear
+foreach var in died_covid_any hosp_any composite_any {
+    preserve 
+    merge 1:m patient_id using ./output/tv_vars_120_vacc_`var' 
+    drop _merge 
+    save ./output/an_dataset_120_vacc_`var', replace
     restore
 }
 

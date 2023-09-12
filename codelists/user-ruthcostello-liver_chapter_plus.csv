@@ -1,0 +1,72 @@
+code,term
+C22,Malignant neoplasm of liver and intrahepatic bile ducts
+C220,Malignant neoplasm: Liver cell carcinoma
+C221,Malignant neoplasm: Intrahepatic bile duct carcinoma
+C222,Malignant neoplasm: Hepatoblastoma
+C223,Malignant neoplasm: Angiosarcoma of liver
+C224,Malignant neoplasm: Other sarcomas of liver
+C227,Malignant neoplasm: Other specified carcinomas of liver
+C229,"Malignant neoplasm: Liver, unspecified"
+G943,Encephalopathy in diseases classified elsewhere
+I850,Oesophageal varices with bleeding
+I983,Oesophageal varices with bleeding in diseases classified elsewhere
+K70,Alcoholic liver disease
+K70-K77,Diseases of liver
+K700,Alcoholic fatty liver
+K701,Alcoholic hepatitis
+K702,Alcoholic fibrosis and sclerosis of liver
+K703,Alcoholic cirrhosis of liver
+K704,Alcoholic hepatic failure
+K709,"Alcoholic liver disease, unspecified"
+K71,Toxic liver disease
+K710,Toxic liver disease with cholestasis
+K711,Toxic liver disease with hepatic necrosis
+K712,Toxic liver disease with acute hepatitis
+K713,Toxic liver disease with chronic persistent hepatitis
+K714,Toxic liver disease with chronic lobular hepatitis
+K715,Toxic liver disease with chronic active hepatitis
+K716,"Toxic liver disease with hepatitis, not elsewhere classified"
+K717,Toxic liver disease with fibrosis and cirrhosis of liver
+K718,Toxic liver disease with other disorders of liver
+K719,"Toxic liver disease, unspecified"
+K72,"Hepatic failure, not elsewhere classified"
+K720,Acute and subacute hepatic failure
+K721,Chronic hepatic failure
+K729,"Hepatic failure, unspecified"
+K73,"Chronic hepatitis, not elsewhere classified"
+K730,"Chronic persistent hepatitis, not elsewhere classified"
+K731,"Chronic lobular hepatitis, not elsewhere classified"
+K732,"Chronic active hepatitis, not elsewhere classified"
+K738,"Other chronic hepatitis, not elsewhere classified"
+K739,"Chronic hepatitis, unspecified"
+K74,Fibrosis and cirrhosis of liver
+K740,Hepatic fibrosis
+K741,Hepatic sclerosis
+K742,Hepatic fibrosis with hepatic sclerosis
+K743,Primary biliary cirrhosis
+K744,Secondary biliary cirrhosis
+K745,"Biliary cirrhosis, unspecified"
+K746,Other and unspecified cirrhosis of liver
+K75,Other inflammatory liver diseases
+K750,Abscess of liver
+K751,Phlebitis of portal vein
+K752,Nonspecific reactive hepatitis
+K753,"Granulomatous hepatitis, not elsewhere classified"
+K754,Autoimmune hepatitis
+K758,Other specified inflammatory liver diseases
+K759,"Inflammatory liver disease, unspecified"
+K76,Other diseases of liver
+K760,"Fatty (change of) liver, not elsewhere classified"
+K761,Chronic passive congestion of liver
+K762,Central haemorrhagic necrosis of liver
+K763,Infarction of liver
+K764,Peliosis hepatis
+K765,Hepatic veno-occlusive disease
+K766,Portal hypertension
+K767,Hepatorenal syndrome
+K768,Other specified diseases of liver
+K769,"Liver disease, unspecified"
+K77,Liver disorders in diseases classified elsewhere
+K770,Liver disorders in infectious and parasitic diseases classified elsewhere
+K778,Liver disorders in other diseases classified elsewhere
+R18,Ascites
