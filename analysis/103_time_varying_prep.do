@@ -458,7 +458,7 @@ sum time_vacc, d
 xtile time_vacc_cat = time_vacc, nq(4)
 bys time_vacc_cat: sum time_vacc 
 
-keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smoking eth_bin time_vacc_cat has_pbc
+keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smoking eth_bin time_vacc_cat has_pbc oca_bl
 tempfile basefile
 save `basefile'
 foreach var in died_covid_any hosp_any composite_any {
