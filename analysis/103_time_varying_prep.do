@@ -415,9 +415,11 @@ label values ethnicity eth5
 safetab ethnicity, m
 * Create White vs non-White ethnicity variable
 gen eth_bin = (ethnicity!=1)
+replace eth_bin = 2 if ethnicity==6
+label define eth_3 0 "White" 1 "Non-White" 2 "Unknown"
+label values eth_bin eth_3
 tab eth_bin ethnicity, m 
-label define eth2 0 "White" 1 "Non-White"
-label values eth_bin eth2 
+
 
 * IMD - should not be missing (i.e. 0) in real data
 replace imd=6 if imd==0
