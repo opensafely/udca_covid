@@ -1479,7 +1479,7 @@ file ./output/tv_vars_hosp_any.dta saved
 
 Contains data from /tmp/St00015.000001
   obs:         1,000                          
- vars:           109                          13 Sep 2023 10:42
+ vars:           109                          14 Sep 2023 14:16
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -1646,13 +1646,21 @@ Sorted by:
 . * Create White vs non-White ethnicity variable
 . gen eth_bin = (ethnicity!=1)
 
+. replace eth_bin = 2 if ethnicity==6
+(55 real changes made)
+
+. label define eth_3 0 "White" 1 "Non-White" 2 "Unknown"
+
+. label values eth_bin eth_3
+
 . tab eth_bin ethnicity, m 
 
            |                       ethnicity
    eth_bin |     White      Mixed      Asian      Black      Other |     Total
 -----------+-------------------------------------------------------+----------
-         0 |       137          0          0          0          0 |       137 
-         1 |         0        206        225        177        200 |       863 
+     White |       137          0          0          0          0 |       137 
+ Non-White |         0        206        225        177        200 |       808 
+   Unknown |         0          0          0          0          0 |        55 
 -----------+-------------------------------------------------------+----------
      Total |       137        206        225        177        200 |     1,000 
 
@@ -1660,15 +1668,13 @@ Sorted by:
            | ethnicity
    eth_bin |   Unknown |     Total
 -----------+-----------+----------
-         0 |         0 |       137 
-         1 |        55 |       863 
+     White |         0 |       137 
+ Non-White |         0 |       808 
+   Unknown |        55 |        55 
 -----------+-----------+----------
      Total |        55 |     1,000 
 
-. label define eth2 0 "White" 1 "Non-White"
-
-. label values eth_bin eth2 
-
+. 
 . 
 . * IMD - should not be missing (i.e. 0) in real data
 . replace imd=6 if imd==0
@@ -1879,7 +1885,7 @@ Current smoker |        731       73.10       84.50
 
 . 
 . keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smokin
-> g eth_bin time_vacc_cat has_pbc
+> g eth_bin time_vacc_cat has_pbc oca_bl
 
 . tempfile basefile
 
@@ -4197,5 +4203,5 @@ file ./output/an_dataset_120_vacc_composite_any.dta saved
       name:  <unnamed>
        log:  /workspace/logs/time_varying.log
   log type:  text
- closed on:  13 Sep 2023, 10:43:59
+ closed on:  14 Sep 2023, 14:18:06
 -------------------------------------------------------------------------------
