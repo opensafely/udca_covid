@@ -808,6 +808,13 @@ foreach outcome in died_covid_any hosp_any composite_any {
     describe
     gen index_date = date("01/03/2020", "DMY")
     gen enter_date = date("01/03/2021", "DMY")
+    * Flag records where outcome or end_date prior to 1st March 2021
+    bys patient_id: egen end_date = max(stop) 
+    gen not_inc = (stop < enter_date & `outcome'==1)
+    replace not_inc = 1 if end_date < enter_date
+    * Spread to all rows 
+    bys patient_id: egen not_inc_flag = max(not_inc) 
+    codebook patient_id if not_inc_flag==1
     stset stop, fail(`outcome'_flag) id(patient_id) enter(enter_date) origin(index_date)
     count if `outcome'_flag==1
     if r(N) > 10 {
@@ -868,14 +875,14 @@ foreach outcome in died_covid_any hosp_any composite_any {
         tab number 
         * Count number unexposed at any time 
         bys patient_id : egen unexposed_ever = min(udca) 
-        tab unexposed_ever if number==1
-        safecount if unexposed_ever==0 & number==1
+        tab unexposed_ever if number==1 & not_inc_flag==0
+        safecount if unexposed_ever==0 & number==1 & not_inc_flag==0
         local denominator = r(N)
-        safecount if udca == 0 & `outcome'_flag == 1
+        safecount if udca == 0 & `outcome'_flag == 1 & not_inc_flag==0
         local event = r(N)
         di "no udca events = " `event'
-        bysort udca: egen total_follow_up = total(_t) if number==1
-        su total_follow_up if udca==0 & number==1
+        bysort udca: egen total_follow_up = total(_t) if number==1 & not_inc_flag==0
+        su total_follow_up if udca==0 & number==1 & not_inc_flag==0
         local person_mth = r(mean)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
@@ -891,12 +898,12 @@ foreach outcome in died_covid_any hosp_any composite_any {
         * Count number exposed at any time 
         bys patient_id : egen exposed_ever = max(udca) 
         tab exposed_ever if number==1
-        qui safecount if exposed_ever==1 & number==1
+        qui safecount if exposed_ever==1 & number==1 & not_inc_flag==0
         local denominator = r(N)
-        qui safecount if udca == 1 & `outcome'_flag == 1
+        qui safecount if udca == 1 & `outcome'_flag == 1 & not_inc_flag==0
         local event = r(N)
         di "udca events = " `event'
-        qui su total_follow_up if udca==1 & number==1
+        qui su total_follow_up if udca==1 & number==1 & not_inc_flag==0
         local person_mth = r(mean)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {

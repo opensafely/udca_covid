@@ -458,7 +458,10 @@ gen date_most_recent_cov_vacA = date(date_most_recent_cov_vac, "YMD")
 gen time_vacc = date("01Mar2021", "DMY") - date_most_recent_cov_vacA
 sum time_vacc, d
 xtile time_vacc_cat = time_vacc, nq(4)
+replace time_vacc_cat = 5 if time_vacc_cat == .
 bys time_vacc_cat: sum time_vacc 
+label define vacc_t 1 "Q1 closest vaccination" 2 "Q2" 3 "Q3" 4 "Q4 furthest vaccination" 5 "No vaccination" 
+label values time_vacc_cat vacc_t 
 
 keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smoking eth_bin time_vacc_cat has_pbc oca_bl
 tempfile basefile
@@ -896,7 +899,7 @@ foreach var in died_covid_any hosp_any composite_any {
 ** Creating file where count of vaccinations updates over time
 use ./output/time_varying_udca_120, clear 
 codebook patient_id
-merge m:1 patient_id using `tempfile', keepusing(covid_vacc* dereg_date died_date_ons)
+merge m:1 patient_id using `tempfile', keepusing(covid_vacc* dereg_date died_date_ons date_most_recent_cov_vac)
 * Should only be required for dummy data 
 keep if _merge==3
 * Only using start date as this is when udca exposure or 6 monthly check occurs
@@ -965,7 +968,7 @@ foreach var in covid_vacc_first_date covid_vacc_second_date covid_vacc_third_dat
 }
 
 * Keep only change dates to create time-varying dataset
-keep patient_id covid_vacc_first_date_update covid_vacc_second_date_update covid_vacc_third_date_update covid_vacc_fourth_date_update covid_vacc_fifth_date_update end_date
+keep patient_id covid_vacc_first_date_update covid_vacc_second_date_update covid_vacc_third_date_update covid_vacc_fourth_date_update covid_vacc_fifth_date_update end_date date_most_recent_cov_vac
 * Chercking number of patient_id's 
 codebook patient_id
 duplicates drop 
@@ -977,6 +980,8 @@ foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fo
     replace `var'_date_update = . if `var'_date>=end_date 
     * Create flag for each vaccination date 
     gen `var'_flag = (`var'_date_update!=.)
+    * Create flag for if date is prior to 1st March 2021
+    gen `var'_prior = `var'_date_update < date("01Mar2021", "DMY")
 }
 * Check not date where prior vaccination is missing 
 count if covid_vacc_first_flag==0 & covid_vacc_second_flag==1
@@ -987,6 +992,10 @@ count if covid_vacc_fourth_flag==0 & covid_vacc_fifth_flag==1
 * Determine total number of vaccinations 
 egen total_vaccs = rowtotal(covid_vacc_first_flag covid_vacc_second_flag covid_vacc_third_flag covid_vacc_fourth_flag covid_vacc_fifth_flag)
 tab total_vaccs
+egen total_vaccs_prior = rowtotal(covid_vacc_first_prior covid_vacc_second_prior covid_vacc_third_prior covid_vacc_fourth_prior covid_vacc_fifth_prior)
+gen date_most_recent_cov_vacA = date(date_most_recent_cov_vac, "YMD")
+count if total_vaccs_prior!=0 & date_most_recent_cov_vacA==.
+count if total_vaccs_prior==0 & date_most_recent_cov_vacA!=.
 * Create time varying vaccination count variable 
 gen vacc_count_tv = 0
 * expand row up to total number of vaccinations 
