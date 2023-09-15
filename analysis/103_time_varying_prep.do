@@ -976,12 +976,13 @@ codebook patient_id
 count
 * Create dataset where rows are updated when person is vaccinated/re-vaccinated  
 foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth {
-    count if `var'_date_update>=end_date 
-    replace `var'_date_update = . if `var'_date>=end_date 
+    count if `var'_date_update>=end_date & `var'_date_update!=.
+    replace `var'_date_update = . if `var'_date_update>=end_date
     * Create flag for each vaccination date 
     gen `var'_flag = (`var'_date_update!=.)
     * Create flag for if date is prior to 1st March 2021
-    gen `var'_prior = `var'_date_update < date("01Mar2021", "DMY")
+    gen `var'_prior = `var'_date_update <= date("01Mar2021", "DMY")
+    tab `var'_prior, m
 }
 * Check not date where prior vaccination is missing 
 count if covid_vacc_first_flag==0 & covid_vacc_second_flag==1

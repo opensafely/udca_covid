@@ -1461,7 +1461,7 @@ file ./output/tv_vars_hosp_any.dta saved
 
 Contains data from /tmp/St00015.000001
   obs:         1,000                          
- vars:           109                          15 Sep 2023 10:20
+ vars:           109                          15 Sep 2023 12:50
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -3688,23 +3688,65 @@ patient_id                                                          (unlabeled)
 > ed  
 . foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc
 > _fourth covid_vacc_fifth {
-  2.     count if `var'_date_update>=end_date 
-  3.     replace `var'_date_update = . if `var'_date>=end_date 
+  2.     count if `var'_date_update>=end_date & `var'_date_update!=.
+  3.     replace `var'_date_update = . if `var'_date_update>=end_date
   4.     * Create flag for each vaccination date 
 .     gen `var'_flag = (`var'_date_update!=.)
   5.     * Create flag for if date is prior to 1st March 2021
-.     gen `var'_prior = `var'_date_update < date("01Mar2021", "DMY")
-  6. }
-  607
+.     gen `var'_prior = `var'_date_update <= date("01Mar2021", "DMY")
+  6.     tab `var'_prior, m
+  7. }
+  0
 (0 real changes made)
-  660
+
+covid_vacc_ |
+first_prior |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        925       92.50       92.50
+          1 |         75        7.50      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+  1
 (1 real change made, 1 to missing)
-  970
+
+covid_vacc_ |
+second_prio |
+          r |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        945       94.50       94.50
+          1 |         55        5.50      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+  0
 (0 real changes made)
-  508
+
+covid_vacc_ |
+third_prior |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,000      100.00      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+  0
 (0 real changes made)
-  507
+
+covid_vacc_ |
+fourth_prio |
+          r |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        508       50.80       50.80
+          1 |        492       49.20      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+  0
 (0 real changes made)
+
+covid_vacc_ |
+fifth_prior |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        511       51.10       51.10
+          1 |        489       48.90      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
 
 . * Check not date where prior vaccination is missing 
 . count if covid_vacc_first_flag==0 & covid_vacc_second_flag==1
@@ -3744,7 +3786,7 @@ total_vaccs |      Freq.     Percent        Cum.
 (941 missing values generated)
 
 . count if total_vaccs_prior!=0 & date_most_recent_cov_vacA==.
-  696
+  736
 
 . count if total_vaccs_prior==0 & date_most_recent_cov_vacA!=.
   21
@@ -4151,5 +4193,5 @@ file ./output/an_dataset_120_vacc_composite_any.dta saved
       name:  <unnamed>
        log:  /workspace/logs/time_varying.log
   log type:  text
- closed on:  15 Sep 2023, 10:21:38
+ closed on:  15 Sep 2023, 12:52:11
 -------------------------------------------------------------------------------
