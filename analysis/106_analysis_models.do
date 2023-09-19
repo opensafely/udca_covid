@@ -847,7 +847,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
         parmest, label eform format(estimate p lb ub) saving("./output/tempdata/p_surv_adj_vacc_`outcome'", replace) idstr("adj_`outcome'") 
         estat phtest, detail
         * Cox model - fully adjusted
-        stcox udca age_tv male any_high_risk_condition i.eth_bin i.imd ib2.bmi_cat i.smoking severe_disease i.vacc_count_tv liver_trans i.time_vacc_cat, strata(stp) vce(robust)
+        stcox udca age_tv male any_high_risk_condition i.eth_bin i.imd ib2.bmi_cat i.smoking severe_disease i.vacc_count_tv liver_trans ib5.time_vacc_cat, strata(stp) vce(robust)
         estimates save "./output/tempdata/adj_model_`outcome'", replace 
         eststo model9
         parmest, label eform format(estimate p lb ub) saving("./output/tempdata/surv_adj_vacc_`outcome'", replace) idstr("adj_`outcome'") 
@@ -868,7 +868,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
                     note("")
         graph combine uni_plot_vacc_`outcome' adj_plot_vacc_`outcome'
         graph export ./output/graphs/schoenplot_vacc_`outcome'.svg, as(svg) replace 
-        * Cox model - fully adjusted with binary ethnicity variable 
+        * Cox model - fully adjusted with categorical ethnicity variable 
         stcox udca age_tv male any_high_risk_condition i.ethnicity i.imd ib2.bmi_cat i.smoking severe_disease i.vacc_count_tv liver_trans ib5.time_vacc_cat, strata(stp) vce(robust)
         * flag single row for each person
         bys patient_id (start): gen number = _n==_N 
