@@ -425,7 +425,70 @@ total_vaccs |      Freq.     Percent        Cum.
 . gen severe_disease_fu = severe_disease_fu_date!=""
 
 . 
-. 
+. * Time from most recent vaccination on 1st March 2021
+. gen date_most_recent_cov_vacA = date(date_most_recent_cov_vac, "YMD")
+(961 missing values generated)
+
+. gen time_vacc = date("01Mar2021", "DMY") - date_most_recent_cov_vacA
+(961 missing values generated)
+
+. sum time_vacc, d
+
+                          time_vacc
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            1              1
+ 5%            2              2
+10%            6              4       Obs                  39
+25%           17              6       Sum of Wgt.          39
+
+50%           33                      Mean           29.92308
+                        Largest       Std. Dev.      17.07473
+75%           42             56
+90%           56             57       Variance       291.5466
+95%           59             59       Skewness       .0906015
+99%           61             61       Kurtosis        1.94112
+
+. xtile time_vacc_cat = time_vacc, nq(4)
+
+. bys time_vacc_cat: sum time_vacc 
+
+-------------------------------------------------------------------------------
+-> time_vacc_cat = 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   time_vacc |         11    10.18182    6.242086          1         17
+
+-------------------------------------------------------------------------------
+-> time_vacc_cat = 2
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   time_vacc |         12    25.08333    6.542981         18         33
+
+-------------------------------------------------------------------------------
+-> time_vacc_cat = 3
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   time_vacc |          7    40.42857    1.718249         38         42
+
+-------------------------------------------------------------------------------
+-> time_vacc_cat = 4
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   time_vacc |          9    52.33333    6.519202         44         61
+
+-------------------------------------------------------------------------------
+-> time_vacc_cat = .
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   time_vacc |          0
+
+
 . 
 . * Create tables 
 . * Characteristics whole cohort
@@ -819,55 +882,62 @@ file ./output/tables/baseline_table_udca_rounded.csv saved
 
 . table1_mc, vars(budesonide_bl bin \ fenofibrate_bl bin \ gc_bl bin \ oca_bl b
 > in \ rituximab_bl bin \ severe_disease_fu bin \ vacc_any bin  \ total_vaccs c
-> at) by(udca_bl) clear
+> at \ time_vacc_cat cat) by(udca_bl) clear
 
-  +-------------------------------------------+
-  | factor              N_0   N_1   m_0   m_1 |
-  |-------------------------------------------|
-  | budesonide_bl       749   251     0     0 |
-  |-------------------------------------------|
-  | fenofibrate_bl      749   251     0     0 |
-  |-------------------------------------------|
-  | gc_bl               749   251     0     0 |
-  |-------------------------------------------|
-  | oca_bl              749   251     0     0 |
-  |-------------------------------------------|
-  | rituximab_bl        749   251     0     0 |
-  |-------------------------------------------|
-  | severe_disease_fu   749   251     0     0 |
-  |-------------------------------------------|
-  | vacc_any            749   251     0     0 |
-  |-------------------------------------------|
-  | total_vaccs         749   251     0     0 |
-  +-------------------------------------------+
+  +--------------------------------------------------+
+  | factor                     N_0   N_1   m_0   m_1 |
+  |--------------------------------------------------|
+  | budesonide_bl              749   251     0     0 |
+  |--------------------------------------------------|
+  | fenofibrate_bl             749   251     0     0 |
+  |--------------------------------------------------|
+  | gc_bl                      749   251     0     0 |
+  |--------------------------------------------------|
+  | oca_bl                     749   251     0     0 |
+  |--------------------------------------------------|
+  | rituximab_bl               749   251     0     0 |
+  |--------------------------------------------------|
+  | severe_disease_fu          749   251     0     0 |
+  |--------------------------------------------------|
+  | vacc_any                   749   251     0     0 |
+  |--------------------------------------------------|
+  | total_vaccs                749   251     0     0 |
+  |--------------------------------------------------|
+  | 4 quantiles of time_vacc    32     7   717   244 |
+  +--------------------------------------------------+
    N_ ... #records used below,   m_ ... #records not used
  
-  +-----------------------------------------------------------------+
-  |                             udca_bl = 0   udca_bl = 1   p-value |
-  |-----------------------------------------------------------------|
-  |                             N=749         N=251                 |
-  |-----------------------------------------------------------------|
-  | budesonide_bl               184 (24.6%)   65 (25.9%)     0.67   |
-  |-----------------------------------------------------------------|
-  | fenofibrate_bl              190 (25.4%)   65 (25.9%)     0.87   |
-  |-----------------------------------------------------------------|
-  | gc_bl                       181 (24.2%)   61 (24.3%)     0.96   |
-  |-----------------------------------------------------------------|
-  | oca_bl                      378 (50.5%)   122 (48.6%)    0.61   |
-  |-----------------------------------------------------------------|
-  | rituximab_bl                392 (52.3%)   108 (43.0%)    0.011  |
-  |-----------------------------------------------------------------|
-  | severe_disease_fu           563 (75.2%)   182 (72.5%)    0.40   |
-  |-----------------------------------------------------------------|
-  | vacc_any                    745 (99.5%)   250 (99.6%)    0.79   |
-  |-----------------------------------------------------------------|
-  | total_vaccs         0       4 ( 0.5%)     1 ( 0.4%)      0.72   |
-  |                     1       57 ( 7.6%)    13 ( 5.2%)            |
-  |                     2       223 (29.8%)   71 (28.3%)            |
-  |                     3       299 (39.9%)   105 (41.8%)           |
-  |                     4       147 (19.6%)   56 (22.3%)            |
-  |                     5       19 ( 2.5%)    5 ( 2.0%)             |
-  +-----------------------------------------------------------------+
+  +------------------------------------------------------------------------+
+  |                                    udca_bl = 0   udca_bl = 1   p-value |
+  |------------------------------------------------------------------------|
+  |                                    N=749         N=251                 |
+  |------------------------------------------------------------------------|
+  | budesonide_bl                      184 (24.6%)   65 (25.9%)     0.67   |
+  |------------------------------------------------------------------------|
+  | fenofibrate_bl                     190 (25.4%)   65 (25.9%)     0.87   |
+  |------------------------------------------------------------------------|
+  | gc_bl                              181 (24.2%)   61 (24.3%)     0.96   |
+  |------------------------------------------------------------------------|
+  | oca_bl                             378 (50.5%)   122 (48.6%)    0.61   |
+  |------------------------------------------------------------------------|
+  | rituximab_bl                       392 (52.3%)   108 (43.0%)    0.011  |
+  |------------------------------------------------------------------------|
+  | severe_disease_fu                  563 (75.2%)   182 (72.5%)    0.40   |
+  |------------------------------------------------------------------------|
+  | vacc_any                           745 (99.5%)   250 (99.6%)    0.79   |
+  |------------------------------------------------------------------------|
+  | total_vaccs                0       4 ( 0.5%)     1 ( 0.4%)      0.72   |
+  |                            1       57 ( 7.6%)    13 ( 5.2%)            |
+  |                            2       223 (29.8%)   71 (28.3%)            |
+  |                            3       299 (39.9%)   105 (41.8%)           |
+  |                            4       147 (19.6%)   56 (22.3%)            |
+  |                            5       19 ( 2.5%)    5 ( 2.0%)             |
+  |------------------------------------------------------------------------|
+  | 4 quantiles of time_vacc   1       9 (28%)       2 (29%)        0.84   |
+  |                            2       10 (31%)      2 (29%)               |
+  |                            3       5 (16%)       2 (29%)               |
+  |                            4       8 (25%)       1 (14%)               |
+  +------------------------------------------------------------------------+
 Data are presented as n (%).
  
 
@@ -895,9 +965,9 @@ _columnb_0: characters space % ( ) removed; percent0 generated as double
 n0_rounded generated as str3
 percent_0 generated as str4
 variable n0_rounded was str3 now str8
-(1 real change made)
+(2 real changes made)
 variable percent_0 was str4 now str8
-(1 real change made)
+(2 real changes made)
 _columna_1: contains nonnumeric characters not specified in ignore(); n1 genera
 > ted as int
 (2 missing values generated)
@@ -908,9 +978,9 @@ _columnb_1: characters space % ( ) removed; percent1 generated as double
 n1_rounded generated as str3
 percent_1 generated as str4
 variable n1_rounded was str3 now str8
-(2 real changes made)
+(6 real changes made)
 variable percent_1 was str4 now str8
-(2 real changes made)
+(6 real changes made)
 
 . keep factor n0_rounded percent_0 n1_rounded percent_1
 
@@ -921,7 +991,8 @@ file ./output/tables/additional_meds_udca_rounded.csv saved
 
 . 
 . * Checking outcomes 
-. foreach var in died_date_ons hosp_covid_primary hosp_covid_any dereg_date {
+. foreach var in died_date_ons hosp_covid_primary hosp_covid_any dereg_date liv
+> er_transplant_fu_date {
   2.     gen `var'A = date(`var', "YMD")
   3.     format `var'A %dD/N/CY
   4.     drop `var'
@@ -981,6 +1052,20 @@ yr_dereg_da |
 ------------+-----------------------------------
       Total |        500      100.00
 (110 real changes made, 110 to missing)
+(984 missing values generated)
+(984 missing values generated)
+
+yr_liver_tr |
+ansplant_fu |
+      _date |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       2020 |          3       18.75       18.75
+       2021 |          7       43.75       62.50
+       2022 |          3       18.75       81.25
+       2023 |          3       18.75      100.00
+------------+-----------------------------------
+      Total |         16      100.00
+(3 real changes made, 3 to missing)
 
 . gen end_study = date("31/12/2022", "DMY")
 
@@ -1254,6 +1339,10 @@ hosp_any_f |       hosp_post
 > d_flag_any!=1
 
 . 
+. * Exploring liver transplants during follow-update
+. gen liver_transplant_fu = liver_transplant_fu_dateA!=.
+
+. 
 . * Check 
 . count if died_liver_any==1 & died_ons_covid_flag_any==1
   0
@@ -1266,7 +1355,8 @@ hosp_any_f |       hosp_post
 . table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \
 >  hosp_died bin \ composite_make_up cat \ composite_pre bin \ ///
 > died_pre bin \ hosp_pre bin \ composite_post bin \ died_post bin \ hosp_post 
-> bin \ died_liver_any bin \ died_liver_underlying bin) clear
+> bin \ died_liver_any bin \ died_liver_underlying bin \ liver_transplant_fu bi
+> n) clear
 
   +-------------------------------------------------+
   | factor                    N_0   N_1   m_0   m_1 |
@@ -1294,6 +1384,8 @@ hosp_any_f |       hosp_post
   | died_liver_any            749   251     0     0 |
   |-------------------------------------------------|
   | died_liver_underlying     749   251     0     0 |
+  |-------------------------------------------------|
+  | liver_transplant_fu       749   251     0     0 |
   +-------------------------------------------------+
    N_ ... #records used below,   m_ ... #records not used
  
@@ -1357,6 +1449,10 @@ hosp_any_f |       hosp_post
 > --|
   | died_liver_underlying                    316 (42.2%)   96 (38.2%)     0.27 
 >   |
+  |----------------------------------------------------------------------------
+> --|
+  | liver_transplant_fu                      10 ( 1.3%)    3 ( 1.2%)      0.87 
+>   |
   +----------------------------------------------------------------------------
 > --+
 Data are presented as n (%).
@@ -1395,9 +1491,9 @@ _columnb_1: characters space % ( ) removed; percent1 generated as double
 n1_rounded generated as str3
 percent_1 generated as str4
 variable n1_rounded was str3 now str8
-(1 real change made)
+(2 real changes made)
 variable percent_1 was str4 now str8
-(1 real change made)
+(2 real changes made)
 
 . keep factor rounded_n0 percent0 rounded_n1 percent1
 
@@ -1408,7 +1504,7 @@ file ./output/tables/baseline_outcomes_rounded.csv saved
 . 
 end of do-file
 
-. . file open output using "/tmp/104_baseline_tables.do.fJHV.out", write text r
+. . file open output using "/tmp/104_baseline_tables.do.nase.out", write text r
 > eplace
 
 . . file write output "success" 

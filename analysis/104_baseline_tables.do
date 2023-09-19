@@ -156,7 +156,7 @@ export delimited using ./output/tables/additional_meds_udca_rounded.csv
 restore 
 
 * Checking outcomes 
-foreach var in died_date_ons hosp_covid_primary hosp_covid_any dereg_date {
+foreach var in died_date_ons hosp_covid_primary hosp_covid_any dereg_date liver_transplant_fu_date {
     gen `var'A = date(`var', "YMD")
     format `var'A %dD/N/CY
     drop `var'
@@ -239,13 +239,16 @@ tab hosp_any_flag hosp_post
 gen died_liver_any = died_ons_liver_flag_any==1 & died_ons_covid_flag_any!=1
 gen died_liver_underlying = died_ons_liver_flag_underlying==1 & died_ons_covid_flag_any!=1
 
+* Exploring liver transplants during follow-update
+gen liver_transplant_fu = liver_transplant_fu_dateA!=.
+
 * Check 
 count if died_liver_any==1 & died_ons_covid_flag_any==1
 count if died_liver_underlying==1 & died_ons_covid_flag_any==1
 
 * Outcomes by baseline exposure stataus
 table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \ hosp_died bin \ composite_make_up cat \ composite_pre bin \ ///
-died_pre bin \ hosp_pre bin \ composite_post bin \ died_post bin \ hosp_post bin \ died_liver_any bin \ died_liver_underlying bin) clear
+died_pre bin \ hosp_pre bin \ composite_post bin \ died_post bin \ hosp_post bin \ died_liver_any bin \ died_liver_underlying bin \ liver_transplant_fu bin) clear
 export delimited using ./output/tables/baseline_outcomes.csv
 forvalues i=0/1 {   
     destring _columna_`i', gen(n`i') ignore(",") force

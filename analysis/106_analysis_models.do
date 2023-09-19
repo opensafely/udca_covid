@@ -869,7 +869,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
         graph combine uni_plot_vacc_`outcome' adj_plot_vacc_`outcome'
         graph export ./output/graphs/schoenplot_vacc_`outcome'.svg, as(svg) replace 
         * Cox model - fully adjusted with binary ethnicity variable 
-        stcox udca age_tv male any_high_risk_condition i.ethnicity i.imd ib2.bmi_cat i.smoking severe_disease i.vacc_count_tv liver_trans i.time_vacc_cat, strata(stp) vce(robust)
+        stcox udca age_tv male any_high_risk_condition i.ethnicity i.imd ib2.bmi_cat i.smoking severe_disease i.vacc_count_tv liver_trans ib5.time_vacc_cat, strata(stp) vce(robust)
         * flag single row for each person
         bys patient_id (start): gen number = _n==_N 
         tab number 
