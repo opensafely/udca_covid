@@ -610,7 +610,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if udca == 0 & `outcome'_flag == 1 & has_pbc==0
         local event = r(N)
         di "no udca events = " `event'
-        bysort udca: egen total_follow_up = total(_t) if number==1
+        bysort udca has_pbc: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1 & has_pbc==0
         local person_mth = r(mean)/30
         di `person_mth'
@@ -632,7 +632,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if udca == 1 & `outcome'_flag == 1 & has_pbc==0
         local event = r(N)
         di "udca events = " `event'
-        qui su total_follow_up if udca==1 & number==1 & has_pbc==0
+        su total_follow_up if udca==1 & number==1 & has_pbc==0
         local person_mth = r(mean)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
