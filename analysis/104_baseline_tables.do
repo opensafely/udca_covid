@@ -262,3 +262,115 @@ forvalues i=0/1 {
 keep factor rounded_n0 percent0 rounded_n1 percent1
 export delimited using ./output/tables/baseline_outcomes_rounded.csv
 
+* Sensitivity analysis March 2021 cohort - vaccinations 
+
+import delimited using ./output/input_vacc.csv, clear
+
+* Prepare variables for table 
+replace ethnicity=6 if ethnicity==0
+label define eth5 			1 "White"  					///
+                            2 "Mixed"				///						
+                            3 "Asian"  					///
+                            4 "Black"					///
+                            5 "Other"					///
+                            6 "Unknown"
+                    
+
+label values ethnicity eth5
+safetab ethnicity, m
+*(2) IMD
+replace imd=6 if imd==0
+
+* Create age categories
+egen age_cat = cut(age), at(18, 40, 60, 80, 120) icodes
+label define age 0 "18 - 40 years" 1 "41 - 60 years" 2 "61 - 80 years" 3 ">80 years"
+label values age_cat age
+bys age_cat: sum age
+
+* BMI categories
+* assume BMI's less than 10 are incorrect and set to missing 
+sum bmi, d
+replace bmi = . if bmi<10
+egen bmi_cat = cut(bmi), at(0, 1, 18.5, 24.9, 29.9, 39.9, 100) icodes
+bys bmi_cat: sum bmi
+* add missing . to zero category
+replace bmi_cat = 0 if bmi_cat==. 
+label define bmi 0 "Missing" 1 "Underweight" 2 "Healthy range" 3 "Overweight" 4 "Obese" 5 "Morbidly obese"
+label values bmi_cat bmi
+
+* Smoking status
+gen smoking = 0 if smoking_status=="N"
+replace smoking = 1 if smoking_status=="S"
+replace smoking = 2 if smoking_status=="E"
+replace smoking = 3 if smoking==.
+
+label define smok 1 "Current smoker" 2 "Ex-smoker" 0 "Never smoked" 3 "Unknown"
+label values smoking smok
+
+replace oral_steroid_drugs_nhsd=. if oral_steroid_drug_nhsd_3m_count < 2 & oral_steroid_drug_nhsd_12m_count < 4
+gen imid_nhsd=max(oral_steroid_drugs_nhsd, immunosuppresant_drugs_nhsd)
+gen rare_neuro_nhsd = max(multiple_sclerosis_nhsd, motor_neurone_disease_nhsd, myasthenia_gravis_nhsd, huntingtons_disease_nhsd)
+gen solid_organ_transplant_bin = solid_organ_transplant_nhsd_new!=""
+gen any_high_risk_condition = max(learning_disability_nhsd_snomed, cancer_opensafely_snomed_new, haematological_disease_nhsd, ///
+ckd_stage_5_nhsd, imid_nhsd, immunosupression_nhsd_new, hiv_aids_nhsd, solid_organ_transplant_bin, rare_neuro_nhsd)
+
+foreach var in udca gc budesonide fenofibrate {
+    sum `var'_count_bl, d
+    sum `var'_count_fu, d 
+    gen `var'_any = (`var'_count_fu>=1 & `var'_count_fu!=.)
+    gen `var'_bl = (`var'_count_bl>=1 & `var'_count_bl!=.)
+    tab `var'_any, m 
+    tab `var'_bl, m
+}
+
+* Generate variable with number of vaccinations 
+foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth {
+    gen `var'= (`var'_date!="")    
+}
+
+egen vacc_any = rowmax(covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth)
+egen total_vaccs = rowtotal(covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth)
+tab total_vaccs 
+
+gen severe_disease_fu = severe_disease_fu_date!=""
+
+* Time from most recent vaccination on 1st March 2021
+gen date_most_recent_cov_vacA = date(date_most_recent_cov_vac, "YMD")
+gen time_vacc = date("01Mar2021", "DMY") - date_most_recent_cov_vacA
+sum time_vacc, d
+xtile time_vacc_cat = time_vacc, nq(4)
+bys time_vacc_cat: sum time_vacc 
+
+* Create tables 
+* Characteristics whole cohort
+preserve
+table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_disease_bl cat \ smoking cat \ bmi_cat cat \ has_pbc bin \ ///
+any_high_risk_condition cat) clear
+export delimited using ./output/tables/baseline_table_vacc.csv, replace
+* Rounding numbers in table to nearest 5
+destring _columna_1, gen(n) ignore(",") force
+destring _columnb_1, gen(percent) ignore("-" "%" "(" ")")  force
+gen rounded_n = round(n, 5)
+tostring rounded_n, gen(n_rounded)
+replace n_rounded = "redacted" if (rounded_n<=5)
+keep factor level n_rounded percent
+export delimited using ./output/tables/baseline_table_vacc_rounded.csv
+restore 
+
+* Characteristics by exposure status at baseline 
+preserve 
+table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_disease_bl cat \ smoking cat \ bmi_cat cat \ has_pbc bin \ any_high_risk_condition cat) by(udca_bl) clear
+export delimited using ./output/tables/baseline_table_udca_vacc.csv, replace
+* Rounding numbers in table to nearest 5
+forvalues i=0/1 {   
+    destring _columna_`i', gen(n`i') ignore(",") force
+    destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
+    gen rounded_n`i' = round(n`i', 5)
+    tostring percent`i', gen(percent_`i')
+    tostring rounded_n`i', gen(n`i'_rounded)
+    replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
+    replace percent_`i' = "redacted" if (rounded_n`i'<=5)
+}
+keep factor level n0_rounded percent_0 n1_rounded percent_1
+export delimited using ./output/tables/baseline_table_udca_vacc_rounded.csv
+restore 

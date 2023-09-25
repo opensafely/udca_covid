@@ -1501,10 +1501,788 @@ variable percent_1 was str4 now str8
 file ./output/tables/baseline_outcomes_rounded.csv saved
 
 . 
+. * Sensitivity analysis March 2021 cohort - vaccinations 
+. 
+. import delimited using ./output/input_vacc.csv, clear
+(109 vars, 1,000 obs)
+
+. 
+. * Prepare variables for table 
+. replace ethnicity=6 if ethnicity==0
+(58 real changes made)
+
+. label define eth5                       1 "White"                            
+>            ///
+>                             2 "Mixed"                           ///          
+>                                    
+>                             3 "Asian"                                   ///
+>                             4 "Black"                                   ///
+>                             5 "Other"                                   ///
+>                             6 "Unknown"
+
+.                     
+. 
+. label values ethnicity eth5
+
+. safetab ethnicity, m
+10
+
+  ethnicity |      Freq.     Percent        Cum.
+------------+-----------------------------------
+      White |        154       15.40       15.40
+      Mixed |        191       19.10       34.50
+      Asian |        208       20.80       55.30
+      Black |        177       17.70       73.00
+      Other |        212       21.20       94.20
+    Unknown |         58        5.80      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+. *(2) IMD
+. replace imd=6 if imd==0
+(45 real changes made)
+
+. 
+. * Create age categories
+. egen age_cat = cut(age), at(18, 40, 60, 80, 120) icodes
+(219 missing values generated)
+
+. label define age 0 "18 - 40 years" 1 "41 - 60 years" 2 "61 - 80 years" 3 ">80
+>  years"
+
+. label values age_cat age
+
+. bys age_cat: sum age
+
+-------------------------------------------------------------------------------
+-> age_cat = 18 - 40 years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |        284     28.7007    6.132679         18         39
+
+-------------------------------------------------------------------------------
+-> age_cat = 41 - 60 years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |        271    48.92989    5.829576         40         59
+
+-------------------------------------------------------------------------------
+-> age_cat = 61 - 80 years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |        184    68.69022    5.562041         60         79
+
+-------------------------------------------------------------------------------
+-> age_cat = >80 years
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |         42    84.21429     3.27247         80         94
+
+-------------------------------------------------------------------------------
+-> age_cat = .
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         age |        219    8.164384    5.295871          0         17
+
+
+. 
+. * BMI categories
+. * assume BMI's less than 10 are incorrect and set to missing 
+. sum bmi, d
+
+                             bmi
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0              0
+ 5%            0              0
+10%            0              0       Obs               1,000
+25%     15.69678              0       Sum of Wgt.       1,000
+
+50%     25.34112                      Mean           22.25085
+                        Largest       Std. Dev.      13.17012
+75%     31.57951       48.26082
+90%     36.74167       48.29522       Variance       173.4521
+95%       40.371        49.0592       Skewness      -.5393152
+99%     46.19471       49.22062       Kurtosis       2.270618
+
+. replace bmi = . if bmi<10
+(210 real changes made, 210 to missing)
+
+. egen bmi_cat = cut(bmi), at(0, 1, 18.5, 24.9, 29.9, 39.9, 100) icodes
+(210 missing values generated)
+
+. bys bmi_cat: sum bmi
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |         86    15.47231    2.297328   10.24404    18.4519
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 2
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        187    22.12234    1.813517   18.56863   24.82433
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 3
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        207    27.44709    1.476499   24.90044   29.83551
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 4
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |        255    33.88192    2.597619   30.01805   39.88887
+
+-------------------------------------------------------------------------------
+-> bmi_cat = 5
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |         55    43.36003    2.625495   40.00311   49.22062
+
+-------------------------------------------------------------------------------
+-> bmi_cat = .
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         bmi |          0
+
+
+. * add missing . to zero category
+. replace bmi_cat = 0 if bmi_cat==. 
+(210 real changes made)
+
+. label define bmi 0 "Missing" 1 "Underweight" 2 "Healthy range" 3 "Overweight"
+>  4 "Obese" 5 "Morbidly obese"
+
+. label values bmi_cat bmi
+
+. 
+. * Smoking status
+. gen smoking = 0 if smoking_status=="N"
+(908 missing values generated)
+
+. replace smoking = 1 if smoking_status=="S"
+(205 real changes made)
+
+. replace smoking = 2 if smoking_status=="E"
+(155 real changes made)
+
+. replace smoking = 3 if smoking==.
+(548 real changes made)
+
+. 
+. label define smok 1 "Current smoker" 2 "Ex-smoker" 0 "Never smoked" 3 "Unknow
+> n"
+
+. label values smoking smok
+
+. 
+. replace oral_steroid_drugs_nhsd=. if oral_steroid_drug_nhsd_3m_count < 2 & or
+> al_steroid_drug_nhsd_12m_count < 4
+(938 real changes made, 938 to missing)
+
+. gen imid_nhsd=max(oral_steroid_drugs_nhsd, immunosuppresant_drugs_nhsd)
+
+. gen rare_neuro_nhsd = max(multiple_sclerosis_nhsd, motor_neurone_disease_nhsd
+> , myasthenia_gravis_nhsd, huntingtons_disease_nhsd)
+
+. gen solid_organ_transplant_bin = solid_organ_transplant_nhsd_new!=""
+
+. gen any_high_risk_condition = max(learning_disability_nhsd_snomed, cancer_ope
+> nsafely_snomed_new, haematological_disease_nhsd, ///
+> ckd_stage_5_nhsd, imid_nhsd, immunosupression_nhsd_new, hiv_aids_nhsd, solid_
+> organ_transplant_bin, rare_neuro_nhsd)
+
+. 
+. foreach var in udca gc budesonide fenofibrate {
+  2.     sum `var'_count_bl, d
+  3.     sum `var'_count_fu, d 
+  4.     gen `var'_any = (`var'_count_fu>=1 & `var'_count_fu!=.)
+  5.     gen `var'_bl = (`var'_count_bl>=1 & `var'_count_bl!=.)
+  6.     tab `var'_any, m 
+  7.     tab `var'_bl, m
+  8. }
+
+                        udca_count_bl
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%           -1             -4
+ 5%            0             -3
+10%            0             -2       Obs               1,000
+25%            0             -2       Sum of Wgt.       1,000
+
+50%            0                      Mean               .724
+                        Largest       Std. Dev.      1.504689
+75%            1              7
+90%            3              7       Variance       2.264088
+95%            4              7       Skewness       1.929016
+99%            6              7       Kurtosis       6.398678
+
+                        udca_count_fu
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0             -3
+ 5%            0             -1
+10%            0             -1       Obs               1,000
+25%            0             -1       Sum of Wgt.       1,000
+
+50%            0                      Mean               .763
+                        Largest       Std. Dev.      1.576489
+75%            1              7
+90%            3              8       Variance       2.485316
+95%            4              8       Skewness       2.079549
+99%            6              8       Kurtosis       6.765186
+
+   udca_any |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        747       74.70       74.70
+          1 |        253       25.30      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+    udca_bl |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        738       73.80       73.80
+          1 |        262       26.20      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+                         gc_count_bl
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0             -3
+ 5%            0             -2
+10%            0             -1       Obs               1,000
+25%            0             -1       Sum of Wgt.       1,000
+
+50%            0                      Mean               .768
+                        Largest       Std. Dev.      1.574374
+75%           .5              7
+90%            3              7       Variance       2.478655
+95%            4              8       Skewness       1.993571
+99%            6              8       Kurtosis       6.326737
+
+                         gc_count_fu
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0             -3
+ 5%            0             -2
+10%            0             -1       Obs               1,000
+25%            0             -1       Sum of Wgt.       1,000
+
+50%            0                      Mean               .796
+                        Largest       Std. Dev.      1.578251
+75%            1              7
+90%            3              7       Variance       2.490875
+95%            5              7       Skewness       1.871278
+99%            6              7       Kurtosis       5.626688
+
+     gc_any |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        738       73.80       73.80
+          1 |        262       26.20      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+      gc_bl |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        750       75.00       75.00
+          1 |        250       25.00      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+                     budesonide_count_bl
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0             -2
+ 5%            0             -1
+10%            0             -1       Obs               1,000
+25%            0             -1       Sum of Wgt.       1,000
+
+50%            0                      Mean               .779
+                        Largest       Std. Dev.      1.544845
+75%            1              7
+90%            3              7       Variance       2.386546
+95%            4              7       Skewness       1.928793
+99%            6              7       Kurtosis        5.81906
+
+                     budesonide_count_fu
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0             -4
+ 5%            0             -3
+10%            0             -2       Obs               1,000
+25%            0             -2       Sum of Wgt.       1,000
+
+50%            0                      Mean               .742
+                        Largest       Std. Dev.      1.542016
+75%            0              7
+90%            3              7       Variance       2.377814
+95%            4              8       Skewness       1.942505
+99%            6              8       Kurtosis       6.394141
+
+budesonide_ |
+        any |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        751       75.10       75.10
+          1 |        249       24.90      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+budesonide_ |
+         bl |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        738       73.80       73.80
+          1 |        262       26.20      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+                    fenofibrate_count_bl
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0             -3
+ 5%            0             -2
+10%            0             -1       Obs               1,000
+25%            0             -1       Sum of Wgt.       1,000
+
+50%            0                      Mean               .779
+                        Largest       Std. Dev.      1.582613
+75%           .5              7
+90%            3              7       Variance       2.504664
+95%            5              7       Skewness       1.907727
+99%            6              8       Kurtosis       5.793223
+
+                    fenofibrate_count_fu
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            0             -2
+ 5%            0             -2
+10%            0             -1       Obs               1,000
+25%            0             -1       Sum of Wgt.       1,000
+
+50%            0                      Mean               .769
+                        Largest       Std. Dev.      1.553078
+75%            1              7
+90%            3              7       Variance       2.412051
+95%            4              8       Skewness       2.027332
+99%            6              8       Kurtosis       6.445269
+
+fenofibrate |
+       _any |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        740       74.00       74.00
+          1 |        260       26.00      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+fenofibrate |
+        _bl |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        750       75.00       75.00
+          1 |        250       25.00      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+. 
+. * Generate variable with number of vaccinations 
+. foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc
+> _fourth covid_vacc_fifth {
+  2.     gen `var'= (`var'_date!="")    
+  3. }
+
+. 
+. egen vacc_any = rowmax(covid_vacc_first covid_vacc_second covid_vacc_third co
+> vid_vacc_fourth covid_vacc_fifth)
+
+. egen total_vaccs = rowtotal(covid_vacc_first covid_vacc_second covid_vacc_thi
+> rd covid_vacc_fourth covid_vacc_fifth)
+
+. tab total_vaccs 
+
+total_vaccs |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |          9        0.90        0.90
+          1 |         72        7.20        8.10
+          2 |        277       27.70       35.80
+          3 |        416       41.60       77.40
+          4 |        202       20.20       97.60
+          5 |         24        2.40      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+. 
+. gen severe_disease_fu = severe_disease_fu_date!=""
+
+. 
+. * Time from most recent vaccination on 1st March 2021
+. gen date_most_recent_cov_vacA = date(date_most_recent_cov_vac, "YMD")
+(939 missing values generated)
+
+. gen time_vacc = date("01Mar2021", "DMY") - date_most_recent_cov_vacA
+(939 missing values generated)
+
+. sum time_vacc, d
+
+                          time_vacc
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%            2              2
+ 5%            4              2
+10%            8              3       Obs                  61
+25%           24              4       Sum of Wgt.          61
+
+50%           41                      Mean           41.90164
+                        Largest       Std. Dev.      24.83459
+75%           60             84
+90%           74             85       Variance       616.7568
+95%           84             88       Skewness       .1138117
+99%           89             89       Kurtosis       2.071786
+
+. xtile time_vacc_cat = time_vacc, nq(4)
+
+. bys time_vacc_cat: sum time_vacc 
+
+-------------------------------------------------------------------------------
+-> time_vacc_cat = 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   time_vacc |         16      10.375    7.098122          2         24
+
+-------------------------------------------------------------------------------
+-> time_vacc_cat = 2
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   time_vacc |         16     34.6875    4.269563         28         41
+
+-------------------------------------------------------------------------------
+-> time_vacc_cat = 3
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   time_vacc |         14        50.5    6.073271         42         60
+
+-------------------------------------------------------------------------------
+-> time_vacc_cat = 4
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   time_vacc |         15        75.2    8.841461         62         89
+
+-------------------------------------------------------------------------------
+-> time_vacc_cat = .
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   time_vacc |          0
+
+
+. 
+. * Create tables 
+. * Characteristics whole cohort
+. preserve
+
+. table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_dise
+> ase_bl cat \ smoking cat \ bmi_cat cat \ has_pbc bin \ ///
+> any_high_risk_condition cat) clear
+
+  +---------------------------------------+
+  | factor                      N_1   m_1 |
+  |---------------------------------------|
+  | age_cat                     781   219 |
+  |---------------------------------------|
+  | sex                       1,000     0 |
+  |---------------------------------------|
+  | imd                       1,000     0 |
+  |---------------------------------------|
+  | ethnicity                 1,000     0 |
+  |---------------------------------------|
+  | severe_disease_bl         1,000     0 |
+  |---------------------------------------|
+  | smoking                   1,000     0 |
+  |---------------------------------------|
+  | bmi_cat                   1,000     0 |
+  |---------------------------------------|
+  | has_pbc                   1,000     0 |
+  |---------------------------------------|
+  | any_high_risk_condition   1,000     0 |
+  +---------------------------------------+
+   N_ ... #records used below,   m_ ... #records not used
+ 
+  +-----------------------------------------------------------+
+  |                                            Total          |
+  |-----------------------------------------------------------|
+  |                                            N=1,000        |
+  |-----------------------------------------------------------|
+  | age_cat                   18 - 40 years    284 (36.4%)    |
+  |                           41 - 60 years    271 (34.7%)    |
+  |                           61 - 80 years    184 (23.6%)    |
+  |                           >80 years        42 ( 5.4%)     |
+  |-----------------------------------------------------------|
+  | sex                       F                523 (52.3%)    |
+  |                           M                463 (46.3%)    |
+  |                           U                14 ( 1.4%)     |
+  |-----------------------------------------------------------|
+  | imd                       1                187 (18.7%)    |
+  |                           2                179 (17.9%)    |
+  |                           3                203 (20.3%)    |
+  |                           4                204 (20.4%)    |
+  |                           5                182 (18.2%)    |
+  |                           6                45 ( 4.5%)     |
+  |-----------------------------------------------------------|
+  | ethnicity                 White            154 (15.4%)    |
+  |                           Mixed            191 (19.1%)    |
+  |                           Asian            208 (20.8%)    |
+  |                           Black            177 (17.7%)    |
+  |                           Other            212 (21.2%)    |
+  |                           Unknown          58 ( 5.8%)     |
+  |-----------------------------------------------------------|
+  | severe_disease_bl         0                500 (50.0%)    |
+  |                           1                500 (50.0%)    |
+  |-----------------------------------------------------------|
+  | smoking                   Never smoked     92 ( 9.2%)     |
+  |                           Current smoker   205 (20.5%)    |
+  |                           Ex-smoker        155 (15.5%)    |
+  |                           Unknown          548 (54.8%)    |
+  |-----------------------------------------------------------|
+  | bmi_cat                   Missing          210 (21.0%)    |
+  |                           Underweight      86 ( 8.6%)     |
+  |                           Healthy range    187 (18.7%)    |
+  |                           Overweight       207 (20.7%)    |
+  |                           Obese            255 (25.5%)    |
+  |                           Morbidly obese   55 ( 5.5%)     |
+  |-----------------------------------------------------------|
+  | has_pbc                                    500 (50.0%)    |
+  |-----------------------------------------------------------|
+  | any_high_risk_condition   1                1,000 (100.0%) |
+  +-----------------------------------------------------------+
+Data are presented as n (%).
+ 
+
+. export delimited using ./output/tables/baseline_table_vacc.csv, replace
+(note: file ./output/tables/baseline_table_vacc.csv not found)
+file ./output/tables/baseline_table_vacc.csv saved
+
+. * Rounding numbers in table to nearest 5
+. destring _columna_1, gen(n) ignore(",") force
+_columna_1: contains nonnumeric characters not specified in ignore()
+_columna_1: character , removed; n generated as int
+(2 missing values generated)
+
+. destring _columnb_1, gen(percent) ignore("-" "%" "(" ")")  force
+_columnb_1: contains nonnumeric characters not specified in ignore()
+_columnb_1: characters space % ( ) removed; percent generated as double
+(2 missing values generated)
+
+. gen rounded_n = round(n, 5)
+(2 missing values generated)
+
+. tostring rounded_n, gen(n_rounded)
+n_rounded generated as str4
+
+. replace n_rounded = "redacted" if (rounded_n<=5)
+(0 real changes made)
+
+. keep factor level n_rounded percent
+
+. export delimited using ./output/tables/baseline_table_vacc_rounded.csv
+file ./output/tables/baseline_table_vacc_rounded.csv saved
+
+. restore 
+
+. 
+. * Characteristics by exposure status at baseline 
+. preserve 
+
+. table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_dise
+> ase_bl cat \ smoking cat \ bmi_cat cat \ has_pbc bin \ any_high_risk_conditio
+> n cat) by(udca_bl) clear
+
+  +-------------------------------------------------+
+  | factor                    N_0   N_1   m_0   m_1 |
+  |-------------------------------------------------|
+  | age_cat                   579   202   159    60 |
+  |-------------------------------------------------|
+  | sex                       738   262     0     0 |
+  |-------------------------------------------------|
+  | imd                       738   262     0     0 |
+  |-------------------------------------------------|
+  | ethnicity                 738   262     0     0 |
+  |-------------------------------------------------|
+  | severe_disease_bl         738   262     0     0 |
+  |-------------------------------------------------|
+  | smoking                   738   262     0     0 |
+  |-------------------------------------------------|
+  | bmi_cat                   738   262     0     0 |
+  |-------------------------------------------------|
+  | has_pbc                   738   262     0     0 |
+  |-------------------------------------------------|
+  | any_high_risk_condition   738   262     0     0 |
+  +-------------------------------------------------+
+   N_ ... #records used below,   m_ ... #records not used
+ 
+  +----------------------------------------------------------------------------
+> ------+
+  |                                            udca_bl = 0    udca_bl = 1    p-
+> value |
+  |----------------------------------------------------------------------------
+> ------|
+  |                                            N=738          N=262            
+>       |
+  |----------------------------------------------------------------------------
+> ------|
+  | age_cat                   18 - 40 years    222 (38.3%)    62 (30.7%)      0
+> .24   |
+  |                           41 - 60 years    193 (33.3%)    78 (38.6%)       
+>       |
+  |                           61 - 80 years    135 (23.3%)    49 (24.3%)       
+>       |
+  |                           >80 years        29 ( 5.0%)     13 ( 6.4%)       
+>       |
+  |----------------------------------------------------------------------------
+> ------|
+  | sex                       F                382 (51.8%)    141 (53.8%)     0
+> .57   |
+  |                           M                347 (47.0%)    116 (44.3%)      
+>       |
+  |                           U                9 ( 1.2%)      5 ( 1.9%)        
+>       |
+  |----------------------------------------------------------------------------
+> ------|
+  | imd                       1                138 (18.7%)    49 (18.7%)      0
+> .94   |
+  |                           2                127 (17.2%)    52 (19.8%)       
+>       |
+  |                           3                152 (20.6%)    51 (19.5%)       
+>       |
+  |                           4                150 (20.3%)    54 (20.6%)       
+>       |
+  |                           5                138 (18.7%)    44 (16.8%)       
+>       |
+  |                           6                33 ( 4.5%)     12 ( 4.6%)       
+>       |
+  |----------------------------------------------------------------------------
+> ------|
+  | ethnicity                 White            110 (14.9%)    44 (16.8%)      0
+> .20   |
+  |                           Mixed            143 (19.4%)    48 (18.3%)       
+>       |
+  |                           Asian            155 (21.0%)    53 (20.2%)       
+>       |
+  |                           Black            137 (18.6%)    40 (15.3%)       
+>       |
+  |                           Other            158 (21.4%)    54 (20.6%)       
+>       |
+  |                           Unknown          35 ( 4.7%)     23 ( 8.8%)       
+>       |
+  |----------------------------------------------------------------------------
+> ------|
+  | severe_disease_bl         0                374 (50.7%)    126 (48.1%)     0
+> .47   |
+  |                           1                364 (49.3%)    136 (51.9%)      
+>       |
+  |----------------------------------------------------------------------------
+> ------|
+  | smoking                   Never smoked     75 (10.2%)     17 ( 6.5%)      0
+> .20   |
+  |                           Current smoker   151 (20.5%)    54 (20.6%)       
+>       |
+  |                           Ex-smoker        107 (14.5%)    48 (18.3%)       
+>       |
+  |                           Unknown          405 (54.9%)    143 (54.6%)      
+>       |
+  |----------------------------------------------------------------------------
+> ------|
+  | bmi_cat                   Missing          151 (20.5%)    59 (22.5%)      0
+> .96   |
+  |                           Underweight      63 ( 8.5%)     23 ( 8.8%)       
+>       |
+  |                           Healthy range    140 (19.0%)    47 (17.9%)       
+>       |
+  |                           Overweight       156 (21.1%)    51 (19.5%)       
+>       |
+  |                           Obese            186 (25.2%)    69 (26.3%)       
+>       |
+  |                           Morbidly obese   42 ( 5.7%)     13 ( 5.0%)       
+>       |
+  |----------------------------------------------------------------------------
+> ------|
+  | has_pbc                                    355 (48.1%)    145 (55.3%)     0
+> .044  |
+  |----------------------------------------------------------------------------
+> ------|
+  | any_high_risk_condition   1                738 (100.0%)   262 (100.0%)     
+>       |
+  +----------------------------------------------------------------------------
+> ------+
+Data are presented as n (%).
+ 
+
+. export delimited using ./output/tables/baseline_table_udca_vacc.csv, replace
+(note: file ./output/tables/baseline_table_udca_vacc.csv not found)
+file ./output/tables/baseline_table_udca_vacc.csv saved
+
+. * Rounding numbers in table to nearest 5
+. forvalues i=0/1 {   
+  2.     destring _columna_`i', gen(n`i') ignore(",") force
+  3.     destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
+  4.     gen rounded_n`i' = round(n`i', 5)
+  5.     tostring percent`i', gen(percent_`i')
+  6.     tostring rounded_n`i', gen(n`i'_rounded)
+  7.     replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
+  8.     replace percent_`i' = "redacted" if (rounded_n`i'<=5)
+  9. }
+_columna_0: contains nonnumeric characters not specified in ignore(); n0 genera
+> ted as int
+(2 missing values generated)
+_columnb_0: contains nonnumeric characters not specified in ignore()
+_columnb_0: characters space % ( ) removed; percent0 generated as double
+(2 missing values generated)
+(2 missing values generated)
+percent_0 generated as str4
+n0_rounded generated as str3
+(0 real changes made)
+(0 real changes made)
+_columna_1: contains nonnumeric characters not specified in ignore(); n1 genera
+> ted as int
+(2 missing values generated)
+_columnb_1: contains nonnumeric characters not specified in ignore()
+_columnb_1: characters space % ( ) removed; percent1 generated as double
+(2 missing values generated)
+(2 missing values generated)
+percent_1 generated as str4
+n1_rounded generated as str3
+variable n1_rounded was str3 now str8
+(1 real change made)
+variable percent_1 was str4 now str8
+(1 real change made)
+
+. keep factor level n0_rounded percent_0 n1_rounded percent_1
+
+. export delimited using ./output/tables/baseline_table_udca_vacc_rounded.csv
+file ./output/tables/baseline_table_udca_vacc_rounded.csv saved
+
+. restore 
+
 . 
 end of do-file
 
-. . file open output using "/tmp/104_baseline_tables.do.nase.out", write text r
+. . file open output using "/tmp/104_baseline_tables.do.VM0v.out", write text r
 > eplace
 
 . . file write output "success" 
