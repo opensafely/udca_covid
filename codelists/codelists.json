@@ -341,6 +341,12 @@
       "url": "https://codelists.opensafely.org/codelist/nhsd-primary-care-domain-refsets/ld_cod/20210127/",
       "downloaded_at": "2023-05-30 14:37:10.417328Z",
       "sha": "0c5bc3b050a55c2090e16932fd7364a0be775cb4"
+    },
+    "user-ruthcostello-liver_chapter_plus.csv": {
+      "id": "user/ruthcostello/liver_chapter_plus/70556bad",
+      "url": "https://codelists.opensafely.org/codelist/user/ruthcostello/liver_chapter_plus/70556bad/",
+      "downloaded_at": "2023-09-12 10:16:05.505808Z",
+      "sha": "a0b3d37277d5e866a66e3ac6949ddcbd874dfe10"
     }
   }
 }

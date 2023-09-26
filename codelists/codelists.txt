@@ -76,3 +76,6 @@ nhsd/myasthenia-gravis/32d35366
 nhsd/huntingtons-snomed-ct/25559398
 nhsd/huntingtons/7e01ad05
 nhsd-primary-care-domain-refsets/ld_cod/20210127
+
+# Liver disease death codes 
+user/ruthcostello/liver_chapter_plus/70556bad

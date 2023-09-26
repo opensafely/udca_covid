@@ -31,6 +31,12 @@ actions:
       highly_sensitive:
         cohort: output/input_pbc.csv
 
+  generate_study_population_vacc:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_vacc
+    outputs:
+      highly_sensitive:
+        cohort: output/input_vacc.csv
+
   feasibility:
     run: stata-mp:latest analysis/feasibility.do
     needs: [generate_study_population, generate_study_population_pbc]
@@ -47,9 +53,17 @@ actions:
       highly_sensitive:
         cohort: output/input_additional.csv
 
+  extract_udca_vacc: 
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_addvacc
+    needs: [generate_study_population_vacc]
+    outputs:
+      highly_sensitive:
+        cohort: output/input_addvacc.csv
+
+
   prep_drug_data: 
     run: stata-mp:latest analysis/101_drug_prep.do
-    needs: [extract_udca, generate_study_population_pbc]
+    needs: [extract_udca, generate_study_population_pbc, extract_udca_vacc, generate_study_population_vacc]
     outputs:
       moderately_sensitive:
         log: logs/drug_prep.log
@@ -66,7 +80,7 @@ actions:
 
   time_varying_prep:
     run: stata-mp:latest analysis/103_time_varying_prep.do
-    needs: [generate_study_population_pbc, prep_drug_data]
+    needs: [generate_study_population_pbc, prep_drug_data, extract_udca_vacc, generate_study_population_vacc]
     outputs:
       highly_sensitive:
         datasets: output/tv*.dta
@@ -77,7 +91,7 @@ actions:
 
   baseline_tables:
     run: stata-mp:latest analysis/104_baseline_tables.do
-    needs: [generate_study_population_pbc]
+    needs: [generate_study_population_pbc, generate_study_population_vacc]
     outputs:
       moderately_sensitive:
         log: logs/baseline_tables.log

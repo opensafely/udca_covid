@@ -8,7 +8,7 @@ study = StudyDefinition(
         "rate": "uniform",
         "incidence": 0.5,
     },
-    index_date="2020-03-01",
+    index_date="2021-03-01",
     population=patients.satisfying(
         """
         has_follow_up AND
@@ -227,7 +227,7 @@ study = StudyDefinition(
     #Ursodeoxycholic acid 
     udca_count_bl=patients.with_these_medications(
         udca_codes, 
-        between=["2019-11-02", "2020-03-01"],
+        between=["2020-11-02", "2022-03-01"],
         returning="number_of_matches_in_period",
         return_expectations={
             "int": {"distribution": "normal", "mean": 3, "stddev": 2},
@@ -237,7 +237,7 @@ study = StudyDefinition(
 
      udca_last_date=patients.with_these_medications(
         udca_codes, 
-        between=["2019-11-01", "2020-02-29"], 
+        between=["2020-11-01", "2021-02-28"], 
         return_last_date_in_period=True,
         date_format="YYYY-MM-DD",
         return_expectations={
@@ -247,7 +247,7 @@ study = StudyDefinition(
 
     udca_first_after=patients.with_these_medications(
         udca_codes, 
-        on_or_after="2020-03-01",
+        on_or_after="2021-03-01",
         return_first_date_in_period=True,
         date_format="YYYY-MM-DD",
         return_expectations={
@@ -258,7 +258,7 @@ study = StudyDefinition(
     #HISTORY OF UDCA use
     udca_first_history=patients.with_these_medications(
         udca_codes, 
-        on_or_before="2020-02-29",
+        on_or_before="2021-02-28",
         return_first_date_in_period=True,
         date_format="YYYY-MM-DD",
         return_expectations={
@@ -268,7 +268,7 @@ study = StudyDefinition(
 
     udca_count_fu=patients.with_these_medications(
         udca_codes, 
-        between=["2020-03-01", "2022-12-31"],
+        between=["2021-03-01", "2022-12-31"],
         returning="number_of_matches_in_period",
         return_expectations={
             "int": {"distribution": "normal", "mean": 3, "stddev": 2},
@@ -286,7 +286,7 @@ study = StudyDefinition(
     # Budenoside prescribing
     budesonide_count_fu=patients.with_these_medications(
         budesonide_codes,
-        between=["2020-03-01", "2022-12-31"],
+        between=["2021-03-01", "2022-12-31"],
         returning="number_of_matches_in_period",
         return_expectations={
             "int": {"distribution": "normal", "mean": 3, "stddev": 2},
@@ -296,7 +296,7 @@ study = StudyDefinition(
 
     budesonide_count_bl=patients.with_these_medications(
         budesonide_codes,
-        between=["2020-02-29", "2019-09-01"],
+        between=["2021-02-28", "2020-09-01"],
         returning="number_of_matches_in_period",
         return_expectations={
             "int": {"distribution": "normal", "mean": 3, "stddev": 2},
@@ -307,7 +307,7 @@ study = StudyDefinition(
     # Fenofibrate prescribing
     fenofibrate_count_fu=patients.with_these_medications(
         fenofibrate_codes,
-        between=["2020-03-01", "2022-12-31"],
+        between=["2021-03-01", "2022-12-31"],
         returning="number_of_matches_in_period",
         return_expectations={
             "int": {"distribution": "normal", "mean": 3, "stddev": 2},
@@ -317,7 +317,7 @@ study = StudyDefinition(
 
     fenofibrate_count_bl=patients.with_these_medications(
         fenofibrate_codes,
-        between=["2020-02-29", "2019-09-01"],
+        between=["2021-02-28", "2020-09-01"],
         returning="number_of_matches_in_period",
         return_expectations={
             "int": {"distribution": "normal", "mean": 3, "stddev": 2},
@@ -328,7 +328,7 @@ study = StudyDefinition(
     # Steroid prescribing
     gc_count_fu=patients.with_these_medications(
         gc_codes,
-        between=["2020-03-01", "2022-12-31"],
+        between=["2021-03-01", "2022-12-31"],
         returning="number_of_matches_in_period",
         return_expectations={
             "int": {"distribution": "normal", "mean": 3, "stddev": 2},
@@ -338,7 +338,7 @@ study = StudyDefinition(
 
     gc_count_bl=patients.with_these_medications(
         gc_codes,
-        between=["2020-02-29", "2019-09-01"],
+        between=["2021-02-28", "2020-09-01"],
         returning="number_of_matches_in_period",
         return_expectations={
             "int": {"distribution": "normal", "mean": 3, "stddev": 2},
@@ -909,14 +909,14 @@ study = StudyDefinition(
   # Flagging if died due to liver disease
   died_ons_liver_flag_any=patients.with_these_codes_on_death_certificate(
         liver_death_codes,
-        on_or_after="2020-03-01",
+        on_or_after="2021-03-01",
         match_only_underlying_cause=False,
         returning="binary_flag",
         return_expectations={"date": {"earliest": "2020-03-01"}},
     ),
   died_ons_liver_flag_underlying=patients.with_these_codes_on_death_certificate(
         liver_death_codes,
-        on_or_after="2020-03-01",
+        on_or_after="2021-03-01",
         match_only_underlying_cause=True,
         returning="binary_flag",
         return_expectations={"date": {"earliest": "2020-03-01"}},
@@ -929,7 +929,7 @@ study = StudyDefinition(
       with_patient_classification = ["1"], # ordinary admissions only - exclude day cases and regular attenders
       # see https://docs.opensafely.org/study-def-variables/#sus for more info
       # with_admission_method=["21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"], # emergency admissions only to exclude incidental COVID
-      on_or_after="2020-03-01",
+      on_or_after="2021-03-01",
       find_first_match_in_period = True,
       date_format = "YYYY-MM-DD",
       return_expectations = {
@@ -944,7 +944,7 @@ study = StudyDefinition(
       with_patient_classification = ["1"], # ordinary admissions only - exclude day cases and regular attenders
       # see https://docs.opensafely.org/study-def-variables/#sus for more info
       # with_admission_method=["21", "22", "23", "24", "25", "2A", "2B", "2C", "2D", "28"], # emergency admissions only to exclude incidental COVID
-      on_or_after="2020-03-01",
+      on_or_after="2021-03-01",
       find_first_match_in_period = True,
       date_format = "YYYY-MM-DD",
       return_expectations = {
@@ -955,20 +955,20 @@ study = StudyDefinition(
   ),
   died_ons_covid_flag_any=patients.with_these_codes_on_death_certificate(
       covid_identification,
-      on_or_after="2020-03-01",
+      on_or_after="2021-03-01",
       match_only_underlying_cause=False,
       returning="binary_flag",
       return_expectations={"date": {"earliest": "2020-03-01"}},
   ),
   died_ons_covid_flag_underlying=patients.with_these_codes_on_death_certificate(
       covid_identification,
-      on_or_after="2020-03-01",
+      on_or_after="2021-03-01",
       match_only_underlying_cause=True,
       returning="binary_flag",
       return_expectations={"date": {"earliest": "2020-03-01"}},
   ),
   died_date_ons=patients.died_from_any_cause(
-      on_or_after="2020-03-01",
+      on_or_after="2021-03-01",
       returning="date_of_death",
       date_format="YYYY-MM-DD",
       return_expectations={"date": {"earliest": "2020-03-01"}},
