@@ -247,6 +247,7 @@ count if died_liver_any==1 & died_ons_covid_flag_any==1
 count if died_liver_underlying==1 & died_ons_covid_flag_any==1
 
 * Outcomes by baseline exposure stataus
+preserve
 table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \ hosp_died bin \ composite_make_up cat \ composite_pre bin \ ///
 died_pre bin \ hosp_pre bin \ composite_post bin \ died_post bin \ hosp_post bin \ died_liver_any bin \ died_liver_underlying bin \ liver_transplant_fu bin) clear
 export delimited using ./output/tables/baseline_outcomes.csv
@@ -261,6 +262,39 @@ forvalues i=0/1 {
 }
 keep factor rounded_n0 percent0 rounded_n1 percent1
 export delimited using ./output/tables/baseline_outcomes_rounded.csv
+restore
+
+preserve
+table1_mc, by(died_ons_covid_flag_any) vars(died_ons_liver_flag_any bin \ died_ons_liver_flag_underlying bin) clear
+export delimited using ./output/tables/baseline_liver_covid_any.csv
+forvalues i=0/1 {   
+    destring _columna_`i', gen(n`i') ignore(",") force
+    destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
+    gen rounded_n`i' = round(n`i', 5)
+    tostring rounded_n`i', gen(n`i'_rounded)
+    tostring percent`i', gen(percent_`i')
+    replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
+    replace percent_`i' = "redacted" if (rounded_n`i'<=5)
+}
+keep factor rounded_n0 percent0 rounded_n1 percent1
+export delimited using ./output/tables/baseline_liver_covid_any_rounded.csv
+restore 
+
+preserve
+table1_mc, by(died_ons_covid_flag_underlying) vars(died_ons_liver_flag_any bin \ died_ons_liver_flag_underlying bin) clear
+export delimited using ./output/tables/baseline_liver_covid_underlying.csv
+forvalues i=0/1 {   
+    destring _columna_`i', gen(n`i') ignore(",") force
+    destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
+    gen rounded_n`i' = round(n`i', 5)
+    tostring rounded_n`i', gen(n`i'_rounded)
+    tostring percent`i', gen(percent_`i')
+    replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
+    replace percent_`i' = "redacted" if (rounded_n`i'<=5)
+}
+keep factor rounded_n0 percent0 rounded_n1 percent1
+export delimited using ./output/tables/baseline_liver_covid_underlying_rounded.csv
+restore
 
 * Sensitivity analysis March 2021 cohort - vaccinations 
 

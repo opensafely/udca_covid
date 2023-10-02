@@ -1352,6 +1352,8 @@ hosp_any_f |       hosp_post
 
 . 
 . * Outcomes by baseline exposure stataus
+. preserve
+
 . table1_mc, by(udca_bl) vars(died_ons_covid_flag_any bin \ hosp_any_flag bin \
 >  hosp_died bin \ composite_make_up cat \ composite_pre bin \ ///
 > died_pre bin \ hosp_pre bin \ composite_post bin \ died_post bin \ hosp_post 
@@ -1499,6 +1501,165 @@ variable percent_1 was str4 now str8
 
 . export delimited using ./output/tables/baseline_outcomes_rounded.csv
 file ./output/tables/baseline_outcomes_rounded.csv saved
+
+. restore
+
+. 
+. preserve
+
+. table1_mc, by(died_ons_covid_flag_any) vars(died_ons_liver_flag_any bin \ die
+> d_ons_liver_flag_underlying bin) clear
+
+  +--------------------------------------------------------+
+  | factor                           N_0   N_1   m_0   m_1 |
+  |--------------------------------------------------------|
+  | died_ons_liver_flag_any          835   165     0     0 |
+  |--------------------------------------------------------|
+  | died_ons_liver_flag_underlying   835   165     0     0 |
+  +--------------------------------------------------------+
+   N_ ... #records used below,   m_ ... #records not used
+ 
+  +----------------------------------------------------------------------------
+> --------------------------+
+  |                                  died_ons_covid_flag_any = 0   died_ons_cov
+> id_flag_any = 1   p-value |
+  |----------------------------------------------------------------------------
+> --------------------------|
+  |                                  N=835                         N=165       
+>                           |
+  |----------------------------------------------------------------------------
+> --------------------------|
+  | died_ons_liver_flag_any          416 (49.8%)                   84 (50.9%)  
+>                    0.80   |
+  |----------------------------------------------------------------------------
+> --------------------------|
+  | died_ons_liver_flag_underlying   412 (49.3%)                   88 (53.3%)  
+>                    0.35   |
+  +----------------------------------------------------------------------------
+> --------------------------+
+Data are presented as n (%).
+ 
+
+. export delimited using ./output/tables/baseline_liver_covid_any.csv
+file ./output/tables/baseline_liver_covid_any.csv saved
+
+. forvalues i=0/1 {   
+  2.     destring _columna_`i', gen(n`i') ignore(",") force
+  3.     destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
+  4.     gen rounded_n`i' = round(n`i', 5)
+  5.     tostring rounded_n`i', gen(n`i'_rounded)
+  6.     tostring percent`i', gen(percent_`i')
+  7.     replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
+  8.     replace percent_`i' = "redacted" if (rounded_n`i'<=5)
+  9. }
+_columna_0: contains nonnumeric characters not specified in ignore(); n0 genera
+> ted as int
+(2 missing values generated)
+_columnb_0: contains nonnumeric characters not specified in ignore()
+_columnb_0: characters space % ( ) removed; percent0 generated as double
+(2 missing values generated)
+(2 missing values generated)
+n0_rounded generated as str3
+percent_0 generated as str4
+(0 real changes made)
+(0 real changes made)
+_columna_1: contains nonnumeric characters not specified in ignore(); n1 genera
+> ted as byte
+(2 missing values generated)
+_columnb_1: contains nonnumeric characters not specified in ignore()
+_columnb_1: characters space % ( ) removed; percent1 generated as double
+(2 missing values generated)
+(2 missing values generated)
+n1_rounded generated as str2
+percent_1 generated as str4
+(0 real changes made)
+(0 real changes made)
+
+. keep factor rounded_n0 percent0 rounded_n1 percent1
+
+. export delimited using ./output/tables/baseline_liver_covid_any_rounded.csv
+file ./output/tables/baseline_liver_covid_any_rounded.csv saved
+
+. restore 
+
+. 
+. preserve
+
+. table1_mc, by(died_ons_covid_flag_underlying) vars(died_ons_liver_flag_any bi
+> n \ died_ons_liver_flag_underlying bin) clear
+
+  +--------------------------------------------------------+
+  | factor                           N_0   N_1   m_0   m_1 |
+  |--------------------------------------------------------|
+  | died_ons_liver_flag_any          500   500     0     0 |
+  |--------------------------------------------------------|
+  | died_ons_liver_flag_underlying   500   500     0     0 |
+  +--------------------------------------------------------+
+   N_ ... #records used below,   m_ ... #records not used
+ 
+  +----------------------------------------------------------------------------
+> ----------------------------------------+
+  |                                  died_ons_covid_flag_underlying = 0   died_
+> ons_covid_flag_underlying = 1   p-value |
+  |----------------------------------------------------------------------------
+> ----------------------------------------|
+  |                                  N=500                                N=500
+>                                         |
+  |----------------------------------------------------------------------------
+> ----------------------------------------|
+  | died_ons_liver_flag_any          246 (49.2%)                          254 (
+> 50.8%)                           0.61   |
+  |----------------------------------------------------------------------------
+> ----------------------------------------|
+  | died_ons_liver_flag_underlying   241 (48.2%)                          259 (
+> 51.8%)                           0.25   |
+  +----------------------------------------------------------------------------
+> ----------------------------------------+
+Data are presented as n (%).
+ 
+
+. export delimited using ./output/tables/baseline_liver_covid_underlying.csv
+file ./output/tables/baseline_liver_covid_underlying.csv saved
+
+. forvalues i=0/1 {   
+  2.     destring _columna_`i', gen(n`i') ignore(",") force
+  3.     destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
+  4.     gen rounded_n`i' = round(n`i', 5)
+  5.     tostring rounded_n`i', gen(n`i'_rounded)
+  6.     tostring percent`i', gen(percent_`i')
+  7.     replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
+  8.     replace percent_`i' = "redacted" if (rounded_n`i'<=5)
+  9. }
+_columna_0: contains nonnumeric characters not specified in ignore(); n0 genera
+> ted as int
+(2 missing values generated)
+_columnb_0: contains nonnumeric characters not specified in ignore()
+_columnb_0: characters space % ( ) removed; percent0 generated as double
+(2 missing values generated)
+(2 missing values generated)
+n0_rounded generated as str3
+percent_0 generated as str4
+(0 real changes made)
+(0 real changes made)
+_columna_1: contains nonnumeric characters not specified in ignore(); n1 genera
+> ted as int
+(2 missing values generated)
+_columnb_1: contains nonnumeric characters not specified in ignore()
+_columnb_1: characters space % ( ) removed; percent1 generated as double
+(2 missing values generated)
+(2 missing values generated)
+n1_rounded generated as str3
+percent_1 generated as str4
+(0 real changes made)
+(0 real changes made)
+
+. keep factor rounded_n0 percent0 rounded_n1 percent1
+
+. export delimited using ./output/tables/baseline_liver_covid_underlying_rounde
+> d.csv
+file ./output/tables/baseline_liver_covid_underlying_rounded.csv saved
+
+. restore
 
 . 
 . * Sensitivity analysis March 2021 cohort - vaccinations 
@@ -2282,7 +2443,7 @@ file ./output/tables/baseline_table_udca_vacc_rounded.csv saved
 . 
 end of do-file
 
-. . file open output using "/tmp/104_baseline_tables.do.VM0v.out", write text r
+. . file open output using "/tmp/104_baseline_tables.do.8jfe.out", write text r
 > eplace
 
 . . file write output "success" 
