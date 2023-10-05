@@ -136,7 +136,7 @@ Sorted by:
      Note: Dataset has changed since last saved.
 
 . save `tempfile' 
-file /tmp/St00016.000001 saved
+file /tmp/St00015.000001 saved
 
 . 
 . /* Time-varying covariates are assessed 6-monthly and at time of exposure swi
@@ -1460,9 +1460,9 @@ file ./output/tv_vars_hosp_any.dta saved
 
 . describe 
 
-Contains data from /tmp/St00016.000001
+Contains data from /tmp/St00015.000001
   obs:         1,000                          
- vars:           109                          5 Oct 2023 09:49
+ vars:           109                          5 Oct 2023 11:05
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -1881,7 +1881,7 @@ Current smoker |        731       73.10       84.50
 . tempfile basefile
 
 . save `basefile'
-file /tmp/St00016.000008 saved
+file /tmp/St00015.000008 saved
 
 . foreach var in died_covid_any hosp_any composite_any {
   2.     preserve 
@@ -4326,7 +4326,7 @@ Sorted by:
      Note: Dataset has changed since last saved.
 
 . save `tempfile', replace 
-file /tmp/St00016.000001 saved
+file /tmp/St00015.000001 saved
 
 . 
 . /* Time-varying covariates are assessed 6-monthly and at time of exposure swi
@@ -5040,7 +5040,9 @@ Number of dates for time-varying update
 . * Keep only change dates to create time-varying dataset
 . keep patient_id covid_vacc_first_date_update covid_vacc_second_date_update co
 > vid_vacc_third_date_update covid_vacc_fourth_date_update covid_vacc_fifth_dat
-> e_update end_date date_most_recent_cov_vac
+> e_update covid_vacc_first_dateA covid_vacc_second_dateA covid_vacc_third_date
+> A covid_vacc_fourth_dateA covid_vacc_fifth_dateA end_date date_most_recent_co
+> v_vac
 
 . * Chercking number of patient_id's 
 . codebook patient_id
@@ -5095,7 +5097,7 @@ patient_id                                                          (unlabeled)
   4.     * Create flag for each vaccination date 
 .     gen `var'_flag = (`var'_date_update!=.)
   5.     * Create flag for if date is prior to 1st March 2021
-.     gen `var'_prior = `var'_date_update < date("01Mar2021", "DMY")
+.     gen `var'_prior = `var'_dateA <= date("01Mar2021", "DMY")
   6.     tab `var'_prior, m
   7. }
   0
@@ -5104,7 +5106,8 @@ patient_id                                                          (unlabeled)
 covid_vacc_ |
 first_prior |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,000      100.00      100.00
+          0 |        911       91.10       91.10
+          1 |         89        8.90      100.00
 ------------+-----------------------------------
       Total |      1,000      100.00
   0
@@ -5114,7 +5117,8 @@ covid_vacc_ |
 second_prio |
           r |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,000      100.00      100.00
+          0 |        927       92.70       92.70
+          1 |         73        7.30      100.00
 ------------+-----------------------------------
       Total |      1,000      100.00
   0
@@ -5133,8 +5137,8 @@ covid_vacc_ |
 fourth_prio |
           r |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        528       52.80       52.80
-          1 |        472       47.20      100.00
+          0 |        520       52.00       52.00
+          1 |        480       48.00      100.00
 ------------+-----------------------------------
       Total |      1,000      100.00
   0
@@ -5143,8 +5147,8 @@ fourth_prio |
 covid_vacc_ |
 fifth_prior |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        515       51.50       51.50
-          1 |        485       48.50      100.00
+          0 |        512       51.20       51.20
+          1 |        488       48.80      100.00
 ------------+-----------------------------------
       Total |      1,000      100.00
 
@@ -5187,9 +5191,10 @@ total_vaccs |      Freq.     Percent        Cum.
 total_vaccs |
      _prior |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        267       26.70       26.70
-          1 |        509       50.90       77.60
-          2 |        224       22.40      100.00
+          0 |        216       21.60       21.60
+          1 |        473       47.30       68.90
+          2 |        276       27.60       96.50
+          3 |         35        3.50      100.00
 ------------+-----------------------------------
       Total |      1,000      100.00
 
@@ -5197,10 +5202,10 @@ total_vaccs |
 (939 missing values generated)
 
 . count if total_vaccs_prior!=0 & date_most_recent_cov_vacA==.
-  688
+  736
 
 . count if total_vaccs_prior==0 & date_most_recent_cov_vacA!=.
-  16
+  13
 
 . * Create time varying vaccination count variable 
 . gen vacc_count_tv = 0
@@ -6018,9 +6023,9 @@ file ./output/tv_vars_hosp_any_vacc.dta saved
 
 . describe 
 
-Contains data from /tmp/St00016.000001
+Contains data from /tmp/St00015.000001
   obs:         1,000                          
- vars:           109                          5 Oct 2023 09:51
+ vars:           109                          5 Oct 2023 11:07
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -6439,8 +6444,8 @@ Current smoker |        753       75.30       84.50
 . tempfile basefile
 
 . save `basefile', replace
-(note: file /tmp/St00016.00000x not found)
-file /tmp/St00016.00000x saved
+(note: file /tmp/St00015.00000x not found)
+file /tmp/St00015.00000x saved
 
 . foreach var in died_covid_any hosp_any composite_any {
   2.     preserve 
@@ -6488,5 +6493,5 @@ file ./output/an_dataset_composite_any_vacc.dta saved
       name:  <unnamed>
        log:  /workspace/logs/time_varying.log
   log type:  text
- closed on:   5 Oct 2023, 09:52:07
+ closed on:   5 Oct 2023, 11:07:51
 -------------------------------------------------------------------------------

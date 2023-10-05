@@ -1330,7 +1330,7 @@ foreach var in covid_vacc_first_date covid_vacc_second_date covid_vacc_third_dat
 }
 
 * Keep only change dates to create time-varying dataset
-keep patient_id covid_vacc_first_date_update covid_vacc_second_date_update covid_vacc_third_date_update covid_vacc_fourth_date_update covid_vacc_fifth_date_update end_date date_most_recent_cov_vac
+keep patient_id covid_vacc_first_date_update covid_vacc_second_date_update covid_vacc_third_date_update covid_vacc_fourth_date_update covid_vacc_fifth_date_update covid_vacc_first_dateA covid_vacc_second_dateA covid_vacc_third_dateA covid_vacc_fourth_dateA covid_vacc_fifth_dateA end_date date_most_recent_cov_vac
 * Chercking number of patient_id's 
 codebook patient_id
 duplicates drop 
@@ -1343,7 +1343,7 @@ foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fo
     * Create flag for each vaccination date 
     gen `var'_flag = (`var'_date_update!=.)
     * Create flag for if date is prior to 1st March 2021
-    gen `var'_prior = `var'_date_update < date("01Mar2021", "DMY")
+    gen `var'_prior = `var'_dateA < date("01Mar2021", "DMY")
     tab `var'_prior, m
 }
 * Check not date where prior vaccination is missing 
