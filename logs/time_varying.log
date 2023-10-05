@@ -1462,7 +1462,7 @@ file ./output/tv_vars_hosp_any.dta saved
 
 Contains data from /tmp/St00015.000001
   obs:         1,000                          
- vars:           109                          5 Oct 2023 11:05
+ vars:           109                          5 Oct 2023 13:40
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -5097,7 +5097,7 @@ patient_id                                                          (unlabeled)
   4.     * Create flag for each vaccination date 
 .     gen `var'_flag = (`var'_date_update!=.)
   5.     * Create flag for if date is prior to 1st March 2021
-.     gen `var'_prior = `var'_dateA <= date("01Mar2021", "DMY")
+.     gen `var'_prior = `var'_dateA < date("01Mar2021", "DMY")
   6.     tab `var'_prior, m
   7. }
   0
@@ -5164,6 +5164,20 @@ fifth_prior |      Freq.     Percent        Cum.
 
 . count if covid_vacc_fourth_flag==0 & covid_vacc_fifth_flag==1
   257
+
+. 
+. * Check where more than one vaccine during a period
+. count if covid_vacc_first_date_update==covid_vacc_second_date_update
+  393
+
+. count if covid_vacc_second_date_update==covid_vacc_third_date_update
+  487
+
+. count if covid_vacc_third_date_update==covid_vacc_fourth_date_update
+  497
+
+. count if covid_vacc_fourth_date_update==covid_vacc_fifth_date_update
+  482
 
 . 
 . * Determine total number of vaccinations 
@@ -5252,6 +5266,9 @@ total_vaccs |
 . replace vacc_count_tv = 1 if newv==1 & number==1
 (919 real changes made)
 
+. count if newv==1 & number==1 & start==stop
+  312
+
 . * Second vaccination 
 . replace start = covid_vacc_second_date_update if newv==1 & number == 2
 (480 real changes made)
@@ -5266,6 +5283,9 @@ total_vaccs |
 
 . replace vacc_count_tv = 2 if newv==1 & number==2
 (710 real changes made)
+
+. count if newv==1 & number==2 & start==stop
+  11
 
 . * Third vaccination 
 . replace start = covid_vacc_third_date_update if newv==1 & number == 3
@@ -5282,6 +5302,9 @@ total_vaccs |
 . replace vacc_count_tv = 3 if newv==1 & number==3
 (382 real changes made)
 
+. count if newv==1 & number==3 & start==stop
+  0
+
 . * Fourth vaccination 
 . replace start = covid_vacc_fourth_date_update if newv==1 & number == 4
 (99 real changes made)
@@ -5297,6 +5320,9 @@ total_vaccs |
 . replace vacc_count_tv = 4 if newv==1 & number==4
 (104 real changes made)
 
+. count if newv==1 & number==4 & start==stop 
+  86
+
 . * Fifth vaccination 
 . replace start = covid_vacc_fifth_date_update if newv==1 & number == 5
 (4 real changes made)
@@ -5306,6 +5332,9 @@ total_vaccs |
 
 . replace vacc_count_tv = 5 if newv==1 & number==5
 (4 real changes made)
+
+. count if newv==1 & number==5 & start==stop
+  0
 
 . save ./output/tv_total_vaccs_check, replace
 (note: file ./output/tv_total_vaccs_check.dta not found)
@@ -6025,7 +6054,7 @@ file ./output/tv_vars_hosp_any_vacc.dta saved
 
 Contains data from /tmp/St00015.000001
   obs:         1,000                          
- vars:           109                          5 Oct 2023 11:07
+ vars:           109                          5 Oct 2023 13:42
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -6493,5 +6522,5 @@ file ./output/an_dataset_composite_any_vacc.dta saved
       name:  <unnamed>
        log:  /workspace/logs/time_varying.log
   log type:  text
- closed on:   5 Oct 2023, 11:07:51
+ closed on:   5 Oct 2023, 13:43:38
 -------------------------------------------------------------------------------

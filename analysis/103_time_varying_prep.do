@@ -1352,6 +1352,12 @@ count if covid_vacc_second_flag==0 & covid_vacc_third_flag==1
 count if covid_vacc_third_flag==0 & covid_vacc_fourth_flag==1
 count if covid_vacc_fourth_flag==0 & covid_vacc_fifth_flag==1
 
+* Check where more than one vaccine during a period
+count if covid_vacc_first_date_update==covid_vacc_second_date_update
+count if covid_vacc_second_date_update==covid_vacc_third_date_update
+count if covid_vacc_third_date_update==covid_vacc_fourth_date_update
+count if covid_vacc_fourth_date_update==covid_vacc_fifth_date_update
+
 * Determine total number of vaccinations 
 egen total_vaccs = rowtotal(covid_vacc_first_flag covid_vacc_second_flag covid_vacc_third_flag covid_vacc_fourth_flag covid_vacc_fifth_flag)
 tab total_vaccs
@@ -1374,25 +1380,30 @@ gen stop = covid_vacc_first_date_update if newv==0 & covid_vacc_first_date_updat
 replace stop = end_date if stop==. & expand==1
 replace stop = covid_vacc_second_date_update if newv==1 & number==1
 replace vacc_count_tv = 1 if newv==1 & number==1
+count if newv==1 & number==1 & start==stop
 * Second vaccination 
 replace start = covid_vacc_second_date_update if newv==1 & number == 2
 replace stop = covid_vacc_third_date_update if newv==1 & number==2 & covid_vacc_third_date_update!=.
 replace stop = end_date if newv==1 & number==2 & covid_vacc_third_date_update==.
 replace vacc_count_tv = 2 if newv==1 & number==2
+count if newv==1 & number==2 & start==stop
 * Third vaccination 
 replace start = covid_vacc_third_date_update if newv==1 & number == 3
 replace stop = covid_vacc_fourth_date_update if newv==1 & number==3 & covid_vacc_fourth_date_update!=.
 replace stop = end_date if newv==1 & number==3 & covid_vacc_fourth_date_update==.
 replace vacc_count_tv = 3 if newv==1 & number==3
+count if newv==1 & number==3 & start==stop
 * Fourth vaccination 
 replace start = covid_vacc_fourth_date_update if newv==1 & number == 4
 replace stop = covid_vacc_fifth_date_update if newv==1 & number==4 & covid_vacc_fifth_date_update!=.
 replace stop = end_date if newv==1 & number==4 & covid_vacc_fifth_date_update==.
 replace vacc_count_tv = 4 if newv==1 & number==4
+count if newv==1 & number==4 & start==stop 
 * Fifth vaccination 
 replace start = covid_vacc_fifth_date_update if newv==1 & number == 5
 replace stop = end_date if newv==1 & number==5
 replace vacc_count_tv = 5 if newv==1 & number==5
+count if newv==1 & number==5 & start==stop
 save ./output/tv_total_vaccs_check, replace
 keep patient_id vacc_count_tv start stop
 * Check data 
