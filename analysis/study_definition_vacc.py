@@ -29,7 +29,7 @@ study = StudyDefinition(
     dereg_date=patients.date_deregistered_from_all_supported_practices(
         on_or_after="index_date",
         date_format="YYYY-MM-DD",
-        return_expectations={"date": {"earliest": "2020-03-01"}}
+        return_expectations={"date": {"earliest": "2021-03-01"}}
     ),
     # Age
     age=patients.age_as_of(
@@ -227,7 +227,7 @@ study = StudyDefinition(
     #Ursodeoxycholic acid 
     udca_count_bl=patients.with_these_medications(
         udca_codes, 
-        between=["2020-11-02", "2022-03-01"],
+        between=["2020-11-02", "2021-02-28"],
         returning="number_of_matches_in_period",
         return_expectations={
             "int": {"distribution": "normal", "mean": 3, "stddev": 2},
@@ -432,7 +432,7 @@ study = StudyDefinition(
         returning="date",
         date_format="YYYY-MM-DD",
         return_expectations={
-          "date": {"earliest":  "2020-12-01",  "latest": "2022-12-31"},
+          "date": {"earliest":  "2020-12-01",  "latest": "2021-02-28"},
         },
       ),
 

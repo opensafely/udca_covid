@@ -1343,7 +1343,7 @@ foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fo
     * Create flag for each vaccination date 
     gen `var'_flag = (`var'_date_update!=.)
     * Create flag for if date is prior to 1st March 2021
-    gen `var'_prior = `var'_date_update <= date("01Mar2021", "DMY")
+    gen `var'_prior = `var'_date_update < date("01Mar2021", "DMY")
     tab `var'_prior, m
 }
 * Check not date where prior vaccination is missing 
@@ -1356,6 +1356,7 @@ count if covid_vacc_fourth_flag==0 & covid_vacc_fifth_flag==1
 egen total_vaccs = rowtotal(covid_vacc_first_flag covid_vacc_second_flag covid_vacc_third_flag covid_vacc_fourth_flag covid_vacc_fifth_flag)
 tab total_vaccs
 egen total_vaccs_prior = rowtotal(covid_vacc_first_prior covid_vacc_second_prior covid_vacc_third_prior covid_vacc_fourth_prior covid_vacc_fifth_prior)
+tab total_vaccs_prior, m 
 gen date_most_recent_cov_vacA = date(date_most_recent_cov_vac, "YMD")
 count if total_vaccs_prior!=0 & date_most_recent_cov_vacA==.
 count if total_vaccs_prior==0 & date_most_recent_cov_vacA!=.
