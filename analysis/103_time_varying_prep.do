@@ -1343,7 +1343,7 @@ foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fo
     * Create flag for each vaccination date 
     gen `var'_flag = (`var'_date_update!=.)
     * Create flag for if date is prior to 1st March 2021
-    gen `var'_prior = `var'_dateA < date("01Mar2021", "DMY")
+    gen `var'_prior = `var'_dateA <= date("01Mar2021", "DMY")
     tab `var'_prior, m
 }
 * Check not date where prior vaccination is missing 
@@ -1353,10 +1353,26 @@ count if covid_vacc_third_flag==0 & covid_vacc_fourth_flag==1
 count if covid_vacc_fourth_flag==0 & covid_vacc_fifth_flag==1
 
 * Check where more than one vaccine during a period
-count if covid_vacc_first_date_update==covid_vacc_second_date_update
-count if covid_vacc_second_date_update==covid_vacc_third_date_update
-count if covid_vacc_third_date_update==covid_vacc_fourth_date_update
-count if covid_vacc_fourth_date_update==covid_vacc_fifth_date_update
+count if covid_vacc_first_date_update==covid_vacc_second_date_update & covid_vacc_first_date_update!=.
+count if covid_vacc_second_date_update==covid_vacc_third_date_update & covid_vacc_second_date_update!=.
+count if covid_vacc_third_date_update==covid_vacc_fourth_date_update & covid_vacc_third_date_update!=.
+count if covid_vacc_fourth_date_update==covid_vacc_fifth_date_update & covid_vacc_fourth_date_update!=.
+
+* Where multiple vaccinations in same period need to set earliest one to missing 
+replace covid_vacc_first_date_update=. if covid_vacc_first_date_update==covid_vacc_second_date_update & covid_vacc_first_date_update!=. 
+replace covid_vacc_second_date_update=. if covid_vacc_second_date_update==covid_vacc_third_date_update & covid_vacc_second_date_update!=. 
+replace covid_vacc_third_date_update=. if covid_vacc_third_date_update==covid_vacc_fourth_date_update & covid_vacc_third_date_update!=.
+replace covid_vacc_fourth_date_update=. if covid_vacc_fourth_date_update==covid_vacc_fifth_date_update & covid_vacc_fourth_date_update!=.
+* Set corresponding flag to zero if missing 
+foreach number in first second third fourth fifth {
+    replace covid_vacc_`number'_flag=0 if covid_vacc_`number'_date_update==.
+}
+* Generate count if number of changes at each vacc 
+gen change_1 = covid_vacc_first_flag 
+gen change_2 = covid_vacc_first_flag + covid_vacc_second_flag
+gen change_3 = covid_vacc_first_flag + covid_vacc_second_flag + covid_vacc_third_flag
+gen change_4 = covid_vacc_first_flag + covid_vacc_second_flag + covid_vacc_third_flag + covid_vacc_fourth_flag
+gen change_5 = covid_vacc_first_flag + covid_vacc_second_flag + covid_vacc_third_flag + covid_vacc_fourth_flag + covid_vacc_fifth_flag
 
 * Determine total number of vaccinations 
 egen total_vaccs = rowtotal(covid_vacc_first_flag covid_vacc_second_flag covid_vacc_third_flag covid_vacc_fourth_flag covid_vacc_fifth_flag)
@@ -1366,44 +1382,75 @@ tab total_vaccs_prior, m
 gen date_most_recent_cov_vacA = date(date_most_recent_cov_vac, "YMD")
 count if total_vaccs_prior!=0 & date_most_recent_cov_vacA==.
 count if total_vaccs_prior==0 & date_most_recent_cov_vacA!=.
+
 * Create time varying vaccination count variable 
-gen vacc_count_tv = 0
+gen vacc_count_tv = total_vaccs_prior
 * expand row up to total number of vaccinations 
 gen expand = total_vaccs + 1
 tab expand 
 expand expand, gen(newv)
 bys patient_id newv: gen number = _n 
-* Update variables so row for when zero and row for each vaccination - if not updated whole time will be zero 
+* Update variables so row for when zero or initial number of vaccines and row for each vaccination - if not updated whole time will be zero 
+* First row is either no to 1, one to 2 or 2 to 3 unless there are multiple vaccines on the same period
 gen start = date("01/03/2020", "DMY") if newv==0
-replace start = covid_vacc_first_date_update if newv==1 & number == 1
-gen stop = covid_vacc_first_date_update if newv==0 & covid_vacc_first_date_update!=.
-replace stop = end_date if stop==. & expand==1
-replace stop = covid_vacc_second_date_update if newv==1 & number==1
-replace vacc_count_tv = 1 if newv==1 & number==1
-count if newv==1 & number==1 & start==stop
-* Second vaccination 
-replace start = covid_vacc_second_date_update if newv==1 & number == 2
-replace stop = covid_vacc_third_date_update if newv==1 & number==2 & covid_vacc_third_date_update!=.
-replace stop = end_date if newv==1 & number==2 & covid_vacc_third_date_update==.
-replace vacc_count_tv = 2 if newv==1 & number==2
-count if newv==1 & number==2 & start==stop
-* Third vaccination 
-replace start = covid_vacc_third_date_update if newv==1 & number == 3
-replace stop = covid_vacc_fourth_date_update if newv==1 & number==3 & covid_vacc_fourth_date_update!=.
-replace stop = end_date if newv==1 & number==3 & covid_vacc_fourth_date_update==.
-replace vacc_count_tv = 3 if newv==1 & number==3
-count if newv==1 & number==3 & start==stop
-* Fourth vaccination 
-replace start = covid_vacc_fourth_date_update if newv==1 & number == 4
-replace stop = covid_vacc_fifth_date_update if newv==1 & number==4 & covid_vacc_fifth_date_update!=.
-replace stop = end_date if newv==1 & number==4 & covid_vacc_fifth_date_update==.
-replace vacc_count_tv = 4 if newv==1 & number==4
-count if newv==1 & number==4 & start==stop 
-* Fifth vaccination 
-replace start = covid_vacc_fifth_date_update if newv==1 & number == 5
-replace stop = end_date if newv==1 & number==5
-replace vacc_count_tv = 5 if newv==1 & number==5
-count if newv==1 & number==5 & start==stop
+gen stop = covid_vacc_first_date_update if newv==0 & change_1==1
+replace stop = covid_vacc_second_date_update if newv==0 & change_2==1 & change_1==0
+replace stop = covid_vacc_third_date_update if newv==0 & change_3==1 & change_2==0
+replace stop = covid_vacc_fourth_date_update if newv==0 & change_4==1 & change_3==0
+replace stop = covid_vacc_fifth_date_update if newv==0 & change_5==1 & change_4==0
+replace stop = end_date if total_vaccs==0
+* Second update - update vacc_count_tv at end
+replace start = covid_vacc_first_date_update if newv==1 & number == 1 & change_1==1
+replace start = covid_vacc_second_date_update if newv==1 & number == 1 & change_2==1 & change_1==0
+replace start = covid_vacc_third_date_update if newv==1 & number == 1 & change_3==1 & change_2==0
+replace start = covid_vacc_fourth_date_update if newv==1 & number == 1 & change_4==1 & change_3==0
+replace start = covid_vacc_fifth_date_update if newv==1 & number == 1 & change_5==1 & change_4==0
+
+replace stop = covid_vacc_second_date_update if newv==1 & number == 1 & change_2==2
+replace stop = covid_vacc_third_date_update if newv==1 & number == 1 & change_3==2 & change_2==1
+replace stop= covid_vacc_fourth_date_update if newv==1 & number == 1 & change_4==2 & change_3==1
+replace stop = covid_vacc_fifth_date_update if newv==1 & number == 1 & change_5==2 & change_4==1
+replace stop = end_date if stop==. & newv==1 & number == 1
+
+* Third update 
+replace start = covid_vacc_second_date_update if newv==1 & number == 2 & change_2==2
+replace start = covid_vacc_third_date_update if newv==1 & number == 2 & change_3==2 & change_2==1
+replace start = covid_vacc_fourth_date_update if newv==1 & number == 2 & change_4==2 & change_3==1
+replace start = covid_vacc_fifth_date_update if newv==1 & number == 2 & change_5==2 & change_4==1
+
+replace stop = covid_vacc_third_date_update if newv==1 & number == 2 & change_3==3 & change_2==2
+replace stop= covid_vacc_fourth_date_update if newv==1 & number == 2 & change_4==3 & change_3==2
+replace stop = covid_vacc_fifth_date_update if newv==1 & number == 2 & change_5==3 & change_4==2
+replace stop = end_date if stop==. & newv==1 & number == 2
+
+* Fourth update 
+replace start = covid_vacc_third_date_update if newv==1 & number == 3 & change_3==3 & change_2==2
+replace start= covid_vacc_fourth_date_update if newv==1 & number == 3 & change_4==3 & change_3==2
+replace start = covid_vacc_fifth_date_update if newv==1 & number == 3 & change_5==3 & change_4==2
+
+replace stop= covid_vacc_fourth_date_update if newv==1 & number == 3 & change_4==4 & change_3==3
+replace stop = covid_vacc_fifth_date_update if newv==1 & number == 3 & change_5==4 & change_4==3
+replace stop = end_date if stop==. & newv==1 & number == 3
+
+* Fifth update 
+replace start = covid_vacc_fourth_date_update if newv==1 & number == 3 & change_4==4 & change_3==3
+replace start = covid_vacc_fifth_date_update if newv==1 & number == 3 & change_5==4 & change_4==3
+
+replace stop = covid_vacc_fifth_date_update if newv==1 & number == 4 & change_5==5 & change_4==4
+replace stop = end_date if stop==. & newv==1 & number == 4
+
+replace vacc_count_tv = 1 if stop==covid_vacc_first_date_update
+replace vacc_count_tv = 2 if stop==covid_vacc_second_date_update
+replace vacc_count_tv = 3 if stop==covid_vacc_third_date_update
+replace vacc_count_tv = 4 if stop==covid_vacc_fourth_date_update
+replace vacc_count_tv = 5 if stop==covid_vacc_fifth_date_update
+
+* Checks
+count if start==.
+count if stop==.
+bys patient_id (start): gen stop_error = start < stop[_n-1] & patient_id==patient_id[_n-1]
+tab stop_error 
+bys patient_id (start): gen tv_vacc_error = vacc_count_tv<vacc_count_tv[_n-1] 
 save ./output/tv_total_vaccs_check, replace
 keep patient_id vacc_count_tv start stop
 * Check data 

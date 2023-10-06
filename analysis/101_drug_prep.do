@@ -482,8 +482,8 @@ gen stop_date = udcaA + 120
 format stop_date %dD/N/CY 
 
 * Drop rows where prescriptions ends prior to March 2020
-count if stop_date <= date("01March2020", "DMY")
-drop if stop_date <= date("01March2020", "DMY")
+count if stop_date <= date("01March2021", "DMY")
+drop if stop_date <= date("01March2021", "DMY")
 
 * Collapse adjacent prescriptions that are continuous prescribing into one period 
 * Flag if start date is greater than assumed stop date of previous prescription 
@@ -525,7 +525,7 @@ merge m:1 patient_id using `tempfile', keepusing(dereg_date died_date_ons udca_c
 tab _merge
 
 * Update variables for people without any prescriptions 
-replace start = date("01/03/2020", "DMY") if _merge==2
+replace start = date("01/03/2021", "DMY") if _merge==2
 replace udca = 0 if _merge==2
 replace stop = date("31/12/2022", "DMY") if _merge==2
 replace total_no_presc = 0 if _merge==2
@@ -549,11 +549,11 @@ gen total_fu = end_date - date("01/03/2020", "DMY")
 
 ** Update start and end of follow-up for cohort
 * Identify prescriptions that start prior to March 2020
-gen start_prior = (start < date("01/03/2020", "DMY"))
-replace start = date("01/03/2020", "DMY") if start_prior==1
+gen start_prior = (start < date("01/03/2021", "DMY"))
+replace start = date("01/03/2021", "DMY") if start_prior==1
 
-* Identify first prescriptions that start after March 2020
-bys patient_id (start): gen start_after = 1 + (start > date("01/03/2020", "DMY") & _n==1)
+* Identify first prescriptions that start after March 2021
+bys patient_id (start): gen start_after = 1 + (start > date("01/03/2021", "DMY") & _n==1)
 tab start_after
 expand start_after
 
@@ -565,10 +565,10 @@ tab start_after new_record
 sort patient_id start
 replace udca=0 if new_record==1
 replace stop = start if new_record==1
-replace start = date("01/03/2020", "DMY") if new_record==1
+replace start = date("01/03/2021", "DMY") if new_record==1
 drop new_record start_after
 
-tab end_date_flag if start==date("01/03/2020", "DMY"), m 
+tab end_date_flag if start==date("01/03/2021", "DMY"), m 
 * Identify rows that end after study end date for person 
 gen end_after = (stop > end_date )
 gen end_before = (start > end_date) 
