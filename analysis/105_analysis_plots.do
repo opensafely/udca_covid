@@ -20,6 +20,10 @@ foreach outcome in hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
     describe
     gen index_date = date("01/03/2020", "DMY")
+    bys patient_id (start): gen last = _N==_n 
+    tab died_liver_any `outcome'_flag if last==1
+    * Update stop date of last record to end of study period if died of liver disease 
+    replace stop = date("31/12/2022", "DMY") if last==1 & died_liver_any==1
     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) origin(index_date)
 
     * Add cumulative incidence plots 
@@ -84,6 +88,10 @@ foreach outcome in hosp_any composite_any {
 use ./output/an_dataset_died_covid_any, clear 
 describe
 gen index_date = date("01/03/2020", "DMY")
+bys patient_id (start): gen last = _N==_n 
+tab died_liver_any died_covid_any_flag if last==1
+* Update stop date of last record to end of study period if died of liver disease 
+replace stop = date("31/12/2022", "DMY") if last==1 & died_liver_any==1
 stset stop, fail(died_covid_any_flag) id(patient_id) enter(index_date) origin(index_date)
 
 * Add cumulative incidence plots 
@@ -149,6 +157,10 @@ foreach outcome in hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
     describe
     gen index_date = date("01/03/2020", "DMY")
+    bys patient_id (start): gen last = _N==_n 
+    tab died_liver_any `outcome'_flag if last==1
+    * Update stop date of last record to end of study period if died of liver disease 
+    replace stop = date("31/12/2022", "DMY") if last==1 & died_liver_any==1
     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) origin(index_date)
 
     * Add cumulative incidence plots 
@@ -169,7 +181,7 @@ foreach outcome in hosp_any composite_any {
     * fully adjusted model to fit 
     stpm2 udca male age_tv any_high_risk_condition eth_bin imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat3 ///
     bmi_cat4 bmi_cat5 smoking2 smoking3 severe_disease covid_vacc_first liver_trans, ///
-     tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(1) scale(hazard) eform
+     tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(3) scale(hazard) eform
     
     summ _t
     local tmax=r(max)
@@ -230,6 +242,10 @@ foreach outcome in hosp_any composite_any {
 use ./output/an_dataset_died_covid_any, clear 
 describe
 gen index_date = date("01/03/2020", "DMY")
+bys patient_id (start): gen last = _N==_n 
+tab died_liver_any died_covid_any_flag if last==1
+* Update stop date of last record to end of study period if died of liver disease 
+replace stop = date("31/12/2022", "DMY") if last==1 & died_liver_any==1
 stset stop, fail(died_covid_any_flag) id(patient_id) enter(index_date) origin(index_date)
 
 * Add cumulative incidence plots 
@@ -248,7 +264,7 @@ bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_first liv
     } 
 stpm2 udca male age_tv any_high_risk_condition eth_bin imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat3 ///
 bmi_cat4 bmi_cat5 smoking2 smoking3 severe_disease covid_vacc_first liver_trans, ///
-    tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(1) scale(hazard) eform
+    tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(3) scale(hazard) eform
 
 summ _t
 local tmax=r(max)

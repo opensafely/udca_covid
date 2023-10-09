@@ -463,7 +463,11 @@ bys time_vacc_cat: sum time_vacc
 label define vacc_t 1 "Q1 closest vaccination" 2 "Q2" 3 "Q3" 4 "Q4 furthest vaccination" 5 "No vaccination" 
 label values time_vacc_cat vacc_t 
 
-keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smoking eth_bin time_vacc_cat has_pbc oca_bl
+* Exploring death by liver disease 
+gen died_liver_any = died_ons_liver_flag_any==1 & died_ons_covid_flag_any!=1
+gen died_liver_underlying = died_ons_liver_flag_underlying==1 & died_ons_covid_flag_any!=1
+
+keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smoking eth_bin time_vacc_cat has_pbc oca_bl died_liver_any died_liver_underlying
 tempfile basefile
 save `basefile'
 foreach var in died_covid_any hosp_any composite_any {

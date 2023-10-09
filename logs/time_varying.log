@@ -1462,7 +1462,7 @@ file ./output/tv_vars_hosp_any.dta saved
 
 Contains data from /tmp/St00015.000001
   obs:         1,000                          
- vars:           109                          5 Oct 2023 13:40
+ vars:           109                          9 Oct 2023 10:58
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -1875,8 +1875,15 @@ Current smoker |        731       73.10       84.50
 . label values time_vacc_cat vacc_t 
 
 . 
+. * Exploring death by liver disease 
+. gen died_liver_any = died_ons_liver_flag_any==1 & died_ons_covid_flag_any!=1
+
+. gen died_liver_underlying = died_ons_liver_flag_underlying==1 & died_ons_covi
+> d_flag_any!=1
+
+. 
 . keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smokin
-> g eth_bin time_vacc_cat has_pbc oca_bl
+> g eth_bin time_vacc_cat has_pbc oca_bl died_liver_any died_liver_underlying
 
 . tempfile basefile
 
@@ -5097,7 +5104,7 @@ patient_id                                                          (unlabeled)
   4.     * Create flag for each vaccination date 
 .     gen `var'_flag = (`var'_date_update!=.)
   5.     * Create flag for if date is prior to 1st March 2021
-.     gen `var'_prior = `var'_dateA < date("01Mar2021", "DMY")
+.     gen `var'_prior = `var'_dateA <= date("01Mar2021", "DMY")
   6.     tab `var'_prior, m
   7. }
   0
@@ -5167,17 +5174,65 @@ fifth_prior |      Freq.     Percent        Cum.
 
 . 
 . * Check where more than one vaccine during a period
-. count if covid_vacc_first_date_update==covid_vacc_second_date_update
-  393
+. count if covid_vacc_first_date_update==covid_vacc_second_date_update & covid_
+> vacc_first_date_update!=.
+  120
 
-. count if covid_vacc_second_date_update==covid_vacc_third_date_update
-  487
+. count if covid_vacc_second_date_update==covid_vacc_third_date_update & covid_
+> vacc_second_date_update!=.
+  11
 
-. count if covid_vacc_third_date_update==covid_vacc_fourth_date_update
-  497
+. count if covid_vacc_third_date_update==covid_vacc_fourth_date_update & covid_
+> vacc_third_date_update!=.
+  0
 
-. count if covid_vacc_fourth_date_update==covid_vacc_fifth_date_update
-  482
+. count if covid_vacc_fourth_date_update==covid_vacc_fifth_date_update & covid_
+> vacc_fourth_date_update!=.
+  224
+
+. 
+. * Where multiple vaccinations in same period need to set earliest one to miss
+> ing 
+. replace covid_vacc_first_date_update=. if covid_vacc_first_date_update==covid
+> _vacc_second_date_update & covid_vacc_first_date_update!=. 
+(120 real changes made, 120 to missing)
+
+. replace covid_vacc_second_date_update=. if covid_vacc_second_date_update==cov
+> id_vacc_third_date_update & covid_vacc_second_date_update!=. 
+(11 real changes made, 11 to missing)
+
+. replace covid_vacc_third_date_update=. if covid_vacc_third_date_update==covid
+> _vacc_fourth_date_update & covid_vacc_third_date_update!=.
+(0 real changes made)
+
+. replace covid_vacc_fourth_date_update=. if covid_vacc_fourth_date_update==cov
+> id_vacc_fifth_date_update & covid_vacc_fourth_date_update!=.
+(224 real changes made, 224 to missing)
+
+. * Set corresponding flag to zero if missing 
+. foreach number in first second third fourth fifth {
+  2.     replace covid_vacc_`number'_flag=0 if covid_vacc_`number'_date_update=
+> =.
+  3. }
+(120 real changes made)
+(11 real changes made)
+(0 real changes made)
+(224 real changes made)
+(0 real changes made)
+
+. * Generate count if number of changes at each vacc 
+. gen change_1 = covid_vacc_first_flag 
+
+. gen change_2 = covid_vacc_first_flag + covid_vacc_second_flag
+
+. gen change_3 = covid_vacc_first_flag + covid_vacc_second_flag + covid_vacc_th
+> ird_flag
+
+. gen change_4 = covid_vacc_first_flag + covid_vacc_second_flag + covid_vacc_th
+> ird_flag + covid_vacc_fourth_flag
+
+. gen change_5 = covid_vacc_first_flag + covid_vacc_second_flag + covid_vacc_th
+> ird_flag + covid_vacc_fourth_flag + covid_vacc_fifth_flag
 
 . 
 . * Determine total number of vaccinations 
@@ -5189,11 +5244,10 @@ fifth_prior |      Freq.     Percent        Cum.
 total_vaccs |      Freq.     Percent        Cum.
 ------------+-----------------------------------
           0 |         81        8.10        8.10
-          1 |        209       20.90       29.00
-          2 |        328       32.80       61.80
-          3 |        278       27.80       89.60
-          4 |        100       10.00       99.60
-          5 |          4        0.40      100.00
+          1 |        301       30.10       38.20
+          2 |        401       40.10       78.30
+          3 |        207       20.70       99.00
+          4 |         10        1.00      100.00
 ------------+-----------------------------------
       Total |      1,000      100.00
 
@@ -5221,8 +5275,9 @@ total_vaccs |
 . count if total_vaccs_prior==0 & date_most_recent_cov_vacA!=.
   13
 
+. 
 . * Create time varying vaccination count variable 
-. gen vacc_count_tv = 0
+. gen vacc_count_tv = total_vaccs_prior
 
 . * expand row up to total number of vaccinations 
 . gen expand = total_vaccs + 1
@@ -5232,109 +5287,204 @@ total_vaccs |
      expand |      Freq.     Percent        Cum.
 ------------+-----------------------------------
           1 |         81        8.10        8.10
-          2 |        209       20.90       29.00
-          3 |        328       32.80       61.80
-          4 |        278       27.80       89.60
-          5 |        100       10.00       99.60
-          6 |          4        0.40      100.00
+          2 |        301       30.10       38.20
+          3 |        401       40.10       78.30
+          4 |        207       20.70       99.00
+          5 |         10        1.00      100.00
 ------------+-----------------------------------
       Total |      1,000      100.00
 
 . expand expand, gen(newv)
-(2,119 observations created)
+(1,764 observations created)
 
 . bys patient_id newv: gen number = _n 
 
-. * Update variables so row for when zero and row for each vaccination - if not
->  updated whole time will be zero 
+. * Update variables so row for when zero or initial number of vaccines and row
+>  for each vaccination - if not updated whole time will be zero 
+. * First row is either no to 1, one to 2 or 2 to 3 unless there are multiple v
+> accines on the same period
 . gen start = date("01/03/2020", "DMY") if newv==0
-(2,119 missing values generated)
+(1,764 missing values generated)
 
-. replace start = covid_vacc_first_date_update if newv==1 & number == 1
-(590 real changes made)
+. gen stop = covid_vacc_first_date_update if newv==0 & change_1==1
+(2,294 missing values generated)
 
-. gen stop = covid_vacc_first_date_update if newv==0 & covid_vacc_first_date_up
-> date!=.
-(2,529 missing values generated)
+. replace stop = covid_vacc_second_date_update if newv==0 & change_2==1 & chang
+> e_1==0
+(248 real changes made)
 
-. replace stop = end_date if stop==. & expand==1
+. replace stop = covid_vacc_third_date_update if newv==0 & change_3==1 & change
+> _2==0
+(12 real changes made)
+
+. replace stop = covid_vacc_fourth_date_update if newv==0 & change_4==1 & chang
+> e_3==0
+(64 real changes made)
+
+. replace stop = covid_vacc_fifth_date_update if newv==0 & change_5==1 & change
+> _4==0
+(125 real changes made)
+
+. replace stop = end_date if total_vaccs==0
 (81 real changes made)
 
-. replace stop = covid_vacc_second_date_update if newv==1 & number==1
-(508 real changes made)
+. * Second update - update vacc_count_tv at end
+. replace start = covid_vacc_first_date_update if newv==1 & number == 1 & chang
+> e_1==1
+(470 real changes made)
 
-. replace vacc_count_tv = 1 if newv==1 & number==1
-(919 real changes made)
+. replace start = covid_vacc_second_date_update if newv==1 & number == 1 & chan
+> ge_2==1 & change_1==0
+(248 real changes made)
 
-. count if newv==1 & number==1 & start==stop
-  312
+. replace start = covid_vacc_third_date_update if newv==1 & number == 1 & chang
+> e_3==1 & change_2==0
+(12 real changes made)
 
-. * Second vaccination 
-. replace start = covid_vacc_second_date_update if newv==1 & number == 2
-(480 real changes made)
+. replace start = covid_vacc_fourth_date_update if newv==1 & number == 1 & chan
+> ge_4==1 & change_3==0
+(64 real changes made)
 
-. replace stop = covid_vacc_third_date_update if newv==1 & number==2 & covid_va
-> cc_third_date_update!=.
-(45 real changes made)
+. replace start = covid_vacc_fifth_date_update if newv==1 & number == 1 & chang
+> e_5==1 & change_4==0
+(125 real changes made)
 
-. replace stop = end_date if newv==1 & number==2 & covid_vacc_third_date_update
-> ==.
-(665 real changes made)
+. 
+. replace stop = covid_vacc_second_date_update if newv==1 & number == 1 & chang
+> e_2==2
+(249 real changes made)
 
-. replace vacc_count_tv = 2 if newv==1 & number==2
-(710 real changes made)
+. replace stop = covid_vacc_third_date_update if newv==1 & number == 1 & change
+> _3==2 & change_2==1
+(24 real changes made)
 
-. count if newv==1 & number==2 & start==stop
-  11
+. replace stop= covid_vacc_fourth_date_update if newv==1 & number == 1 & change
+> _4==2 & change_3==1
+(109 real changes made)
 
-. * Third vaccination 
-. replace start = covid_vacc_third_date_update if newv==1 & number == 3
-(41 real changes made)
+. replace stop = covid_vacc_fifth_date_update if newv==1 & number == 1 & change
+> _5==2 & change_4==1
+(236 real changes made)
 
-. replace stop = covid_vacc_fourth_date_update if newv==1 & number==3 & covid_v
-> acc_fourth_date_update!=.
-(283 real changes made)
+. replace stop = end_date if stop==. & newv==1 & number == 1
+(301 real changes made)
 
-. replace stop = end_date if newv==1 & number==3 & covid_vacc_fourth_date_updat
-> e==.
-(99 real changes made)
+. 
+. * Third update 
+. replace start = covid_vacc_second_date_update if newv==1 & number == 2 & chan
+> ge_2==2
+(249 real changes made)
 
-. replace vacc_count_tv = 3 if newv==1 & number==3
-(382 real changes made)
+. replace start = covid_vacc_third_date_update if newv==1 & number == 2 & chang
+> e_3==2 & change_2==1
+(24 real changes made)
 
-. count if newv==1 & number==3 & start==stop
-  0
+. replace start = covid_vacc_fourth_date_update if newv==1 & number == 2 & chan
+> ge_4==2 & change_3==1
+(109 real changes made)
 
-. * Fourth vaccination 
-. replace start = covid_vacc_fourth_date_update if newv==1 & number == 4
-(99 real changes made)
+. replace start = covid_vacc_fifth_date_update if newv==1 & number == 2 & chang
+> e_5==2 & change_4==1
+(236 real changes made)
 
-. replace stop = covid_vacc_fifth_date_update if newv==1 & number==4 & covid_va
-> cc_fifth_date_update!=.
-(97 real changes made)
+. 
+. replace stop = covid_vacc_third_date_update if newv==1 & number == 2 & change
+> _3==3 & change_2==2
+(9 real changes made)
 
-. replace stop = end_date if newv==1 & number==4 & covid_vacc_fifth_date_update
-> ==.
+. replace stop= covid_vacc_fourth_date_update if newv==1 & number == 2 & change
+> _4==3 & change_3==2
+(85 real changes made)
+
+. replace stop = covid_vacc_fifth_date_update if newv==1 & number == 2 & change
+> _5==3 & change_4==2
+(123 real changes made)
+
+. replace stop = end_date if stop==. & newv==1 & number == 2
+(401 real changes made)
+
+. 
+. * Fourth update 
+. replace start = covid_vacc_third_date_update if newv==1 & number == 3 & chang
+> e_3==3 & change_2==2
+(9 real changes made)
+
+. replace start= covid_vacc_fourth_date_update if newv==1 & number == 3 & chang
+> e_4==3 & change_3==2
+(85 real changes made)
+
+. replace start = covid_vacc_fifth_date_update if newv==1 & number == 3 & chang
+> e_5==3 & change_4==2
+(123 real changes made)
+
+. 
+. replace stop= covid_vacc_fourth_date_update if newv==1 & number == 3 & change
+> _4==4 & change_3==3
+(3 real changes made)
+
+. replace stop = covid_vacc_fifth_date_update if newv==1 & number == 3 & change
+> _5==4 & change_4==3
 (7 real changes made)
 
-. replace vacc_count_tv = 4 if newv==1 & number==4
-(104 real changes made)
+. replace stop = end_date if stop==. & newv==1 & number == 3
+(207 real changes made)
 
-. count if newv==1 & number==4 & start==stop 
-  86
+. 
+. * Fifth update 
+. replace start = covid_vacc_fourth_date_update if newv==1 & number == 3 & chan
+> ge_4==4 & change_3==3
+(3 real changes made)
 
-. * Fifth vaccination 
-. replace start = covid_vacc_fifth_date_update if newv==1 & number == 5
-(4 real changes made)
+. replace start = covid_vacc_fifth_date_update if newv==1 & number == 3 & chang
+> e_5==4 & change_4==3
+(7 real changes made)
 
-. replace stop = end_date if newv==1 & number==5
-(4 real changes made)
+. 
+. replace stop = covid_vacc_fifth_date_update if newv==1 & number == 4 & change
+> _5==5 & change_4==4
+(0 real changes made)
 
-. replace vacc_count_tv = 5 if newv==1 & number==5
-(4 real changes made)
+. replace stop = end_date if stop==. & newv==1 & number == 4
+(10 real changes made)
 
-. count if newv==1 & number==5 & start==stop
+. 
+. replace vacc_count_tv = 1 if stop==covid_vacc_first_date_update
+(244 real changes made)
+
+. replace vacc_count_tv = 2 if stop==covid_vacc_second_date_update
+(356 real changes made)
+
+. replace vacc_count_tv = 3 if stop==covid_vacc_third_date_update
+(52 real changes made)
+
+. replace vacc_count_tv = 4 if stop==covid_vacc_fourth_date_update
+(270 real changes made)
+
+. replace vacc_count_tv = 5 if stop==covid_vacc_fifth_date_update
+(494 real changes made)
+
+. 
+. * Checks
+. count if start==.
+  10
+
+. count if stop==.
   0
+
+. bys patient_id (start): gen stop_error = start < stop[_n-1] & patient_id==pat
+> ient_id[_n-1]
+
+. tab stop_error 
+
+ stop_error |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      1,752       63.39       63.39
+          1 |      1,012       36.61      100.00
+------------+-----------------------------------
+      Total |      2,764      100.00
+
+. bys patient_id (start): gen tv_vacc_error = vacc_count_tv<vacc_count_tv[_n-1]
+>  
 
 . save ./output/tv_total_vaccs_check, replace
 (note: file ./output/tv_total_vaccs_check.dta not found)
@@ -5344,17 +5494,17 @@ file ./output/tv_total_vaccs_check.dta saved
 
 . * Check data 
 . count if start==stop 
-  409
+  208
 
 . * drop where start is same as stop - should not drop any in real data 
 . drop if start==stop 
-(409 observations deleted)
+(208 observations deleted)
 
 . count if stop<start
-  870
+  678
 
 . count if start==. 
-  713
+  10
 
 . count if stop==1
   0
@@ -5368,13 +5518,13 @@ patient_id                                                          (unlabeled)
                   type:  numeric (int)
 
                  range:  [1,9987]                     units:  1
-         unique values:  1,000                    missing .:  0/2,710
+         unique values:  1,000                    missing .:  0/2,556
 
-                  mean:    4965.2
-              std. dev:    2840.6
+                  mean:   4926.81
+              std. dev:   2833.12
 
            percentiles:        10%       25%       50%       75%       90%
-                             992.5      2585      4979      7296      8914
+                               985      2567      4928    7243.5      8846
 
 . save ./output/tv_total_vaccs, replace
 (note: file ./output/tv_total_vaccs.dta not found)
@@ -5851,13 +6001,13 @@ patient_id                                                          (unlabeled)
                   type:  numeric (int)
 
                  range:  [1,9987]                     units:  1
-         unique values:  999                      missing .:  0/2,902
+         unique values:  999                      missing .:  0/2,905
 
-                  mean:   4954.62
-              std. dev:   2831.16
+                  mean:   4949.81
+              std. dev:    2829.2
 
            percentiles:        10%       25%       50%       75%       90%
-                              1005      2578    4977.5      7275      8887
+                              1005      2578      4976      7258      8846
 
 . * Check number of outcomes after merge  - there will be missings for rows aft
 > er event
@@ -5866,11 +6016,11 @@ patient_id                                                          (unlabeled)
 composite_a |
     ny_flag |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,701       93.07       93.07
-          1 |        136        4.69       97.76
+          0 |      2,704       93.08       93.08
+          1 |        136        4.68       97.76
           . |         65        2.24      100.00
 ------------+-----------------------------------
-      Total |      2,902      100.00
+      Total |      2,905      100.00
 
 . missings report
 
@@ -5921,13 +6071,13 @@ patient_id                                                          (unlabeled)
                   type:  numeric (int)
 
                  range:  [1,9987]                     units:  1
-         unique values:  999                      missing .:  0/2,870
+         unique values:  999                      missing .:  0/2,873
 
-                  mean:   4944.17
-              std. dev:   2832.36
+                  mean:   4939.32
+              std. dev:   2830.35
 
            percentiles:        10%       25%       50%       75%       90%
-                              1000      2576      4976      7258      8846
+                              1000      2574      4971      7246      8842
 
 . * Check number of outcomes after merge 
 . tab died_covid_any_flag, m
@@ -5935,10 +6085,10 @@ patient_id                                                          (unlabeled)
 died_covid_ |
    any_flag |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,764       96.31       96.31
+          0 |      2,767       96.31       96.31
           1 |        106        3.69      100.00
 ------------+-----------------------------------
-      Total |      2,870      100.00
+      Total |      2,873      100.00
 
 . missings report
 
@@ -5972,11 +6122,11 @@ file ./output/tv_vars_died_covid_any_vacc.dta saved
 hosp_any_fl |
          ag |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,805       48.31       48.31
-          1 |         32        0.55       48.86
-          . |      2,969       51.14      100.00
+          0 |      2,808       48.34       48.34
+          1 |         32        0.55       48.89
+          . |      2,969       51.11      100.00
 ------------+-----------------------------------
-      Total |      5,806      100.00
+      Total |      5,809      100.00
 
 . bys patient_id: egen total_hosp = total(hosp_any_flag)
 
@@ -5984,10 +6134,10 @@ hosp_any_fl |
 
  total_hosp |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      5,639       97.12       97.12
-          1 |        167        2.88      100.00
+          0 |      5,642       97.13       97.13
+          1 |        167        2.87      100.00
 ------------+-----------------------------------
-      Total |      5,806      100.00
+      Total |      5,809      100.00
 
 . * Dummy drug data includes people not in cohort, so drop these - should not b
 > e any in real data 
@@ -6003,13 +6153,13 @@ patient_id                                                          (unlabeled)
                   type:  numeric (int)
 
                  range:  [1,9987]                     units:  1
-         unique values:  999                      missing .:  0/2,902
+         unique values:  999                      missing .:  0/2,905
 
-                  mean:   4954.62
-              std. dev:   2831.16
+                  mean:   4949.81
+              std. dev:    2829.2
 
            percentiles:        10%       25%       50%       75%       90%
-                              1005      2578    4977.5      7275      8887
+                              1005      2578      4976      7258      8846
 
 . * Check number of outcomes after merge - there will be missings for rows afte
 > r event
@@ -6018,11 +6168,11 @@ patient_id                                                          (unlabeled)
 hosp_any_fl |
          ag |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,805       96.66       96.66
+          0 |      2,808       96.66       96.66
           1 |         32        1.10       97.76
           . |         65        2.24      100.00
 ------------+-----------------------------------
-      Total |      2,902      100.00
+      Total |      2,905      100.00
 
 . missings report
 
@@ -6054,7 +6204,7 @@ file ./output/tv_vars_hosp_any_vacc.dta saved
 
 Contains data from /tmp/St00015.000001
   obs:         1,000                          
- vars:           109                          5 Oct 2023 13:42
+ vars:           109                          9 Oct 2023 11:00
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -6490,7 +6640,7 @@ file /tmp/St00015.00000x saved
         from master                         1  (_merge==1)
         from using                          0  (_merge==2)
 
-    matched                             2,870  (_merge==3)
+    matched                             2,873  (_merge==3)
     -----------------------------------------
 (note: file ./output/an_dataset_died_covid_any_vacc.dta not found)
 file ./output/an_dataset_died_covid_any_vacc.dta saved
@@ -6501,7 +6651,7 @@ file ./output/an_dataset_died_covid_any_vacc.dta saved
         from master                         1  (_merge==1)
         from using                          0  (_merge==2)
 
-    matched                             2,837  (_merge==3)
+    matched                             2,840  (_merge==3)
     -----------------------------------------
 (note: file ./output/an_dataset_hosp_any_vacc.dta not found)
 file ./output/an_dataset_hosp_any_vacc.dta saved
@@ -6512,7 +6662,7 @@ file ./output/an_dataset_hosp_any_vacc.dta saved
         from master                         1  (_merge==1)
         from using                          0  (_merge==2)
 
-    matched                             2,837  (_merge==3)
+    matched                             2,840  (_merge==3)
     -----------------------------------------
 (note: file ./output/an_dataset_composite_any_vacc.dta not found)
 file ./output/an_dataset_composite_any_vacc.dta saved
@@ -6522,5 +6672,5 @@ file ./output/an_dataset_composite_any_vacc.dta saved
       name:  <unnamed>
        log:  /workspace/logs/time_varying.log
   log type:  text
- closed on:   5 Oct 2023, 13:43:38
+ closed on:   9 Oct 2023, 11:00:48
 -------------------------------------------------------------------------------
