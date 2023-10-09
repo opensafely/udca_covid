@@ -54,6 +54,27 @@ file write table ("`r(N)'") _n ("Liver transplant prior to index") _tab
 safetab liver_transplant_bl, m
 drop if liver_transplant_bl
 safecount
-file write table ("`r(N)'") 
+file write table ("`r(N)'") _N
+
+/* Determine number censored
+import delimited using ./output/input_pbc.csv, clear
+* Determine end of follow-up date
+gen dereg_dateA = date(dereg_date, "YMD")
+format %dD/N/CY dereg_dateA
+drop dereg_date
+gen died_dateA = date(died_date_ons, "YMD")
+format %dD/N/CY died_dateA
+drop died_date_ons
+gen end_study = date("31/12/2022", "DMY")
+egen end_date = rowmin(dereg_dateA end_study died_dateA)
+
+gen censored = end_date!=end_study 
+
+file write table ("Censoring information") _tab ("No UDCA BL") _tab ("UDCA BL") _N 
+safecount if censored==1 & udca_bl==0
+file write table ("Censored") _tab ("`r(N)'") 
+
+
+
 
 file close table 
