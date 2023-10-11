@@ -54,10 +54,12 @@ file write table ("`r(N)'") _n ("Liver transplant prior to index") _tab
 safetab liver_transplant_bl, m
 drop if liver_transplant_bl
 safecount
-file write table ("`r(N)'") _N
+file write table ("`r(N)'") _n
 
-/* Determine number censored
+* Determine number censored
 import delimited using ./output/input_pbc.csv, clear
+* Create baseline UDCA variable
+gen udca_bl = (udca_count_bl>=1 & udca_count_bl!=.)
 * Determine end of follow-up date
 gen dereg_dateA = date(dereg_date, "YMD")
 format %dD/N/CY dereg_dateA
@@ -67,14 +69,40 @@ format %dD/N/CY died_dateA
 drop died_date_ons
 gen end_study = date("31/12/2022", "DMY")
 egen end_date = rowmin(dereg_dateA end_study died_dateA)
+* Create flag indicating reason for end of follow-up 
+gen end_date_flag = (end_date==dereg_dateA)
+replace end_date_flag = 2 if end_date==died_dateA
+replace end_date_flag = 3 if end_date==end_study
 
 gen censored = end_date!=end_study 
+tab censored end_date_flag
 
-file write table ("Censoring information") _tab ("No UDCA BL") _tab ("UDCA BL") _N 
+file write table ("Censoring information") _n _tab ("No UDCA BL") _tab ("UDCA BL") _n  
 safecount if censored==1 & udca_bl==0
-file write table ("Censored") _tab ("`r(N)'") 
-
-
-
+file write table ("Censored") _tab ("`r(N)'") _tab 
+safecount if censored==1 & udca_bl==1
+file write table ("`r(N)'") _n 
+* Count deregistered
+safecount if end_date_flag==1 & udca_bl==0
+file write table ("Deregistered") _tab ("`r(N)'") _tab
+safecount if end_date_flag==1 & udca_bl==1
+file write table ("`r(N)'") _n 
+* Count died 
+safecount if end_date_flag==2 & udca_bl==0
+file write table ("Died") _tab ("`r(N)'") _tab
+safecount if end_date_flag==2 & udca_bl==1
+file write table ("`r(N)'") _n 
+* Count end study 
+safecount if end_date_flag==3 & udca_bl==0
+file write table ("Remained") _tab ("`r(N)'") _tab
+safecount if end_date_flag==3 & udca_bl==1
+file write table ("`r(N)'") _n 
+* Liver deaths
+gen died_liver_any = died_ons_liver_flag_any==1 & died_ons_covid_flag_any!=1
+tab died_liver_any censored 
+safecount if died_liver_any==1 & udca_bl==0
+file write table ("Liver death") _tab ("`r(N)'") _tab
+safecount if died_liver_any==1 & udca_bl==1
+file write table ("`r(N)'") _n 
 
 file close table 

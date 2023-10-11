@@ -13,7 +13,7 @@ actions:
 
   flowchart_data:
     run: stata-mp:latest analysis/100_flowchart.do
-    needs: [generate_study_population_flowchart]
+    needs: [generate_study_population_flowchart, generate_study_population_pbc]
     outputs:
       moderately_sensitive:
         log: logs/flowchart.log
