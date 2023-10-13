@@ -412,7 +412,14 @@ study = StudyDefinition(
         on_or_after=" covid_vacc_third_date + 1 day", # from day after previous dose
         find_first_match_in_period=True,
         returning="date",
-        date_format="YYYY-MM-DD"
+        date_format="YYYY-MM-DD",
+         return_expectations={
+            "date": {
+                "earliest": "2022-03-01",  # first booster dose recorded
+                "latest": "2022-12-31",
+            },
+            "incidence": 0.1,
+        },
     ),
     
     # Date of fifth COVID vaccination (extended primary series + two boosters)
@@ -421,7 +428,14 @@ study = StudyDefinition(
         on_or_after="covid_vacc_fourth_date + 1 day", # from day after previous dose
         find_first_match_in_period=True,
         returning="date",
-        date_format="YYYY-MM-DD"
+        date_format="YYYY-MM-DD",
+         return_expectations={
+            "date": {
+                "earliest": "2022-09-01",  # first booster dose recorded
+                "latest": "2022-12-31",
+            },
+            "incidence": 0.1,
+        },
     ),
 
     # Date of most recent vaccination before 1st March 2021

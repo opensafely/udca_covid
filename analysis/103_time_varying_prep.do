@@ -1334,13 +1334,27 @@ foreach var in covid_vacc_first_date covid_vacc_second_date covid_vacc_third_dat
 }
 
 * Keep only change dates to create time-varying dataset
-keep patient_id covid_vacc_first_date_update covid_vacc_second_date_update covid_vacc_third_date_update covid_vacc_fourth_date_update covid_vacc_fifth_date_update covid_vacc_first_dateA covid_vacc_second_dateA covid_vacc_third_dateA covid_vacc_fourth_dateA covid_vacc_fifth_dateA end_date date_most_recent_cov_vac
-* Chercking number of patient_id's 
+keep patient_id start covid_vacc_first_date_update covid_vacc_second_date_update covid_vacc_third_date_update covid_vacc_fourth_date_update covid_vacc_fifth_date_update end_date 
+* Checking number of patient_id's 
 codebook patient_id
 duplicates drop 
 codebook patient_id
 count
-* Create dataset where rows are updated when person is vaccinated/re-vaccinated  
+
+foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth { 
+    gen `var'_prior_start = (`var'_date_update <= start) 
+}
+* Determine number of vaccinations at each assessment point 
+egen vacc_count_tv = rowtotal(covid_vacc_first_prior_start covid_vacc_second_prior_start covid_vacc_third_prior_start covid_vacc_fourth_prior_start covid_vacc_fifth_prior_start)
+* Determine if no change in number of vaccinations since last assessment 
+bys patient_id (start): gen no_change = vacc_count_tv==vacc_count_tv[_n-1]
+* Drop records if no change 
+drop if no_change==1 
+drop no_change 
+bys patient_id (start): gen stop = start[_n+1]
+replace stop = end_date if stop==.
+
+/* Create dataset where rows are updated when person is vaccinated/re-vaccinated  
 foreach var in covid_vacc_first covid_vacc_second covid_vacc_third covid_vacc_fourth covid_vacc_fifth {
     count if `var'_date_update>=end_date & `var'_date_update!=.
     replace `var'_date_update = . if `var'_date_update>=end_date
@@ -1367,16 +1381,17 @@ replace covid_vacc_first_date_update=. if covid_vacc_first_date_update==covid_va
 replace covid_vacc_second_date_update=. if covid_vacc_second_date_update==covid_vacc_third_date_update & covid_vacc_second_date_update!=. 
 replace covid_vacc_third_date_update=. if covid_vacc_third_date_update==covid_vacc_fourth_date_update & covid_vacc_third_date_update!=.
 replace covid_vacc_fourth_date_update=. if covid_vacc_fourth_date_update==covid_vacc_fifth_date_update & covid_vacc_fourth_date_update!=.
-* Set corresponding flag to zero if missing 
-foreach number in first second third fourth fifth {
-    replace covid_vacc_`number'_flag=0 if covid_vacc_`number'_date_update==.
-}
+
 * Generate count if number of changes at each vacc 
 gen change_1 = covid_vacc_first_flag 
 gen change_2 = covid_vacc_first_flag + covid_vacc_second_flag
 gen change_3 = covid_vacc_first_flag + covid_vacc_second_flag + covid_vacc_third_flag
 gen change_4 = covid_vacc_first_flag + covid_vacc_second_flag + covid_vacc_third_flag + covid_vacc_fourth_flag
 gen change_5 = covid_vacc_first_flag + covid_vacc_second_flag + covid_vacc_third_flag + covid_vacc_fourth_flag + covid_vacc_fifth_flag
+forvalues i=1/5 {
+    tab change_`i'
+    }
+
 
 * Determine total number of vaccinations 
 egen total_vaccs = rowtotal(covid_vacc_first_flag covid_vacc_second_flag covid_vacc_third_flag covid_vacc_fourth_flag covid_vacc_fifth_flag)
@@ -1448,7 +1463,7 @@ replace vacc_count_tv = 2 if stop==covid_vacc_second_date_update
 replace vacc_count_tv = 3 if stop==covid_vacc_third_date_update
 replace vacc_count_tv = 4 if stop==covid_vacc_fourth_date_update
 replace vacc_count_tv = 5 if stop==covid_vacc_fifth_date_update
-
+*/
 * Checks
 count if start==.
 count if stop==.
