@@ -32,7 +32,7 @@ foreach outcome in hosp_any composite_any {
     * Age and sex adjusted model 
     * Setting df (degrees of freedom for restricted cubic splines) as 3 as this is default 
     * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = linear effect of log time 
-    stpm2 udca age_tv male, tvc(udca) dftvc(1) df(3) scale(hazard) eform
+    stpm2 udca age_tv male, tvc(udca) dftvc(1) df(2) scale(hazard) eform
     summ _t
     local tmax=r(max)
     local tmaxplus1=r(max)+1
@@ -100,7 +100,7 @@ stset stop, fail(died_covid_any_flag) id(patient_id) enter(index_date) origin(in
 * Age and sex adjusted model 
 * Setting df (degrees of freedom for restricted cubic splines) as 3 as this is default 
 * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = linear effect of log time 
-stpm2 udca age_tv male, tvc(udca age_tv) dftvc(1) df(3) scale(hazard) eform
+stpm2 udca age_tv male, tvc(udca age_tv) dftvc(1) df(2) scale(hazard) eform
 summ _t
 local tmax=r(max)
 local tmaxplus1=r(max)+1
