@@ -20,6 +20,7 @@ file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator"
 * Cox models and Schoenfeld residual plots for each outcome
 foreach outcome in died_covid_any hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
+    missings report
     * Open file to write results
     describe
     gen index_date = date("01/03/2020", "DMY")
@@ -151,6 +152,7 @@ file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator"
 foreach outcome in died_covid_any hosp_any composite_any {
     use ./output/an_dataset_90_`outcome', clear 
     * Open file to write results
+    missings report
     describe
     gen index_date = date("01/03/2020", "DMY")
     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) origin(index_date)
@@ -281,6 +283,7 @@ file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator"
 foreach outcome in died_covid_any hosp_any composite_any {
     use ./output/an_dataset_overlap_120_`outcome', clear 
     * Open file to write results
+    missings report 
     describe
     gen index_date = date("01/03/2020", "DMY")
     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) origin(index_date)
@@ -805,6 +808,7 @@ file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator"
 foreach outcome in died_covid_any hosp_any composite_any {
     use ./output/an_dataset_`outcome'_vacc, clear 
     * Open file to write results
+    missings report 
     describe
     gen index_date = date("01/03/2021", "DMY")
         * Flag records where outcome or end_date prior to 1st March 2021
