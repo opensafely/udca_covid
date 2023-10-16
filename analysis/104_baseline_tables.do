@@ -33,6 +33,8 @@ label define age 0 "18 - 40 years" 1 "41 - 60 years" 2 "61 - 80 years" 3 ">80 ye
 label values age_cat age
 bys age_cat: sum age
 
+count if stp==.
+
 * BMI categories
 * assume BMI's less than 10 are incorrect and set to missing 
 sum bmi, d
@@ -408,6 +410,4 @@ forvalues i=0/1 {
 keep factor level n0_rounded percent_0 n1_rounded percent_1
 export delimited using ./output/tables/baseline_table_udca_vacc_rounded.csv
 restore 
-
-use ./output/an_dataset_composite_any, clear 
-tab udca, m 
+ 
