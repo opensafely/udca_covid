@@ -408,3 +408,6 @@ forvalues i=0/1 {
 keep factor level n0_rounded percent_0 n1_rounded percent_1
 export delimited using ./output/tables/baseline_table_udca_vacc_rounded.csv
 restore 
+
+use ./output/an_dataset_composite_any, clear 
+tab udca, m 

@@ -91,7 +91,7 @@ actions:
 
   baseline_tables:
     run: stata-mp:latest analysis/104_baseline_tables.do
-    needs: [generate_study_population_pbc, generate_study_population_vacc]
+    needs: [generate_study_population_pbc, generate_study_population_vacc, time_varying_prep]
     outputs:
       moderately_sensitive:
         log: logs/baseline_tables.log
