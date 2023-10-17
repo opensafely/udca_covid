@@ -18,6 +18,7 @@ file write tablecontent ("Outcome") _tab ("Exposure") _tab ("Cumulative incidenc
 * plot for each outcome - age and sex adjusted only
 foreach outcome in hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
+    drop if stp==""
     describe
     gen index_date = date("01/03/2020", "DMY")
     bys patient_id (start): gen last = _N==_n 
@@ -86,6 +87,7 @@ foreach outcome in hosp_any composite_any {
 }
 
 use ./output/an_dataset_died_covid_any, clear 
+drop if stp==""
 describe
 gen index_date = date("01/03/2020", "DMY")
 bys patient_id (start): gen last = _N==_n 
@@ -155,6 +157,7 @@ graph close
 * plot for each outcome - fully adjusted 
 foreach outcome in hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
+    drop if stp==""
     describe
     gen index_date = date("01/03/2020", "DMY")
     bys patient_id (start): gen last = _N==_n 
@@ -240,6 +243,7 @@ foreach outcome in hosp_any composite_any {
 }
 
 use ./output/an_dataset_died_covid_any, clear 
+drop if stp==""
 describe
 gen index_date = date("01/03/2020", "DMY")
 bys patient_id (start): gen last = _N==_n 
