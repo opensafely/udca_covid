@@ -14,7 +14,7 @@ cap log using ./logs/analysis_models.log, replace
 
 * Open file to write results to 
 file open tablecontent using ./output/tables/cox_models.txt, write text replace
-file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator") _tab ("events") _tab ("total_person_mths") _tab ("Rate") _tab ("unadj_hr") _tab ///
+file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("events") _tab ("total_person_mths") _tab ("Rate") _tab ("unadj_hr") _tab ///
 ("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci")  _tab ("p_adj_hr") _tab ("p_adj_ci") _tab ("p_adj_lci") _tab ("p_adj_uci") _tab ("f_adj_hr") _tab ("f_adj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
 
 * Cox models and Schoenfeld residual plots for each outcome
@@ -89,16 +89,16 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if unexposed_ever==0 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1
-        local event = r(N)
+        local event = round(r(N),6)
         di "no udca events = " `event'
         bysort udca: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
         if `event'>10 & `event'!=. {
-            file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             file write tablecontent ("1.00") _tab _tab ("1.00")  _n
             }
         else {
@@ -111,13 +111,13 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1
-        local event = r(N)
+        local event = round(r(N),6)
         di "udca events = " `event'
         qui su total_follow_up if udca==1 & number==1
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
-            file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             cap estimates use "./output/tempdata/crude_`outcome'" 
             cap lincom udca, eform
             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _tab 
@@ -146,7 +146,7 @@ else {
 
 * sensitivity analysis - 90 day exposure 
 file write tablecontent _n ("90 day exposure sensitivity analysis") _n 
-file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator") _tab ("events") _tab ("total_person_mths") _tab ("Rate") _tab ("unadj_hr") _tab ///
+file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("events") _tab ("total_person_mths") _tab ("Rate") _tab ("unadj_hr") _tab ///
 ("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci")  _tab ("p_adj_hr") _tab ("p_adj_ci") _tab ("p_adj_lci") _tab ("p_adj_uci") _tab ("f_adj_hr") _tab ("f_adj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
 
 * Cox models and Schoenfeld residual plots for each outcome
@@ -221,16 +221,16 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if unexposed_ever==0 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1
-        local event = r(N)
+        local event = round(r(N),6)
         di "no udca events = " `event'
         bysort udca: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
         if `event'>10 & `event'!=. {
-            file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             file write tablecontent ("1.00") _tab _tab ("1.00")  _n
             }
         else {
@@ -243,13 +243,13 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1
-        local event = r(N)
+        local event = round(r(N),6)
         di "udca events = " `event'
         qui su total_follow_up if udca==1 & number==1
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
-            file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             cap estimates use "./output/tempdata/crude_`outcome'" 
             cap lincom udca, eform
             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _tab 
@@ -278,7 +278,7 @@ else {
 
 * sensitivity analysis - 120 day overlap exposure 
 file write tablecontent _n ("120 day overlap exposure sensitivity analysis") _n 
-file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator") _tab ("events") _tab ("total_person_mths") _tab ("Rate") _tab ("unadj_hr") _tab ///
+file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("events") _tab ("total_person_mths") _tab ("Rate") _tab ("unadj_hr") _tab ///
 ("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci")  _tab ("p_adj_hr") _tab ("p_adj_ci") _tab ("p_adj_lci") _tab ("p_adj_uci") _tab ("f_adj_hr") _tab ("f_adj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
 
 * Cox models and Schoenfeld residual plots for each outcome
@@ -351,18 +351,18 @@ foreach outcome in died_covid_any hosp_any composite_any {
         bys patient_id : egen unexposed_ever = min(udca) 
         tab unexposed_ever if number==1
         safecount if unexposed_ever==0 & number==1
-        local denominator = r(N)
+        local denominator = round(r(N),6)
         safecount if udca == 0 & `outcome'_flag == 1
-        local event = r(N)
+        local event = round(r(N),6)
         di "no udca events = " `event'
         bysort udca: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
         if `event'>10 & `event'!=. {
-            file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             file write tablecontent ("1.00") _tab _tab ("1.00")  _n
             }
         else {
@@ -375,13 +375,13 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1
-        local event = r(N)
+        local event = round(r(N),6)
         di "udca events = " `event'
         qui su total_follow_up if udca==1 & number==1
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
-            file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             cap estimates use "./output/tempdata/crude_`outcome'" 
             cap lincom udca, eform
             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _tab 
@@ -411,7 +411,7 @@ else {
 
 * sensitivity analysis - stratify by PBC vs PSC
 file write tablecontent _n ("PBC only sensitivity analysis") _n 
-file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator") _tab ("events") _tab ("total_person_mths") _tab ("Rate") _tab ("unadj_hr") _tab ///
+file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("events") _tab ("total_person_mths") _tab ("Rate") _tab ("unadj_hr") _tab ///
 ("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci")  _tab ("p_adj_hr") _tab ("p_adj_ci") _tab ("p_adj_lci") _tab ("p_adj_uci") _tab ("f_adj_hr") _tab ("f_adj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
 
 * Cox models and Schoenfeld residual plots for each outcome
@@ -485,16 +485,16 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if unexposed_ever==0 & has_pbc==1 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1 & has_pbc==1
-        local event = r(N)
+        local event = round(r(N),6)
         di "no udca events = " `event'
         bysort udca: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1 & has_pbc==1
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
         if `event'>10 & `event'!=. {
-            file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent  ("`outcome'") _tab ("No UDCA")  _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             file write tablecontent ("1.00") _tab _tab ("1.00")  _n
             }
         else {
@@ -507,13 +507,13 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1 & has_pbc==1
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1 & has_pbc==1
-        local event = r(N)
+        local event = round(r(N),6)
         di "udca events = " `event'
         qui su total_follow_up if udca==1 & number==1 & has_pbc==1
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
-            file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent ("`outcome'") _tab ("UDCA")  _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             cap estimates use "./output/tempdata/crude_`outcome'" 
             cap lincom udca, eform
             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _tab 
@@ -542,7 +542,7 @@ else {
 }
 
 file write tablecontent _n ("PSC only sensitivity analysis") _n 
-file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator") _tab ("events") _tab ("total_person_mths") _tab ("Rate") _tab ("unadj_hr") _tab ///
+file write tablecontent ("Outcome") _tab ("Exposure status")  _tab ("events") _tab ("total_person_mths") _tab ("Rate") _tab ("unadj_hr") _tab ///
 ("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci")  _tab ("p_adj_hr") _tab ("p_adj_ci") _tab ("p_adj_lci") _tab ("p_adj_uci") _tab ("f_adj_hr") _tab ("f_adj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
 
 * Cox models and Schoenfeld residual plots for each outcome
@@ -616,16 +616,16 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if unexposed_ever==0 & has_pbc==0 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1 & has_pbc==0
-        local event = r(N)
+        local event = round(r(N),6)
         di "no udca events = " `event'
         bysort udca has_pbc: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1 & has_pbc==0
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
         if `event'>10 & `event'!=. {
-            file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent  ("`outcome'") _tab ("No UDCA")  _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             file write tablecontent ("1.00") _tab _tab ("1.00")  _n
             }
         else {
@@ -638,13 +638,13 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1 & has_pbc==0
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1 & has_pbc==0
-        local event = r(N)
+        local event = round(r(N),6)
         di "udca events = " `event'
         su total_follow_up if udca==1 & number==1 & has_pbc==0
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
-            file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent ("`outcome'") _tab ("UDCA")  _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             cap estimates use "./output/tempdata/crude_`outcome'" 
             cap lincom udca, eform
             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _tab 
@@ -674,7 +674,7 @@ else {
 
 * Take out people prescribed OCA at baseline  
 file write tablecontent _n ("Remove people prescribed OCA sensitivity analysis") _n 
-file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator") _tab ("events") _tab ("total_person_mths") _tab ("Rate") _tab ("unadj_hr") _tab ///
+file write tablecontent ("Outcome") _tab ("Exposure status")  _tab ("events") _tab ("total_person_mths") _tab ("Rate") _tab ("unadj_hr") _tab ///
 ("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci")  _tab ("p_adj_hr") _tab ("p_adj_ci") _tab ("p_adj_lci") _tab ("p_adj_uci") _tab ("f_adj_hr") _tab ("f_adj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
 
 * Cox models and Schoenfeld residual plots for each outcome
@@ -749,16 +749,16 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if unexposed_ever==0 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1
-        local event = r(N)
+        local event = round(r(N),6)
         di "no udca events = " `event'
         bysort udca: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
         if `event'>10 & `event'!=. {
-            file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent  ("`outcome'") _tab ("No UDCA")  _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             file write tablecontent ("1.00") _tab _tab ("1.00")  _n
             }
         else {
@@ -771,13 +771,13 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1
-        local event = r(N)
+        local event = round(r(N),6)
         di "udca events = " `event'
         qui su total_follow_up if udca==1 & number==1
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
-            file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent ("`outcome'") _tab ("UDCA")  _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             cap estimates use "./output/tempdata/crude_`outcome'" 
             cap lincom udca, eform
             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _tab 
@@ -807,7 +807,7 @@ else {
 
 * sensitivity analysis - explore vaccinations  
 file write tablecontent _n ("vaccinations sensitivity analysis") _n 
-file write tablecontent ("Outcome") _tab ("Exposure status") _tab ("denominator") _tab ("events") _tab ("total_person_wks") _tab ("Rate") _tab ("unadj_hr") _tab ///
+file write tablecontent ("Outcome") _tab ("Exposure status")  _tab ("events") _tab ("total_person_wks") _tab ("Rate") _tab ("unadj_hr") _tab ///
 ("unadj_ci") _tab ("unadj_lci") _tab ("unadj_uci")  _tab ("p_adj_hr") _tab ("p_adj_ci") _tab ("p_adj_lci") _tab ("p_adj_uci") _tab ("f_adj_hr") _tab ("f_adj_ci") _tab ("f_adj_lci") _tab ("f_adj_uci") _tab  _n
 
 * Cox models and Schoenfeld residual plots for each outcome
@@ -884,16 +884,16 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if unexposed_ever==0 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1 
-        local event = r(N)
+        local event = round(r(N),6)
         di "no udca events = " `event'
         bysort udca: egen total_follow_up = total(_t) if number==1 
         su total_follow_up if udca==0 & number==1 
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
         if `event'>10 & `event'!=. {
-            file write tablecontent  ("`outcome'") _tab ("No UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent  ("`outcome'") _tab ("No UDCA")  _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             file write tablecontent ("1.00") _tab _tab ("1.00")  _n
             }
         else {
@@ -906,13 +906,13 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1 
-        local event = r(N)
+        local event = round(r(N), 5)
         di "udca events = " `event'
         qui su total_follow_up if udca==1 & number==1 
-        local person_mth = r(mean)/30
+        local person_mth = round(r(mean),6)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
-            file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`denominator') _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
+            file write tablecontent ("`outcome'") _tab ("UDCA")  _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
             cap estimates use "./output/tempdata/crude_`outcome'" 
             cap lincom udca, eform
             file write tablecontent  %4.2f (r(estimate)) _tab ("(") %4.2f (r(lb)) (" - ") %4.2f (r(ub)) (")") _tab %4.2f (r(lb)) _tab %4.2f (r(ub)) _tab 
