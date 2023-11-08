@@ -2,349 +2,349 @@
   "files": {
     "user-ruthcostello-primary_biliary_cirrhosis.csv": {
       "id": "user/ruthcostello/primary_biliary_cirrhosis/00438120",
-      "url": "https://codelists.opensafely.org/codelist/user/ruthcostello/primary_biliary_cirrhosis/00438120/",
+      "url": "https://www.opencodelists.org/codelist/user/ruthcostello/primary_biliary_cirrhosis/00438120/",
       "downloaded_at": "2023-01-30 11:43:45.850762Z",
       "sha": "f7b987bf7201fed23545ab14e1550e64e08beb86"
     },
     "user-ruthcostello-primary-sclerosing-cholangitis.csv": {
       "id": "user/ruthcostello/primary-sclerosing-cholangitis/2dba3230",
-      "url": "https://codelists.opensafely.org/codelist/user/ruthcostello/primary-sclerosing-cholangitis/2dba3230/",
+      "url": "https://www.opencodelists.org/codelist/user/ruthcostello/primary-sclerosing-cholangitis/2dba3230/",
       "downloaded_at": "2023-02-27 11:20:14.274283Z",
       "sha": "63766a4b9ff99b190d532447acbe23b593586cd1"
     },
     "opensafely-ursodeoxycholic_acid.csv": {
       "id": "opensafely/ursodeoxycholic_acid/738c74e0",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/ursodeoxycholic_acid/738c74e0/",
-      "downloaded_at": "2023-01-19 11:01:09.680649Z",
-      "sha": "d0c6744f54fe4bab33e9ef927a7d3b53c93cea92"
+      "url": "https://www.opencodelists.org/codelist/opensafely/ursodeoxycholic_acid/738c74e0/",
+      "downloaded_at": "2023-11-08 12:31:21.856319Z",
+      "sha": "d55e56ee26aea6a7746a9afd8cb720d56f505274"
     },
     "opensafely-covid-identification.csv": {
       "id": "opensafely/covid-identification/2020-06-03",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/covid-identification/2020-06-03/",
+      "url": "https://www.opencodelists.org/codelist/opensafely/covid-identification/2020-06-03/",
       "downloaded_at": "2023-01-20 09:18:05.696374Z",
       "sha": "124db6929439379b7dacd55ba26ae4f2ed9370bc"
     },
     "opensafely-condition-advanced-decompensated-cirrhosis-of-the-liver.csv": {
       "id": "opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver/5e42487f",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver/5e42487f/",
+      "url": "https://www.opencodelists.org/codelist/opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver/5e42487f/",
       "downloaded_at": "2023-06-19 10:15:26.578118Z",
       "sha": "30168b948211c8a823aabb2ec60ff55b34dd82c4"
     },
     "opensafely-condition-advanced-decompensated-cirrhosis-of-the-liver-and-associated-conditions-icd-10.csv": {
       "id": "opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver-and-associated-conditions-icd-10/6bc0084d",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver-and-associated-conditions-icd-10/6bc0084d/",
+      "url": "https://www.opencodelists.org/codelist/opensafely/condition-advanced-decompensated-cirrhosis-of-the-liver-and-associated-conditions-icd-10/6bc0084d/",
       "downloaded_at": "2023-06-26 07:59:23.048380Z",
       "sha": "064a1827d9a2fe63eb8401a24bf9a024344f4425"
     },
     "user-ruthcostello-liver-transplant-opcs4.csv": {
       "id": "user/ruthcostello/liver-transplant-opcs4/71258839",
-      "url": "https://codelists.opensafely.org/codelist/user/ruthcostello/liver-transplant-opcs4/71258839/",
+      "url": "https://www.opencodelists.org/codelist/user/ruthcostello/liver-transplant-opcs4/71258839/",
       "downloaded_at": "2023-06-26 07:59:23.243671Z",
       "sha": "650f3769bcff0afef4ce09fdd8ea7c46cf29e5f0"
     },
     "user-ruthcostello-liver-transplant.csv": {
       "id": "user/ruthcostello/liver-transplant/07823b79",
-      "url": "https://codelists.opensafely.org/codelist/user/ruthcostello/liver-transplant/07823b79/",
+      "url": "https://www.opencodelists.org/codelist/user/ruthcostello/liver-transplant/07823b79/",
       "downloaded_at": "2023-06-26 07:59:23.430919Z",
       "sha": "c9f33bb7f73f82a544894e1405a1e6864354da0b"
     },
     "opensafely-ethnicity-snomed-0removed.csv": {
       "id": "opensafely/ethnicity-snomed-0removed/2e641f61",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity-snomed-0removed/2e641f61/",
+      "url": "https://www.opencodelists.org/codelist/opensafely/ethnicity-snomed-0removed/2e641f61/",
       "downloaded_at": "2023-04-27 11:27:44.612396Z",
       "sha": "8b849b5b785d80306e488d0109640c8c1d2da01b"
     },
     "opensafely-smoking-clear.csv": {
       "id": "opensafely/smoking-clear/2020-04-29",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/smoking-clear/2020-04-29/",
+      "url": "https://www.opencodelists.org/codelist/opensafely/smoking-clear/2020-04-29/",
       "downloaded_at": "2023-04-27 11:27:44.722006Z",
       "sha": "0b5f3afe1db96dcce5141220e893a42ba2e5a8f7"
     },
     "opensafely-smoking-unclear.csv": {
       "id": "opensafely/smoking-unclear/2020-04-29",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/smoking-unclear/2020-04-29/",
+      "url": "https://www.opencodelists.org/codelist/opensafely/smoking-unclear/2020-04-29/",
       "downloaded_at": "2023-04-27 11:27:44.846772Z",
       "sha": "d9dad3e9d9491f765863b2617114c521957b6db1"
     },
     "user-ruthcostello-budesonide-dmd.csv": {
       "id": "user/ruthcostello/budesonide-dmd/60f50875",
-      "url": "https://codelists.opensafely.org/codelist/user/ruthcostello/budesonide-dmd/60f50875/",
-      "downloaded_at": "2023-06-07 14:09:22.405430Z",
-      "sha": "dd9e5e7091725cec78cf2e7da378e2807ee4bfed"
+      "url": "https://www.opencodelists.org/codelist/user/ruthcostello/budesonide-dmd/60f50875/",
+      "downloaded_at": "2023-11-08 12:31:23.216969Z",
+      "sha": "81ca771d7e973ad8e73d9c6b269c7ddc6cc84a7c"
     },
     "user-ruthcostello-fenofibrates-dmd.csv": {
       "id": "user/ruthcostello/fenofibrates-dmd/3de148f7",
-      "url": "https://codelists.opensafely.org/codelist/user/ruthcostello/fenofibrates-dmd/3de148f7/",
-      "downloaded_at": "2023-06-07 14:09:22.546194Z",
-      "sha": "fd3187b951155aaa6620a74547b6986f0efaf9e1"
+      "url": "https://www.opencodelists.org/codelist/user/ruthcostello/fenofibrates-dmd/3de148f7/",
+      "downloaded_at": "2023-11-08 12:31:23.336772Z",
+      "sha": "590d7b958e3408a76ec42559614d0c2e7ccfd097"
     },
     "opensafely-asthma-oral-prednisolone-medication.csv": {
       "id": "opensafely/asthma-oral-prednisolone-medication/2020-04-27",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/asthma-oral-prednisolone-medication/2020-04-27/",
-      "downloaded_at": "2023-05-24 13:26:17.208037Z",
-      "sha": "e47cc254975c23f7507cf04bb655454f8b5ece18"
+      "url": "https://www.opencodelists.org/codelist/opensafely/asthma-oral-prednisolone-medication/2020-04-27/",
+      "downloaded_at": "2023-11-08 12:31:23.510507Z",
+      "sha": "a27045e5455a014a290ba8c2dfb75066dbb91eb4"
     },
     "nhsd-sickle-spl-atriskv4-snomed-ct.csv": {
       "id": "nhsd/sickle-spl-atriskv4-snomed-ct/7083ed37",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/sickle-spl-atriskv4-snomed-ct/7083ed37/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/sickle-spl-atriskv4-snomed-ct/7083ed37/",
       "downloaded_at": "2023-05-24 13:26:17.636111Z",
       "sha": "9798e11fac7650aa56002ded0177d38c5c2192a7"
     },
     "nhsd-sickle-spl-hes-icd-10.csv": {
       "id": "nhsd/sickle-spl-hes-icd-10/789c2d19",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/sickle-spl-hes-icd-10/789c2d19/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/sickle-spl-hes-icd-10/789c2d19/",
       "downloaded_at": "2023-05-24 13:26:17.779715Z",
       "sha": "5b1407e877e6f8c1c045ac083dd5dbc4c36ef3a4"
     },
     "user-bangzheng-cancer-excluding-lung-and-haematological-snomed-new.csv": {
       "id": "user/bangzheng/cancer-excluding-lung-and-haematological-snomed-new/31cac0ec",
-      "url": "https://codelists.opensafely.org/codelist/user/bangzheng/cancer-excluding-lung-and-haematological-snomed-new/31cac0ec/",
+      "url": "https://www.opencodelists.org/codelist/user/bangzheng/cancer-excluding-lung-and-haematological-snomed-new/31cac0ec/",
       "downloaded_at": "2023-05-30 15:14:02.373877Z",
       "sha": "cac87b571ed24373102d103bbf03d593966bd8bd"
     },
     "opensafely-cancer-excluding-lung-and-haematological-snomed.csv": {
       "id": "opensafely/cancer-excluding-lung-and-haematological-snomed/2020-04-15",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/cancer-excluding-lung-and-haematological-snomed/2020-04-15/",
+      "url": "https://www.opencodelists.org/codelist/opensafely/cancer-excluding-lung-and-haematological-snomed/2020-04-15/",
       "downloaded_at": "2023-05-24 13:26:18.172641Z",
       "sha": "d43aff12fcb3b404c635e24f964ba2a368c96c98"
     },
     "opensafely-lung-cancer-snomed.csv": {
       "id": "opensafely/lung-cancer-snomed/2020-04-15",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/lung-cancer-snomed/2020-04-15/",
+      "url": "https://www.opencodelists.org/codelist/opensafely/lung-cancer-snomed/2020-04-15/",
       "downloaded_at": "2023-05-24 13:26:18.297888Z",
       "sha": "f0debdf1c968242fa8790cd0b773662b8e169f43"
     },
     "opensafely-chemotherapy-or-radiotherapy-snomed.csv": {
       "id": "opensafely/chemotherapy-or-radiotherapy-snomed/2020-04-15",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/chemotherapy-or-radiotherapy-snomed/2020-04-15/",
+      "url": "https://www.opencodelists.org/codelist/opensafely/chemotherapy-or-radiotherapy-snomed/2020-04-15/",
       "downloaded_at": "2023-05-24 13:26:18.469518Z",
       "sha": "10f223ed1c0b45b4f8276e33c8293e0287b3f611"
     },
     "nhsd-haematopoietic-stem-cell-transplant-snomed.csv": {
       "id": "nhsd/haematopoietic-stem-cell-transplant-snomed/3ec3ac16",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/haematopoietic-stem-cell-transplant-snomed/3ec3ac16/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/haematopoietic-stem-cell-transplant-snomed/3ec3ac16/",
       "downloaded_at": "2023-05-24 13:26:18.625801Z",
       "sha": "cf529748a01cfa37247b550248db8edfc494ebc2"
     },
     "nhsd-haematopoietic-stem-cell-transplant-icd-10.csv": {
       "id": "nhsd/haematopoietic-stem-cell-transplant-icd-10/395e2c2a",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/haematopoietic-stem-cell-transplant-icd-10/395e2c2a/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/haematopoietic-stem-cell-transplant-icd-10/395e2c2a/",
       "downloaded_at": "2023-05-24 13:26:18.750822Z",
       "sha": "2635631fd1f67bb6a0442c91d119dec2fab24900"
     },
     "nhsd-haematopoietic-stem-cell-transplant-opcs4.csv": {
       "id": "nhsd/haematopoietic-stem-cell-transplant-opcs4/204eb8f5",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/haematopoietic-stem-cell-transplant-opcs4/204eb8f5/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/haematopoietic-stem-cell-transplant-opcs4/204eb8f5/",
       "downloaded_at": "2023-05-24 13:26:18.907018Z",
       "sha": "cf4870f86f0b704c125d1398765c05826d0bb9ea"
     },
     "nhsd-haematological-malignancies-icd-10.csv": {
       "id": "nhsd/haematological-malignancies-icd-10/073f45c0",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/haematological-malignancies-icd-10/073f45c0/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/haematological-malignancies-icd-10/073f45c0/",
       "downloaded_at": "2023-05-24 13:26:19.032017Z",
       "sha": "4ba51c56e9dfb0ab05161da4b381b9cbb0337003"
     },
     "nhsd-haematological-malignancies-snomed.csv": {
       "id": "nhsd/haematological-malignancies-snomed/31a49191",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/haematological-malignancies-snomed/31a49191/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/haematological-malignancies-snomed/31a49191/",
       "downloaded_at": "2023-05-24 13:26:19.344546Z",
       "sha": "a9eb86b02ec26884f2e26508e699bdcf5ea783aa"
     },
     "nhsd-ckd-stage-5-snomed-ct.csv": {
       "id": "nhsd/ckd-stage-5-snomed-ct/2808538e",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/ckd-stage-5-snomed-ct/2808538e/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/ckd-stage-5-snomed-ct/2808538e/",
       "downloaded_at": "2023-05-24 13:26:19.485144Z",
       "sha": "6c0621a51526d91170b31fd3ebf5bcaac73bb1bc"
     },
     "nhsd-ckd-stage-5-icd-10.csv": {
       "id": "nhsd/ckd-stage-5-icd-10/7bad9258",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/ckd-stage-5-icd-10/7bad9258/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/ckd-stage-5-icd-10/7bad9258/",
       "downloaded_at": "2023-05-24 13:26:19.657021Z",
       "sha": "242f2707db9159f86616ae31397ee63deb396bb5"
     },
     "nhsd-immunosuppresant-drugs-pra-dmd.csv": {
       "id": "nhsd/immunosuppresant-drugs-pra-dmd/526d9f5f",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/immunosuppresant-drugs-pra-dmd/526d9f5f/",
-      "downloaded_at": "2023-05-24 13:26:20.047642Z",
-      "sha": "fbb772601936d4df67f1ebe8a2e7e0bb3ec0777f"
+      "url": "https://www.opencodelists.org/codelist/nhsd/immunosuppresant-drugs-pra-dmd/526d9f5f/",
+      "downloaded_at": "2023-11-08 12:31:27.767594Z",
+      "sha": "b86c1ff06c9208851b40b668fc846e25ccabcbb1"
     },
     "nhsd-immunosuppresant-drugs-pra-snomed.csv": {
       "id": "nhsd/immunosuppresant-drugs-pra-snomed/6b7d1294",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/immunosuppresant-drugs-pra-snomed/6b7d1294/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/immunosuppresant-drugs-pra-snomed/6b7d1294/",
       "downloaded_at": "2023-05-24 13:26:20.205280Z",
       "sha": "48bc788a302d38b71a706262f0f2813afddb2c18"
     },
     "nhsd-oral-steroid-drugs-pra-dmd.csv": {
       "id": "nhsd/oral-steroid-drugs-pra-dmd/44292c02",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/oral-steroid-drugs-pra-dmd/44292c02/",
-      "downloaded_at": "2023-05-24 13:26:20.330082Z",
-      "sha": "bc844f5bf1d376fdfff43458233e09cc2a0978de"
+      "url": "https://www.opencodelists.org/codelist/nhsd/oral-steroid-drugs-pra-dmd/44292c02/",
+      "downloaded_at": "2023-11-08 12:31:28.163727Z",
+      "sha": "c6460d99b85104a351d329a0fe1a4cf3e5af7275"
     },
     "nhsd-oral-steroid-drugs-snomed.csv": {
       "id": "nhsd/oral-steroid-drugs-snomed/1ae93909",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/oral-steroid-drugs-snomed/1ae93909/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/oral-steroid-drugs-snomed/1ae93909/",
       "downloaded_at": "2023-05-24 13:26:20.455078Z",
       "sha": "5f2688b864aca2a50e8d67a2b71703922d9b7dd0"
     },
     "nhsd-immunosupression-pcdcluster-snomed-ct.csv": {
       "id": "nhsd/immunosupression-pcdcluster-snomed-ct/0993606d",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/immunosupression-pcdcluster-snomed-ct/0993606d/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/immunosupression-pcdcluster-snomed-ct/0993606d/",
       "downloaded_at": "2023-05-24 13:26:20.767618Z",
       "sha": "3cc58660e33777bd2cd4e9d43b4ff3843ee9ead2"
     },
     "user-bangzheng-nhsd-immunosupression-pcdcluster-snomed-ct-new.csv": {
       "id": "user/bangzheng/nhsd-immunosupression-pcdcluster-snomed-ct-new/7c9a7542",
-      "url": "https://codelists.opensafely.org/codelist/user/bangzheng/nhsd-immunosupression-pcdcluster-snomed-ct-new/7c9a7542/",
+      "url": "https://www.opencodelists.org/codelist/user/bangzheng/nhsd-immunosupression-pcdcluster-snomed-ct-new/7c9a7542/",
       "downloaded_at": "2023-05-24 13:26:20.939433Z",
       "sha": "09287f14fed4848e8fb7e706e859ebc1f316be74"
     },
     "nhsd-hiv-aids-snomed.csv": {
       "id": "nhsd/hiv-aids-snomed/68ca529e",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/hiv-aids-snomed/68ca529e/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/hiv-aids-snomed/68ca529e/",
       "downloaded_at": "2023-05-24 13:26:21.095745Z",
       "sha": "0a17c7d5410264ef321a0e8f8fed48fdbbec483a"
     },
     "nhsd-hiv-aids-icd10.csv": {
       "id": "nhsd/hiv-aids-icd10/01d9c5d4",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/hiv-aids-icd10/01d9c5d4/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/hiv-aids-icd10/01d9c5d4/",
       "downloaded_at": "2023-05-24 13:26:21.220921Z",
       "sha": "c89c973bdb73b5c23c541905e3c71bd7dfe72930"
     },
     "nhsd-transplant-spl-atriskv4-snomed-ct.csv": {
       "id": "nhsd/transplant-spl-atriskv4-snomed-ct/57747a02",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/transplant-spl-atriskv4-snomed-ct/57747a02/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/transplant-spl-atriskv4-snomed-ct/57747a02/",
       "downloaded_at": "2023-05-24 13:26:21.408243Z",
       "sha": "512bf4922c32d3826e17eeb0870e465825ec2e21"
     },
     "user-bangzheng-nhsd-transplant-spl-atriskv4-snomed-ct-new.csv": {
       "id": "user/bangzheng/nhsd-transplant-spl-atriskv4-snomed-ct-new/15a9e878",
-      "url": "https://codelists.opensafely.org/codelist/user/bangzheng/nhsd-transplant-spl-atriskv4-snomed-ct-new/15a9e878/",
+      "url": "https://www.opencodelists.org/codelist/user/bangzheng/nhsd-transplant-spl-atriskv4-snomed-ct-new/15a9e878/",
       "downloaded_at": "2023-05-24 13:26:21.549031Z",
       "sha": "56a9f8c2b600286b5403ad532097a82fcbdccd7d"
     },
     "nhsd-transplant-spl-hes-opcs4.csv": {
       "id": "nhsd/transplant-spl-hes-opcs4/1b47de52",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/transplant-spl-hes-opcs4/1b47de52/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/transplant-spl-hes-opcs4/1b47de52/",
       "downloaded_at": "2023-05-24 13:26:21.674043Z",
       "sha": "01602bfebd47489f5d14b4aa16fabe8c4655d1d6"
     },
     "nhsd-transplant-thymus-gland-spl-hes-opcs4.csv": {
       "id": "nhsd/transplant-thymus-gland-spl-hes-opcs4/5feb5f2d",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/transplant-thymus-gland-spl-hes-opcs4/5feb5f2d/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/transplant-thymus-gland-spl-hes-opcs4/5feb5f2d/",
       "downloaded_at": "2023-05-24 13:26:21.814464Z",
       "sha": "f67d10329e95a519692fb2d6724495178c3665dd"
     },
     "nhsd-transplant-replacement-of-organ-spl-hes-opcs4.csv": {
       "id": "nhsd/transplant-replacement-of-organ-spl-hes-opcs4/46dbebf8",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/transplant-replacement-of-organ-spl-hes-opcs4/46dbebf8/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/transplant-replacement-of-organ-spl-hes-opcs4/46dbebf8/",
       "downloaded_at": "2023-05-24 13:26:21.939423Z",
       "sha": "9dd25fa753fb8644b9c26e4f5a59603eeff5f97c"
     },
     "nhsd-transplant-conjunctiva-spl-hes-opcs4.csv": {
       "id": "nhsd/transplant-conjunctiva-spl-hes-opcs4/2dcc78c3",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/transplant-conjunctiva-spl-hes-opcs4/2dcc78c3/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/transplant-conjunctiva-spl-hes-opcs4/2dcc78c3/",
       "downloaded_at": "2023-05-24 13:26:22.048842Z",
       "sha": "904de2fa216c96db3e46a1f8dedeefaf0d6dad6a"
     },
     "nhsd-transplant-conjunctiva-y-codes-spl-hes-opcs4.csv": {
       "id": "nhsd/transplant-conjunctiva-y-codes-spl-hes-opcs4/14bd058e",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/transplant-conjunctiva-y-codes-spl-hes-opcs4/14bd058e/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/transplant-conjunctiva-y-codes-spl-hes-opcs4/14bd058e/",
       "downloaded_at": "2023-05-24 13:26:22.205049Z",
       "sha": "59356997a45d1349f85e9ecbed7f256122069535"
     },
     "nhsd-transplant-stomach-spl-hes-opcs4.csv": {
       "id": "nhsd/transplant-stomach-spl-hes-opcs4/6550df19",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/transplant-stomach-spl-hes-opcs4/6550df19/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/transplant-stomach-spl-hes-opcs4/6550df19/",
       "downloaded_at": "2023-05-24 13:26:22.330089Z",
       "sha": "472011c19bcc5953af39dacc451503cad62d3bd7"
     },
     "nhsd-transplant-ileum_1-spl-hes-opcs4.csv": {
       "id": "nhsd/transplant-ileum_1-spl-hes-opcs4/3331f8af",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/transplant-ileum_1-spl-hes-opcs4/3331f8af/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/transplant-ileum_1-spl-hes-opcs4/3331f8af/",
       "downloaded_at": "2023-05-24 13:26:22.472160Z",
       "sha": "b19cc21594fc4b4e1f91c9eaa2dc55c8a6d57122"
     },
     "nhsd-transplant-ileum_2-spl-hes-opcs4.csv": {
       "id": "nhsd/transplant-ileum_2-spl-hes-opcs4/1a22857a",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/transplant-ileum_2-spl-hes-opcs4/1a22857a/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/transplant-ileum_2-spl-hes-opcs4/1a22857a/",
       "downloaded_at": "2023-05-24 13:26:22.581742Z",
       "sha": "75dd3aebd1df8296b3370a0d8cd0daf9aa4ce716"
     },
     "nhsd-transplant-ileum_1-y-codes-spl-hes-opcs4.csv": {
       "id": "nhsd/transplant-ileum_1-y-codes-spl-hes-opcs4/01131245",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/transplant-ileum_1-y-codes-spl-hes-opcs4/01131245/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/transplant-ileum_1-y-codes-spl-hes-opcs4/01131245/",
       "downloaded_at": "2023-05-24 13:26:22.722339Z",
       "sha": "0de23a6b731e8a67cb1c0e229dcd9fc44d9f79bf"
     },
     "nhsd-transplant-ileum_2-y-codes-spl-hes-opcs4.csv": {
       "id": "nhsd/transplant-ileum_2-y-codes-spl-hes-opcs4/68039f0f",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/transplant-ileum_2-y-codes-spl-hes-opcs4/68039f0f/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/transplant-ileum_2-y-codes-spl-hes-opcs4/68039f0f/",
       "downloaded_at": "2023-05-24 13:26:22.862962Z",
       "sha": "5cf53f1089cc57821fc00b09f45149aa0155d20d"
     },
     "opensafely-solid-organ-transplantation-snomed.csv": {
       "id": "opensafely/solid-organ-transplantation-snomed/2020-04-10",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/solid-organ-transplantation-snomed/2020-04-10/",
+      "url": "https://www.opencodelists.org/codelist/opensafely/solid-organ-transplantation-snomed/2020-04-10/",
       "downloaded_at": "2023-05-30 15:16:23.615967Z",
       "sha": "cdb61aa51b4400c1aba2f8e4728c1b8130c4fd40"
     },
     "nhsd-multiple-sclerosis-snomed-ct.csv": {
       "id": "nhsd/multiple-sclerosis-snomed-ct/7336ad2d",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/multiple-sclerosis-snomed-ct/7336ad2d/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/multiple-sclerosis-snomed-ct/7336ad2d/",
       "downloaded_at": "2023-05-24 13:26:23.019106Z",
       "sha": "2990e766da7913754e1db89b65ce719e78adf129"
     },
     "nhsd-multiple-sclerosis.csv": {
       "id": "nhsd/multiple-sclerosis/4be2c69b",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/multiple-sclerosis/4be2c69b/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/multiple-sclerosis/4be2c69b/",
       "downloaded_at": "2023-05-24 13:26:23.159606Z",
       "sha": "de6b1f9688f0dd08fb69436c204f6357175c24bb"
     },
     "nhsd-motor-neurone-disease-snomed-ct.csv": {
       "id": "nhsd/motor-neurone-disease-snomed-ct/5a2739f8",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/motor-neurone-disease-snomed-ct/5a2739f8/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/motor-neurone-disease-snomed-ct/5a2739f8/",
       "downloaded_at": "2023-05-24 13:26:23.291925Z",
       "sha": "6b0bc73d709b8c3d31c1e705e25d15f610f014d4"
     },
     "nhsd-motor-neurone-disease-icd-10.csv": {
       "id": "nhsd/motor-neurone-disease-icd-10/4117c6c3",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/motor-neurone-disease-icd-10/4117c6c3/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/motor-neurone-disease-icd-10/4117c6c3/",
       "downloaded_at": "2023-05-24 13:26:23.448174Z",
       "sha": "d141fdf3c3363bed0a6d43535811ba63601b1d6a"
     },
     "nhsd-myasthenia-gravis-snomed-ct.csv": {
       "id": "nhsd/myasthenia-gravis-snomed-ct/0c462063",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/myasthenia-gravis-snomed-ct/0c462063/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/myasthenia-gravis-snomed-ct/0c462063/",
       "downloaded_at": "2023-05-24 13:26:23.635586Z",
       "sha": "b76277dd3fbc6ebad52cdb121f44007f84a53c35"
     },
     "nhsd-myasthenia-gravis.csv": {
       "id": "nhsd/myasthenia-gravis/32d35366",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/myasthenia-gravis/32d35366/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/myasthenia-gravis/32d35366/",
       "downloaded_at": "2023-05-24 13:26:23.744820Z",
       "sha": "8f2aa6f6d04149ae61497c973d460e9b62a09e94"
     },
     "nhsd-huntingtons-snomed-ct.csv": {
       "id": "nhsd/huntingtons-snomed-ct/25559398",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/huntingtons-snomed-ct/25559398/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/huntingtons-snomed-ct/25559398/",
       "downloaded_at": "2023-05-24 13:26:23.869943Z",
       "sha": "ce170ade64bf723f349eaaf95cd810fea3e6f74b"
     },
     "nhsd-huntingtons.csv": {
       "id": "nhsd/huntingtons/7e01ad05",
-      "url": "https://codelists.opensafely.org/codelist/nhsd/huntingtons/7e01ad05/",
+      "url": "https://www.opencodelists.org/codelist/nhsd/huntingtons/7e01ad05/",
       "downloaded_at": "2023-05-24 13:26:23.994820Z",
       "sha": "96987e57a5813399b57b73c76ac675eee5894ab5"
     },
     "nhsd-primary-care-domain-refsets-ld_cod.csv": {
       "id": "nhsd-primary-care-domain-refsets/ld_cod/20210127",
-      "url": "https://codelists.opensafely.org/codelist/nhsd-primary-care-domain-refsets/ld_cod/20210127/",
+      "url": "https://www.opencodelists.org/codelist/nhsd-primary-care-domain-refsets/ld_cod/20210127/",
       "downloaded_at": "2023-05-30 14:37:10.417328Z",
       "sha": "0c5bc3b050a55c2090e16932fd7364a0be775cb4"
     },
     "user-ruthcostello-liver_chapter_plus.csv": {
       "id": "user/ruthcostello/liver_chapter_plus/70556bad",
-      "url": "https://codelists.opensafely.org/codelist/user/ruthcostello/liver_chapter_plus/70556bad/",
+      "url": "https://www.opencodelists.org/codelist/user/ruthcostello/liver_chapter_plus/70556bad/",
       "downloaded_at": "2023-09-12 10:16:05.505808Z",
       "sha": "a0b3d37277d5e866a66e3ac6949ddcbd874dfe10"
     }

@@ -1,110 +1,122 @@
-dmd_type,dmd_id,dmd_name,bnf_code
-VMP,35912611000001102,Budesonide 3mg gastro-resistant modified-release capsules,0105020A0AAAAAA
-AMP,40815511000001105,Budesonide 3mg gastro-resistant modified-release capsules,0105020A0AAAAAA
-VMP,39697511000001108,Budesonide 2mg/100ml enema,0105020A0AAABAB
-VMP,317446001,Budesonide 3mg gastro-resistant capsules,0105020A0AAACAC
-VMP,11550711000001105,Budesonide 2mg/application foam enema,0105020A0AAADAD
-VMP,19743911000001108,Budesonide 9mg gastro-resistant granules sachets,0105020A0AAAEAE
-VMP,29094911000001100,Budesonide 9mg modified-release tablets,0105020A0AAAFAF
-VMP,35824211000001108,Budesonide 1mg orodispersible tablets sugar free,0105020A0AAAGAG
-VMP,40754711000001107,Budesonide 500microgram orodispersible tablets sugar free,0105020A0AAAHAH
-AMP,3765811000001105,Entocort CR 3mg capsules,0105020A0BBAAAA
-AMP,3954411000001107,Entocort 2mg/100ml enema,0105020A0BBABAB
-AMP,3807811000001103,Budenofalk 3mg gastro-resistant capsules,0105020A0BCAAAC
-AMP,11550911000001107,Budenofalk 2mg/application foam enema,0105020A0BCABAD
-AMP,19738311000001103,Budenofalk 9mg gastro-resistant granules sachets,0105020A0BCACAE
-AMP,29094211000001109,Cortiment 9mg modified-release tablets,0105020A0BDAAAF
-AMP,35774711000001104,Jorveza 1mg orodispersible tablets,0105020A0BEAAAG
-AMP,40745211000001101,Jorveza 0.5mg orodispersible tablets,0105020A0BEABAH
-VMP,35912811000001103,Budesonide 50micrograms/dose inhaler,0302000K0AAAAAA
-VMP,35912511000001101,Budesonide 200micrograms/dose inhaler,0302000K0AAADAD
-VMP,35912411000001100,Budesonide 200micrograms/dose dry powder inhaler,0302000K0AAAGAG
-VMP,35912711000001106,Budesonide 400micrograms/dose dry powder inhaler,0302000K0AAAHAH
-VMP,3654611000001109,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-AMP,10273211000001108,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-AMP,11005711000001109,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-AMP,10347911000001102,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-AMP,18507211000001101,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-AMP,10453211000001107,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-AMP,22622611000001108,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-AMP,10326711000001104,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-AMP,30004511000001108,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-AMP,38807411000001101,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-AMP,17810011000001102,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-AMP,15060511000001109,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-AMP,10274211000001106,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-AMP,21804611000001101,Budesonide 1mg/2ml nebuliser liquid unit dose vials,0302000K0AAAIAI
-VMP,3654511000001105,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-AMP,10272811000001101,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-AMP,11005511000001104,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-AMP,10347711000001104,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-AMP,18507011000001106,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-AMP,10453011000001102,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-AMP,22622411000001105,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-AMP,10326511000001109,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-AMP,30004311000001102,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-AMP,38807211000001100,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-AMP,17809311000001106,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-AMP,29775411000001101,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-AMP,10273611000001105,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-AMP,21804411000001104,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,0302000K0AAAJAJ
-VMP,35912111000001105,Budesonide 100micrograms/dose dry powder inhaler,0302000K0AAAKAK
-VMP,35912011000001109,Budesonide 100micrograms/dose / Formoterol 6micrograms/dose dry powder inhaler,0302000K0AAALAL
-VMP,38896811000001103,Budesonide 200micrograms/dose / Formoterol 6micrograms/dose dry powder inhaler,0302000K0AAAMAM
-VMP,3432911000001109,Budesonide 200microgram inhalation powder capsules,0302000K0AAARAR
-VMP,3433011000001101,Budesonide 400microgram inhalation powder capsules,0302000K0AAASAS
-VMP,4864911000001104,Budesonide 200micrograms/dose inhaler with spacer,0302000K0AAATAT
-VMP,4378111000001103,Budesonide 400micrograms/dose / Formoterol 12micrograms/dose dry powder inhaler,0302000K0AAAUAU
-VMP,8024611000001102,Budesonide 200micrograms/dose dry powder inhalation cartridge with device,0302000K0AAAVAV
-VMP,9117811000001107,Budesonide 200micrograms/dose dry powder inhalation cartridge,0302000K0AAAWAW
-VMP,14959511000001107,Budesonide 100micrograms/dose inhaler CFC free,0302000K0AAAZAZ
-VMP,15374611000001106,Budesonide 200micrograms/dose inhaler CFC free,0302000K0AABABA
-VMP,32960711000001105,Budesonide 200micrograms/dose / Formoterol 6micrograms/dose inhaler CFC free,0302000K0AABBBB
-VMP,39133611000001108,Budesonide 100micrograms/dose / Formoterol 3micrograms/dose inhaler CFC free,0302000K0AABCBC
-AMP,2924111000001109,Pulmicort 200micrograms/dose inhaler,0302000K0BBADAD
-AMP,3240911000001108,Pulmicort LS 50micrograms/dose inhaler,0302000K0BBAEAA
-AMP,3636511000001103,Pulmicort 1mg Respules,0302000K0BBAGAI
-AMP,3112411000001105,Pulmicort 200 Turbohaler,0302000K0BBAHAG
-AMP,3228711000001106,Pulmicort 400 Turbohaler,0302000K0BBAIAH
-AMP,3635411000001106,Pulmicort 0.5mg Respules,0302000K0BBAJAJ
-AMP,3113111000001106,Pulmicort 100 Turbohaler,0302000K0BBAKAK
-AMP,4860811000001104,Pulmicort 200micrograms/dose inhaler with Nebuchamber,0302000K0BBALAT
-AMP,14951111000001102,Pulmicort 100micrograms/dose inhaler CFC free,0302000K0BBAMAZ
-AMP,15358411000001102,Pulmicort 200micrograms/dose inhaler CFC free,0302000K0BBANBA
-AMP,3294211000001101,Symbicort 100/6 Turbohaler,0302000K0BDAAAL
-AMP,3294611000001104,Symbicort 200/6 Turbohaler,0302000K0BDABAM
-AMP,4373811000001100,Symbicort 400/12 Turbohaler,0302000K0BDACAU
-AMP,32926011000001100,Symbicort 200micrograms/dose / 6micrograms/dose pressurised inhaler,0302000K0BDADBB
-AMP,39105811000001102,Symbicort 100micrograms/dose / 3micrograms/dose pressurised inhaler,0302000K0BDAEBC
-AMP,3197211000001105,Budesonide 200 Cyclocaps,0302000K0BEAAAR
-AMP,3198411000001108,Budesonide 400 Cyclocaps,0302000K0BEABAS
-AMP,8031811000001102,Budelin Novolizer 200micrograms/dose inhalation powder,0302000K0BFAAAV
-AMP,9111811000001100,Budelin Novolizer 200micrograms/dose inhalation powder refill,0302000K0BFABAW
-AMP,10073911000001106,Easyhaler Budesonide 100micrograms/dose dry powder inhaler,0302000K0BGAAAK
-AMP,10074611000001102,Easyhaler Budesonide 200micrograms/dose dry powder inhaler,0302000K0BGABAG
-AMP,10074411000001100,Easyhaler Budesonide 400micrograms/dose dry powder inhaler,0302000K0BGACAH
-AMP,25254111000001105,DuoResp Spiromax 160micrograms/dose / 4.5micrograms/dose dry powder inhaler,0302000K0BHAAAM
-AMP,25254711000001106,DuoResp Spiromax 320micrograms/dose / 9micrograms/dose dry powder inhaler,0302000K0BHABAU
-AMP,34812111000001106,Fobumix Easyhaler 320micrograms/dose / 9micrograms/dose dry powder inhaler,0302000K0BIAAAU
-AMP,34950311000001108,Fobumix Easyhaler 160micrograms/dose / 4.5micrograms/dose dry powder inhaler,0302000K0BIABAM
-AMP,34950611000001103,Fobumix Easyhaler 80micrograms/dose / 4.5micrograms/dose dry powder inhaler,0302000K0BIADAL
-AMP,40106011000001102,WockAIR 160micrograms/dose / 4.5micrograms/dose dry powder inhaler,0302000K0BJAAAM
-AMP,40106211000001107,WockAIR 320micrograms/dose / 9micrograms/dose dry powder inhaler,0302000K0BJABAU
-VMP,35912211000001104,Budesonide 100micrograms/dose nasal spray,1202010I0AAACAC
-AMP,117711000001109,Budesonide 100micrograms/dose nasal spray,1202010I0AAACAC
-AMP,10271611000001106,Budesonide 100micrograms/dose nasal spray,1202010I0AAACAC
-AMP,65711000001108,Budesonide 100micrograms/dose nasal spray,1202010I0AAACAC
-AMP,15060211000001106,Budesonide 100micrograms/dose nasal spray,1202010I0AAACAC
-AMP,642611000001107,Budesonide 100micrograms/dose nasal spray,1202010I0AAACAC
-VMP,7425611000001100,Budesonide 64micrograms/dose nasal spray,1202010I0AAAFAF
-AMP,16730311000001108,Budesonide 64micrograms/dose nasal spray,1202010I0AAAFAF
-AMP,16640611000001107,Budesonide 64micrograms/dose nasal spray,1202010I0AAAFAF
-AMP,22622211000001106,Budesonide 64micrograms/dose nasal spray,1202010I0AAAFAF
-AMP,38806911000001106,Budesonide 64micrograms/dose nasal spray,1202010I0AAAFAF
-AMP,17809011000001108,Budesonide 64micrograms/dose nasal spray,1202010I0AAAFAF
-AMP,20284211000001101,Budesonide 64micrograms/dose nasal spray,1202010I0AAAFAF
-AMP,544311000001102,Rhinocort Aqua 100micrograms/dose nasal spray,1202010I0BBACAC
-AMP,7401811000001109,Rhinocort Aqua 64 nasal spray,1202010I0BBAEAF
-AMP,19528311000001102,Budeflam Aquanase 100micrograms/dose nasal spray,1202010I0BCAAAC
-AMP,28871811000001101,Aircort 100micrograms/dose nasal spray,1202010I0BDAAAC
-AMP,35089811000001104,Benacort 64micrograms nasal spray,1202010I0BEAAAF
+code,term,dmd_id
+35912611000001102,Budesonide 3mg gastro-resistant modified-release capsules,35912611000001102
+40815511000001105,Budesonide 3mg gastro-resistant modified-release capsules,40815511000001105
+39697511000001108,Budesonide 2mg/100ml enema,39697511000001108
+317446001,Budesonide 3mg gastro-resistant capsules,317446001
+11550711000001105,Budesonide 2mg/application foam enema,11550711000001105
+19743911000001108,Budesonide 9mg gastro-resistant granules sachets,19743911000001108
+29094911000001100,Budesonide 9mg modified-release tablets,29094911000001100
+35824211000001108,Budesonide 1mg orodispersible tablets sugar free,35824211000001108
+40754711000001107,Budesonide 500microgram orodispersible tablets sugar free,40754711000001107
+3765811000001105,Entocort CR 3mg capsules,3765811000001105
+3954411000001107,Entocort 2mg/100ml enema,3954411000001107
+3807811000001103,Budenofalk 3mg gastro-resistant capsules,3807811000001103
+11550911000001107,Budenofalk 2mg/application foam enema,11550911000001107
+19738311000001103,Budenofalk 9mg gastro-resistant granules sachets,19738311000001103
+29094211000001109,Cortiment 9mg modified-release tablets,29094211000001109
+35774711000001104,Jorveza 1mg orodispersible tablets,35774711000001104
+40745211000001101,Jorveza 0.5mg orodispersible tablets,40745211000001101
+35912811000001103,Budesonide 50micrograms/dose inhaler,35912811000001103
+35912511000001101,Budesonide 200micrograms/dose inhaler,35912511000001101
+35912411000001100,Budesonide 200micrograms/dose dry powder inhaler,35912411000001100
+35912711000001106,Budesonide 400micrograms/dose dry powder inhaler,35912711000001106
+3654611000001109,Budesonide 1mg/2ml nebuliser liquid unit dose vials,3654611000001109
+10273211000001108,Budesonide 1mg/2ml nebuliser liquid unit dose vials,10273211000001108
+11005711000001109,Budesonide 1mg/2ml nebuliser liquid unit dose vials,11005711000001109
+10347911000001102,Budesonide 1mg/2ml nebuliser liquid unit dose vials,10347911000001102
+18507211000001101,Budesonide 1mg/2ml nebuliser liquid unit dose vials,18507211000001101
+10453211000001107,Budesonide 1mg/2ml nebuliser liquid unit dose vials,10453211000001107
+22622611000001108,Budesonide 1mg/2ml nebuliser liquid unit dose vials,22622611000001108
+10326711000001104,Budesonide 1mg/2ml nebuliser liquid unit dose vials,10326711000001104
+30004511000001108,Budesonide 1mg/2ml nebuliser liquid unit dose vials,30004511000001108
+38807411000001101,Budesonide 1mg/2ml nebuliser liquid unit dose vials,38807411000001101
+17810011000001102,Budesonide 1mg/2ml nebuliser liquid unit dose vials,17810011000001102
+15060511000001109,Budesonide 1mg/2ml nebuliser liquid unit dose vials,15060511000001109
+10274211000001106,Budesonide 1mg/2ml nebuliser liquid unit dose vials,10274211000001106
+21804611000001101,Budesonide 1mg/2ml nebuliser liquid unit dose vials,21804611000001101
+3654511000001105,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,3654511000001105
+10272811000001101,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,10272811000001101
+11005511000001104,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,11005511000001104
+10347711000001104,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,10347711000001104
+18507011000001106,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,18507011000001106
+10453011000001102,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,10453011000001102
+22622411000001105,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,22622411000001105
+10326511000001109,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,10326511000001109
+30004311000001102,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,30004311000001102
+38807211000001100,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,38807211000001100
+17809311000001106,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,17809311000001106
+29775411000001101,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,29775411000001101
+10273611000001105,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,10273611000001105
+21804411000001104,Budesonide 500micrograms/2ml nebuliser liquid unit dose vials,21804411000001104
+35912111000001105,Budesonide 100micrograms/dose dry powder inhaler,35912111000001105
+35912011000001109,Budesonide 100micrograms/dose / Formoterol 6micrograms/dose dry powder inhaler,35912011000001109
+38896811000001103,Budesonide 200micrograms/dose / Formoterol 6micrograms/dose dry powder inhaler,38896811000001103
+3432911000001109,Budesonide 200microgram inhalation powder capsules,3432911000001109
+3433011000001101,Budesonide 400microgram inhalation powder capsules,3433011000001101
+4864911000001104,Budesonide 200micrograms/dose inhaler with spacer,4864911000001104
+4378111000001103,Budesonide 400micrograms/dose / Formoterol 12micrograms/dose dry powder inhaler,4378111000001103
+8024611000001102,Budesonide 200micrograms/dose dry powder inhalation cartridge with device,8024611000001102
+9117811000001107,Budesonide 200micrograms/dose dry powder inhalation cartridge,9117811000001107
+14959511000001107,Budesonide 100micrograms/dose inhaler CFC free,14959511000001107
+15374611000001106,Budesonide 200micrograms/dose inhaler CFC free,15374611000001106
+32960711000001105,Budesonide 200micrograms/dose / Formoterol 6micrograms/dose inhaler CFC free,32960711000001105
+39133611000001108,Budesonide 100micrograms/dose / Formoterol 3micrograms/dose inhaler CFC free,39133611000001108
+2924111000001109,Pulmicort 200micrograms/dose inhaler,2924111000001109
+3240911000001108,Pulmicort LS 50micrograms/dose inhaler,3240911000001108
+3636511000001103,Pulmicort 1mg Respules,3636511000001103
+3112411000001105,Pulmicort 200 Turbohaler,3112411000001105
+3228711000001106,Pulmicort 400 Turbohaler,3228711000001106
+3635411000001106,Pulmicort 0.5mg Respules,3635411000001106
+3113111000001106,Pulmicort 100 Turbohaler,3113111000001106
+4860811000001104,Pulmicort 200micrograms/dose inhaler with Nebuchamber,4860811000001104
+14951111000001102,Pulmicort 100micrograms/dose inhaler CFC free,14951111000001102
+15358411000001102,Pulmicort 200micrograms/dose inhaler CFC free,15358411000001102
+3294211000001101,Symbicort 100/6 Turbohaler,3294211000001101
+3294611000001104,Symbicort 200/6 Turbohaler,3294611000001104
+4373811000001100,Symbicort 400/12 Turbohaler,4373811000001100
+32926011000001100,Symbicort 200micrograms/dose / 6micrograms/dose pressurised inhaler,32926011000001100
+39105811000001102,Symbicort 100micrograms/dose / 3micrograms/dose pressurised inhaler,39105811000001102
+3197211000001105,Budesonide 200 Cyclocaps,3197211000001105
+3198411000001108,Budesonide 400 Cyclocaps,3198411000001108
+8031811000001102,Budelin Novolizer 200micrograms/dose inhalation powder,8031811000001102
+9111811000001100,Budelin Novolizer 200micrograms/dose inhalation powder refill,9111811000001100
+10073911000001106,Easyhaler Budesonide 100micrograms/dose dry powder inhaler,10073911000001106
+10074611000001102,Easyhaler Budesonide 200micrograms/dose dry powder inhaler,10074611000001102
+10074411000001100,Easyhaler Budesonide 400micrograms/dose dry powder inhaler,10074411000001100
+25254111000001105,DuoResp Spiromax 160micrograms/dose / 4.5micrograms/dose dry powder inhaler,25254111000001105
+25254711000001106,DuoResp Spiromax 320micrograms/dose / 9micrograms/dose dry powder inhaler,25254711000001106
+34812111000001106,Fobumix Easyhaler 320micrograms/dose / 9micrograms/dose dry powder inhaler,34812111000001106
+34950311000001108,Fobumix Easyhaler 160micrograms/dose / 4.5micrograms/dose dry powder inhaler,34950311000001108
+34950611000001103,Fobumix Easyhaler 80micrograms/dose / 4.5micrograms/dose dry powder inhaler,34950611000001103
+40106011000001102,WockAIR 160micrograms/dose / 4.5micrograms/dose dry powder inhaler,40106011000001102
+40106211000001107,WockAIR 320micrograms/dose / 9micrograms/dose dry powder inhaler,40106211000001107
+35912211000001104,Budesonide 100micrograms/dose nasal spray,35912211000001104
+117711000001109,Budesonide 100micrograms/dose nasal spray,117711000001109
+10271611000001106,Budesonide 100micrograms/dose nasal spray,10271611000001106
+65711000001108,Budesonide 100micrograms/dose nasal spray,65711000001108
+15060211000001106,Budesonide 100micrograms/dose nasal spray,15060211000001106
+642611000001107,Budesonide 100micrograms/dose nasal spray,642611000001107
+7425611000001100,Budesonide 64micrograms/dose nasal spray,7425611000001100
+16730311000001108,Budesonide 64micrograms/dose nasal spray,16730311000001108
+16640611000001107,Budesonide 64micrograms/dose nasal spray,16640611000001107
+22622211000001106,Budesonide 64micrograms/dose nasal spray,22622211000001106
+38806911000001106,Budesonide 64micrograms/dose nasal spray,38806911000001106
+17809011000001108,Budesonide 64micrograms/dose nasal spray,17809011000001108
+20284211000001101,Budesonide 64micrograms/dose nasal spray,20284211000001101
+544311000001102,Rhinocort Aqua 100micrograms/dose nasal spray,544311000001102
+7401811000001109,Rhinocort Aqua 64 nasal spray,7401811000001109
+19528311000001102,Budeflam Aquanase 100micrograms/dose nasal spray,19528311000001102
+28871811000001101,Aircort 100micrograms/dose nasal spray,28871811000001101
+35089811000001104,Benacort 64micrograms nasal spray,35089811000001104
+134498003,VMP previous to 38896811000001103,134498003
+134499006,VMP previous to 35912011000001109,134499006
+317443009,VMP previous to 35912611000001102,317443009
+317695007,VMP previous to 39697511000001108,317695007
+320565009,VMP previous to 35912111000001105,320565009
+320567001,VMP previous to 35912411000001100,320567001
+320568006,VMP previous to 35912711000001106,320568006
+320571003,VMP previous to 35912511000001101,320571003
+320574006,VMP previous to 35912811000001103,320574006
+331032009,VMP previous to 35912211000001104,331032009
+35912311000001107,VMP previous to 38896811000001103,35912311000001107
+42292411000001104,VMP subsequent to 317446001,42292411000001104
