@@ -108,7 +108,20 @@ actions:
     needs: [time_varying_prep]
     outputs:
       moderately_sensitive:
-        tables: output/tables/cox*
+        tables: output/tables/cox*.txt
         graphs: output/graphs/schoenplot*.svg
         km_plots: output/graphs/km*.svg
         
+  high_cost_drugs:
+    run: cohortextractor:latest generate_cohort --study-definition study_definition_hc_drugs
+    needs: [generate_study_population_pbc]
+    outputs:
+      highly_sensitive:
+        cohort: output/input_hc_drugs.csv
+
+  hcd_descriptives:
+    run: stata-mp:latest analysis/hcd_descriptives.do
+    needs: [high_cost_drugs]
+    outputs:
+      moderately_sensitive:
+        log: logs/hcd_descriptives.log

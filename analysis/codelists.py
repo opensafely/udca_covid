@@ -361,3 +361,15 @@ liver_death_codes = codelist_from_csv(
   system = "icd10",
   column = "code",
 )
+
+oca_hcd_codes = codelist_from_csv(
+  "codelists/hcd-obeticholic-acid-drug-names.csv",
+  system = "none",
+  column = "olddrugname",
+)
+
+udca_hcd_codes = codelist_from_csv(
+  "codelists/hcd-ursodeoxycholic-acid-drug-names.csv",
+  system = "none",
+  column = "olddrugname",
+)

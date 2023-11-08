@@ -1,0 +1,36 @@
+
+. 
+. cap mkdir ./output/tables/
+
+. 
+. * First import udca population
+. import delimited using ./output/input_hc_drugs.csv
+(3 vars, 1,000 obs)
+
+. tab prescribed_oca_n, m 
+
+prescribed_ |
+      oca_n |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        500       50.00       50.00
+          1 |        500       50.00      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+. tab prescribed_udca_hcd, m
+
+prescribed_ |
+   udca_hcd |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        500       50.00       50.00
+          1 |        500       50.00      100.00
+------------+-----------------------------------
+      Total |      1,000      100.00
+
+. 
+. log close 
+      name:  <unnamed>
+       log:  /workspace/logs/hcd_descriptives.log
+  log type:  text
+ closed on:   8 Nov 2023, 12:28:39
+-------------------------------------------------------------------------------
