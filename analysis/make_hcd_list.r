@@ -38,7 +38,7 @@ if (nrow(check_doubles) > 0) {
 
 hc_mapped %>% 
   group_by(drug = str_replace_all(hc_mapped$drug, " ", "-")) %>% 
-  group_walk(~write_csv(.x, glue("codelists/hcd-{.y$drug}-drug-names.csv")))
+  group_walk(~write_csv(.x, glue("other_codelists/hcd-{.y$drug}-drug-names.csv")))
 
 hc_metadata <- drug_mapping %>%
   filter(new_clean_drug %in% hc_mapped$drug) %>% 
