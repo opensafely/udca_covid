@@ -25,13 +25,13 @@ study = StudyDefinition(
     index_date="2019-03-01",
 
     prescribed_oca_n = patients.with_high_cost_drugs(
-        drug_name_matches="oca_hcd_codes",
+        drug_name_matches=oca_hcd_codes,
         returning="binary_flag",
         on_or_after="2019-09-01",
     ),
 
     prescribed_udca_hcd = patients.with_high_cost_drugs(
-        drug_name_matches="udca_hcd_codes",
+        drug_name_matches=udca_hcd_codes,
         returning="binary_flag",
         on_or_after="2019-09-01",
     ),
