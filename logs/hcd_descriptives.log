@@ -3,34 +3,272 @@
 . cap mkdir ./output/tables/
 
 . 
+. tempfile tempfile 
+
+. import delimited using ./output/input_pbc.csv
+(109 vars, 1,000 obs)
+
+. describe
+
+Contains data
+  obs:         1,000                          
+ vars:           109                          
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+dereg_date      str10   %10s                  
+has_pbc_date    int     %8.0g                 
+has_psc_date    int     %8.0g                 
+fu_liver_tran~d str10   %10s                  
+fu_liver_tran~s str10   %10s                  
+udca_last_date  str10   %10s                  
+udca_first_af~r str10   %10s                  
+udca_first_hi~y str10   %10s                  
+covid_va~t_date str10   %10s                  
+covid_vacc_se~e str10   %10s                  
+covid_vacc_th~e str10   %10s                  
+covid_vacc_fo~e str10   %10s                  
+covid_~fth_date str10   %10s                  
+date_most_rec~c str10   %10s                  
+severe_disea~ed str10   %10s                  
+severe_disea~cd str10   %10s                  
+solid_organ_t~m str10   %10s                  solid_organ_transplant_nhsd_snome
+                                                > d
+solid_organ_n~w str10   %10s                  
+solid_organ_t~s byte    %8.0g                 solid_organ_transplant_nhsd_opcs4
+transplant_al~4 byte    %8.0g                 
+transplant_th~4 str10   %10s                  
+transplant_co~p byte    %8.0g                 transplant_conjunctiva_y_code_opc
+                                                > s4
+transplant_co~4 str10   %10s                  
+transplant_st~4 str10   %10s                  
+transplant_il.. byte    %8.0g                 transplant_ileum_1_Y_codes_opcs4
+transplant_il.. byte    %8.0g                 transplant_ileum_2_Y_codes_opcs4
+transpl~1_opcs4 str10   %10s                  
+transpl~2_opcs4 str10   %10s                  
+hosp_covid_pr~y str10   %10s                  
+hosp_covid_any  str10   %10s                  
+died_date_ons   str10   %10s                  
+age             byte    %8.0g                 
+sex             str1    %9s                   
+stp             str4    %9s                   
+region_nhs      str24   %24s                  
+has_msoa        byte    %8.0g                 
+imd             byte    %8.0g                 
+eth             byte    %8.0g                 
+ethnicity_sus   byte    %8.0g                 
+ethnicity       byte    %8.0g                 
+smoking_status  str1    %9s                   
+bmi             float   %9.0g                 
+has_pbc         byte    %8.0g                 
+has_psc         byte    %8.0g                 
+liver_transpl~l byte    %8.0g                 
+udca_count_bl   byte    %8.0g                 
+udca_count_fu   byte    %8.0g                 
+oca_bl          byte    %8.0g                 
+budesonide_co~u byte    %8.0g                 
+budesonide_co~l byte    %8.0g                 
+fenofibrate_c~u byte    %8.0g                 
+fenofibrate_c~l byte    %8.0g                 
+gc_count_fu     byte    %8.0g                 
+gc_count_bl     byte    %8.0g                 
+rituximab_bl    byte    %8.0g                 
+severe_diseas~l byte    %8.0g                 
+learning_disa~d byte    %8.0g                 
+cancer_opensa~d byte    %8.0g                 
+cancer_opensa~w byte    %8.0g                 
+cancer_opensa~r byte    %8.0g                 
+haematopoieti~d byte    %8.0g                 
+haematopoiet~10 byte    %8.0g                 
+haematopoieti~4 byte    %8.0g                 
+haematologica~m byte    %8.0g                 haematological_malignancies_snome
+                                                > d
+haematologica~1 byte    %8.0g                 haematological_malignancies_icd10
+sickle_cell_d~d byte    %8.0g                 
+sickle_cell_~10 byte    %8.0g                 
+haematopoieti~_ byte    %8.0g                 haematopoietic_stem_cell_snomed_e
+                                                > ver
+haematopoie~0_e byte    %8.0g                 haematopoietic_stem_cell_icd10_ev
+                                                > er
+haematopoie~4_e byte    %8.0g                 haematopoietic_stem_cell_opcs4_ev
+                                                > er
+v71             byte    %8.0g                 haematological_malignancies_snome
+                                                > d_ever
+v72             byte    %8.0g                 haematological_malignancies_icd10
+                                                > _ever
+ckd_stage_5_~ed byte    %8.0g                 
+ckd_stage_5_~10 byte    %8.0g                 
+immunosuppres~d byte    %8.0g                 
+oral_steroid_~d byte    %8.0g                 
+oral_s~3m_count byte    %8.0g                 
+oral_s~2m_count byte    %8.0g                 
+immunosuppres~r byte    %8.0g                 
+oral_steroid_~r byte    %8.0g                 
+immunosupress~d byte    %8.0g                 
+immunosupress~w byte    %8.0g                 
+hiv_aids_nhsd~d byte    %8.0g                 
+hiv_aids_nhs~10 byte    %8.0g                 
+multiple_scl~ed byte    %8.0g                 
+multiple_scl~10 byte    %8.0g                 
+motor_neurone~e byte    %8.0g                 motor_neurone_disease_nhsd_snomed
+motor_neuron~10 byte    %8.0g                 
+myasthenia_g~ed byte    %8.0g                 
+myasthenia_g~10 byte    %8.0g                 
+huntingtons_~ed byte    %8.0g                 
+huntingtons_~10 byte    %8.0g                 
+died_ons_live~y byte    %8.0g                 
+died_ons_live~g byte    %8.0g                 
+died_ons_covi~y byte    %8.0g                 
+died_ons_covi~g byte    %8.0g                 
+liver_transpl~e str10   %10s                  
+severe_diseas~e str10   %10s                  
+haematologica~d byte    %8.0g                 
+haematologica~r byte    %8.0g                 
+ckd_stage_5_~sd byte    %8.0g                 
+hiv_aids_nhsd   byte    %8.0g                 
+solid_organ_t~d str10   %10s                  
+solid_organ_t~w str10   %10s                  
+multiple_scl~sd byte    %8.0g                 
+motor_neurone~d byte    %8.0g                 
+myasthenia_g~sd byte    %8.0g                 
+huntingtons_~sd byte    %8.0g                 
+patient_id      int     %8.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. save `tempfile' 
+file /tmp/St00015.000001 saved
+
+. 
 . * First import udca population
-. import delimited using ./output/input_hc_drugs.csv
+. import delimited using ./output/input_hc_drugs.csv, clear 
 (3 vars, 1,000 obs)
+
+. merge 1:1 patient_id using `tempfile', keepusing(udca_count_bl)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         1,756
+        from master                       878  (_merge==1)
+        from using                        878  (_merge==2)
+
+    matched                               122  (_merge==3)
+    -----------------------------------------
 
 . tab prescribed_oca_n, m 
 
 prescribed_ |
       oca_n |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        500       50.00       50.00
-          1 |        500       50.00      100.00
+          0 |        500       26.62       26.62
+          1 |        500       26.62       53.25
+          . |        878       46.75      100.00
 ------------+-----------------------------------
-      Total |      1,000      100.00
+      Total |      1,878      100.00
 
 . tab prescribed_udca_hcd, m
 
 prescribed_ |
    udca_hcd |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        500       50.00       50.00
-          1 |        500       50.00      100.00
+          0 |        500       26.62       26.62
+          1 |        500       26.62       53.25
+          . |        878       46.75      100.00
 ------------+-----------------------------------
-      Total |      1,000      100.00
+      Total |      1,878      100.00
+
+. 
+. gen udca_bl = (udca_count_bl>=1 & udca_count_bl!=.)
+
+. bys udca_bl: sum udca_count_bl
+
+-------------------------------------------------------------------------------
+-> udca_bl = 0
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+udca_count~l |        749   -.0146862    .1310103         -2          0
+
+-------------------------------------------------------------------------------
+-> udca_bl = 1
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+udca_count~l |        251    3.131474    1.568007          1          8
+
+
+. 
+. preserve 
+
+. table1_mc, vars(prescribed_oca_n bin) by(udca_bl) clear
+
+  +------------------------------------------+
+  | factor             N_0   N_1   m_0   m_1 |
+  |------------------------------------------|
+  | prescribed_oca_n   968    32   659   219 |
+  +------------------------------------------+
+   N_ ... #records used below,   m_ ... #records not used
+ 
+  +--------------------------------------------------------+
+  |                    udca_bl = 0   udca_bl = 1   p-value |
+  |--------------------------------------------------------|
+  |                    N=1,627       N=251                 |
+  |--------------------------------------------------------|
+  | prescribed_oca_n   481 (49.7%)   19 (59.4%)     0.28   |
+  +--------------------------------------------------------+
+Data are presented as n (%).
+ 
+
+. export delimited using ./output/tables/baseline_oca.csv, replace
+(note: file ./output/tables/baseline_oca.csv not found)
+file ./output/tables/baseline_oca.csv saved
+
+. * Rounding numbers in table to nearest 5
+. forvalues i=0/1 {   
+  2.     destring _columna_`i', gen(n`i') ignore(",") force
+  3.     destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
+  4.     gen rounded_n`i' = round(n`i', 5)
+  5.     tostring percent`i', gen(percent_`i')
+  6.     tostring rounded_n`i', gen(n`i'_rounded)
+  7.     replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
+  8.     replace percent_`i' = "redacted" if (rounded_n`i'<=5)
+  9. }
+_columna_0: contains nonnumeric characters not specified in ignore(); n0 genera
+> ted as int
+(2 missing values generated)
+_columnb_0: contains nonnumeric characters not specified in ignore()
+_columnb_0: characters space % ( ) removed; percent0 generated as double
+(2 missing values generated)
+(2 missing values generated)
+percent_0 generated as str4
+n0_rounded generated as str3
+(0 real changes made)
+(0 real changes made)
+_columna_1: contains nonnumeric characters not specified in ignore(); n1 genera
+> ted as byte
+(2 missing values generated)
+_columnb_1: contains nonnumeric characters not specified in ignore()
+_columnb_1: characters space % ( ) removed; percent1 generated as double
+(2 missing values generated)
+(2 missing values generated)
+percent_1 generated as str4
+n1_rounded generated as str2
+(0 real changes made)
+(0 real changes made)
+
+. keep factor n0_rounded percent_0 n1_rounded percent_1
+
+. export delimited using ./output/tables/baseline_oca_rounded.csv
+file ./output/tables/baseline_oca_rounded.csv saved
+
+. restore 
 
 . 
 . log close 
       name:  <unnamed>
        log:  /workspace/logs/hcd_descriptives.log
   log type:  text
- closed on:   8 Nov 2023, 12:28:39
+ closed on:  15 Nov 2023, 16:10:24
 -------------------------------------------------------------------------------
