@@ -1,4 +1,4 @@
-# ${udca_covid}
+# udca_covid
 
 [View on OpenSAFELY]([https://jobs.opensafely.org/repo/https%253A%252F%252Fgithub.com%252F${GITHUB_REPOSITORY_OWNER}%252F${GITHUB_REPOSITORY_NAME}](https://jobs.opensafely.org/association-between-ursodeoxycholic-acid-and-covid-19-outcomes/udca-covid/))
 
