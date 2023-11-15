@@ -680,11 +680,14 @@ file write tablecontent ("Outcome") _tab ("Exposure status")  _tab ("events") _t
 * Cox models and Schoenfeld residual plots for each outcome
 foreach outcome in died_covid_any hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
+    merge m:1 patient_id using ./output/baseline_oca_n
+    tab _merge 
+    drop _merge
     drop if stp==""
     * Open file to write results
     describe
     gen index_date = date("01/03/2020", "DMY")
-    drop if oca_bl==1
+    drop if oca_bl==1 | prescribed_oca_n==1
     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) origin(index_date)
     count if `outcome'_flag==1
     if r(N) > 10 {
