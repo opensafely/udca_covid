@@ -18,7 +18,9 @@ file open tablecontent using ./output/tables/udca_descriptives.txt, write text r
 * Loop through each dataset with different lengths of days of prescriptions
 forvalues i=60(30)180 {
     use ./output/time_varying_udca_all_vars_`i', clear 
-    drop last 
+    drop last _merge 
+    merge m:1 patient_id using `tempfile', keepusing(stp)
+    drop if stp==""
     tab udca, m
     bys patient_id: gen last = _n==_N 
     bys patient_id (start): gen udca_bl_check = udca[1]
@@ -84,7 +86,9 @@ forvalues i=60(30)180 {
 }
 
 use ./output/time_varying_udca_overlap_all_vars_120, clear 
-drop last 
+drop last _merge 
+merge m:1 patient_id using `tempfile', keepusing(stp)
+drop if stp==""
 bys patient_id: gen last = _n==_N 
 file write tablecontent _tab ("Number of obervations") _tab ("Mean") _tab ("SD") _tab ("Median") _tab ("25th percentile") _tab ("75th percentile") _n 
 

@@ -34,6 +34,7 @@ label values age_cat age
 bys age_cat: sum age
 
 safecount if stp==""
+drop if stp==""
 
 * BMI categories
 * assume BMI's less than 10 are incorrect and set to missing 
@@ -322,6 +323,9 @@ egen age_cat = cut(age), at(18, 40, 60, 80, 120) icodes
 label define age 0 "18 - 40 years" 1 "41 - 60 years" 2 "61 - 80 years" 3 ">80 years"
 label values age_cat age
 bys age_cat: sum age
+
+safecount if stp==""
+drop if stp==""
 
 * BMI categories
 * assume BMI's less than 10 are incorrect and set to missing 
