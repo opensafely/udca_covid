@@ -1,7 +1,37 @@
 
 . 
+. tempfile tempfile 
+
+. import delimited using ./output/input_stp.csv, clear 
+(2 vars, 1,000 obs)
+
+. save `tempfile'
+file /tmp/St00015.000001 saved
+
+. 
 . import delimited using ./output/input_flowchart.csv, clear
 (12 vars, 1,000 obs)
+
+. merge 1:1 patient_id using `tempfile'
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         1,792
+        from master                       896  (_merge==1)
+        from using                        896  (_merge==2)
+
+    matched                               104  (_merge==3)
+    -----------------------------------------
+
+. tab _merge
+
+                 _merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+        master only (1) |        896       47.26       47.26
+         using only (2) |        896       47.26       94.51
+            matched (3) |        104        5.49      100.00
+------------------------+-----------------------------------
+                  Total |      1,896      100.00
 
 .  *  has_follow_up 
 .  * (NOT died) AND
@@ -21,8 +51,8 @@
 . describe
 
 Contains data
-  obs:         1,000                          
- vars:            12                          
+  obs:         1,896                          
+ vars:            14                          
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -31,7 +61,7 @@ has_pbc_date    int     %8.0g
 has_psc_date    int     %8.0g                 
 has_follow_up   byte    %8.0g                 
 died            byte    %8.0g                 
-age             int     %8.0g                 
+age             byte    %8.0g                 
 sex             str1    %9s                   
 has_msoa        byte    %8.0g                 
 imd             byte    %8.0g                 
@@ -39,13 +69,17 @@ has_pbc         byte    %8.0g
 has_psc         byte    %8.0g                 
 liver_transpl~l byte    %8.0g                 
 patient_id      int     %8.0g                 
+stp             str4    %9s                   
+_merge          byte    %23.0g     _merge     
 -------------------------------------------------------------------------------
 Sorted by: 
      Note: Dataset has changed since last saved.
 
-. 
+. count if imd==0 & stp!=""
+  2
+
 . safecount
-  1,000
+  1,896
 
 . file write table ("`r(N)'") _n ("Has follow-up") _tab 
 
@@ -55,16 +89,17 @@ Sorted by:
 has_follow_ |
          up |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        950       95.00       95.00
-          1 |         50        5.00      100.00
+          0 |        950       50.11       50.11
+          1 |         50        2.64       52.74
+          . |        896       47.26      100.00
 ------------+-----------------------------------
-      Total |      1,000      100.00
+      Total |      1,896      100.00
 
 . keep if has_follow_up
 (950 observations deleted)
 
 . safecount
-  50
+  946
 
 . file write table ("`r(N)'") _n ("Died") _tab 
 
@@ -78,7 +113,7 @@ has_follow_ |
 (3 observations deleted)
 
 . safecount
-  47
+  943
 
 . file write table ("`r(N)'") _n ("Age ineligible") _tab  
 
@@ -86,13 +121,13 @@ has_follow_ |
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-         age |         47    39.08511    24.27544          1         85
+         age |         47     42.2766    21.23441          6         84
 
 . keep if (age>=18 & age<=115)
-(10 observations deleted)
+(904 observations deleted)
 
 . safecount
-  37
+  39
 
 . file write table ("`r(N)'") _n ("Missing/ineligible sex") _tab 
 
@@ -103,10 +138,10 @@ has_follow_ |
 
 
 . keep if (sex=="F" | sex=="M")
-(3 observations deleted)
+(1 observation deleted)
 
 . safecount 
-  34
+  38
 
 . file write table ("`r(N)'") _n ("IMD missing") _tab 
 
@@ -117,10 +152,22 @@ has_follow_ |
 
 
 . drop if imd==0
-(2 observations deleted)
+(4 observations deleted)
 
 . safecount
+  34
+
+. file write table ("`r(N)'") _n ("STP missing") _tab 
+
+. count if stp=="" 
   32
+
+. drop if stp==""
+(32 observations deleted)
+
+. safecount 
+
+** COUNT <=5 **
 
 . file write table ("`r(N)'") _n ("No PBC or PSC") _tab 
 
@@ -133,7 +180,7 @@ has_follow_ |
 
 
 . keep if pbc_psc
-(30 observations deleted)
+(1 observation deleted)
 
 . safecount
 
@@ -187,10 +234,10 @@ has_follow_ |
 . gen end_date_flag = (end_date==dereg_dateA)
 
 . replace end_date_flag = 2 if end_date==died_dateA
-(323 real changes made)
+(344 real changes made)
 
 . replace end_date_flag = 3 if end_date==end_study
-(375 real changes made)
+(329 real changes made)
 
 . 
 . gen censored = end_date!=end_study 
@@ -200,55 +247,55 @@ has_follow_ |
            |          end_date_flag
   censored |         1          2          3 |     Total
 -----------+---------------------------------+----------
-         0 |         0          0        375 |       375 
-         1 |       302        323          0 |       625 
+         0 |         0          0        329 |       329 
+         1 |       327        344          0 |       671 
 -----------+---------------------------------+----------
-     Total |       302        323        375 |     1,000 
+     Total |       327        344        329 |     1,000 
 
 . 
 . file write table ("Censoring information") _n _tab ("No UDCA BL") _tab ("UDCA
 >  BL") _n  
 
 . safecount if censored==1 & udca_bl==0
-  467
+  509
 
 . file write table ("Censored") _tab ("`r(N)'") _tab 
 
 . safecount if censored==1 & udca_bl==1
-  158
+  162
 
 . file write table ("`r(N)'") _n 
 
 . * Count deregistered
 . safecount if end_date_flag==1 & udca_bl==0
-  224
+  254
 
 . file write table ("Deregistered") _tab ("`r(N)'") _tab
 
 . safecount if end_date_flag==1 & udca_bl==1
-  78
+  73
 
 . file write table ("`r(N)'") _n 
 
 . * Count died 
 . safecount if end_date_flag==2 & udca_bl==0
-  243
+  255
 
 . file write table ("Died") _tab ("`r(N)'") _tab
 
 . safecount if end_date_flag==2 & udca_bl==1
-  80
+  89
 
 . file write table ("`r(N)'") _n 
 
 . * Count end study 
 . safecount if end_date_flag==3 & udca_bl==0
-  282
+  232
 
 . file write table ("Remained") _tab ("`r(N)'") _tab
 
 . safecount if end_date_flag==3 & udca_bl==1
-  93
+  97
 
 . file write table ("`r(N)'") _n 
 
@@ -260,18 +307,18 @@ has_follow_ |
 died_liver |       censored
       _any |         0          1 |     Total
 -----------+----------------------+----------
-         0 |       288        458 |       746 
-         1 |        87        167 |       254 
+         0 |       249        497 |       746 
+         1 |        80        174 |       254 
 -----------+----------------------+----------
-     Total |       375        625 |     1,000 
+     Total |       329        671 |     1,000 
 
 . safecount if died_liver_any==1 & udca_bl==0
-  192
+  200
 
 . file write table ("Liver death") _tab ("`r(N)'") _tab
 
 . safecount if died_liver_any==1 & udca_bl==1
-  62
+  54
 
 . file write table ("`r(N)'") _n 
 
@@ -281,7 +328,7 @@ died_liver |       censored
 . 
 end of do-file
 
-. . file open output using "/tmp/100_flowchart.do.005O.out", write text replace
+. . file open output using "/tmp/100_flowchart.do.jeOq.out", write text replace
 
 . . file write output "success" 
 

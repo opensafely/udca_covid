@@ -9,7 +9,13 @@ cap mkdir ./output/flowchart
 
 cap log using ./logs/flowchart.log, replace
 
+tempfile tempfile 
+import delimited using ./output/input_stp.csv, clear 
+save `tempfile'
+
 import delimited using ./output/input_flowchart.csv, clear
+merge 1:1 patient_id using `tempfile'
+tab _merge
  *  has_follow_up 
  * (NOT died) AND
  * (age >=18 AND age <= 115) AND
@@ -23,7 +29,7 @@ file open table using ./output/flowchart/values.txt, write text replace
 file write table ("Total start") _tab 
 
 describe
-
+count if imd==0 & stp!=""
 safecount
 file write table ("`r(N)'") _n ("Has follow-up") _tab 
 safetab has_follow_up, m
@@ -45,6 +51,10 @@ file write table ("`r(N)'") _n ("IMD missing") _tab
 safetab imd 
 drop if imd==0
 safecount
+file write table ("`r(N)'") _n ("STP missing") _tab 
+count if stp=="" 
+drop if stp==""
+safecount 
 file write table ("`r(N)'") _n ("No PBC or PSC") _tab 
 gen pbc_psc = (has_pbc==1 | has_psc==1)
 safetab pbc_psc, m
