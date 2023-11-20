@@ -150,3 +150,55 @@ local percent_stp = (r(N)/_N)*100
 file write tablecontent (`percent_stp') _n _n 
 
 file close tablecontent
+
+* New output for release with switching only 
+file open tablecontent using ./output/tables/udca_descriptives_switch_only.txt, write text replace
+
+use ./output/time_varying_udca_all_vars_120, clear 
+drop last _merge 
+merge m:1 patient_id using `tempfile', keepusing(stp)
+drop if stp==""
+tab udca, m
+bys patient_id: gen last = _n==_N 
+bys patient_id (start): gen udca_bl_check = udca[1]
+tab udca_count_bl udca_bl_check  
+
+* Summarise proportion of time on udca 
+* First generate time for each row 
+*gen time = stop - start 
+* Generate total time on & off udca 
+* First calculate time for both on and off within one variable 
+bys patient_id udca: egen time_udca = total(time)
+* From this generate variable with time off udca 
+bys patient_id: egen time_off_udca = max(time_udca) if udca==0
+bys patient_id (time_off_udca): replace time_off_udca = time_off_udca[_n-1] if time_off_udca==. & time_off_udca[_n-1]!=.
+* Update time_udca to only contain time on udca 
+replace time_udca=. if udca==0
+bys patient_id: egen time_on_udca = max(time_udca)
+* Check on and off equals total time of follow-up 
+count if time_on_udca + time_off_udca!=total_fu
+
+* Summarising switching
+gen udca_bl = (udca_count_bl>=1 & udca_count_bl!=.) 
+gen yr_start = year(start)
+sum yr_start 
+gen switch_120_i = udca!=udca_bl
+bys patient_id: egen switch_120 = max(switch_120_i)
+bys patient_id: egen switch_120_total = total(switch_120_i)
+gen switch_120_start = (switch_120==1 & udca_bl==0)
+gen switch_120_stop = (switch_120==1 & udca_bl==1)
+gen switch_120_multi = (switch_120_total>1 & switch_120_total!=.)
+keep if last==1
+tab switch_120  
+safecount if switch_120==1
+file write tablecontent ("switching") _tab ("Number switched") _tab ("Percent switched") _tab ("Switched from unexposed") _tab ("Percent switched unexposed") _tab ("Switched from exposed") _tab ("Percent switched exposed") _n 
+file write tablecontent ("120") _tab %3.1f (round(r(N),5)) _tab  
+local percent = (r(N)/_N)*100
+safecount if switch_120_start==1
+file write tablecontent (`percent') _tab  %3.1f (round(r(N),5)) _tab 
+local percent_stt = (r(N)/_N)*100
+safecount if switch_120_stop==1
+file write tablecontent (`percent_stt') _tab  %3.1f (round(r(N),5)) _tab 
+local percent_stp = (r(N)/_N)*100
+file write tablecontent (`percent_stp') _n _n 
+file close tablecontent

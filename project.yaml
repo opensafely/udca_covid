@@ -75,7 +75,7 @@ actions:
     needs: [prep_drug_data, generate_study_population_pbc]
     outputs:
       moderately_sensitive:
-        summary: output/tables/udca_descriptives.txt
+        summary: output/tables/udca_descriptives*.txt
 
   time_varying_prep:
     run: stata-mp:latest analysis/103_time_varying_prep.do
