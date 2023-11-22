@@ -7,7 +7,7 @@ DESCRIPTION OF FILE:	Produces forest plot from file created in 106_analysis_mode
 
 * Run outside of OpenSAFELY environment as uses released data
 
-import delimited "output/20231120/cox_models.txt", varnames(1) clear
+import delimited "output/cox_models.txt", varnames(1) clear
 
 * Name analysis variable
 gen analysis = outcome if exposurestatus==""
