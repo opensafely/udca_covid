@@ -12,16 +12,19 @@
 . * plot for each outcome - age and sex adjusted only
 . foreach outcome in hosp_any composite_any {
   2.     use ./output/an_dataset_`outcome', clear 
-  3.     describe
-  4.     gen index_date = date("01/03/2020", "DMY")
-  5.     bys patient_id (start): gen last = _N==_n 
-  6.     tab died_liver_any `outcome'_flag if last==1
-  7.     * Update stop date of last record to end of study period if died of li
-> ver disease 
-.     replace stop = date("31/12/2022", "DMY") if last==1 & died_liver_any==1
-  8.     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) orig
+  3.     drop if stp==""
+  4.     describe
+  5.     gen index_date = date("01/03/2020", "DMY")
+  6.     bys patient_id (start): gen last = _N==_n 
+  7.     tab died_liver_any `outcome'_flag if last==1
+  8.     * For sensitivity: generate new stop and update last record to end of 
+> study period if died of liver disease 
+.     gen stop_new = stop 
+  9.     replace stop_new = date("31/12/2022", "DMY") if last==1 & died_liver_a
+> ny==1
+ 10.     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) orig
 > in(index_date)
-  9. 
+ 11. 
 .     * Add cumulative incidence plots 
 .     * Not stratifying by stp as cannot use tvc and stratify  
 .     
@@ -30,39 +33,39 @@
 > is is default 
 .     * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = li
 > near effect of log time 
-.     stpm2 udca age_tv male, tvc(udca) dftvc(1) df(3) scale(hazard) eform
- 10.     summ _t
- 11.     local tmax=r(max)
- 12.     local tmaxplus1=r(max)+1
- 13. 
-.     range days 0 `tmax' `tmaxplus1'
- 14.     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci
->  contrast(difference) fail
+.     stpm2 udca age_tv male, tvc(udca) dftvc(1) df(2) scale(hazard) eform
+ 12.     summ _t
+ 13.     local tmax=r(max)
+ 14.     local tmaxplus1=r(max)+1
  15. 
-.     gen date = d(1/3/2020)+ days
- 16.     format date %tddd_Month
+.     range days 0 `tmax' `tmaxplus1'
+ 16.     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci
+>  contrast(difference) fail
  17. 
+.     gen date = d(1/3/2020)+ days
+ 18.     format date %tddd_Month
+ 19. 
 .     for var _at1 _at2 _at1_lci _at1_uci _at2_lci _at2_uci _contrast2_1 _contr
 > ast2_1_lci _contrast2_1_uci: replace X=100*X
- 18. 
+ 20. 
 .     *cumulative mortality at last day of follow-up - write to file 
 .     file write tablecontent ("`outcome'") _tab ("No UDCA") _tab  
- 19.     * cumulative outcome - no UDCA 
+ 21.     * cumulative outcome - no UDCA 
 .     sum _at1 if days==`tmax'
- 20.     file write tablecontent (r(mean)) _tab 
- 21.     sum _at1_lci if days==`tmax'
  22.     file write tablecontent (r(mean)) _tab 
- 23.     sum _at1_uci if days==`tmax'
- 24.     file write tablecontent (r(mean)) _tab _n 
- 25.     * cumulative outcome - UDCA 
+ 23.     sum _at1_lci if days==`tmax'
+ 24.     file write tablecontent (r(mean)) _tab 
+ 25.     sum _at1_uci if days==`tmax'
+ 26.     file write tablecontent (r(mean)) _tab _n 
+ 27.     * cumulative outcome - UDCA 
 .     file write tablecontent ("`outcome'") _tab ("UDCA") _tab  
- 26.     sum _at2 if days==`tmax'
- 27.     file write tablecontent (r(mean)) _tab 
- 28.     sum _at2_lci if days==`tmax'
+ 28.     sum _at2 if days==`tmax'
  29.     file write tablecontent (r(mean)) _tab 
- 30.     sum _at2_uci if days==`tmax'
- 31.     file write tablecontent (r(mean)) _tab _n 
- 32.     
+ 30.     sum _at2_lci if days==`tmax'
+ 31.     file write tablecontent (r(mean)) _tab 
+ 32.     sum _at2_uci if days==`tmax'
+ 33.     file write tablecontent (r(mean)) _tab _n 
+ 34.     
 .     *l date days _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days<.
 . 
 .     twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
@@ -84,16 +87,101 @@
 >            ///
 >                     graphregion(fcolor(white)) saving(adjcurv_`outcome', repl
 > ace)
- 33. 
+ 35. 
 .     graph export "./output/graphs/adjcurv_`outcome'.svg", as(svg) replace
- 34. 
+ 36. 
 .     * Close window 
 .     graph close
- 35. 
-. }
+ 37. 
+.     * Post-hoc analysis: Model with liver deaths not censored
+.     use ./output/an_dataset_`outcome', clear 
+ 38.     drop if stp==""
+ 39.     describe
+ 40.     gen index_date = date("01/03/2020", "DMY")
+ 41.     bys patient_id (start): gen last = _N==_n 
+ 42.     tab died_liver_any `outcome'_flag if last==1
+ 43.     * For sensitivity: generate new stop and update last record to end of 
+> study period if died of liver disease 
+.     gen stop_new = stop 
+ 44.     replace stop_new = date("31/12/2022", "DMY") if last==1 & died_liver_a
+> ny==1
+ 45.     stset stop_new, fail(`outcome'_flag) id(patient_id) enter(index_date) 
+> origin(index_date)
+ 46. 
+.     * Add cumulative incidence plots 
+.     * Not stratifying by stp as cannot use tvc and stratify  
+.     
+.     * Age and sex adjusted model 
+.     * Setting df (degrees of freedom for restricted cubic splines) as 3 as th
+> is is default 
+.     * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = li
+> near effect of log time 
+.     stpm2 udca age_tv male, tvc(udca) dftvc(1) df(2) scale(hazard) eform
+ 47.     summ _t
+ 48.     local tmax=r(max)
+ 49.     local tmaxplus1=r(max)+1
+ 50. 
+.     range days_ph 0 `tmax' `tmaxplus1'
+ 51.     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days_ph)
+>  ci contrast(difference) fail
+ 52. 
+.     gen date = d(1/3/2020)+ days_ph
+ 53.     format date %tddd_Month
+ 54. 
+.     for var _at1 _at2 _at1_lci _at1_uci _at2_lci _at2_uci _contrast2_1 _contr
+> ast2_1_lci _contrast2_1_uci: replace X=100*X
+ 55. 
+.     *cumulative mortality at last day of follow-up - write to file 
+.     file write tablecontent ("Post-hoc: `outcome'") _tab ("No UDCA") _tab  
+ 56.     * cumulative outcome - no UDCA 
+.     sum _at1 if days_ph==`tmax'
+ 57.     file write tablecontent (r(mean)) _tab 
+ 58.     sum _at1_lci if days_ph==`tmax'
+ 59.     file write tablecontent (r(mean)) _tab 
+ 60.     sum _at1_uci if days_ph==`tmax'
+ 61.     file write tablecontent (r(mean)) _tab _n 
+ 62.     * cumulative outcome - UDCA 
+.     file write tablecontent ("`outcome'") _tab ("UDCA") _tab  
+ 63.     sum _at2 if days_ph==`tmax'
+ 64.     file write tablecontent (r(mean)) _tab 
+ 65.     sum _at2_lci if days_ph==`tmax'
+ 66.     file write tablecontent (r(mean)) _tab 
+ 67.     sum _at2_uci if days_ph==`tmax'
+ 68.     file write tablecontent (r(mean)) _tab _n 
+ 69.     
+.     *l date days_ph _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days_ph<
+> .
+. 
+.     twoway  (rarea _at1_lci _at1_uci days_ph, color(red%25)) ///
+>                     (rarea _at2_lci _at2_uci days_ph, color(blue%25)) ///
+>                     (line _at1 days_ph, sort lcolor(red)) ///
+>                     (line _at2 days_ph, sort lcolor(blue) lpattern(dash)) ///
+>                     , legend(order(1 "No UDCA" 2 "UDCA") ring(0) cols(1) pos(
+> 11) region(lwidth(none))) ///
+>                     title("Time to `outcome'", justification(left) size(med) 
+> )             ///
+>                     yscale(range(0, 1))                                      
+>                                                    ///
+>                     ylabel(0 (1) 10, angle(0) format(%4.1f) labsize(small))  
+>    ///
+>                     xlabel(0 (200) 1035, labsize(small))                     
+>                                            ///                     
+>                     ytitle("Cumulative outcomes (%)", size(medsmall)) ///
+>                     xtitle("days since 1 Mar 2020", size(medsmall))          
+>            ///
+>                     graphregion(fcolor(white)) saving(adjcurv_`outcome', repl
+> ace)
+ 70. 
+.     graph export "./output/graphs/adjcurv_`outcome'_post_hoc.svg", as(svg) re
+> place
+ 71. 
+.     * Close window 
+.     graph close
+ 72. }
+(1,463 observations deleted)
 
 Contains data from ./output/an_dataset_hosp_any.dta
-  obs:         2,933                          
+  obs:         1,470                          
  vars:            23                          9 Oct 2023 10:58
 -------------------------------------------------------------------------------
               storage   display    value
@@ -124,15 +212,16 @@ severe_disease  float   %9.0g
 total_hosp      float   %9.0g                 
 -------------------------------------------------------------------------------
 Sorted by: 
+     Note: Dataset has changed since last saved.
 
 died_liver |     hosp_any_flag
       _any |         0          1 |     Total
 -----------+----------------------+----------
-         0 |       700         46 |       746 
-         1 |       243         11 |       254 
+         0 |       349         25 |       374 
+         1 |       122          4 |       126 
 -----------+----------------------+----------
-     Total |       943         57 |     1,000 
-(175 real changes made)
+     Total |       471         29 |       500 
+(92 real changes made)
 
                 id:  patient_id
      failure event:  hosp_any_flag != 0 & hosp_any_flag < .
@@ -143,46 +232,45 @@ obs. time interval:  (stop[_n-1], stop]
             origin:  time index_date
 
 ------------------------------------------------------------------------------
-      2,933  total observations
+      1,470  total observations
           0  exclusions
 ------------------------------------------------------------------------------
-      2,933  observations remaining, representing
-      1,000  subjects
-         57  failures in single-failure-per-subject data
-    754,218  total analysis time at risk and under observation
+      1,470  observations remaining, representing
+        500  subjects
+         29  failures in single-failure-per-subject data
+    325,834  total analysis time at risk and under observation
                                                 at risk from t =         0
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
 note: delayed entry models are being fitted
 
-Iteration 0:   log likelihood = -255.06865  
-Iteration 1:   log likelihood = -250.52093  
-Iteration 2:   log likelihood = -249.94616  
-Iteration 3:   log likelihood = -249.93921  
-Iteration 4:   log likelihood =  -249.9392  
+Iteration 0:   log likelihood = -124.07426  
+Iteration 1:   log likelihood = -122.91935  
+Iteration 2:   log likelihood = -122.78768  
+Iteration 3:   log likelihood =  -122.7867  
+Iteration 4:   log likelihood =  -122.7867  
 
-Log likelihood =  -249.9392                     Number of obs     =      2,914
+Log likelihood =  -122.7867                     Number of obs     =      1,459
 
 ------------------------------------------------------------------------------
              |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
 xb           |
-        udca |   .2295186   .2477109    -1.36   0.173     .0276788    1.903216
-      age_tv |   1.005384   .0056239     0.96   0.337     .9944219    1.016468
-        male |   1.592003   .4363203     1.70   0.090     .9303687    2.724161
-       _rcs1 |   3.514448    .893877     4.94   0.000     2.134812    5.785684
-       _rcs2 |   1.174798   .1984526     0.95   0.340     .8436731    1.635884
-       _rcs3 |   .8938343   .0365464    -2.74   0.006     .8249996    .9684124
-  _rcs_udca1 |   7.287447   9.210723     1.57   0.116     .6119669    86.78065
-       _cons |   .0178927   .0061913   -11.63   0.000     .0090811    .0352544
+        udca |    .469766   .4587666    -0.77   0.439     .0692805    3.185316
+      age_tv |   1.006462    .008055     0.80   0.421     .9907974    1.022374
+        male |   1.677254    .649664     1.34   0.182     .7850477    3.583451
+       _rcs1 |   5.754312   2.568618     3.92   0.000     2.399014    13.80238
+       _rcs2 |   1.452022   .3092385     1.75   0.080     .9565152    2.204217
+  _rcs_udca1 |   3.191227   3.428739     1.08   0.280     .3885116    26.21267
+       _cons |   .0175585   .0086544    -8.20   0.000     .0066825    .0461353
 ------------------------------------------------------------------------------
 Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-          _t |      2,933    568.4801     308.938          1       1035
-(1,897 missing values generated)
-(1,897 missing values generated)
+          _t |      1,470    537.9714    293.7312          1       1035
+(434 missing values generated)
+(434 missing values generated)
 
 ->  replace _at1=100*_at1
 (1,035 real changes made)
@@ -213,35 +301,184 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        _at1 |          1    7.466865           .   7.466865   7.466865
+        _at1 |          1    8.099085           .   8.099085   8.099085
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at1_lci |          1    5.668197           .   5.668197   5.668197
+    _at1_lci |          1     5.47581           .    5.47581    5.47581
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at1_uci |          1    9.836298           .   9.836298   9.836298
+    _at1_uci |          1    11.97908           .   11.97908   11.97908
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        _at2 |          1    8.808465           .   8.808465   8.808465
+        _at2 |          1     10.4877           .    10.4877    10.4877
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at2_lci |          1    4.085169           .   4.085169   4.085169
+    _at2_lci |          1    3.425975           .   3.425975   3.425975
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at2_uci |          1    18.99287           .   18.99287   18.99287
+    _at2_uci |          1    32.10525           .   32.10525   32.10525
 (note:  named style med not found in class gsize, default attributes used)
 (note: file adjcurv_hosp_any.gph not found)
 (file adjcurv_hosp_any.gph saved)
 (note: file ./output/graphs/adjcurv_hosp_any.svg not found)
 (file ./output/graphs/adjcurv_hosp_any.svg written in SVG format)
+(1,463 observations deleted)
+
+Contains data from ./output/an_dataset_hosp_any.dta
+  obs:         1,470                          
+ vars:            23                          9 Oct 2023 10:58
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+stp             str4    %9s                   
+imd             byte    %8.0g                 
+ethnicity       byte    %8.0g      eth5       
+has_pbc         byte    %8.0g                 
+oca_bl          byte    %8.0g                 
+patient_id      int     %8.0g                 
+male            float   %9.0g                 
+eth_bin         float   %9.0g      eth_3      
+bmi_cat         float   %14.0g     bmi        
+smoking         float   %14.0g     smok       
+any_high_risk~n float   %9.0g                 
+time_vacc_cat   byte    %23.0g     vacc_t     4 quantiles of time_vacc
+died_liver_any  float   %9.0g                 
+died_liver_un~g float   %9.0g                 
+start           float   %9.0g                 
+stop            float   %9.0g                 
+hosp_any_flag   float   %9.0g                 
+age_tv          float   %9.0g                 
+udca            float   %9.0g                 
+liver_trans     float   %9.0g                 
+covid_vacc_fi~t float   %9.0g                 
+severe_disease  float   %9.0g                 
+total_hosp      float   %9.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+died_liver |     hosp_any_flag
+      _any |         0          1 |     Total
+-----------+----------------------+----------
+         0 |       349         25 |       374 
+         1 |       122          4 |       126 
+-----------+----------------------+----------
+     Total |       471         29 |       500 
+(92 real changes made)
+
+                id:  patient_id
+     failure event:  hosp_any_flag != 0 & hosp_any_flag < .
+obs. time interval:  (stop_new[_n-1], stop_new]
+ enter on or after:  time index_date
+ exit on or before:  failure
+    t for analysis:  (time-origin)
+            origin:  time index_date
+
+------------------------------------------------------------------------------
+      1,470  total observations
+          0  exclusions
+------------------------------------------------------------------------------
+      1,470  observations remaining, representing
+        500  subjects
+         29  failures in single-failure-per-subject data
+    379,659  total analysis time at risk and under observation
+                                                at risk from t =         0
+                                     earliest observed entry t =         0
+                                          last observed exit t =     1,035
+note: delayed entry models are being fitted
+
+Iteration 0:   log likelihood = -126.31179  
+Iteration 1:   log likelihood = -125.22735  
+Iteration 2:   log likelihood = -125.12238  
+Iteration 3:   log likelihood = -125.12175  
+Iteration 4:   log likelihood = -125.12175  
+
+Log likelihood = -125.12175                     Number of obs     =      1,459
+
+------------------------------------------------------------------------------
+             |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+xb           |
+        udca |   .3874386   .4249617    -0.86   0.387     .0451402    3.325391
+      age_tv |   1.005269   .0079559     0.66   0.507     .9897965    1.020984
+        male |   1.746398   .6764198     1.44   0.150     .8174351    3.731066
+       _rcs1 |   4.687846    1.87999     3.85   0.000     2.136052    10.28809
+       _rcs2 |   1.327128   .2671842     1.41   0.160     .8944259     1.96916
+  _rcs_udca1 |   3.795926   4.626469     1.09   0.274     .3482366     41.3772
+       _cons |   .0176054   .0086566    -8.22   0.000      .006716    .0461511
+------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation.
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+          _t |      1,470    574.5871    307.0052          1       1035
+(434 missing values generated)
+(434 missing values generated)
+
+->  replace _at1=100*_at1
+(1,035 real changes made)
+
+->  replace _at2=100*_at2
+(1,035 real changes made)
+
+->  replace _at1_lci=100*_at1_lci
+(1,035 real changes made)
+
+->  replace _at1_uci=100*_at1_uci
+(1,035 real changes made)
+
+->  replace _at2_lci=100*_at2_lci
+(1,035 real changes made)
+
+->  replace _at2_uci=100*_at2_uci
+(1,035 real changes made)
+
+->  replace _contrast2_1=100*_contrast2_1
+(1,035 real changes made)
+
+->  replace _contrast2_1_lci=100*_contrast2_1_lci
+(1,035 real changes made)
+
+->  replace _contrast2_1_uci=100*_contrast2_1_uci
+(1,035 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        _at1 |          1    7.173225           .   7.173225   7.173225
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    _at1_lci |          1      4.8799           .     4.8799     4.8799
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    _at1_uci |          1     10.5443           .    10.5443    10.5443
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        _at2 |          1    8.340435           .   8.340435   8.340435
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    _at2_lci |          1    2.792393           .   2.792393   2.792393
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    _at2_uci |          1    24.91155           .   24.91155   24.91155
+(note:  named style med not found in class gsize, default attributes used)
+(file adjcurv_hosp_any.gph saved)
+(note: file ./output/graphs/adjcurv_hosp_any_post_hoc.svg not found)
+(file ./output/graphs/adjcurv_hosp_any_post_hoc.svg written in SVG format)
+(1,463 observations deleted)
 
 Contains data from ./output/an_dataset_composite_any.dta
-  obs:         2,933                          
+  obs:         1,470                          
  vars:            22                          9 Oct 2023 10:58
 -------------------------------------------------------------------------------
               storage   display    value
@@ -271,15 +508,16 @@ covid_vacc_fi~t float   %9.0g
 severe_disease  float   %9.0g                 
 -------------------------------------------------------------------------------
 Sorted by: 
+     Note: Dataset has changed since last saved.
 
 died_liver |  composite_any_flag
       _any |         0          1 |     Total
 -----------+----------------------+----------
-         0 |       543        203 |       746 
-         1 |       243         11 |       254 
+         0 |       277         97 |       374 
+         1 |       122          4 |       126 
 -----------+----------------------+----------
-     Total |       786        214 |     1,000 
-(175 real changes made)
+     Total |       399        101 |       500 
+(92 real changes made)
 
                 id:  patient_id
      failure event:  composite_any_flag != 0 & composite_any_flag < .
@@ -290,45 +528,45 @@ obs. time interval:  (stop[_n-1], stop]
             origin:  time index_date
 
 ------------------------------------------------------------------------------
-      2,933  total observations
+      1,470  total observations
           0  exclusions
 ------------------------------------------------------------------------------
-      2,933  observations remaining, representing
-      1,000  subjects
-        214  failures in single-failure-per-subject data
-    754,218  total analysis time at risk and under observation
+      1,470  observations remaining, representing
+        500  subjects
+        101  failures in single-failure-per-subject data
+    325,834  total analysis time at risk and under observation
                                                 at risk from t =         0
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
 note: delayed entry models are being fitted
 
-Iteration 0:   log likelihood = -705.75144  
-Iteration 1:   log likelihood = -705.17735  
-Iteration 2:   log likelihood = -705.17556  
-Iteration 3:   log likelihood = -705.17556  
+Iteration 0:   log likelihood = -321.90537  
+Iteration 1:   log likelihood =  -319.7437  
+Iteration 2:   log likelihood = -319.55223  
+Iteration 3:   log likelihood = -319.55015  
+Iteration 4:   log likelihood = -319.55015  
 
-Log likelihood = -705.17556                     Number of obs     =      2,914
+Log likelihood = -319.55015                     Number of obs     =      1,459
 
 ------------------------------------------------------------------------------
              |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
 xb           |
-        udca |    1.00592   .2928291     0.02   0.984     .5685571    1.779726
-      age_tv |   .9997625   .0028885    -0.08   0.934     .9941171     1.00544
-        male |   1.130048   .1559368     0.89   0.376     .8622608    1.481001
-       _rcs1 |   3.052379   .3511203     9.70   0.000     2.436258    3.824314
-       _rcs2 |   1.002767   .0739866     0.04   0.970     .8677536    1.158788
-       _rcs3 |   .9776966    .021439    -1.03   0.304      .936567    1.020632
-  _rcs_udca1 |   1.013799   .2649259     0.05   0.958     .6074579    1.691951
-       _cons |   .1085923   .0177796   -13.56   0.000     .0787832    .1496803
+        udca |   .6112616   .3052137    -0.99   0.324     .2297244    1.626474
+      age_tv |   1.000453   .0042776     0.11   0.916     .9921044    1.008873
+        male |   1.070389   .2141927     0.34   0.734     .7231194    1.584431
+       _rcs1 |   3.532454   .6939471     6.42   0.000     2.403581    5.191516
+       _rcs2 |   1.017282    .113984     0.15   0.878     .8167066    1.267116
+  _rcs_udca1 |    1.60055   .8344654     0.90   0.367     .5760835    4.446856
+       _cons |   .1074756   .0255077    -9.40   0.000     .0674979    .1711315
 ------------------------------------------------------------------------------
 Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-          _t |      2,933    568.4801     308.938          1       1035
-(1,897 missing values generated)
-(1,897 missing values generated)
+          _t |      1,470    537.9714    293.7312          1       1035
+(434 missing values generated)
+(434 missing values generated)
 
 ->  replace _at1=100*_at1
 (1,035 real changes made)
@@ -359,40 +597,190 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        _at1 |          1    25.41464           .   25.41464   25.41464
+        _at1 |          1    28.67116           .   28.67116   28.67116
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at1_lci |          1    22.38007           .   22.38007   22.38007
+    _at1_lci |          1    23.93855           .   23.93855   23.93855
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at1_uci |          1    28.86066           .   28.86066   28.86066
+    _at1_uci |          1     34.3394           .    34.3394    34.3394
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        _at2 |          1    25.79404           .   25.79404   25.79404
+        _at2 |          1    26.89446           .   26.89446   26.89446
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at2_lci |          1    18.11403           .   18.11403   18.11403
+    _at2_lci |          1    15.03084           .   15.03084   15.03084
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at2_uci |          1    36.73022           .   36.73022   36.73022
+    _at2_uci |          1    48.12185           .   48.12185   48.12185
 (note:  named style med not found in class gsize, default attributes used)
 (note: file adjcurv_composite_any.gph not found)
 (file adjcurv_composite_any.gph saved)
 (note: file ./output/graphs/adjcurv_composite_any.svg not found)
 (file ./output/graphs/adjcurv_composite_any.svg written in SVG format)
+(1,463 observations deleted)
+
+Contains data from ./output/an_dataset_composite_any.dta
+  obs:         1,470                          
+ vars:            22                          9 Oct 2023 10:58
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+stp             str4    %9s                   
+imd             byte    %8.0g                 
+ethnicity       byte    %8.0g      eth5       
+has_pbc         byte    %8.0g                 
+oca_bl          byte    %8.0g                 
+patient_id      int     %8.0g                 
+male            float   %9.0g                 
+eth_bin         float   %9.0g      eth_3      
+bmi_cat         float   %14.0g     bmi        
+smoking         float   %14.0g     smok       
+any_high_risk~n float   %9.0g                 
+time_vacc_cat   byte    %23.0g     vacc_t     4 quantiles of time_vacc
+died_liver_any  float   %9.0g                 
+died_liver_un~g float   %9.0g                 
+start           float   %9.0g                 
+stop            float   %9.0g                 
+composite_any~g float   %9.0g                 
+age_tv          float   %9.0g                 
+udca            float   %9.0g                 
+liver_trans     float   %9.0g                 
+covid_vacc_fi~t float   %9.0g                 
+severe_disease  float   %9.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+died_liver |  composite_any_flag
+      _any |         0          1 |     Total
+-----------+----------------------+----------
+         0 |       277         97 |       374 
+         1 |       122          4 |       126 
+-----------+----------------------+----------
+     Total |       399        101 |       500 
+(92 real changes made)
+
+                id:  patient_id
+     failure event:  composite_any_flag != 0 & composite_any_flag < .
+obs. time interval:  (stop_new[_n-1], stop_new]
+ enter on or after:  time index_date
+ exit on or before:  failure
+    t for analysis:  (time-origin)
+            origin:  time index_date
+
+------------------------------------------------------------------------------
+      1,470  total observations
+          0  exclusions
+------------------------------------------------------------------------------
+      1,470  observations remaining, representing
+        500  subjects
+        101  failures in single-failure-per-subject data
+    379,659  total analysis time at risk and under observation
+                                                at risk from t =         0
+                                     earliest observed entry t =         0
+                                          last observed exit t =     1,035
+note: delayed entry models are being fitted
+
+Iteration 0:   log likelihood = -335.10213  
+Iteration 1:   log likelihood = -333.11085  
+Iteration 2:   log likelihood = -332.99291  
+Iteration 3:   log likelihood =  -332.9924  
+Iteration 4:   log likelihood =  -332.9924  
+
+Log likelihood =  -332.9924                     Number of obs     =      1,459
+
+------------------------------------------------------------------------------
+             |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+xb           |
+        udca |   .6055475   .3021435    -1.01   0.315     .2277369    1.610138
+      age_tv |   .9990574    .004196    -0.22   0.822     .9908671    1.007315
+        male |    1.11255   .2225903     0.53   0.594     .7516537    1.646726
+       _rcs1 |   3.324498   .6258782     6.38   0.000      2.29867    4.808121
+       _rcs2 |   1.044173   .1161852     0.39   0.698      .839574    1.298631
+  _rcs_udca1 |    1.54766   .7765371     0.87   0.384     .5788762    4.137759
+       _cons |   .1088355    .025613    -9.42   0.000     .0686202    .1726193
+------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation.
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+          _t |      1,470    574.5871    307.0052          1       1035
+(434 missing values generated)
+(434 missing values generated)
+
+->  replace _at1=100*_at1
+(1,035 real changes made)
+
+->  replace _at2=100*_at2
+(1,035 real changes made)
+
+->  replace _at1_lci=100*_at1_lci
+(1,035 real changes made)
+
+->  replace _at1_uci=100*_at1_uci
+(1,035 real changes made)
+
+->  replace _at2_lci=100*_at2_lci
+(1,035 real changes made)
+
+->  replace _at2_uci=100*_at2_uci
+(1,035 real changes made)
+
+->  replace _contrast2_1=100*_contrast2_1
+(1,035 real changes made)
+
+->  replace _contrast2_1_lci=100*_contrast2_1_lci
+(1,035 real changes made)
+
+->  replace _contrast2_1_uci=100*_contrast2_1_uci
+(1,035 real changes made)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        _at1 |          1    24.68842           .   24.68842   24.68842
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    _at1_lci |          1    20.60192           .   20.60192   20.60192
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    _at1_uci |          1     29.5855           .    29.5855    29.5855
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        _at2 |          1     21.8553           .    21.8553    21.8553
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    _at2_lci |          1    12.18393           .   12.18393   12.18393
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    _at2_uci |          1    39.20363           .   39.20363   39.20363
+(note:  named style med not found in class gsize, default attributes used)
+(file adjcurv_composite_any.gph saved)
+(note: file ./output/graphs/adjcurv_composite_any_post_hoc.svg not found)
+(file ./output/graphs/adjcurv_composite_any_post_hoc.svg written in SVG format)
 
 . 
 . use ./output/an_dataset_died_covid_any, clear 
 
+. drop if stp==""
+(1,500 observations deleted)
+
 . describe
 
 Contains data from ./output/an_dataset_died_covid_any.dta
-  obs:         3,012                          
+  obs:         1,512                          
  vars:            22                          9 Oct 2023 10:58
 -------------------------------------------------------------------------------
               storage   display    value
@@ -422,6 +810,7 @@ covid_vacc_fi~t float   %9.0g
 severe_disease  float   %9.0g                 
 -------------------------------------------------------------------------------
 Sorted by: 
+     Note: Dataset has changed since last saved.
 
 . gen index_date = date("01/03/2020", "DMY")
 
@@ -432,15 +821,17 @@ Sorted by:
 died_liver |  died_covid_any_flag
       _any |         0          1 |     Total
 -----------+----------------------+----------
-         0 |       581        165 |       746 
-         1 |       254          0 |       254 
+         0 |       297         77 |       374 
+         1 |       126          0 |       126 
 -----------+----------------------+----------
-     Total |       835        165 |     1,000 
+     Total |       423         77 |       500 
 
-. * Update stop date of last record to end of study period if died of liver dis
-> ease 
-. replace stop = date("31/12/2022", "DMY") if last==1 & died_liver_any==1
-(167 real changes made)
+. * For sensitivity: generate new stop and update last record to end of study p
+> eriod if died of liver disease 
+. gen stop_new = stop 
+
+. replace stop_new = date("31/12/2022", "DMY") if last==1 & died_liver_any==1
+(88 real changes made)
 
 . stset stop, fail(died_covid_any_flag) id(patient_id) enter(index_date) origin
 > (index_date)
@@ -454,13 +845,13 @@ obs. time interval:  (stop[_n-1], stop]
             origin:  time index_date
 
 ------------------------------------------------------------------------------
-      3,012  total observations
+      1,512  total observations
           0  exclusions
 ------------------------------------------------------------------------------
-      3,012  observations remaining, representing
-      1,000  subjects
-        165  failures in single-failure-per-subject data
-    773,887  total analysis time at risk and under observation
+      1,512  observations remaining, representing
+        500  subjects
+         77  failures in single-failure-per-subject data
+    338,450  total analysis time at risk and under observation
                                                 at risk from t =         0
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
@@ -474,30 +865,29 @@ obs. time interval:  (stop[_n-1], stop]
 > s default 
 . * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = linear
 >  effect of log time 
-. stpm2 udca age_tv male, tvc(udca age_tv) dftvc(1) df(3) scale(hazard) eform
+. stpm2 udca age_tv male, tvc(udca age_tv) dftvc(1) df(2) scale(hazard) eform
 note: delayed entry models are being fitted
 
-Iteration 0:   log likelihood = -590.07987  
-Iteration 1:   log likelihood = -587.66286  
-Iteration 2:   log likelihood = -587.57266  
-Iteration 3:   log likelihood = -587.57244  
-Iteration 4:   log likelihood = -587.57244  
+Iteration 0:   log likelihood = -265.68589  
+Iteration 1:   log likelihood =  -264.6243  
+Iteration 2:   log likelihood = -264.33495  
+Iteration 3:   log likelihood = -264.32388  
+Iteration 4:   log likelihood = -264.32387  
 
-Log likelihood = -587.57244                     Number of obs     =      2,990
+Log likelihood = -264.32387                     Number of obs     =      1,498
 
 ------------------------------------------------------------------------------
              |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
 -------------+----------------------------------------------------------------
 xb           |
-        udca |   1.154211   .3742139     0.44   0.658      .611381    2.179007
-      age_tv |   .9956738   .0040056    -1.08   0.281     .9878538    1.003556
-        male |   .9690384   .1523997    -0.20   0.841     .7119892     1.31889
-       _rcs1 |    2.53478    .428913     5.50   0.000     1.819313    3.531612
-       _rcs2 |   .9713432   .0772872    -0.37   0.715      .831084    1.135274
-       _rcs3 |   1.015192   .0248325     0.62   0.538     .9676696    1.065048
-  _rcs_udca1 |   .8006184   .2076229    -0.86   0.391     .4815985    1.330963
-_rcs_age_tv1 |   1.004598   .0034606     1.33   0.183     .9978383    1.011404
-       _cons |   .1056726   .0208929   -11.37   0.000     .0717247    .1556885
+        udca |   .6114087   .3558455    -0.85   0.398        .1954    1.913105
+      age_tv |   .9961738   .0059715    -0.64   0.522     .9845384    1.007947
+        male |   .8841416   .2035703    -0.53   0.593     .5630356    1.388378
+       _rcs1 |   2.484563   .6357347     3.56   0.000       1.5047    4.102516
+       _rcs2 |   .9320339   .1012974    -0.65   0.517      .753216    1.153304
+  _rcs_udca1 |    1.32334   .7659289     0.48   0.628      .425607    4.114659
+_rcs_age_tv1 |   1.006132   .0055003     1.12   0.263     .9954096    1.016971
+       _cons |   .1046646   .0303868    -7.77   0.000     .0592481    .1848952
 ------------------------------------------------------------------------------
 Note: Estimates are transformed only in the first equation.
 
@@ -505,7 +895,7 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-          _t |      3,012    576.0544    307.6224          1       1035
+          _t |      1,512    547.5456    294.9018          1       1035
 
 . local tmax=r(max)
 
@@ -513,14 +903,14 @@ Note: Estimates are transformed only in the first equation.
 
 . 
 . range days 0 `tmax' `tmaxplus1'
-(1,976 missing values generated)
+(476 missing values generated)
 
 . stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci contra
 > st(difference) fail
 
 . 
 . gen date = d(1/3/2020)+ days
-(1,976 missing values generated)
+(476 missing values generated)
 
 . format date %tddd_Month
 
@@ -564,7 +954,7 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        _at1 |          1    19.82055           .   19.82055   19.82055
+        _at1 |          1    22.45008           .   22.45008   22.45008
 
 . file write tablecontent (r(mean)) _tab 
 
@@ -572,7 +962,7 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at1_lci |          1    17.06649           .   17.06649   17.06649
+    _at1_lci |          1    18.14367           .   18.14367   18.14367
 
 . file write tablecontent (r(mean)) _tab 
 
@@ -580,7 +970,7 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at1_uci |          1    23.01905           .   23.01905   23.01905
+    _at1_uci |          1    27.77862           .   27.77862   27.77862
 
 . file write tablecontent (r(mean)) _tab _n 
 
@@ -591,7 +981,7 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-        _at2 |          1    19.14406           .   19.14406   19.14406
+        _at2 |          1    18.00275           .   18.00275   18.00275
 
 . file write tablecontent (r(mean)) _tab 
 
@@ -599,7 +989,7 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at2_lci |          1    12.47605           .   12.47605   12.47605
+    _at2_lci |          1    8.533634           .   8.533634   8.533634
 
 . file write tablecontent (r(mean)) _tab 
 
@@ -607,7 +997,7 @@ Note: Estimates are transformed only in the first equation.
 
     Variable |        Obs        Mean    Std. Dev.       Min        Max
 -------------+---------------------------------------------------------
-    _at2_uci |          1     29.3759           .    29.3759    29.3759
+    _at2_uci |          1      37.979           .     37.979     37.979
 
 . file write tablecontent (r(mean)) _tab _n 
 
@@ -645,21 +1035,289 @@ Note: Estimates are transformed only in the first equation.
 . * Close window 
 . graph close
 
-.     
+. 
+. * Post-hoc analysis: Model with liver deaths not censored
+. use ./output/an_dataset_died_covid_any, clear 
+
+. drop if stp==""
+(1,500 observations deleted)
+
+. describe
+
+Contains data from ./output/an_dataset_died_covid_any.dta
+  obs:         1,512                          
+ vars:            22                          9 Oct 2023 10:58
+-------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+stp             str4    %9s                   
+imd             byte    %8.0g                 
+ethnicity       byte    %8.0g      eth5       
+has_pbc         byte    %8.0g                 
+oca_bl          byte    %8.0g                 
+patient_id      int     %8.0g                 
+male            float   %9.0g                 
+eth_bin         float   %9.0g      eth_3      
+bmi_cat         float   %14.0g     bmi        
+smoking         float   %14.0g     smok       
+any_high_risk~n float   %9.0g                 
+time_vacc_cat   byte    %23.0g     vacc_t     4 quantiles of time_vacc
+died_liver_any  float   %9.0g                 
+died_liver_un~g float   %9.0g                 
+start           float   %9.0g                 
+stop            float   %9.0g                 
+died_covid_an~g byte    %8.0g                 
+age_tv          float   %9.0g                 
+udca            float   %9.0g                 
+liver_trans     float   %9.0g                 
+covid_vacc_fi~t float   %9.0g                 
+severe_disease  float   %9.0g                 
+-------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. gen index_date = date("01/03/2020", "DMY")
+
+. bys patient_id (start): gen last = _N==_n 
+
+. tab died_liver_any died_covid_any_flag if last==1
+
+died_liver |  died_covid_any_flag
+      _any |         0          1 |     Total
+-----------+----------------------+----------
+         0 |       297         77 |       374 
+         1 |       126          0 |       126 
+-----------+----------------------+----------
+     Total |       423         77 |       500 
+
+. * For sensitivity: generate new stop and update last record to end of study p
+> eriod if died of liver disease 
+. gen stop_new = stop 
+
+. replace stop_new = date("31/12/2022", "DMY") if last==1 & died_liver_any==1
+(88 real changes made)
+
+. stset stop_new, fail(died_covid_any_flag) id(patient_id) enter(index_date) or
+> igin(index_date)
+
+                id:  patient_id
+     failure event:  died_covid_any_flag != 0 & died_covid_any_flag < .
+obs. time interval:  (stop_new[_n-1], stop_new]
+ enter on or after:  time index_date
+ exit on or before:  failure
+    t for analysis:  (time-origin)
+            origin:  time index_date
+
+------------------------------------------------------------------------------
+      1,512  total observations
+          0  exclusions
+------------------------------------------------------------------------------
+      1,512  observations remaining, representing
+        500  subjects
+         77  failures in single-failure-per-subject data
+    390,704  total analysis time at risk and under observation
+                                                at risk from t =         0
+                                     earliest observed entry t =         0
+                                          last observed exit t =     1,035
+
+. 
+. * Add cumulative incidence plots 
+. * Not stratifying by stp as cannot use tvc and stratify  
+. 
+. * Age and sex adjusted model 
+. * Setting df (degrees of freedom for restricted cubic splines) as 3 as this i
+> s default 
+. * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = linear
+>  effect of log time 
+. stpm2 udca age_tv male, tvc(udca) dftvc(1) df(2) scale(hazard) eform
+note: delayed entry models are being fitted
+
+Iteration 0:   log likelihood = -278.18477  
+Iteration 1:   log likelihood = -276.97973  
+Iteration 2:   log likelihood =   -276.784  
+Iteration 3:   log likelihood = -276.77908  
+Iteration 4:   log likelihood = -276.77907  
+
+Log likelihood = -276.77907                     Number of obs     =      1,498
+
+------------------------------------------------------------------------------
+             |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+xb           |
+        udca |   .6495983   .3707281    -0.76   0.450     .2122565    1.988057
+      age_tv |    .998711    .004796    -0.27   0.788     .9893551    1.008155
+        male |   .9352079   .2152873    -0.29   0.771     .5956063    1.468443
+       _rcs1 |   2.930287   .5375163     5.86   0.000     2.045363    4.198074
+       _rcs2 |   .9625162   .1063875    -0.35   0.730     .7750402    1.195341
+  _rcs_udca1 |   1.182083   .6384968     0.31   0.757     .4100863     3.40738
+       _cons |   .0920777   .0243092    -9.03   0.000     .0548822    .1544819
+------------------------------------------------------------------------------
+Note: Estimates are transformed only in the first equation.
+
+. summ _t
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+          _t |      1,512    582.1052    306.1212          1       1035
+
+. local tmax=r(max)
+
+. local tmaxplus1=r(max)+1
+
+. 
+. range days_ph 0 `tmax' `tmaxplus1'
+(476 missing values generated)
+
+. stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days_ph) ci con
+> trast(difference) fail
+
+. 
+. gen date = d(1/3/2020)+ days_ph
+(476 missing values generated)
+
+. format date %tddd_Month
+
+. 
+. for var _at1 _at2 _at1_lci _at1_uci _at2_lci _at2_uci _contrast2_1 _contrast2
+> _1_lci _contrast2_1_uci: replace X=100*X
+
+->  replace _at1=100*_at1
+(1,035 real changes made)
+
+->  replace _at2=100*_at2
+(1,035 real changes made)
+
+->  replace _at1_lci=100*_at1_lci
+(1,035 real changes made)
+
+->  replace _at1_uci=100*_at1_uci
+(1,035 real changes made)
+
+->  replace _at2_lci=100*_at2_lci
+(1,035 real changes made)
+
+->  replace _at2_uci=100*_at2_uci
+(1,035 real changes made)
+
+->  replace _contrast2_1=100*_contrast2_1
+(1,035 real changes made)
+
+->  replace _contrast2_1_lci=100*_contrast2_1_lci
+(1,035 real changes made)
+
+->  replace _contrast2_1_uci=100*_contrast2_1_uci
+(1,035 real changes made)
+
+. 
+. *cumulative mortality at last day of follow-up - write to file 
+. file write tablecontent ("Post-hoc: died_covid_any") _tab ("No UDCA") _tab  
+
+. * cumulative outcome - no UDCA 
+. sum _at1 if days_ph==`tmax'
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        _at1 |          1    19.21125           .   19.21125   19.21125
+
+. file write tablecontent (r(mean)) _tab 
+
+. sum _at1_lci if days_ph==`tmax'
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    _at1_lci |          1    15.52293           .   15.52293   15.52293
+
+. file write tablecontent (r(mean)) _tab 
+
+. sum _at1_uci if days_ph==`tmax'
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    _at1_uci |          1    23.77595           .   23.77595   23.77595
+
+. file write tablecontent (r(mean)) _tab _n 
+
+. * cumulative outcome - UDCA 
+. file write tablecontent ("`outcome'") _tab ("UDCA") _tab  
+
+. sum _at2 if days_ph==`tmax'
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+        _at2 |          1    14.69446           .   14.69446   14.69446
+
+. file write tablecontent (r(mean)) _tab 
+
+. sum _at2_lci if days_ph==`tmax'
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    _at2_lci |          1    6.967609           .   6.967609   6.967609
+
+. file write tablecontent (r(mean)) _tab 
+
+. sum _at2_uci if days_ph==`tmax'
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+    _at2_uci |          1    30.99013           .   30.99013   30.99013
+
+. file write tablecontent (r(mean)) _tab _n 
+
+. 
+. *l date days_ph _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days_ph<.
+. 
+. twoway  (rarea _at1_lci _at1_uci days_ph, color(red%25)) ///
+>                 (rarea _at2_lci _at2_uci days_ph, color(blue%25)) ///
+>                 (line _at1 days_ph, sort lcolor(red)) ///
+>                 (line _at2 days_ph, sort lcolor(blue) lpattern(dash)) ///
+>                 , legend(order(1 "No UDCA" 2 "UDCA") ring(0) cols(1) pos(11) 
+> region(lwidth(none))) ///
+>                 title("Time to `outcome'", justification(left) size(med) )   
+>       ///
+>                 yscale(range(0, 1))                                          
+>                                            ///
+>                 ylabel(0 (1) 10, angle(0) format(%4.1f) labsize(small)) ///
+>                 xlabel(0 (200) 1035, labsize(small))                         
+>                                    ///                     
+>                 ytitle("Cumulative outcomes (%)", size(medsmall)) ///
+>                 xtitle("Days since 1 Mar 2020", size(medsmall))              
+>    ///
+>                 graphregion(fcolor(white)) saving(adjcurv_died_covid_any_post
+> _hoc, replace)
+(note:  named style med not found in class gsize, default attributes used)
+(note: file adjcurv_died_covid_any_post_hoc.gph not found)
+(file adjcurv_died_covid_any_post_hoc.gph saved)
+
+. 
+. graph export "./output/graphs/adjcurv_died_covid_any_post_hoc.svg", as(svg) r
+> eplace
+(note: file ./output/graphs/adjcurv_died_covid_any_post_hoc.svg not found)
+(file ./output/graphs/adjcurv_died_covid_any_post_hoc.svg written in SVG format
+> )
+
+. 
+. * Close window 
+. graph close    
+
 . 
 . * plot for each outcome - fully adjusted 
 . foreach outcome in hosp_any composite_any {
   2.     use ./output/an_dataset_`outcome', clear 
-  3.     describe
-  4.     gen index_date = date("01/03/2020", "DMY")
-  5.     bys patient_id (start): gen last = _N==_n 
-  6.     tab died_liver_any `outcome'_flag if last==1
-  7.     * Update stop date of last record to end of study period if died of li
-> ver disease 
-.     replace stop = date("31/12/2022", "DMY") if last==1 & died_liver_any==1
-  8.     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) orig
+  3.     drop if stp==""
+  4.     describe
+  5.     gen index_date = date("01/03/2020", "DMY")
+  6.     bys patient_id (start): gen last = _N==_n 
+  7.     tab died_liver_any `outcome'_flag if last==1
+  8.     * For sensitivity: generate new stop and update last record to end of 
+> study period if died of liver disease 
+.     gen stop_new = stop 
+  9.     replace stop_new = date("31/12/2022", "DMY") if last==1 & died_liver_a
+> ny==1
+ 10.     stset stop, fail(`outcome'_flag) id(patient_id) enter(index_date) orig
 > in(index_date)
-  9. 
+ 11. 
 .     * Add cumulative incidence plots 
 .     * Not stratifying by stp as cannot use tvc and stratify 
 .     * Fully adjusted model (though not including wave as not right in main mo
@@ -671,61 +1329,61 @@ Note: Estimates are transformed only in the first equation.
 .     * stpm2_standsurv cannot use factor variables so creating dummy variables
 > :
 .     tab imd, gen(imd) 
- 10.     tab bmi_cat, gen(bmi_cat)
- 11.     tab smoking, gen(smoking)
- 12.     * Check all binary 
+ 12.     tab bmi_cat, gen(bmi_cat)
+ 13.     tab smoking, gen(smoking)
+ 14.     * Check all binary 
 .     foreach vars in udca male any_high_risk_condition eth_bin imd1 imd2 imd3 
 > imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
 >     bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_fi
 > rst liver_trans {
- 13.         tab `vars', m nolabel
- 14.         } 
- 15.       
+ 15.         tab `vars', m nolabel
+ 16.         } 
+ 17.       
 .     * fully adjusted model to fit 
 .     stpm2 udca male age_tv any_high_risk_condition eth_bin imd2 imd3 imd4 imd
 > 5 bmi_cat1 bmi_cat3 ///
 >     bmi_cat4 bmi_cat5 smoking2 smoking3 severe_disease covid_vacc_first liver
 > _trans, ///
 >      tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df
-> (3) scale(hazard) eform
- 16.     
+> (2) scale(hazard) eform
+ 18.     
 .     summ _t
- 17.     local tmax=r(max)
- 18.     local tmaxplus1=r(max)+1
- 19. 
+ 19.     local tmax=r(max)
+ 20.     local tmaxplus1=r(max)+1
+ 21. 
 .     range days 0 `tmax' `tmaxplus1'
- 20.     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci
+ 22.     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days) ci
 >  contrast(difference) fail
- 21.     gen date = d(1/3/2020)+ days
- 22.     format date %tddd_Month
- 23. 
+ 23.     gen date = d(1/3/2020)+ days
+ 24.     format date %tddd_Month
+ 25. 
 .     for var _at1 _at2 _at1_lci _at1_uci _at2_lci _at2_uci _contrast2_1 _contr
 > ast2_1_lci _contrast2_1_uci: replace X=100*X
- 24. 
+ 26. 
 .     *cumulative mortality at last day of follow-up
 .     list _at1* if days==`tmax', noobs
- 25.     list _at2* if days==`tmax', noobs
- 26.     list _contrast* if days==`tmax', noobs
- 27. 
+ 27.     list _at2* if days==`tmax', noobs
+ 28.     list _contrast* if days==`tmax', noobs
+ 29. 
 .     *cumulative mortality at last day of follow-up - write to file 
 .     file write tablecontent ("`outcome' fully adjusted") _tab ("No UDCA") _ta
 > b  
- 28.     * cumulative outcome - no UDCA 
+ 30.     * cumulative outcome - no UDCA 
 .     sum _at1 if days==`tmax'
- 29.     file write tablecontent (r(mean)) _tab 
- 30.     sum _at1_lci if days==`tmax'
  31.     file write tablecontent (r(mean)) _tab 
- 32.     sum _at1_uci if days==`tmax'
- 33.     file write tablecontent (r(mean)) _tab _n 
- 34.     * cumulative outcome - UDCA 
+ 32.     sum _at1_lci if days==`tmax'
+ 33.     file write tablecontent (r(mean)) _tab 
+ 34.     sum _at1_uci if days==`tmax'
+ 35.     file write tablecontent (r(mean)) _tab _n 
+ 36.     * cumulative outcome - UDCA 
 .     file write tablecontent ("`outcome'") _tab ("UDCA") _tab  
- 35.     sum _at2 if days==`tmax'
- 36.     file write tablecontent (r(mean)) _tab 
- 37.     sum _at2_lci if days==`tmax'
+ 37.     sum _at2 if days==`tmax'
  38.     file write tablecontent (r(mean)) _tab 
- 39.     sum _at2_uci if days==`tmax'
- 40.     file write tablecontent (r(mean)) _tab _n 
- 41. 
+ 39.     sum _at2_lci if days==`tmax'
+ 40.     file write tablecontent (r(mean)) _tab 
+ 41.     sum _at2_uci if days==`tmax'
+ 42.     file write tablecontent (r(mean)) _tab _n 
+ 43. 
 .     *l date days _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days<.
 . 
 .     twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
@@ -747,16 +1405,109 @@ Note: Estimates are transformed only in the first equation.
 >            ///
 >                     graphregion(fcolor(white)) saving(adjcurv_f_`outcome', re
 > place)
- 42. 
+ 44. 
 .     graph export "./output/graphs/adjcurv_f_`outcome'.svg", as(svg) replace
- 43. 
+ 45. 
 .     * Close window 
 .     graph close
- 44. 
+ 46. 
+.     * Post-hoc analysis: Model with liver deaths not censored
+.     use ./output/an_dataset_`outcome', clear 
+ 47.     drop if stp==""
+ 48.     describe
+ 49.     gen index_date = date("01/03/2020", "DMY")
+ 50.     bys patient_id (start): gen last = _N==_n 
+ 51.     tab died_liver_any `outcome'_flag if last==1
+ 52.     * For sensitivity: generate new stop and update last record to end of 
+> study period if died of liver disease 
+.     gen stop_new = stop 
+ 53.     replace stop_new = date("31/12/2022", "DMY") if last==1 & died_liver_a
+> ny==1
+ 54.     stset stop_new, fail(`outcome'_flag) id(patient_id) enter(index_date) 
+> origin(index_date)
+ 55. 
+.     * Add cumulative incidence plots 
+.     * Not stratifying by stp as cannot use tvc and stratify  
+.     
+.     * Age and sex adjusted model 
+.     * Setting df (degrees of freedom for restricted cubic splines) as 3 as th
+> is is default 
+.     * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = li
+> near effect of log time 
+.     * fully adjusted model to fit 
+.     stpm2 udca male age_tv any_high_risk_condition eth_bin imd2 imd3 imd4 imd
+> 5 bmi_cat1 bmi_cat3 ///
+>     bmi_cat4 bmi_cat5 smoking2 smoking3 severe_disease covid_vacc_first liver
+> _trans, ///
+>      tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df
+> (2) scale(hazard) eform
+ 56.     
+.     summ _t
+ 57.     local tmax=r(max)
+ 58.     local tmaxplus1=r(max)+1
+ 59. 
+.     range days_ph 0 `tmax' `tmaxplus1'
+ 60.     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days_ph)
+>  ci contrast(difference) fail
+ 61. 
+.     gen date = d(1/3/2020)+ days_ph
+ 62.     format date %tddd_Month
+ 63. 
+.     for var _at1 _at2 _at1_lci _at1_uci _at2_lci _at2_uci _contrast2_1 _contr
+> ast2_1_lci _contrast2_1_uci: replace X=100*X
+ 64. 
+.     *cumulative mortality at last day of follow-up - write to file 
+.     file write tablecontent ("Post-hoc: `outcome'") _tab ("No UDCA") _tab  
+ 65.     * cumulative outcome - no UDCA 
+.     sum _at1 if days_ph==`tmax'
+ 66.     file write tablecontent (r(mean)) _tab 
+ 67.     sum _at1_lci if days_ph==`tmax'
+ 68.     file write tablecontent (r(mean)) _tab 
+ 69.     sum _at1_uci if days_ph==`tmax'
+ 70.     file write tablecontent (r(mean)) _tab _n 
+ 71.     * cumulative outcome - UDCA 
+.     file write tablecontent ("`outcome'") _tab ("UDCA") _tab  
+ 72.     sum _at2 if days_ph==`tmax'
+ 73.     file write tablecontent (r(mean)) _tab 
+ 74.     sum _at2_lci if days_ph==`tmax'
+ 75.     file write tablecontent (r(mean)) _tab 
+ 76.     sum _at2_uci if days_ph==`tmax'
+ 77.     file write tablecontent (r(mean)) _tab _n 
+ 78.     
+.     *l date days_ph _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days_ph<
+> .
+. 
+.     twoway  (rarea _at1_lci _at1_uci days_ph, color(red%25)) ///
+>                     (rarea _at2_lci _at2_uci days_ph, color(blue%25)) ///
+>                     (line _at1 days_ph, sort lcolor(red)) ///
+>                     (line _at2 days_ph, sort lcolor(blue) lpattern(dash)) ///
+>                     , legend(order(1 "No UDCA" 2 "UDCA") ring(0) cols(1) pos(
+> 11) region(lwidth(none))) ///
+>                     title("Time to `outcome'", justification(left) size(med) 
+> )             ///
+>                     yscale(range(0, 1))                                      
+>                                                    ///
+>                     ylabel(0 (1) 10, angle(0) format(%4.1f) labsize(small))  
+>    ///
+>                     xlabel(0 (200) 1035, labsize(small))                     
+>                                            ///                     
+>                     ytitle("Cumulative outcomes (%)", size(medsmall)) ///
+>                     xtitle("Days since 1 Mar 2020", size(medsmall))          
+>            ///
+>                     graphregion(fcolor(white)) saving(adjcurv_`outcome', repl
+> ace)
+ 79. 
+.     graph export "./output/graphs/adjcurv_f_`outcome'_post_hoc.svg", as(svg) 
+> replace
+ 80. 
+.     * Close window 
+.     graph close
+ 81. 
 . }
+(1,463 observations deleted)
 
 Contains data from ./output/an_dataset_hosp_any.dta
-  obs:         2,933                          
+  obs:         1,470                          
  vars:            23                          9 Oct 2023 10:58
 -------------------------------------------------------------------------------
               storage   display    value
@@ -787,15 +1538,16 @@ severe_disease  float   %9.0g
 total_hosp      float   %9.0g                 
 -------------------------------------------------------------------------------
 Sorted by: 
+     Note: Dataset has changed since last saved.
 
 died_liver |     hosp_any_flag
       _any |         0          1 |     Total
 -----------+----------------------+----------
-         0 |       700         46 |       746 
-         1 |       243         11 |       254 
+         0 |       349         25 |       374 
+         1 |       122          4 |       126 
 -----------+----------------------+----------
-     Total |       943         57 |     1,000 
-(175 real changes made)
+     Total |       471         29 |       500 
+(92 real changes made)
 
                 id:  patient_id
      failure event:  hosp_any_flag != 0 & hosp_any_flag < .
@@ -806,554 +1558,216 @@ obs. time interval:  (stop[_n-1], stop]
             origin:  time index_date
 
 ------------------------------------------------------------------------------
-      2,933  total observations
+      1,470  total observations
           0  exclusions
 ------------------------------------------------------------------------------
-      2,933  observations remaining, representing
-      1,000  subjects
-         57  failures in single-failure-per-subject data
-    754,218  total analysis time at risk and under observation
+      1,470  observations remaining, representing
+        500  subjects
+         29  failures in single-failure-per-subject data
+    325,834  total analysis time at risk and under observation
                                                 at risk from t =         0
                                      earliest observed entry t =         0
                                           last observed exit t =     1,035
 
         imd |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |        599       20.42       20.42
-          2 |        563       19.20       39.62
-          3 |        611       20.83       60.45
-          4 |        487       16.60       77.05
-          5 |        537       18.31       95.36
-          6 |        136        4.64      100.00
+          1 |        298       20.27       20.27
+          2 |        278       18.91       39.18
+          3 |        279       18.98       58.16
+          4 |        246       16.73       74.90
+          5 |        303       20.61       95.51
+          6 |         66        4.49      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
        bmi_cat |      Freq.     Percent        Cum.
 ---------------+-----------------------------------
-   Underweight |        261        8.90        8.90
- Healthy range |      1,114       37.98       46.88
-    Overweight |        571       19.47       66.35
-         Obese |        805       27.45       93.79
-Morbidly obese |        182        6.21      100.00
+   Underweight |        159       10.82       10.82
+ Healthy range |        553       37.62       48.44
+    Overweight |        290       19.73       68.16
+         Obese |        373       25.37       93.54
+Morbidly obese |         95        6.46      100.00
 ---------------+-----------------------------------
-         Total |      2,933      100.00
+         Total |      1,470      100.00
 
        smoking |      Freq.     Percent        Cum.
 ---------------+-----------------------------------
-  Never smoked |        313       10.67       10.67
-Current smoker |      2,146       73.17       83.84
-     Ex-smoker |        474       16.16      100.00
+  Never smoked |        182       12.38       12.38
+Current smoker |      1,065       72.45       84.83
+     Ex-smoker |        223       15.17      100.00
 ---------------+-----------------------------------
-         Total |      2,933      100.00
+         Total |      1,470      100.00
 
        udca |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,643       90.11       90.11
-          1 |        290        9.89      100.00
+          0 |      1,324       90.07       90.07
+          1 |        146        9.93      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
        male |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,478       50.39       50.39
-          1 |      1,436       48.96       99.35
-          . |         19        0.65      100.00
+          0 |        759       51.63       51.63
+          1 |        700       47.62       99.25
+          . |         11        0.75      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
 any_high_ri |
 sk_conditio |
           n |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          1 |      2,933      100.00      100.00
+          1 |      1,470      100.00      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
     eth_bin |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        385       13.13       13.13
-          1 |      2,383       81.25       94.37
-          2 |        165        5.63      100.00
+          0 |        198       13.47       13.47
+          1 |      1,211       82.38       95.85
+          2 |         61        4.15      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
       imd== |
      1.0000 |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,334       79.58       79.58
-          1 |        599       20.42      100.00
+          0 |      1,172       79.73       79.73
+          1 |        298       20.27      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
       imd== |
      2.0000 |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,370       80.80       80.80
-          1 |        563       19.20      100.00
+          0 |      1,192       81.09       81.09
+          1 |        278       18.91      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
       imd== |
      3.0000 |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,322       79.17       79.17
-          1 |        611       20.83      100.00
+          0 |      1,191       81.02       81.02
+          1 |        279       18.98      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
       imd== |
      4.0000 |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,446       83.40       83.40
-          1 |        487       16.60      100.00
+          0 |      1,224       83.27       83.27
+          1 |        246       16.73      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
       imd== |
      5.0000 |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,396       81.69       81.69
-          1 |        537       18.31      100.00
+          0 |      1,167       79.39       79.39
+          1 |        303       20.61      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
 bmi_cat==Un |
   derweight |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,672       91.10       91.10
-          1 |        261        8.90      100.00
+          0 |      1,311       89.18       89.18
+          1 |        159       10.82      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
 bmi_cat==He |
 althy range |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,819       62.02       62.02
-          1 |      1,114       37.98      100.00
+          0 |        917       62.38       62.38
+          1 |        553       37.62      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
 bmi_cat==Ov |
    erweight |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,362       80.53       80.53
-          1 |        571       19.47      100.00
+          0 |      1,180       80.27       80.27
+          1 |        290       19.73      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
 bmi_cat==Ob |
         ese |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,128       72.55       72.55
-          1 |        805       27.45      100.00
+          0 |      1,097       74.63       74.63
+          1 |        373       25.37      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
 bmi_cat==Mo |
      rbidly |
       obese |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,751       93.79       93.79
-          1 |        182        6.21      100.00
+          0 |      1,375       93.54       93.54
+          1 |         95        6.46      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
 smoking==Ne |
  ver smoked |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,620       89.33       89.33
-          1 |        313       10.67      100.00
+          0 |      1,288       87.62       87.62
+          1 |        182       12.38      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
 smoking==Cu |
       rrent |
      smoker |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |        787       26.83       26.83
-          1 |      2,146       73.17      100.00
+          0 |        405       27.55       27.55
+          1 |      1,065       72.45      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
 smoking==Ex |
     -smoker |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,459       83.84       83.84
-          1 |        474       16.16      100.00
+          0 |      1,247       84.83       84.83
+          1 |        223       15.17      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
 severe_dise |
         ase |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      1,160       39.55       39.55
-          1 |      1,773       60.45      100.00
+          0 |        573       38.98       38.98
+          1 |        897       61.02      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
 covid_vacc_ |
       first |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,371       80.84       80.84
-          1 |        562       19.16      100.00
+          0 |      1,188       80.82       80.82
+          1 |        282       19.18      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 
 liver_trans |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-          0 |      2,920       99.56       99.56
-          1 |         13        0.44      100.00
+          0 |      1,460       99.32       99.32
+          1 |         10        0.68      100.00
 ------------+-----------------------------------
-      Total |      2,933      100.00
+      Total |      1,470      100.00
 note: delayed entry models are being fitted
 note: any_high_risk_condition omitted because of collinearity
 
-Iteration 0:   log likelihood = -251.09352  (not concave)
-Iteration 1:   log likelihood = -248.28019  (not concave)
-Iteration 2:   log likelihood = -247.81626  (not concave)
-Iteration 3:   log likelihood = -247.56739  (not concave)
-Iteration 4:   log likelihood = -247.44415  (not concave)
-Iteration 5:   log likelihood = -247.20857  (not concave)
-Iteration 6:   log likelihood = -247.16018  (not concave)
-Iteration 7:   log likelihood = -247.12491  (not concave)
-Iteration 8:   log likelihood = -247.09262  (not concave)
-Iteration 9:   log likelihood =  -246.9832  (not concave)
-Iteration 10:  log likelihood = -246.92539  (not concave)
-Iteration 11:  log likelihood =  -246.9114  (not concave)
-Iteration 12:  log likelihood = -246.89372  (not concave)
-Iteration 13:  log likelihood = -246.87069  (not concave)
-Iteration 14:  log likelihood = -246.85907  (not concave)
-Iteration 15:  log likelihood = -246.83927  (not concave)
-Iteration 16:  log likelihood =   -246.822  (not concave)
-Iteration 17:  log likelihood = -246.78576  (not concave)
-Iteration 18:  log likelihood = -246.76716  (not concave)
-Iteration 19:  log likelihood =  -246.7374  (not concave)
-Iteration 20:  log likelihood = -246.70941  (not concave)
-Iteration 21:  log likelihood = -246.65891  (not concave)
-Iteration 22:  log likelihood = -246.62218  (not concave)
-Iteration 23:  log likelihood = -246.61235  (not concave)
-Iteration 24:  log likelihood = -246.60301  (not concave)
-Iteration 25:  log likelihood = -246.59405  (not concave)
-Iteration 26:  log likelihood = -246.58501  (not concave)
-Iteration 27:  log likelihood = -246.57606  (not concave)
-Iteration 28:  log likelihood = -246.56732  (not concave)
-Iteration 29:  log likelihood = -246.55864  (not concave)
-Iteration 30:  log likelihood = -246.55004  (not concave)
-Iteration 31:  log likelihood = -246.54154  (not concave)
-Iteration 32:  log likelihood = -246.53315  (not concave)
-Iteration 33:  log likelihood = -246.52485  (not concave)
-Iteration 34:  log likelihood = -246.51663  (not concave)
-Iteration 35:  log likelihood =  -246.5085  (not concave)
-Iteration 36:  log likelihood = -246.50048  (not concave)
-Iteration 37:  log likelihood = -246.49252  (not concave)
-Iteration 38:  log likelihood = -246.48467  (not concave)
-Iteration 39:  log likelihood = -246.47689  (not concave)
-Iteration 40:  log likelihood =  -246.4692  (not concave)
-Iteration 41:  log likelihood = -246.46158  (not concave)
-Iteration 42:  log likelihood = -246.45405  (not concave)
-Iteration 43:  log likelihood =  -246.4466  (not concave)
-Iteration 44:  log likelihood = -246.43923  (not concave)
-Iteration 45:  log likelihood = -246.43193  (not concave)
-Iteration 46:  log likelihood = -246.42471  (not concave)
-Iteration 47:  log likelihood = -246.41756  (not concave)
-Iteration 48:  log likelihood = -246.41049  (not concave)
-Iteration 49:  log likelihood = -246.40349  (not concave)
-Iteration 50:  log likelihood = -246.39656  (not concave)
-Iteration 51:  log likelihood =  -246.3897  (not concave)
-Iteration 52:  log likelihood = -246.38291  (not concave)
-Iteration 53:  log likelihood = -246.37619  (not concave)
-Iteration 54:  log likelihood = -246.36954  (not concave)
-Iteration 55:  log likelihood = -246.36295  (not concave)
-Iteration 56:  log likelihood = -246.35643  (not concave)
-Iteration 57:  log likelihood = -246.34997  (not concave)
-Iteration 58:  log likelihood = -246.34358  (not concave)
-Iteration 59:  log likelihood = -246.33724  (not concave)
-Iteration 60:  log likelihood = -246.33098  (not concave)
-Iteration 61:  log likelihood = -246.32476  (not concave)
-Iteration 62:  log likelihood = -246.31862  (not concave)
-Iteration 63:  log likelihood = -246.31252  (not concave)
-Iteration 64:  log likelihood =  -246.3065  (not concave)
-Iteration 65:  log likelihood = -246.30052  (not concave)
-Iteration 66:  log likelihood =  -246.2946  (not concave)
-Iteration 67:  log likelihood = -246.28874  (not concave)
-Iteration 68:  log likelihood = -246.28293  (not concave)
-Iteration 69:  log likelihood = -246.27718  (not concave)
-Iteration 70:  log likelihood = -246.27148  (not concave)
-Iteration 71:  log likelihood = -246.26583  (not concave)
-Iteration 72:  log likelihood = -246.26024  (not concave)
-Iteration 73:  log likelihood =  -246.2547  (not concave)
-Iteration 74:  log likelihood = -246.24921  (not concave)
-Iteration 75:  log likelihood = -246.24376  (not concave)
-Iteration 76:  log likelihood = -246.23837  (not concave)
-Iteration 77:  log likelihood = -246.23302  (not concave)
-Iteration 78:  log likelihood = -246.22773  (not concave)
-Iteration 79:  log likelihood = -246.22248  (not concave)
-Iteration 80:  log likelihood = -246.21728  (not concave)
-Iteration 81:  log likelihood = -246.21212  (not concave)
-Iteration 82:  log likelihood = -246.20701  (not concave)
-Iteration 83:  log likelihood = -246.20194  (not concave)
-Iteration 84:  log likelihood = -246.19693  (not concave)
-Iteration 85:  log likelihood = -246.19195  (not concave)
-Iteration 86:  log likelihood = -246.18701  (not concave)
-Iteration 87:  log likelihood = -246.18212  (not concave)
-Iteration 88:  log likelihood = -246.17727  (not concave)
-Iteration 89:  log likelihood = -246.17246  (not concave)
-Iteration 90:  log likelihood =  -246.1677  (not concave)
-Iteration 91:  log likelihood = -246.16297  (not concave)
-Iteration 92:  log likelihood = -246.15828  (not concave)
-Iteration 93:  log likelihood = -246.15363  (not concave)
-Iteration 94:  log likelihood = -246.14902  (not concave)
-Iteration 95:  log likelihood = -246.14445  (not concave)
-Iteration 96:  log likelihood = -246.13992  (not concave)
-Iteration 97:  log likelihood = -246.13542  (not concave)
-Iteration 98:  log likelihood = -246.13097  (not concave)
-Iteration 99:  log likelihood = -246.12654  (not concave)
-Iteration 100: log likelihood = -246.12216  (not concave)
-Iteration 101: log likelihood = -246.11781  (not concave)
-Iteration 102: log likelihood =  -246.1135  (not concave)
-Iteration 103: log likelihood = -246.10921  (not concave)
-Iteration 104: log likelihood = -246.10497  (not concave)
-Iteration 105: log likelihood = -246.10076  (not concave)
-Iteration 106: log likelihood = -246.09658  (not concave)
-Iteration 107: log likelihood = -246.09243  (not concave)
-Iteration 108: log likelihood = -246.08832  (not concave)
-Iteration 109: log likelihood = -246.08424  (not concave)
-Iteration 110: log likelihood = -246.08019  (not concave)
-Iteration 111: log likelihood = -246.07617  (not concave)
-Iteration 112: log likelihood = -246.07218  (not concave)
-Iteration 113: log likelihood = -246.06823  (not concave)
-Iteration 114: log likelihood =  -246.0643  (not concave)
-Iteration 115: log likelihood = -246.06041  (not concave)
-Iteration 116: log likelihood = -246.05654  (not concave)
-Iteration 117: log likelihood =  -246.0527  (not concave)
-Iteration 118: log likelihood =  -246.0489  (not concave)
-Iteration 119: log likelihood = -246.04512  (not concave)
-Iteration 120: log likelihood = -246.04137  (not concave)
-Iteration 121: log likelihood = -246.03764  (not concave)
-Iteration 122: log likelihood = -246.03395  (not concave)
-Iteration 123: log likelihood = -246.03028  (not concave)
-Iteration 124: log likelihood = -246.02664  (not concave)
-Iteration 125: log likelihood = -246.02302  (not concave)
-Iteration 126: log likelihood = -246.01943  (not concave)
-Iteration 127: log likelihood = -246.01587  (not concave)
-Iteration 128: log likelihood = -246.01233  (not concave)
-Iteration 129: log likelihood = -246.00882  (not concave)
-Iteration 130: log likelihood = -246.00533  (not concave)
-Iteration 131: log likelihood = -246.00187  (not concave)
-Iteration 132: log likelihood = -245.99844  (not concave)
-Iteration 133: log likelihood = -245.99502  (not concave)
-Iteration 134: log likelihood = -245.99163  (not concave)
-Iteration 135: log likelihood = -245.98827  (not concave)
-Iteration 136: log likelihood = -245.98493  (not concave)
-Iteration 137: log likelihood = -245.98161  (not concave)
-Iteration 138: log likelihood = -245.97831  (not concave)
-Iteration 139: log likelihood = -245.97504  (not concave)
-Iteration 140: log likelihood = -245.97179  (not concave)
-Iteration 141: log likelihood = -245.96856  (not concave)
-Iteration 142: log likelihood = -245.96535  (not concave)
-Iteration 143: log likelihood = -245.96216  (not concave)
-Iteration 144: log likelihood =   -245.959  (not concave)
-Iteration 145: log likelihood = -245.95586  (not concave)
-Iteration 146: log likelihood = -245.95274  (not concave)
-Iteration 147: log likelihood = -245.94964  (not concave)
-Iteration 148: log likelihood = -245.94656  (not concave)
-Iteration 149: log likelihood = -245.94349  (not concave)
-Iteration 150: log likelihood = -245.94046  (not concave)
-Iteration 151: log likelihood = -245.93743  (not concave)
-Iteration 152: log likelihood = -245.93443  (not concave)
-Iteration 153: log likelihood = -245.93145  (not concave)
-Iteration 154: log likelihood = -245.92849  (not concave)
-Iteration 155: log likelihood = -245.92555  (not concave)
-Iteration 156: log likelihood = -245.92262  (not concave)
-Iteration 157: log likelihood = -245.91972  (not concave)
-Iteration 158: log likelihood = -245.91683  (not concave)
-Iteration 159: log likelihood = -245.91396  (not concave)
-Iteration 160: log likelihood = -245.91111  (not concave)
-Iteration 161: log likelihood = -245.90828  (not concave)
-Iteration 162: log likelihood = -245.90546  (not concave)
-Iteration 163: log likelihood = -245.90266  (not concave)
-Iteration 164: log likelihood = -245.89988  (not concave)
-Iteration 165: log likelihood = -245.89712  (not concave)
-Iteration 166: log likelihood = -245.89437  (not concave)
-Iteration 167: log likelihood = -245.89164  (not concave)
-Iteration 168: log likelihood = -245.88893  (not concave)
-Iteration 169: log likelihood = -245.88623  (not concave)
-Iteration 170: log likelihood = -245.88355  (not concave)
-Iteration 171: log likelihood = -245.88088  (not concave)
-Iteration 172: log likelihood = -245.87823  (not concave)
-Iteration 173: log likelihood =  -245.8756  (not concave)
-Iteration 174: log likelihood = -245.87298  (not concave)
-Iteration 175: log likelihood = -245.87038  (not concave)
-Iteration 176: log likelihood = -245.86779  (not concave)
-Iteration 177: log likelihood = -245.86522  (not concave)
-Iteration 178: log likelihood = -245.86266  (not concave)
-Iteration 179: log likelihood = -245.86012  (not concave)
-Iteration 180: log likelihood = -245.85759  (not concave)
-Iteration 181: log likelihood = -245.85508  (not concave)
-Iteration 182: log likelihood = -245.85258  (not concave)
-Iteration 183: log likelihood =  -245.8501  (not concave)
-Iteration 184: log likelihood = -245.84763  (not concave)
-Iteration 185: log likelihood = -245.84517  (not concave)
-Iteration 186: log likelihood = -245.84273  (not concave)
-Iteration 187: log likelihood =  -245.8403  (not concave)
-Iteration 188: log likelihood = -245.83788  (not concave)
-Iteration 189: log likelihood = -245.83548  (not concave)
-Iteration 190: log likelihood = -245.83309  (not concave)
-Iteration 191: log likelihood = -245.83072  (not concave)
-Iteration 192: log likelihood = -245.82835  (not concave)
-Iteration 193: log likelihood =   -245.826  (not concave)
-Iteration 194: log likelihood = -245.82367  (not concave)
-Iteration 195: log likelihood = -245.82134  (not concave)
-Iteration 196: log likelihood = -245.81903  (not concave)
-Iteration 197: log likelihood = -245.81673  (not concave)
-Iteration 198: log likelihood = -245.81444  (not concave)
-Iteration 199: log likelihood = -245.81217  (not concave)
-Iteration 200: log likelihood = -245.80991  (not concave)
-Iteration 201: log likelihood = -245.80765  (not concave)
-Iteration 202: log likelihood = -245.80542  (not concave)
-Iteration 203: log likelihood = -245.80319  (not concave)
-Iteration 204: log likelihood = -245.80097  (not concave)
-Iteration 205: log likelihood = -245.79877  (not concave)
-Iteration 206: log likelihood = -245.79658  (not concave)
-Iteration 207: log likelihood = -245.79439  (not concave)
-Iteration 208: log likelihood = -245.79223  (not concave)
-Iteration 209: log likelihood = -245.79007  (not concave)
-Iteration 210: log likelihood = -245.78792  (not concave)
-Iteration 211: log likelihood = -245.78578  (not concave)
-Iteration 212: log likelihood = -245.78365  (not concave)
-Iteration 213: log likelihood = -245.78154  (not concave)
-Iteration 214: log likelihood = -245.77943  (not concave)
-Iteration 215: log likelihood = -245.77734  (not concave)
-Iteration 216: log likelihood = -245.77525  (not concave)
-Iteration 217: log likelihood = -245.77318  (not concave)
-Iteration 218: log likelihood = -245.77112  (not concave)
-Iteration 219: log likelihood = -245.76906  (not concave)
-Iteration 220: log likelihood = -245.76702  (not concave)
-Iteration 221: log likelihood = -245.76499  (not concave)
-Iteration 222: log likelihood = -245.76296  (not concave)
-Iteration 223: log likelihood = -245.76095  (not concave)
-Iteration 224: log likelihood = -245.75895  (not concave)
-Iteration 225: log likelihood = -245.75695  (not concave)
-Iteration 226: log likelihood = -245.75497  (not concave)
-Iteration 227: log likelihood = -245.75299  (not concave)
-Iteration 228: log likelihood = -245.75103  (not concave)
-Iteration 229: log likelihood = -245.74907  (not concave)
-Iteration 230: log likelihood = -245.74712  (not concave)
-Iteration 231: log likelihood = -245.74518  (not concave)
-Iteration 232: log likelihood = -245.74325  (not concave)
-Iteration 233: log likelihood = -245.74133  (not concave)
-Iteration 234: log likelihood = -245.73942  (not concave)
-Iteration 235: log likelihood = -245.73752  (not concave)
-Iteration 236: log likelihood = -245.73562  (not concave)
-Iteration 237: log likelihood = -245.73374  (not concave)
-Iteration 238: log likelihood = -245.73186  (not concave)
-Iteration 239: log likelihood = -245.72999  (not concave)
-Iteration 240: log likelihood = -245.72813  (not concave)
-Iteration 241: log likelihood = -245.72628  (not concave)
-Iteration 242: log likelihood = -245.72444  (not concave)
-Iteration 243: log likelihood = -245.72261  (not concave)
-Iteration 244: log likelihood = -245.72078  (not concave)
-Iteration 245: log likelihood = -245.71896  (not concave)
-Iteration 246: log likelihood = -245.71715  (not concave)
-Iteration 247: log likelihood = -245.71535  (not concave)
-Iteration 248: log likelihood = -245.71355  (not concave)
-Iteration 249: log likelihood = -245.71177  (not concave)
-Iteration 250: log likelihood = -245.70999  (not concave)
-Iteration 251: log likelihood = -245.70822  (not concave)
-Iteration 252: log likelihood = -245.70645  (not concave)
-Iteration 253: log likelihood =  -245.7047  (not concave)
-Iteration 254: log likelihood = -245.70295  (not concave)
-Iteration 255: log likelihood = -245.70121  (not concave)
-Iteration 256: log likelihood = -245.69948  (not concave)
-Iteration 257: log likelihood = -245.69775  (not concave)
-Iteration 258: log likelihood = -245.69603  (not concave)
-Iteration 259: log likelihood = -245.69432  (not concave)
-Iteration 260: log likelihood = -245.69262  (not concave)
-Iteration 261: log likelihood = -245.69092  (not concave)
-Iteration 262: log likelihood = -245.68923  (not concave)
-Iteration 263: log likelihood = -245.68755  (not concave)
-Iteration 264: log likelihood = -245.68587  (not concave)
-Iteration 265: log likelihood =  -245.6842  (not concave)
-Iteration 266: log likelihood = -245.68254  (not concave)
-Iteration 267: log likelihood = -245.68088  (not concave)
-Iteration 268: log likelihood = -245.67924  (not concave)
-Iteration 269: log likelihood = -245.67759  (not concave)
-Iteration 270: log likelihood = -245.67596  (not concave)
-Iteration 271: log likelihood = -245.67433  (not concave)
-Iteration 272: log likelihood = -245.67271  (not concave)
-Iteration 273: log likelihood = -245.67109  (not concave)
-Iteration 274: log likelihood = -245.66948  (not concave)
-Iteration 275: log likelihood = -245.66788  (not concave)
-Iteration 276: log likelihood = -245.66629  (not concave)
-Iteration 277: log likelihood =  -245.6647  (not concave)
-Iteration 278: log likelihood = -245.66311  (not concave)
-Iteration 279: log likelihood = -245.66153  (not concave)
-Iteration 280: log likelihood = -245.65996  (not concave)
-Iteration 281: log likelihood =  -245.6584  (not concave)
-Iteration 282: log likelihood = -245.65684  (not concave)
-Iteration 283: log likelihood = -245.65529  (not concave)
-Iteration 284: log likelihood = -245.65374  (not concave)
-Iteration 285: log likelihood =  -245.6522  (not concave)
-Iteration 286: log likelihood = -245.65066  (not concave)
-Iteration 287: log likelihood = -245.64913  (not concave)
-Iteration 288: log likelihood = -245.64761  (not concave)
-Iteration 289: log likelihood = -245.64609  (not concave)
-Iteration 290: log likelihood = -245.64458  (not concave)
-Iteration 291: log likelihood = -245.64308  (not concave)
-Iteration 292: log likelihood = -245.64158  (not concave)
-Iteration 293: log likelihood = -245.64008  (not concave)
-Iteration 294: log likelihood = -245.63859  (not concave)
-Iteration 295: log likelihood = -245.63711  (not concave)
-Iteration 296: log likelihood = -245.63563  (not concave)
-Iteration 297: log likelihood = -245.63416  (not concave)
-Iteration 298: log likelihood = -245.63269  (not concave)
-Iteration 299: log likelihood = -245.63123  (not concave)
-Iteration 300: log likelihood = -245.62977  (not concave)
-convergence not achieved
-
-Log likelihood = -245.62977                     Number of obs     =      2,914
-
-------------------------------------------------------------------------------
-             |     exp(b)   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-xb           |
-        udca |   .5626098   .4381584    -0.74   0.460     .1222629    2.588927
-        male |   1.406093   .3822648     1.25   0.210      .825285    2.395656
-      age_tv |   1.007976    .006992     1.15   0.252     .9943642    1.021773
-any_high_r~n |          1   1.67e-16     0.59   0.555            1           1
-     eth_bin |   1.157541   .3637662     0.47   0.642     .6252302    2.143054
-        imd2 |      .5324   .2355206    -1.42   0.154     .2237111    1.267035
-        imd3 |   .8511679   .3146063    -0.44   0.663      .412474    1.756443
-        imd4 |   .8364365   .3471458    -0.43   0.667     .3708167    1.886717
-        imd5 |    .832064   .3327442    -0.46   0.646     .3799788    1.822024
-    bmi_cat1 |   .1467004   .1596889    -1.76   0.078     .0173726    1.238787
-    bmi_cat3 |   .7374637   .2737137    -0.82   0.412     .3562973    1.526401
-    bmi_cat4 |   .6777186   .2295261    -1.15   0.251     .3489547    1.316224
-    bmi_cat5 |     1.0294    .503359     0.06   0.953     .3947858    2.684153
-    smoking2 |   1.000763   .4289143     0.00   0.999     .4320333    2.318171
-    smoking3 |   1.013647   .5458834     0.03   0.980     .3527653    2.912646
-severe_dis~e |   1.295839   .4396632     0.76   0.445       .66642    2.519729
-covid_vacc~t |   1.120451   .8683043     0.15   0.883     .2453274    5.117286
- liver_trans |   .1024111   .0049617   -47.03   0.000     .0931339    .1126125
-       _rcs1 |   4.512437   1.976908     3.44   0.001     1.912044    10.64938
-       _rcs2 |   1.130388   .1926063     0.72   0.472     .8094534    1.578569
-       _rcs3 |   .8844004   .0401344    -2.71   0.007     .8091352    .9666667
-  _rcs_udca1 |   2.252629    1.93794     0.94   0.345     .4172535    12.16128
-_rcs_sever~1 |   .9391471    .274054    -0.22   0.830     .5300821    1.663888
-_rcs_covid~1 |   .7296879   .3456021    -0.67   0.506     .2883916    1.846255
-_rcs_liver~1 |   .8758599   7.429453    -0.02   0.988     5.27e-08    1.45e+07
-_rcs_age_tv1 |   .9953573   .0059223    -0.78   0.434     .9838172    1.007033
-       _cons |   .0201478   .0147323    -5.34   0.000     .0048064    .0844568
-------------------------------------------------------------------------------
-Note: Estimates are transformed only in the first equation.
-convergence not achieved
-r(430);
+initial values not feasible
+r(1400);
 
 end of do-file
-r(430);
+r(1400);
 
 end of do-file
 
-r(430);
+r(1400);
 
 
