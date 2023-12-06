@@ -398,6 +398,14 @@ foreach outcome in hosp_any composite_any {
     * Setting df (degrees of freedom for restricted cubic splines) as 3 as this is default 
     * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = linear effect of log time 
     * fully adjusted model to fit 
+    tab imd, gen(imd) 
+    tab bmi_cat, gen(bmi_cat)
+    tab smoking, gen(smoking)
+    * Check all binary 
+    foreach vars in udca male any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
+    bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_first liver_trans {
+        tab `vars', m nolabel
+        } 
     stpm2 udca male age_tv any_high_risk_condition eth_bin imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat3 ///
     bmi_cat4 bmi_cat5 smoking2 smoking3 severe_disease covid_vacc_first liver_trans, ///
      tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(2) scale(hazard) eform
@@ -556,6 +564,14 @@ stset stop_new, fail(died_covid_any_flag) id(patient_id) enter(index_date) origi
 * Fully adjusted model 
 * Setting df (degrees of freedom for restricted cubic splines) as 3 as this is default 
 * Setting dftvc (degrees of freedom for time-dependent effects) as 1 = linear effect of log time 
+tab imd, gen(imd) 
+tab bmi_cat, gen(bmi_cat)
+tab smoking, gen(smoking)
+* Check all binary 
+foreach vars in udca male any_high_risk_condition eth_bin imd1 imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
+bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_first liver_trans {
+    tab `vars', m nolabel
+    } 
 stpm2 udca male age_tv any_high_risk_condition eth_bin imd2 imd3 imd4 imd5 bmi_cat1 bmi_cat3 ///
 bmi_cat4 bmi_cat5 smoking2 smoking3 severe_disease covid_vacc_first liver_trans, ///
 tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df(2) scale(hazard) eform
