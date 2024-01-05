@@ -212,7 +212,7 @@ twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
                 , legend(order(1 "No UDCA" 2 "UDCA") ring(0) cols(1) pos(11) region(lwidth(none))) ///
                 title("Time to COVID-19 death", justification(left) size(med) )  	   ///
                 yscale(range(0, 1)) 											///
-                ylabel(0 (0.2) 2, angle(0) format(%4.1f) labsize(small))	///
+                ylabel(0 (1) 10, angle(0) format(%4.1f) labsize(small))	///
                 xlabel(0 (200) 1035, labsize(small))				   				///			
                 ytitle("Cumulative mortality (%)", size(medsmall)) ///
                 xtitle("Days since 1 Mar 2020", size(medsmall))      		///
@@ -535,7 +535,7 @@ twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
                 , legend(order(1 "No UDCA" 2 "UDCA") ring(0) cols(1) pos(11) region(lwidth(none))) ///
                 title("Time to `outcome'", justification(left) size(med) )  	   ///
                 yscale(range(0, 1)) 											///
-                ylabel(0 (0.2) 2, angle(0) format(%4.1f) labsize(small))	///
+                ylabel(0 (1) 10, angle(0) format(%4.1f) labsize(small))	///
                 xlabel(0 (200) 1035, labsize(small))				   				///			
                 ytitle("Cumulative mortality (%)", size(medsmall)) ///
                 xtitle("Days since 1 Mar 2020", size(medsmall))      		///
