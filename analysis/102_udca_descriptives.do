@@ -19,7 +19,7 @@ file open tablecontent using ./output/tables/udca_descriptives.txt, write text r
 forvalues i=60(30)180 {
     use ./output/time_varying_udca_all_vars_`i', clear 
     drop last _merge 
-    merge m:1 patient_id using `tempfile', keepusing(stp)
+    merge m:1 patient_id using `tempfile', keepusing(stp has_pbc)
     drop if stp==""
     tab udca, m
     bys patient_id: gen last = _n==_N 
@@ -156,7 +156,7 @@ file open tablecontent using ./output/tables/udca_descriptives_switch_only.txt, 
 
 use ./output/time_varying_udca_all_vars_120, clear 
 drop last _merge 
-merge m:1 patient_id using `tempfile', keepusing(stp)
+merge m:1 patient_id using `tempfile', keepusing(stp has_pbc)
 drop if stp==""
 tab udca, m
 bys patient_id: gen last = _n==_N 
@@ -200,5 +200,28 @@ local percent_stt = (r(N)/_N)*100
 safecount if switch_120_stop==1
 file write tablecontent (`percent_stt') _tab  %3.1f (round(r(N),5)) _tab 
 local percent_stp = (r(N)/_N)*100
-file write tablecontent (`percent_stp') _n _n 
+file write tablecontent (`percent_stp') _n 
+* Switching by PBC/PSC status 
+*PBC
+safecount if switch_120==1 & has_pbc==1
+file write tablecontent ("PBC") _tab %3.1f (round(r(N),5)) _tab 
+local percent_pbc = (r(N)/_N)*100
+safecount if switch_120==1 & has_pbc==1
+file write tablecontent (`percent_pbc') _tab  %3.1f (round(r(N),5)) _tab 
+local percent_stt_pbc = (r(N)/_N)*100
+safecount if switch_120_stop==1 & has_pbc==1
+file write tablecontent (`percent_stt_pbc') _tab  %3.1f (round(r(N),5)) _tab 
+local percent_stp_pbc = (r(N)/_N)*100
+file write tablecontent (`percent_stp_pbc') _n 
+*PSC
+safecount if switch_120==1 & has_pbc==0
+file write tablecontent ("PSC") _tab %3.1f (round(r(N),5)) _tab 
+local percent_psc = (r(N)/_N)*100
+safecount if switch_120==1 & has_pbc==0
+file write tablecontent (`percent_psc') _tab  %3.1f (round(r(N),5)) _tab 
+local percent_stt_psc = (r(N)/_N)*100
+safecount if switch_120_stop==1 & has_pbc==0
+file write tablecontent (`percent_stt_psc') _tab  %3.1f (round(r(N),5)) _tab 
+local percent_stp_psc = (r(N)/_N)*100
+file write tablecontent (`percent_stp_psc') _n _n
 file close tablecontent

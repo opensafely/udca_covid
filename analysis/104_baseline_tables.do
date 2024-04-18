@@ -140,6 +140,24 @@ keep factor level n0_rounded percent_0 n1_rounded percent_1
 export delimited using ./output/tables/baseline_table_udca_rounded.csv
 restore 
 
+* Characteristics by PBC/PSC status 
+preserve 
+table1_mc, vars(age_cat cat \ sex cat \ imd cat \ ethnicity cat \ severe_disease_bl cat \ smoking cat \ bmi_cat cat \ has_pbc bin \ any_high_risk_condition cat) by(has_pbc) clear
+export delimited using ./output/tables/baseline_table_pbc_psc.csv, replace
+* Rounding numbers in table to nearest 5
+forvalues i=0/1 {   
+    destring _columna_`i', gen(n`i') ignore(",") force
+    destring _columnb_`i', gen(percent`i') ignore("-" "%" "(" ")")  force
+    gen rounded_n`i' = round(n`i', 5)
+    tostring percent`i', gen(percent_`i')
+    tostring rounded_n`i', gen(n`i'_rounded)
+    replace n`i'_rounded = "redacted" if (rounded_n`i'<=5)
+    replace percent_`i' = "redacted" if (rounded_n`i'<=5)
+}
+keep factor level n0_rounded percent_0 n1_rounded percent_1
+export delimited using ./output/tables/baseline_table_pbc_psc_rounded.csv
+restore 
+
 * Additional medications by any exposure
 preserve 
 table1_mc, vars(budesonide_bl bin \ fenofibrate_bl bin \ gc_bl bin \ oca_bl bin \ rituximab_bl bin \ severe_disease_fu bin \ vacc_any bin  \ total_vaccs cat \ time_vacc_cat cat) by(udca_bl) clear

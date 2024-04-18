@@ -1748,6 +1748,92 @@ foreach var in died_covid_any hosp_any composite_any {
     restore
 }
 
+* Sensitivity analysis - take out people with missing ethnicity, BMI or smoking for 120 file 
+/* Format file with static covariates: sex, region, covid high risk conditions, 
+ethnicity, imd, bmi, smoking. */
+
+** Need to decide on second line therapies 
+use `tempfile', clear
+describe 
+* Format variables 
+* Sex
+gen male = 1 if sex == "M"
+replace male = 0 if sex == "F"
+* Ethnicity
+drop if ethnicity==0
+label define eth5 			1 "White"  					///
+                            2 "Mixed"				///						
+                            3 "Asian"  					///
+                            4 "Black"					///
+                            5 "Other"					///
+                                   
+
+label values ethnicity eth5
+safetab ethnicity, m
+* Create White vs non-White ethnicity variable
+gen eth_bin = (ethnicity!=1)
+label define eth_3 0 "White" 1 "Non-White" 
+label values eth_bin eth_3
+tab eth_bin ethnicity, m 
+
+
+* IMD - should not be missing (i.e. 0) in real data
+replace imd=6 if imd==0
+
+* BMI categories
+* assume BMI's less than 10 are incorrect and set to missing 
+sum bmi, d 
+replace bmi = . if bmi<10
+egen bmi_cat = cut(bmi), at(0, 1, 18.5, 24.9, 29.9, 39.9, 100) icodes
+bys bmi_cat: sum bmi
+* assume missing . is healthy range BMI
+drop if bmi_cat==. 
+label define bmi 1 "Underweight" 2 "Healthy range" 3 "Overweight" 4 "Obese" 5 "Morbidly obese"
+label values bmi_cat bmi
+tab bmi_cat 
+
+* Smoking status - assume missings are non-smokers 
+gen smoking = 0 if smoking_status=="N"
+replace smoking = 1 if smoking_status=="S"
+replace smoking = 2 if smoking_status=="E"
+drop if smoking==.
+label define smok 1 "Current smoker" 2 "Ex-smoker" 0 "Never smoked" 
+label values smoking smok
+tab smoking 
+
+* High risk covid conditions
+replace oral_steroid_drugs_nhsd=. if oral_steroid_drug_nhsd_3m_count < 2 & oral_steroid_drug_nhsd_12m_count < 4
+gen imid_nhsd=max(oral_steroid_drugs_nhsd, immunosuppresant_drugs_nhsd)
+gen rare_neuro_nhsd = max(multiple_sclerosis_nhsd, motor_neurone_disease_nhsd, myasthenia_gravis_nhsd, huntingtons_disease_nhsd)
+gen solid_organ_transplant_bin = solid_organ_transplant_nhsd_new!=""
+gen any_high_risk_condition = max(learning_disability_nhsd_snomed, cancer_opensafely_snomed_new, haematological_disease_nhsd, ///
+ckd_stage_5_nhsd, imid_nhsd, immunosupression_nhsd_new, hiv_aids_nhsd, solid_organ_transplant_bin, rare_neuro_nhsd)
+
+* Time from most recent vaccination on 1st March 2021
+gen date_most_recent_cov_vacA = date(date_most_recent_cov_vac, "YMD")
+gen time_vacc = date("01Mar2021", "DMY") - date_most_recent_cov_vacA
+sum time_vacc, d
+xtile time_vacc_cat = time_vacc, nq(4)
+replace time_vacc_cat = 5 if time_vacc_cat == .
+bys time_vacc_cat: sum time_vacc 
+label define vacc_t 1 "Q1 closest vaccination" 2 "Q2" 3 "Q3" 4 "Q4 furthest vaccination" 5 "No vaccination" 
+label values time_vacc_cat vacc_t 
+
+* Exploring death by liver disease 
+gen died_liver_any = died_ons_liver_flag_any==1 & died_ons_covid_flag_any!=1
+gen died_liver_underlying = died_ons_liver_flag_underlying==1 & died_ons_covid_flag_any!=1
+
+keep patient_id male stp any_high_risk_condition ethnicity imd bmi_cat smoking eth_bin time_vacc_cat has_pbc oca_bl died_liver_any died_liver_underlying
+tempfile basefile
+save `basefile'
+foreach var in died_covid_any hosp_any composite_any {
+    preserve 
+    merge 1:m patient_id using ./output/tv_vars_`var' 
+    drop _merge 
+    save ./output/an_dataset_`var'_nomiss, replace
+    restore
+}
+
 log close 
 
 
