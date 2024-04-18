@@ -1828,7 +1828,7 @@ tempfile basefile
 save `basefile'
 foreach var in died_covid_any hosp_any composite_any {
     preserve 
-    merge 1:m patient_id using ./output/tv_vars_`var' 
+    merge 1:m patient_id using ./output/tv_vars_`var', keep(3) 
     drop _merge 
     save ./output/an_dataset_`var'_nomiss, replace
     restore
