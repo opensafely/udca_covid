@@ -815,8 +815,13 @@ file write tablecontent ("Outcome") _tab ("Exposure status")  _tab ("events") _t
 
 * Cox models and Schoenfeld residual plots for each outcome
 foreach outcome in died_covid_any hosp_any composite_any {
-    use ./output/an_dataset_`outcome'_nomiss, clear 
+    use ./output/an_dataset_`outcome', clear 
+    merge m:1 patient_id using ./output/an_dataset_missings_flag
+    tab _merge 
+    drop _merge 
     drop if stp==""
+    drop if missing_ebs==1
+    count 
     * Open file to write results
     describe
     gen index_date = date("01/03/2020", "DMY")
