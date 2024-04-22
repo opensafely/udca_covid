@@ -89,11 +89,11 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if unexposed_ever==0 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "no udca events = " `event'
         bysort udca: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
@@ -111,10 +111,10 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "udca events = " `event'
         qui su total_follow_up if udca==1 & number==1
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
             file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
@@ -221,11 +221,11 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if unexposed_ever==0 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "no udca events = " `event'
         bysort udca: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
@@ -243,10 +243,10 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "udca events = " `event'
         qui su total_follow_up if udca==1 & number==1
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
             file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
@@ -351,13 +351,13 @@ foreach outcome in died_covid_any hosp_any composite_any {
         bys patient_id : egen unexposed_ever = min(udca) 
         tab unexposed_ever if number==1
         safecount if unexposed_ever==0 & number==1
-        local denominator = round(r(N),6)
+        local denominator = round(r(N),5)
         safecount if udca == 0 & `outcome'_flag == 1
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "no udca events = " `event'
         bysort udca: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
@@ -375,10 +375,10 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "udca events = " `event'
         qui su total_follow_up if udca==1 & number==1
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
             file write tablecontent ("`outcome'") _tab ("UDCA") _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
@@ -485,11 +485,11 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if unexposed_ever==0 & has_pbc==1 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1 & has_pbc==1
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "no udca events = " `event'
         bysort udca: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1 & has_pbc==1
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
@@ -507,10 +507,10 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1 & has_pbc==1
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1 & has_pbc==1
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "udca events = " `event'
         qui su total_follow_up if udca==1 & number==1 & has_pbc==1
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
             file write tablecontent ("`outcome'") _tab ("UDCA")  _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
@@ -616,11 +616,11 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if unexposed_ever==0 & has_pbc==0 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1 & has_pbc==0
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "no udca events = " `event'
         bysort udca has_pbc: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1 & has_pbc==0
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
@@ -638,10 +638,10 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1 & has_pbc==0
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1 & has_pbc==0
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "udca events = " `event'
         su total_follow_up if udca==1 & number==1 & has_pbc==0
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
             file write tablecontent ("`outcome'") _tab ("UDCA")  _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
@@ -752,11 +752,11 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if unexposed_ever==0 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "no udca events = " `event'
         bysort udca: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
@@ -774,10 +774,10 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "udca events = " `event'
         qui su total_follow_up if udca==1 & number==1
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
             file write tablecontent ("`outcome'") _tab ("UDCA")  _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
@@ -889,11 +889,11 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if unexposed_ever==0 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "no udca events = " `event'
         bysort udca: egen total_follow_up = total(_t) if number==1
         su total_follow_up if udca==0 & number==1
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
@@ -911,10 +911,10 @@ foreach outcome in died_covid_any hosp_any composite_any {
         qui safecount if exposed_ever==1 & number==1
         local denominator = r(N)
         qui safecount if udca == 1 & `outcome'_flag == 1
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "udca events = " `event'
         qui su total_follow_up if udca==1 & number==1
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
             file write tablecontent ("`outcome'") _tab ("UDCA")  _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab
@@ -1024,11 +1024,11 @@ foreach outcome in died_covid_any hosp_any composite_any {
         safecount if unexposed_ever==0 & number==1
         local denominator = r(N)
         safecount if udca == 0 & `outcome'_flag == 1 
-        local event = round(r(N),6)
+        local event = round(r(N),5)
         di "no udca events = " `event'
         bysort udca: egen total_follow_up = total(_t) if number==1 
         su total_follow_up if udca==0 & number==1 
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         di `person_mth'
         local rate = 100000*(`event'/`person_mth')
         di `rate'
@@ -1049,7 +1049,7 @@ foreach outcome in died_covid_any hosp_any composite_any {
         local event = round(r(N), 5)
         di "udca events = " `event'
         qui su total_follow_up if udca==1 & number==1 
-        local person_mth = round(r(mean),6)/30
+        local person_mth = round(r(mean),5)/30
         local rate = 100000*(`event'/`person_mth')
         if `event'>10 & `event'!=. {
             file write tablecontent ("`outcome'") _tab ("UDCA")  _tab (`event') _tab %10.0f (`person_mth') _tab %3.2f (`rate') _tab

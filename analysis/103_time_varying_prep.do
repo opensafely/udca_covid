@@ -922,6 +922,9 @@ replace smoking = 2 if smoking_status=="E"
 replace missing_ebs = 1 if smoking==.
 
 keep patient_id missing_ebs 
+
+tab missing_ebs
+
 save ./output/an_dataset_missings_flag, replace
 
 *** vaccination file: sensitivity analysis 
