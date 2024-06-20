@@ -182,7 +182,7 @@
 
 Contains data from ./output/an_dataset_hosp_any.dta
   obs:         1,426                          
- vars:            23                          13 Oct 2023 13:56
+ vars:            23                          19 Apr 2024 08:01
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label
@@ -331,7 +331,7 @@ Note: Estimates are transformed only in the first equation.
 
 Contains data from ./output/an_dataset_hosp_any.dta
   obs:         1,426                          
- vars:            23                          13 Oct 2023 13:56
+ vars:            23                          19 Apr 2024 08:01
 -------------------------------------------------------------------------------
               storage   display    value
 variable name   type    format     label      variable label

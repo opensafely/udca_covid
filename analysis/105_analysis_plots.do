@@ -294,7 +294,7 @@ graph close
 
 * plot for each outcome - fully adjusted 
 foreach outcome in hosp_any composite_any {
-    use ./output/an_dataset_`outcome', clear 
+        use ./output/an_dataset_`outcome', clear 
     drop if stp==""
     describe
     gen index_date = date("01/03/2020", "DMY")
@@ -358,6 +358,13 @@ foreach outcome in hosp_any composite_any {
     file write tablecontent (r(mean)) _tab 
     sum _at2_uci if days==`tmax'
     file write tablecontent (r(mean)) _tab _n 
+    * Macro for graph title 
+    if `outcome'== composite_any {
+        local title a 
+    }
+    else {
+        local title c 
+    }
 
     *l date days _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days<.
 
@@ -366,7 +373,7 @@ foreach outcome in hosp_any composite_any {
                     (line _at1 days, sort lcolor(red)) ///
                     (line _at2 days, sort lcolor(blue) lpattern(dash)) ///
                     , legend(order(1 "No UDCA" 2 "UDCA") ring(0) cols(1) pos(11) region(lwidth(none))) ///
-                    title("Time to `outcome'", justification(left) size(med) )  	   ///
+                    title("`title'", justification(left) size(med) )  	   ///
                     yscale(range(0, 1)) 											///
                     ylabel(0 (1) 10, angle(0) format(%4.1f) labsize(small))	///
                     xlabel(0 (200) 1035, labsize(small))				   				///			
@@ -533,7 +540,7 @@ twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
                 (line _at1 days, sort lcolor(red)) ///
                 (line _at2 days, sort lcolor(blue) lpattern(dash)) ///
                 , legend(order(1 "No UDCA" 2 "UDCA") ring(0) cols(1) pos(11) region(lwidth(none))) ///
-                title("Time to `outcome'", justification(left) size(med) )  	   ///
+                title("b", justification(left) size(med) )  	   ///
                 yscale(range(0, 1)) 											///
                 ylabel(0 (1) 10, angle(0) format(%4.1f) labsize(small))	///
                 xlabel(0 (200) 1035, labsize(small))				   				///			
