@@ -546,7 +546,7 @@ twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
                 xlabel(0 (200) 1035, labsize(small))				   				///			
                 ytitle("Cumulative mortality (%)", size(medsmall)) ///
                 xtitle("Days since 1 Mar 2020", size(medsmall))      		///
-                graphregion(fcolor(white)) saving(adjcurv_`outcome', replace)
+                graphregion(fcolor(white)) saving(adjcurv_died, replace)
 
 graph export "./output/graphs/adjcurv_f_died_covid_any.svg", as(svg) replace
 
@@ -630,6 +630,8 @@ twoway  (rarea _at1_lci _at1_uci days_ph, color(red%25)) ///
 
 graph export "./output/graphs/adjcurv_f_died_covid_any_post_hoc.svg", as(svg) replace
 
+graph combine adjcurve_f_composite_any adjcurv_died adjcurve_f_hosp_any, graphregion(color(white))
+graph export "./output/graphs/adjcurv_f_combine.svg, as(svg) replace 
 * Close window 
 graph close 
 
