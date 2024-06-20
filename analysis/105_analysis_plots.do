@@ -378,12 +378,10 @@ forvalues i=1/2 {
                     xlabel(0 (200) 1035, labsize(small))				   				///			
                     ytitle("Cumulative outcomes (%)", size(medsmall)) ///
                     xtitle("Days since 1 Mar 2020", size(medsmall))      		///
-                    graphregion(fcolor(white)) saving(adjcurv_f_`outcome', replace)
+                    graphregion(fcolor(white)) name(adjcurv_f_`outcome', replace)
 
     graph export "./output/graphs/adjcurv_f_`outcome'.svg", as(svg) replace
 
-    * Close window 
-    graph close
 
     * Post-hoc analysis: Model with liver deaths not censored
     use ./output/an_dataset_`outcome', clear 
@@ -463,8 +461,6 @@ forvalues i=1/2 {
 
     graph export "./output/graphs/adjcurv_f_`outcome'_post_hoc.svg", as(svg) replace
 
-    * Close window 
-    graph close
 }
 
 use ./output/an_dataset_died_covid_any, clear 
@@ -544,12 +540,9 @@ twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
                 xlabel(0 (200) 1035, labsize(small))				   				///			
                 ytitle("Cumulative mortality (%)", size(medsmall)) ///
                 xtitle("Days since 1 Mar 2020", size(medsmall))      		///
-                graphregion(fcolor(white)) saving(adjcurv_f_died, replace)
+                graphregion(fcolor(white)) name(adjcurv_f_died, replace)
 
 graph export "./output/graphs/adjcurv_f_died_covid_any.svg", as(svg) replace
-
-* Close window 
-graph close
 
 * Post-hoc analysis: Model with liver deaths not censored
 use ./output/an_dataset_died_covid_any, clear 
@@ -630,7 +623,5 @@ graph export "./output/graphs/adjcurv_f_died_covid_any_post_hoc.svg", as(svg) re
 
 graph combine adjcurve_f_composite_any adjcurv_f_died adjcurve_f_hosp_any, graphregion(color(white))
 graph export "./output/graphs/adjcurv_f_combine.svg, as(svg) replace 
-* Close window 
-graph close 
 
 file close tablecontent

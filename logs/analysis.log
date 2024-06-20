@@ -449,29 +449,27 @@
 >                     ytitle("Cumulative outcomes (%)", size(medsmall)) ///
 >                     xtitle("Days since 1 Mar 2020", size(medsmall))          
 >            ///
->                     graphregion(fcolor(white)) saving(adjcurv_f_`outcome', re
-> place)
+>                     graphregion(fcolor(white)) name(adjcurv_f_`outcome', repl
+> ace)
  46. 
 .     graph export "./output/graphs/adjcurv_f_`outcome'.svg", as(svg) replace
  47. 
-.     * Close window 
-.     graph close
- 48. 
+. 
 .     * Post-hoc analysis: Model with liver deaths not censored
 .     use ./output/an_dataset_`outcome', clear 
- 49.     drop if stp==""
- 50.     describe
- 51.     gen index_date = date("01/03/2020", "DMY")
- 52.     bys patient_id (start): gen last = _N==_n 
- 53.     tab died_liver_any `outcome'_flag if last==1
- 54.     * For sensitivity: generate new stop and update last record to end of 
+ 48.     drop if stp==""
+ 49.     describe
+ 50.     gen index_date = date("01/03/2020", "DMY")
+ 51.     bys patient_id (start): gen last = _N==_n 
+ 52.     tab died_liver_any `outcome'_flag if last==1
+ 53.     * For sensitivity: generate new stop and update last record to end of 
 > study period if died of liver disease 
 .     gen stop_new = stop 
- 55.     replace stop_new = date("31/12/2022", "DMY") if last==1 & died_liver_a
+ 54.     replace stop_new = date("31/12/2022", "DMY") if last==1 & died_liver_a
 > ny==1
- 56.     stset stop_new, fail(`outcome'_flag) id(patient_id) enter(index_date) 
+ 55.     stset stop_new, fail(`outcome'_flag) id(patient_id) enter(index_date) 
 > origin(index_date)
- 57. 
+ 56. 
 .     * Add cumulative incidence plots 
 .     * Not stratifying by stp as cannot use tvc and stratify  
 .     
@@ -482,54 +480,54 @@
 > near effect of log time 
 .     * fully adjusted model to fit 
 .     tab imd, gen(imd) 
- 58.     tab bmi_cat, gen(bmi_cat)
- 59.     tab smoking, gen(smoking)
- 60.     * Check all binary 
+ 57.     tab bmi_cat, gen(bmi_cat)
+ 58.     tab smoking, gen(smoking)
+ 59.     * Check all binary 
 .     foreach vars in udca male any_high_risk_condition eth_bin imd1 imd2 imd3 
 > imd4 imd5 bmi_cat1 bmi_cat2 bmi_cat3 ///
 >     bmi_cat4 bmi_cat5 smoking1 smoking2 smoking3 severe_disease covid_vacc_fi
 > rst liver_trans {
- 61.         tab `vars', m nolabel
- 62.         } 
- 63.     stpm2 udca male age_tv any_high_risk_condition eth_bin imd2 imd3 imd4 
+ 60.         tab `vars', m nolabel
+ 61.         } 
+ 62.     stpm2 udca male age_tv any_high_risk_condition eth_bin imd2 imd3 imd4 
 > imd5 bmi_cat1 bmi_cat3 ///
 >     bmi_cat4 bmi_cat5 smoking2 smoking3 severe_disease covid_vacc_first liver
 > _trans, ///
 >      tvc(udca severe_disease covid_vacc_first liver_trans age_tv) dftvc(1) df
 > (2) scale(hazard) eform
- 64.     
+ 63.     
 .     summ _t
- 65.     local tmax=r(max)
- 66.     local tmaxplus1=r(max)+1
- 67. 
+ 64.     local tmax=r(max)
+ 65.     local tmaxplus1=r(max)+1
+ 66. 
 .     range days_ph 0 `tmax' `tmaxplus1'
- 68.     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days_ph)
+ 67.     stpm2_standsurv if udca == 1, at1(udca 0) at2(udca 1) timevar(days_ph)
 >  ci contrast(difference) fail
- 69. 
+ 68. 
 .     gen date = d(1/3/2020)+ days_ph
- 70.     format date %tddd_Month
- 71. 
+ 69.     format date %tddd_Month
+ 70. 
 .     for var _at1 _at2 _at1_lci _at1_uci _at2_lci _at2_uci _contrast2_1 _contr
 > ast2_1_lci _contrast2_1_uci: replace X=100*X
- 72. 
+ 71. 
 .     *cumulative mortality at last day of follow-up - write to file 
 .     file write tablecontent ("Post-hoc: `outcome'") _tab ("No UDCA") _tab  
- 73.     * cumulative outcome - no UDCA 
+ 72.     * cumulative outcome - no UDCA 
 .     sum _at1 if days_ph==`tmax'
- 74.     file write tablecontent (r(mean)) _tab 
- 75.     sum _at1_lci if days_ph==`tmax'
- 76.     file write tablecontent (r(mean)) _tab 
- 77.     sum _at1_uci if days_ph==`tmax'
- 78.     file write tablecontent (r(mean)) _tab _n 
- 79.     * cumulative outcome - UDCA 
+ 73.     file write tablecontent (r(mean)) _tab 
+ 74.     sum _at1_lci if days_ph==`tmax'
+ 75.     file write tablecontent (r(mean)) _tab 
+ 76.     sum _at1_uci if days_ph==`tmax'
+ 77.     file write tablecontent (r(mean)) _tab _n 
+ 78.     * cumulative outcome - UDCA 
 .     file write tablecontent ("`outcome'") _tab ("UDCA") _tab  
- 80.     sum _at2 if days_ph==`tmax'
- 81.     file write tablecontent (r(mean)) _tab 
- 82.     sum _at2_lci if days_ph==`tmax'
- 83.     file write tablecontent (r(mean)) _tab 
- 84.     sum _at2_uci if days_ph==`tmax'
- 85.     file write tablecontent (r(mean)) _tab _n 
- 86.     
+ 79.     sum _at2 if days_ph==`tmax'
+ 80.     file write tablecontent (r(mean)) _tab 
+ 81.     sum _at2_lci if days_ph==`tmax'
+ 82.     file write tablecontent (r(mean)) _tab 
+ 83.     sum _at2_uci if days_ph==`tmax'
+ 84.     file write tablecontent (r(mean)) _tab _n 
+ 85.     
 .     *l date days_ph _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days_ph<
 > .
 . 
@@ -552,13 +550,11 @@
 >            ///
 >                     graphregion(fcolor(white)) saving(adjcurv_`outcome'_posth
 > oc, replace)
- 87. 
+ 86. 
 .     graph export "./output/graphs/adjcurv_f_`outcome'_post_hoc.svg", as(svg) 
 > replace
- 88. 
-.     * Close window 
-.     graph close
- 89. }
+ 87. 
+. }
 (1,440 observations deleted)
 
 Contains data from ./output/an_dataset_hosp_any.dta
