@@ -15,7 +15,7 @@ file open tablecontent using ./output/tables/cum_incidence.txt, write text repla
 file write tablecontent ("Outcome") _tab ("Exposure") _tab ("Cumulative incidence") _tab ("95% confidence interval") _n
 
 
-* plot for each outcome - age and sex adjusted only
+/* plot for each outcome - age and sex adjusted only
 foreach outcome in hosp_any composite_any {
     use ./output/an_dataset_`outcome', clear 
     drop if stp==""
@@ -291,10 +291,16 @@ graph export "./output/graphs/adjcurv_died_covid_any_post_hoc.svg", as(svg) repl
 
 * Close window 
 graph close    
+*/
 
 * plot for each outcome - fully adjusted 
-foreach outcome in hosp_any composite_any {
-        use ./output/an_dataset_`outcome', clear 
+local a "hosp_any composite_any"
+local b "c a"
+forvalues i=1/2 {
+    local outcome: word `i' of `a'
+    local title: word `i' of `b'
+    
+    use ./output/an_dataset_`outcome', clear 
     drop if stp==""
     describe
     gen index_date = date("01/03/2020", "DMY")
@@ -358,14 +364,7 @@ foreach outcome in hosp_any composite_any {
     file write tablecontent (r(mean)) _tab 
     sum _at2_uci if days==`tmax'
     file write tablecontent (r(mean)) _tab _n 
-    * Macro for graph title 
-    if `outcome'== composite_any {
-        local title a 
-    }
-    else {
-        local title c 
-    }
-
+    
     *l date days _at1 _at1_lci _at1_uci _at2 _at2_lci _at2_uci if days<.
 
     twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
@@ -460,13 +459,12 @@ foreach outcome in hosp_any composite_any {
                     xlabel(0 (200) 1035, labsize(small))				   				///			
                     ytitle("Cumulative outcomes (%)", size(medsmall)) ///
                     xtitle("Days since 1 Mar 2020", size(medsmall))      		///
-                    graphregion(fcolor(white)) saving(adjcurv_`outcome', replace)
+                    graphregion(fcolor(white)) saving(adjcurv_`outcome'_posthoc, replace)
 
     graph export "./output/graphs/adjcurv_f_`outcome'_post_hoc.svg", as(svg) replace
 
     * Close window 
     graph close
-
 }
 
 use ./output/an_dataset_died_covid_any, clear 
@@ -546,7 +544,7 @@ twoway  (rarea _at1_lci _at1_uci days, color(red%25)) ///
                 xlabel(0 (200) 1035, labsize(small))				   				///			
                 ytitle("Cumulative mortality (%)", size(medsmall)) ///
                 xtitle("Days since 1 Mar 2020", size(medsmall))      		///
-                graphregion(fcolor(white)) saving(adjcurv_died, replace)
+                graphregion(fcolor(white)) saving(adjcurv_f_died, replace)
 
 graph export "./output/graphs/adjcurv_f_died_covid_any.svg", as(svg) replace
 
@@ -630,7 +628,7 @@ twoway  (rarea _at1_lci _at1_uci days_ph, color(red%25)) ///
 
 graph export "./output/graphs/adjcurv_f_died_covid_any_post_hoc.svg", as(svg) replace
 
-graph combine adjcurve_f_composite_any adjcurv_died adjcurve_f_hosp_any, graphregion(color(white))
+graph combine adjcurve_f_composite_any adjcurv_f_died adjcurve_f_hosp_any, graphregion(color(white))
 graph export "./output/graphs/adjcurv_f_combine.svg, as(svg) replace 
 * Close window 
 graph close 
