@@ -623,6 +623,6 @@ twoway  (rarea _at1_lci _at1_uci days_ph, color(red%25)) ///
 graph export "./output/graphs/adjcurv_f_died_covid_any_post_hoc.svg", as(svg) replace
 
 graph combine adjcurv_f_composite_any adjcurv_f_died adjcurv_f_hosp_any, graphregion(color(white))
-graph export "./output/graphs/adjcurv_f_combine.svg, as(svg) replace 
+graph export "./output/graphs/adjcurv_f_combine.svg", as(svg) replace 
 
 file close tablecontent
